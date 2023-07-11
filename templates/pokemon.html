@@ -1,0 +1,41 @@
+<html>
+<head>
+    <title>Pokémon List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="main-section">
+        <h1>Pokémon List</h1>
+        <div class="pokemon-grid">
+            {% for pokemon in pokemons %}
+            <div class="pokemon-card">
+                <div class="image-section">
+                    <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}">
+                </div>
+                <div class="info-section">
+                    <p class="name">{{ pokemon.name }}</p>
+                    <p class="id-type">{{ pokemon.id }} - {{ pokemon.type }}</p>
+                </div>
+                <div class="moves-section">
+                    <p class="moves">{{ pokemon.moves }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="pagination">
+            {% if prev_url %}
+            <a href="/page?url={{ prev_url }}">Previous</a>
+            {% endif %}
+            {% for page in range(1, 6) %}
+                {% if next_url %}
+                    <a href="/page?url={{ next_url }}" class="{% if page == 1 %}active{% endif %}">{{ page }}</a>
+                {% endif %}
+            {% endfor %}
+            {% if next_url %}
+            <a href="/page?url={{ next_url }}">Next</a>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
