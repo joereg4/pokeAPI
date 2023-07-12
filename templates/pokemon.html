@@ -25,15 +25,10 @@
         </div>
         <div class="pagination">
             {% if prev_url %}
-            <a href="/page?url={{ prev_url }}">Previous</a>
+            <a href="/prev?url={{ prev_url }}">Previous</a>
             {% endif %}
-            {% for page in range(1, 6) %}
-                {% if next_url %}
-                    <a href="/page?url={{ next_url }}" class="{% if page == 1 %}active{% endif %}">{{ page }}</a>
-                {% endif %}
-            {% endfor %}
             {% if next_url %}
-            <a href="/page?url={{ next_url }}">Next</a>
+            <a href="/next?url={{ next_url }}">Next</a>
             {% endif %}
         </div>
     </div>
