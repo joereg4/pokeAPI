@@ -5,32 +5,38 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-    <div class="main-section">
-        <h1>Pokémon List</h1>
-        <div class="pokemon-grid">
-            {% for pokemon in pokemons %}
-            <div class="pokemon-card">
-                <div class="image-section">
-                    <img src="{{ pokemon.image }}" alt="{{ pokemon.name }}">
-                </div>
-                <div class="info-section">
-                    <p class="name">{{ pokemon.name }}</p>
-                    <p class="id-type">{{ pokemon.id }} - {{ pokemon.type }}</p>
-                </div>
-                <div class="moves-section">
-                    <p class="moves">{{ pokemon.moves }}</p>
-                </div>
+<div class="main-section">
+    <h1>Pokémon List</h1>
+    <div class="pokemon-grid">
+        {% for pokemon in pokemons %}
+        <div class="pokemon-card">
+            <div class="image-section">
+                <img src="{{ pokemon.sprites['other']['official-artwork']['front_default'] }}" alt="{{ pokemon.name }}">
             </div>
-            {% endfor %}
+
+            <div class="info-section">
+                <p class="name">{{ pokemon.name }}</p>
+                <p class="id-type">{{ pokemon.id }} - {{ pokemon.type }}</p>
+            </div>
+            <div class="moves-section">
+                {% set moves_list = [] %}
+                {% for move in pokemon.moves[:20] %}
+                {% set _ = moves_list.append(move.name) %}
+                {% endfor %}
+                {% set card_moves = moves_list|join(', ') %}
+                <p class="moves">{{ card_moves }}</p>
+            </div>
         </div>
-        <div class="pagination">
-            {% if prev_url %}
-            <a href="/prev?url={{ prev_url }}">Previous</a>
-            {% endif %}
-            {% if next_url %}
-            <a href="/next?url={{ next_url }}">Next</a>
-            {% endif %}
-        </div>
+        {% endfor %}
     </div>
+    <div class="pagination">
+        {% if prev_url %}
+        <a href="/prev?url={{ prev_url }}">Previous</a>
+        {% endif %}
+        {% if next_url %}
+        <a href="/next?url={{ next_url }}">Next</a>
+        {% endif %}
+    </div>
+</div>
 </body>
 </html>

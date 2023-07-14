@@ -1,56 +1,106 @@
-import urllib.request
-import json
+def get_data(pokemon_name):
+    from flask import g
+
+    # Query the MongoDB database for the specified Pokemon
+    pokemon = g.db['pokemon'].find_one({"name": pokemon_name})
+
+    if pokemon is not None:
+        card_id = pokemon['id']
+        card_name = pokemon['name'].title()
+        card_image = pokemon['sprites']['other']['official-artwork']['front_default']
+
+        # Process types and moves as before, but get data from MongoDB instead of PokeAPI
+        card_type = ', '.join([t['type']['name'] for t in pokemon.get('types', [])])
+        card_moves = ', '.join([m['name'] for m in pokemon.get('moves', [])[:20]])
+
+        return card_id, card_name, card_image, card_type, card_moves
+    else:
+        print('Pokemon not found in the database')
+        return None
+
+
+class Ability:
+    def __init__(self, ability):
+        if ability is not None:
+            self.is_hidden = ability.get("is_hidden")
+            self.slot = ability.get("slot")
+            self.name = ability.get("ability").get("name")
+            self.url = ability.get("ability").get("url")
+        else:
+            self.is_hidden = None
+            self.slot = None
+            self.name = None
+            self.url = None
+
+    def to_dict(self):
+        return {
+            "is_hidden": self.is_hidden,
+            "slot": self.slot,
+            "name": self.name,
+            "url": self.url
+        }
+
+
+class HeldItem:
+    def __init__(self, item):
+        self.name = item.get("item").get("name")
+        self.url = item.get("item").get("url")
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "url": self.url
+        }
+
+
+class Move:
+    def __init__(self, move):
+        self.name = move.get("move").get("name")
+        self.url = move.get("move").get("url")
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "url": self.url
+        }
 
 
 class Pokemon:
-    def __init__(self, id, name, url, image, type, moves):
-        self.id = id
-        self.name = name
-        self.url = url
-        self.image = image
-        self.type = type
-        self.moves = moves
+    def __init__(self, data):
+        self.id = data.get('id')
+        self.name = data.get('name')
+        self.base_experience = data.get('base_experience')
+        self.height = data.get('height')
+        self.is_default = data.get('is_default')
+        self.order = data.get('order')
+        self.weight = data.get('weight')
+        self.abilities = [Ability(ability) for ability in data.get('abilities', [])]
+        self.forms = data.get('forms', [])
+        self.game_indices = data.get('game_indices', [])
+        self.held_items = [HeldItem(item) for item in data.get('held_items', [])]
+        self.location_area_encounters = data.get('location_area_encounters')
+        self.moves = [Move(move) for move in data.get('moves', [])]
+        self.species = data.get('species')
+        self.sprites = data.get('sprites')
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "base_experience": self.base_experience,
+            "height": self.height,
+            "is_default": self.is_default,
+            "order": self.order,
+            "weight": self.weight,
+            "abilities": [ability.to_dict() for ability in self.abilities],
+            "forms": self.forms,
+            "game_indices": self.game_indices,
+            "held_items": [item.to_dict() for item in self.held_items],
+            "location_area_encounters": self.location_area_encounters,
+            "moves": [move.to_dict() for move in self.moves],
+            "species": self.species,
+            "sprites": self.sprites
+        }
 
-def get_pokemon_data(pokemon_url):
-    request = urllib.request.Request(pokemon_url)
-    request.add_header('User-Agent', 'Mozilla 5.10')
-    pokemon_data = urllib.request.urlopen(request).read()
-    pokemon_json_data = json.loads(pokemon_data)
-
-    pokemons = []
-
-    for pokemon in pokemon_json_data["results"]:
-        id, name, url, image, type, moves = get_data(pokemon['url'])
-        p = Pokemon(id=id, name=name, url=url, image=image, type=type, moves=moves)
-        pokemons.append(p)
-
-    return pokemons, pokemon_json_data.get("next")
-
-
-def get_data(pokeurl):
-    card_url = pokeurl
-    card_request = urllib.request.Request(card_url)
-    card_request.add_header('User-Agent', 'Mozilla 5.10')
-    try:
-        card_data = urllib.request.urlopen(card_request).read()
-        card_json_data = json.loads(card_data)
-        card_id = card_json_data['id']
-        card_name = card_json_data['name'].title()
-        card_image = card_json_data['sprites']['other']['official-artwork']['front_default']
-        type_list = []
-        for card_type in card_json_data['types']:
-            card_type = {card_type['type']['name']}
-            type_list.append(card_type)
-        card_type = str(type_list).title().replace("'", "").replace("{", "").replace("}", "").replace("[", "").replace(
-            "]", "")
-        moves_list = []
-        for move in card_json_data['moves']:
-            move = {move['move']['name']}
-            moves_list.append(move)
-        card_moves = str(moves_list).title().replace("'", "").replace("{", "").replace("}", "").replace("[",
-                                                                                                        "").replace(
-            "]", "")
-        return card_id, card_name, pokeurl, card_image, card_type, card_moves
-    except:
-        print('Something broke')
+    def __str__(self):
+        return f"Pokemon {self.id}: {self.name}"
