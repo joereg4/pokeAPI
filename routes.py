@@ -35,13 +35,30 @@ def index():
     return render_template('pokemon.html', pokemons=pokemons, next_url=next_url, prev_url=prev_url)
 
 
-@pokemon_bp.route('/pokemon/<name>', methods=['GET'])
+@pokemon_bp.route('/pokemon/<name>')
 def get_pokemon(name):
-    data = get_data(name.lower())
-    if data is not None:
-        return render_template('pokemon.html', data=data)
+    db = get_db()
+    collection = db['pokemon']
+
+    pokemon = collection.find_one({"name": name.lower()})
+
+    if pokemon is not None:
+        data = {
+            'name': pokemon['name'].title(),
+            'id': pokemon['id'],
+            'sprites': pokemon['sprites'],
+            'base_experience': pokemon['base_experience'],
+            'height': pokemon['height'],
+            'weight': pokemon['weight'],
+            'is_default': pokemon['is_default'],
+            'order': pokemon['order'],
+            'abilities': pokemon.get('abilities', []),
+            'moves': pokemon.get('moves', [])
+        }
+        return render_template('pokemon_detail.html', data=data)
     else:
         return "Pokemon not found", 404
+
 
 @pokemon_bp.route('/next')
 def next_page():
