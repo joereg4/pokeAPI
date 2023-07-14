@@ -9,4 +9,8 @@ def create_app():
     app.teardown_appcontext(close_db)
     app.register_blueprint(pokemon_bp)
 
+    # print out all URL rules
+    for rule in app.url_map.iter_rules():
+        print(rule)
+
     return app

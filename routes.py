@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, g
 from pokemon import Pokemon, get_data
 from database import get_db
+import requests
 import math
 
 pokemon_bp = Blueprint(
@@ -43,6 +44,7 @@ def get_pokemon(name):
     pokemon = collection.find_one({"name": name.lower()})
 
     if pokemon is not None:
+        print(pokemon['abilities'])
         data = {
             'name': pokemon['name'].title(),
             'id': pokemon['id'],
@@ -58,6 +60,19 @@ def get_pokemon(name):
         return render_template('pokemon_detail.html', data=data)
     else:
         return "Pokemon not found", 404
+
+
+@pokemon_bp.route('/ability/<int:ability_id>')
+def get_ability_data(ability_id):
+    response = requests.get(f'https://pokeapi.co/api/v2/ability/{ability_id}')
+    data = response.json()
+
+    # Filter for English language data
+    data['effect_entries'] = [entry for entry in data['effect_entries'] if entry['language']['name'] == 'en']
+    data['flavor_text_entries'] = [entry for entry in data['flavor_text_entries'] if entry['language']['name'] == 'en']
+
+    return render_template('pokemon_ability.html', data=data)
+
 
 
 @pokemon_bp.route('/next')

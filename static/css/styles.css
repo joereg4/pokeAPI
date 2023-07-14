@@ -37,6 +37,20 @@ body {
     object-fit: contain;
 }
 
+.pokemon-card__image-section {
+    text-align: center;
+    width: 100%;
+    overflow: hidden;
+/ / add this line
+}
+
+.pokemon-card__image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+
 .image-section--pokemon-detail-image {
     text-align: center;
     width: 100%;
