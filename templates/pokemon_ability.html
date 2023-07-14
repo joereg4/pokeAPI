@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Ability Detail{% endblock %}
+
+{% block content %}
+<h1>Ability Detail</h1>
+<div class="ability-details">
+    <h2>Effects</h2>
+    <ul>
+        {% for entry in data.effect_entries %}
+        <li>{{ entry.effect }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Flavor Texts</h2>
+    <ul>
+        {% for entry in data['flavor_text_entries'] %}
+        <li><strong>{{ entry['version_group']['name'] }}:</strong> {{ entry['flavor_text'] }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

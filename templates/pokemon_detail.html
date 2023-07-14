@@ -20,10 +20,17 @@
         <h2 class="abilities-section__title">Abilities:</h2>
         <ul class="abilities-section__list">
             {% for ability in data.abilities %}
-            <li class="abilities-section__item">{{ ability.name }}</li>
+            <li class="abilities-section__item">
+                <a href="{{ url_for('pokemon.get_ability_data', ability_id=ability.url.split('/')[-2]) }}"> {{
+                    ability.name }} </a>
+
+                </a>
+            </li>
             {% endfor %}
         </ul>
     </div>
+
+
     <div class="pokemon-card__moves-section">
         {% set moves_list = [] %}
         {% for move in data.moves %}
