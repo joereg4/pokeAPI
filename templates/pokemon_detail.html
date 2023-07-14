@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ data.name }} - Pokémon Detail{% endblock %}
+
+{% block content %}
+<h1>{{ data.name }}</h1>
+<div class="pokemon-details">
+    <div class="image-section pokemon-detail__image">
+        <img src="{{ data.sprites['other']['official-artwork']['front_default'] }}" alt="{{ data.name }}">
+    </div>
+    <div class="info-section">
+        <p class="info-section__item">ID: {{ data.id }}</p>
+        <p class="info-section__item">Base Experience: {{ data.base_experience }}</p>
+        <p class="info-section__item">Height: {{ data.height }}</p>
+        <p class="info-section__item">Weight: {{ data.weight }}</p>
+        <p class="info-section__item">Is Default: {{ data.is_default }}</p>
+        <p class="info-section__item">Order: {{ data.order }}</p>
+    </div>
+    <div class="abilities-section">
+        <h2 class="abilities-section__title">Abilities:</h2>
+        <ul class="abilities-section__list">
+            {% for ability in data.abilities %}
+            <li class="abilities-section__item">{{ ability.name }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="pokemon-card__moves-section">
+        {% set moves_list = [] %}
+        {% for move in data.moves %}
+        {% set _ = moves_list.append(move.name) %}
+        {% endfor %}
+        {% set card_moves = moves_list|join(', ') %}
+        <p class="pokemon-card__moves">{{ card_moves }}</p>
+    </div>
+</div>
+{% endblock %}
