@@ -31,13 +31,14 @@
     </div>
 
 
-    <div class="pokemon-card__moves-section">
-        {% set moves_list = [] %}
+<div class="pokemon-card__moves-section">
+    <h2 class="pokemon-card__moves-title">Moves:</h2>
+    <div class="pokemon-card__moves">
         {% for move in data.moves %}
-        {% set _ = moves_list.append(move.name) %}
+            <a href="{{ url_for('pokemon.get_move_data', move_id=move.url.split('/')[-2]) }}">{{ move.name }}</a>{% if not loop.last %}, {% endif %}
         {% endfor %}
-        {% set card_moves = moves_list|join(', ') %}
-        <p class="pokemon-card__moves">{{ card_moves }}</p>
     </div>
+</div>
+
 </div>
 {% endblock %}

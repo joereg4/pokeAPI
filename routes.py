@@ -8,6 +8,8 @@ pokemon_bp = Blueprint(
     "pokemon", __name__, template_folder="templates", static_folder="static"
 )
 
+pokeapi_base_url = 'https://pokeapi.co/api/v2/'
+
 
 @pokemon_bp.route('/')
 def index():
@@ -65,14 +67,67 @@ def get_pokemon(name):
 @pokemon_bp.route('/ability/<int:ability_id>')
 def get_ability_data(ability_id):
     response = requests.get(f'https://pokeapi.co/api/v2/ability/{ability_id}')
-    data = response.json()
+    if response.status_code == 200:
+        data = response.json()
 
-    # Filter for English language data
-    data['effect_entries'] = [entry for entry in data['effect_entries'] if entry['language']['name'] == 'en']
-    data['flavor_text_entries'] = [entry for entry in data['flavor_text_entries'] if entry['language']['name'] == 'en']
+        # Filter for English language data
+        data['effect_entries'] = [entry for entry in data['effect_entries'] if entry['language']['name'] == 'en']
+        data['flavor_text_entries'] = [entry for entry in data['flavor_text_entries'] if
+                                       entry['language']['name'] == 'en']
 
-    return render_template('pokemon_ability.html', data=data)
+        return render_template('pokemon_ability.html', data=data)
+    else:
+        return "Ability not found", 404
 
+
+@pokemon_bp.route('/move/<int:move_id>')
+def get_move_data(move_id):
+    response = requests.get(f'https://pokeapi.co/api/v2/move/{move_id}')
+    if response.status_code == 200:
+        data = response.json()
+        return render_template('pokemon_move.html', data=data)
+    else:
+        return "Move not found", 404
+
+
+@pokemon_bp.route('/item/<id_or_name>')
+def get_item_data(id_or_name):
+    response = requests.get(f'https://pokeapi.co/api/v2/item/{id_or_name}')
+    if response.status_code == 200:
+        data = response.json()
+
+        # Filter for English language data
+        data['effect_entries'] = [entry for entry in data['effect_entries'] if entry['language']['name'] == 'en']
+        data['flavor_text_entries'] = [entry for entry in data['flavor_text_entries'] if
+                                       entry['language']['name'] == 'en']
+        return render_template('pokemon_item.html', data=data)
+    else:
+        return "Item not found", 404
+
+
+@pokemon_bp.route('/<api_endpoint>/<int:id>')
+def get_endpoint_data(api_endpoint, id):
+    full_url = f"{pokeapi_base_url}/{api_endpoint}/{id}"
+    response = requests.get(full_url)
+
+    if response.status_code == 200:
+        data = response.json()
+
+        # Filter for English language data if 'effect_entries' field exists
+        effect_entries = data.get('effect_entries', [])
+        data['effect_entries'] = [entry for entry in effect_entries if entry.get('language', {}).get('name') == 'en']
+
+        # Filter for English language data if 'flavor_text_entries' field exists
+        flavor_text_entries = data.get('flavor_text_entries', [])
+        data['flavor_text_entries'] = [entry for entry in flavor_text_entries if
+                                       entry.get('language', {}).get('name') == 'en']
+
+        # Determine the template name based on the endpoint
+        #template_name = f"{api_endpoint.replace('-', '_')}.html"
+
+        return render_template('generic.html', data=data)
+    else:
+        return "Endpoint not found", 404
 
 
 @pokemon_bp.route('/next')
@@ -108,12 +163,3 @@ def next_page():
         prev_url = f"/?page={page_number}" if page_number > 1 else None  # Construct the URL for the previous page
 
     return render_template('pokemon.html', pokemons=pokemons, next_url=next_url, prev_url=prev_url)
-
-
-
-
-
-
-
-
-
