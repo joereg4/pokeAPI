@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Item Detail{% endblock %}
+
+{% block content %}
+<h1 class="detail-page">{{ data.name }}</h1>
+<div class="item-details">
+    <h2>Attribute</h2>
+    <ul>
+        {% for entry in data.attributes %}
+        <a href="{{ url_for('pokemon.get_endpoint_data', api_endpoint=entry.url.split('/')[-3], id=entry.url.split('/')[-2]) }}">{{
+            entry.name }}</a>
+        {% if not loop.last %}, {% endif %}
+        {% endfor %}
+    </ul>
+
+    <h2>Category:</h2>
+    <a href="{{ url_for('pokemon.get_endpoint_data',api_endpoint=data.category.url.split('/')[-3], id=data.category.url.split('/')[-2]) }}">{{
+        data.category.name }}</a>
+
+    <h2>Cost:</h2>
+    <p>{{ data.cost }}</p>
+
+    <h2>Effect:</h2>
+    <ul>
+        {% for entry in data.effect_entries %}
+        <li>{{ entry.effect }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Flavor Texts:</h2>
+    <ul>
+        {% for entry in data.flavor_text_entries %}
+        <li><strong>{{ entry['version_group']['name'] }}:</strong> {{ entry['text'] }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

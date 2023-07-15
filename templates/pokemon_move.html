@@ -1,22 +1,27 @@
 {% extends 'base.html' %}
 
-{% block title %}Ability Detail{% endblock %}
+{% block title %}Move Detail{% endblock %}
 
 {% block content %}
-<h1 class="detail-page">{{ data.name }}</h1>
-<div class="ability-details">
 
+<h1>Move Detail</h1>
+
+<div class="move-details">
     <h2>Effects</h2>
     <ul>
-        {% for entry in data.effect_entries %}
-        <li>{{ entry.effect }}</li>
+        {% for entry in data['effect_entries'] %}
+        {% if entry['language']['name'] == 'en' %}
+        <li>{{ entry['effect'] }}</li>
+        {% endif %}
         {% endfor %}
     </ul>
 
     <h2>Flavor Texts</h2>
     <ul>
         {% for entry in data['flavor_text_entries'] %}
+        {% if entry['language']['name'] == 'en' %}
         <li><strong>{{ entry['version_group']['name'] }}:</strong> {{ entry['flavor_text'] }}</li>
+        {% endif %}
         {% endfor %}
     </ul>
 </div>

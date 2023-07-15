@@ -26,22 +26,10 @@ body {
     padding: 10px;
 }
 
-.image-section {
-    text-align: center;
-    width: 100%;
-}
-
-.image-section__image {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-}
-
 .pokemon-card__image-section {
     text-align: center;
     width: 100%;
     overflow: hidden;
-/ / add this line
 }
 
 .pokemon-card__image {
@@ -50,38 +38,23 @@ body {
     object-fit: contain;
 }
 
-
-.image-section--pokemon-detail-image {
-    text-align: center;
-    width: 100%;
-}
-
-.image-section--pokemon-detail-image .image-section__image {
-    width: auto;
-    max-width: 50%;
-    height: auto;
-    object-fit: contain;
-    display: block;
-    margin: 0 auto;
-}
-
-.info-section {
+.pokemon-card__info-section {
     margin-top: 10px;
 }
 
-.name {
+.pokemon-card__name {
     font-weight: bold;
 }
 
-.id-type {
+.pokemon-card__id-type {
     color: #777;
 }
 
-.moves-section {
+.pokemon-card__moves-section {
     margin-top: 10px;
 }
 
-.moves {
+.pokemon-card__moves {
     font-style: italic;
 }
 
@@ -102,4 +75,8 @@ body {
 
 .pagination__link:hover {
     background: #e5e5e5;
+}
+
+.detail-page {
+    text-transform: capitalize;
 }
