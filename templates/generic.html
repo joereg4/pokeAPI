@@ -1,8 +1,70 @@
 {% extends 'base.html' %}
 
-{% block title %}Generic Template{% endblock %}
+{% block title %}
+    {% if data.name %}
+        {{ data.name | capitalize }}
+    {% else %}
+        Generic Template
+    {% endif %}
+{% endblock %}
 
 {% block content %}
-  <h1>Generic Template</h1>
+  <h1>
+    {% if data.name %}
+        {{ data.name | capitalize }}
+    {% else %}
+        Default Text
+    {% endif %}
+  </h1>
+
+  {% for key, value in data.items() %}
+    {% if value is string or value is number %}
+      <h2>{{ key | capitalize }}</h2>
+      {{ value }}
+    {% elif value is mapping %}
+      <h2>{{ key | capitalize }}</h2>
+      <ul>
+        {% for subkey, subvalue in value.items() %}
+          <li>{{ subkey }}:
+            {% if subvalue is string or subvalue is number %}
+              {{ subvalue }}
+            {% elif subvalue is mapping %}
+              <ul>
+                {% for key2, value2 in subvalue.items() %}
+                  <li>{{ key2 }}: {{ value2 }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% elif value is iterable %}
+      <h2>{{ key | capitalize }}</h2>
+      <ul>
+        {% for item in value %}
+          {% if item is string or item is number %}
+            <li>{{ item }}</li>
+          {% elif item is mapping %}
+            <ul>
+              {% for subkey, subvalue in item.items() %}
+                <li>{{ subkey }}:
+                  {% if subvalue is string or subvalue is number %}
+                    {{ subvalue }}
+                  {% elif subvalue is mapping %}
+                    <ul>
+                      {% for key2, value2 in subvalue.items() %}
+                        <li>{{ key2 }}: {{ value2 }}</li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endfor %}
+
   <pre>{{ data | tojson(indent=4) }}</pre>
 {% endblock %}

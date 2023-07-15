@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Encounters
+{% endblock %}
+
+{% block content %}
+  <h1>
+    Encounters
+  </h1>
+
+  <ul>
+    {% for encounter in data %}
+      <li>
+        <h2>Location area: <a href="{{ encounter.location_area.url }}">{{ encounter.location_area.name }}</a></h2>
+        <ul>
+          {% for version_detail in encounter.version_details %}
+            <li>
+              <h3>Version: <a href="{{ version_detail.version.url }}">{{ version_detail.version.name }}</a></h3>
+              <h4>Max chance: {{ version_detail.max_chance }}</h4>
+              <ul>
+                {% for encounter_detail in version_detail.encounter_details %}
+                  <li>
+                    Level: {{ encounter_detail.min_level }} - {{ encounter_detail.max_level }}
+                    Chance: {{ encounter_detail.chance }}
+                    Method: <a href="{{ encounter_detail.method.url }}">{{ encounter_detail.method.name }}</a>
+                    Condition Values:
+                    <ul>
+                      {% for condition_value in encounter_detail.condition_values %}
+                        <li><a href="{{ condition_value.url }}">{{ condition_value.name }}</a></li>
+                      {% endfor %}
+                    </ul>
+                  </li>
+                {% endfor %}
+              </ul>
+            </li>
+          {% endfor %}
+        </ul>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <pre>{{ data | tojson(indent=4) }}</pre>
+{% endblock %}

@@ -31,6 +31,20 @@
     </div>
 
 
+        <div class="items-section">
+        <h2 class="items-section__title">Held items:</h2>
+        <ul class="items-section__list">
+            {% for item in data.held_items %}
+            <li class="item-section__item">
+                <a href="{{ url_for('pokemon.get_item_data', id_or_name=item.url.split('/')[-2]) }}"> {{
+                    item.name }} </a>
+
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
 <div class="pokemon-card__moves-section">
     <h2 class="pokemon-card__moves-title">Moves:</h2>
     <div class="pokemon-card__moves">

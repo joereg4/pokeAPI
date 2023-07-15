@@ -46,7 +46,6 @@ def get_pokemon(name):
     pokemon = collection.find_one({"name": name.lower()})
 
     if pokemon is not None:
-        print(pokemon['abilities'])
         data = {
             'name': pokemon['name'].title(),
             'id': pokemon['id'],
@@ -57,7 +56,8 @@ def get_pokemon(name):
             'is_default': pokemon['is_default'],
             'order': pokemon['order'],
             'abilities': pokemon.get('abilities', []),
-            'moves': pokemon.get('moves', [])
+            'moves': pokemon.get('moves', []),
+            'held_items': pokemon.get('held_items', [])
         }
         return render_template('pokemon_detail.html', data=data)
     else:
@@ -105,6 +105,20 @@ def get_item_data(id_or_name):
         return "Item not found", 404
 
 
+@pokemon_bp.route('/pokemon/<id_or_name>/encounters')
+def get_encounter_data(id_or_name):
+    print("Accessing encounters for:", id_or_name)
+    response = requests.get(f'https://pokeapi.co/api/v2/pokemon/{id_or_name}/encounters/')
+    print(f'Response from PokeAPI: {response.status_code}')
+
+    if response.status_code == 200:
+        data = response.json()
+
+        return render_template('pokemon_encounter.html', data=data)
+    else:
+        return "Encounter not found", 404
+
+
 @pokemon_bp.route('/<api_endpoint>/<int:id>')
 def get_endpoint_data(api_endpoint, id):
     full_url = f"{pokeapi_base_url}/{api_endpoint}/{id}"
@@ -121,9 +135,6 @@ def get_endpoint_data(api_endpoint, id):
         flavor_text_entries = data.get('flavor_text_entries', [])
         data['flavor_text_entries'] = [entry for entry in flavor_text_entries if
                                        entry.get('language', {}).get('name') == 'en']
-
-        # Determine the template name based on the endpoint
-        #template_name = f"{api_endpoint.replace('-', '_')}.html"
 
         return render_template('generic.html', data=data)
     else:
