@@ -27,11 +27,11 @@
         {% for subkey, subvalue in value.items() %}
           <li>{{ subkey }}:
             {% if subvalue is string or subvalue is number %}
-              {{ subvalue }}
+            {{ subvalue }}
             {% elif subvalue is mapping %}
               <ul>
                 {% for key2, value2 in subvalue.items() %}
-                  <li>{{ key2 }}: {{ value2 }}</li>
+                  <li>{{ key2 }}:  {{ value2 }}</li>
                 {% endfor %}
               </ul>
             {% endif %}
@@ -47,7 +47,8 @@
           {% elif item is mapping %}
             <ul>
               {% for subkey, subvalue in item.items() %}
-                <li>{{ subkey }}:
+              <!-- Name: or URL: -->
+              <li>{{ subkey }}:
                   {% if subvalue is string or subvalue is number %}
                     {{ subvalue }}
                   {% elif subvalue is mapping %}
