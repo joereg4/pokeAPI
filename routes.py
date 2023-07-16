@@ -1,8 +1,12 @@
+import logging
+
 from flask import Blueprint, render_template, request, g
 from pokemon import Pokemon, get_data
 from database import get_db
 import requests
 import math
+
+logging.basicConfig(level=logging.INFO)
 
 pokemon_bp = Blueprint(
     "pokemon", __name__, template_folder="templates", static_folder="static"
@@ -50,6 +54,7 @@ def get_pokemon(name):
             'name': pokemon['name'].title(),
             'id': pokemon['id'],
             'sprites': pokemon['sprites'],
+            'species': pokemon['species'],
             'base_experience': pokemon['base_experience'],
             'height': pokemon['height'],
             'weight': pokemon['weight'],
@@ -117,6 +122,27 @@ def get_encounter_data(id_or_name):
         return render_template('pokemon_encounter.html', data=data)
     else:
         return "Encounter not found", 404
+
+
+@pokemon_bp.route('/species/<id_or_name>')
+def get_species_data(id_or_name):
+    response = requests.get(f'https://pokeapi.co/api/v2/pokemon-species/{id_or_name}')
+    print(f'https://pokeapi.co/api/v2/pokemon-species/{id_or_name}')
+    if response.status_code == 200:
+        data = response.json()
+
+        # Filter for English language data if 'effect_entries' field exists
+        effect_entries = data.get('effect_entries', [])
+        data['effect_entries'] = [entry for entry in effect_entries if entry.get('language', {}).get('name') == 'en']
+
+        # Filter for English language data if 'flavor_text_entries' field exists
+        flavor_text_entries = data.get('flavor_text_entries', [])
+        data['flavor_text_entries'] = [entry for entry in flavor_text_entries if
+                                       entry.get('language', {}).get('name') == 'en']
+
+        return render_template('pokemon_species.html', data=data)
+    else:
+        return "Species not found", 404
 
 
 @pokemon_bp.route('/<api_endpoint>/<int:id>')
