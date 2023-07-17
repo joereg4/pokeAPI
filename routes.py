@@ -64,7 +64,18 @@ def get_pokemon(name):
             'moves': pokemon.get('moves', []),
             'held_items': pokemon.get('held_items', [])
         }
-        return render_template('pokemon_detail.html', data=data)
+
+        # Define the valid sprite names to filter
+        valid_sprites = ['back_default', 'back_female', 'back_shiny', 'back_shiny_female',
+                         'front_default', 'front_female', 'front_shiny', 'front_shiny_female']
+
+        # Get the sprite data and filter out null values and unwanted sprites
+        sprites = {
+            key: value for key, value in pokemon['sprites'].items()
+            if value is not None and key in valid_sprites
+        }
+
+        return render_template('pokemon_detail.html', data=data, sprites=sprites)
     else:
         return "Pokemon not found", 404
 
