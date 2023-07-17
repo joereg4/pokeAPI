@@ -105,6 +105,7 @@ a {
 
 a:hover {
     text-decoration: underline;
+    font-weight: bold;
     color: rgba(0, 116, 236, .9294117647058824);
 }
 

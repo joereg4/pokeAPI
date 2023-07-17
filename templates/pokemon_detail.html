@@ -65,5 +65,15 @@
         {% endfor %}
     </div>
 </div>
+<h1>Pokémon Sprites</h1>
+
+<div class="sprite-grid">
+  {% for name, url in sprites.items() %}
+    <div class="sprite-card">
+      <img src="{{ url }}" alt="{{ name }}">
+      <p>{{ name }}</p>
+    </div>
+  {% endfor %}
+</div>
 
 {% endblock %}
