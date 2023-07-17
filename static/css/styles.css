@@ -7,6 +7,7 @@
 body {
     box-sizing: border-box;
     font-family: "Lato", sans-serif;
+    line-height: 150%;
 }
 
 .main-section {
@@ -58,6 +59,75 @@ body {
     font-style: italic;
 }
 
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    grid-auto-rows: minmax(200px, auto);
+    grid-gap: 1rem;
+    grid-auto-flow: dense;
+}
+
+.detail-card__title {
+    text-align: center;
+    font-weight: bold;
+    color: #ef5350;
+}
+
+.detail-card__image-section {
+    grid-column: 1 / span 2;
+    text-align: center;
+    width: 100%;
+}
+
+.detail-card__image img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.detail-card__info-section {
+    grid-column: auto;
+    grid-row: auto;
+    margin-top: 10px;
+    padding-left: 1rem;
+    border: 1px solid #ccc;
+}
+
+.detail-card__item {
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+    transition: color 0.1s ease-in-out;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: rgba(0, 116, 236, .9294117647058824);
+}
+
+.detail-card__info-section li {
+    list-style: none;
+}
+
+.detail-card__item {
+    color: inherit;
+}
+
+.detail-card__list {
+    color: inherit;
+}
+
+.detail-card__moves-section {
+    margin-top: 10px;
+}
+
+.detail-card__moves {
+    font-style: italic;
+}
+
 .pagination {
     display: flex;
     justify-content: center;
@@ -80,53 +150,3 @@ body {
 .detail-page {
     text-transform: capitalize;
 }
-
-.pokemon-details {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    grid-gap: 20px;
-}
-
-.image-section {
-    grid-row: 1 / span 2;
-    grid-column: 1;
-}
-
-.attribute-section {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    grid-row: 1;
-    grid-column: 2;
-}
-
-.info-section {
-    margin-bottom: 20px;
-}
-
-.moves-section {
-    grid-row: 3;
-    grid-column: 1 / span 2;
-}
-
-@media (max-width: 600px) {
-    .pokemon-details, .attribute-section {
-        grid-template-columns: 1fr;
-    }
-
-    .image-section, .info-section, .moves-section {
-        grid-column: 1;
-    }
-
-    .image-section {
-        grid-row: 1;
-    }
-
-    .attribute-section {
-        grid-row: 2;
-    }
-
-    .moves-section {
-        grid-row: 3;
-    }
-}
-
