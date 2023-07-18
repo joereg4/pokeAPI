@@ -48,7 +48,7 @@ def get_pokemon(name):
     collection = db['pokemon']
 
     pokemon = collection.find_one({"name": name.lower()})
-
+    print(pokemon)
     if pokemon is not None:
         data = {
             'name': pokemon['name'].title(),
