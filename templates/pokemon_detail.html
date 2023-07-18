@@ -31,7 +31,7 @@
         <ul class="detail-card__item">
             {% for ability in data.abilities %}
             <li class="detail-card__list">
-                <a href="{{ url_for('pokemon.get_ability_data', ability_id=ability.url.split('/')[-2]) }}"> {{
+                {{ ability.slot }}<a href="{{ url_for('pokemon.get_ability_data', ability_id=ability.url.split('/')[-2]) }}"> {{
                     ability.name }} </a>
             </li>
             {% endfor %}
