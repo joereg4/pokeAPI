@@ -17,6 +17,8 @@ pokeapi_base_url = 'https://pokeapi.co/api/v2/'
 
 @pokemon_bp.route('/')
 def index():
+    print("Inside index() function")  # This line will print a message to the console whenever the function is called
+
     db = get_db()
     collection = db['pokemon']
 
@@ -38,6 +40,9 @@ def index():
 
     next_url = f"/?page={next_page}" if next_page else None  # Construct the next page URL
     prev_url = f"/?page={prev_page}" if prev_page else None  # Construct the previous page URL
+
+    print(f"next_url: {next_url}")
+    print(f"prev_url: {prev_url}")
 
     return render_template('pokemon.html', pokemons=pokemons, next_url=next_url, prev_url=prev_url)
 
@@ -183,36 +188,36 @@ def get_endpoint_data(api_endpoint, id):
         return "Endpoint not found", 404
 
 
-@pokemon_bp.route('/next')
-def next_page():
-    next_page_url = request.args.get('url')
-    print(next_page_url)
-    page_number = int(request.args.get('page', 1))  # Get the current page number from the query parameters
-    print(page_number)
-    next_page_number = page_number + 1
-    print(next_page_number)
-
-    db = get_db()
-    collection = db['pokemon']
-
-    limit = 20  # Number of items per page
-    offset = (next_page_number - 1) * limit  # Calculate the offset based on the next page number
-
-    total_pokemons = collection.count_documents({})  # Total number of pokemons in the collection
-    total_pages = math.ceil(total_pokemons / limit)  # Calculate the total number of pages
-
-    # Check if the next page number is within the valid range
-    if next_page_number <= total_pages:
-        # Get the pokemons for the next page using the offset and limit
-        pokemons = collection.find().skip(offset).limit(limit)
-        pokemons = list(pokemons)
-
-        next_url = f"/next?url={next_page_url}"  # Construct the URL for the next page
-        prev_url = f"/?page={page_number}" if page_number > 1 else None  # Construct the URL for the previous page
-    else:
-        # The next page number is out of range, so set the values to None
-        pokemons = []
-        next_url = None
-        prev_url = f"/?page={page_number}" if page_number > 1 else None  # Construct the URL for the previous page
-
-    return render_template('pokemon.html', pokemons=pokemons, next_url=next_url, prev_url=prev_url)
+# @pokemon_bp.route('/next')
+# def next_page():
+#     next_page_url = request.args.get('url')
+#     print(next_page_url)
+#     page_number = int(request.args.get('page', 1))  # Get the current page number from the query parameters
+#     print(page_number)
+#     next_page_number = page_number + 1
+#     print(next_page_number)
+#
+#     db = get_db()
+#     collection = db['pokemon']
+#
+#     limit = 20  # Number of items per page
+#     offset = (next_page_number - 1) * limit  # Calculate the offset based on the next page number
+#
+#     total_pokemons = collection.count_documents({})  # Total number of pokemons in the collection
+#     total_pages = math.ceil(total_pokemons / limit)  # Calculate the total number of pages
+#
+#     # Check if the next page number is within the valid range
+#     if next_page_number <= total_pages:
+#         # Get the pokemons for the next page using the offset and limit
+#         pokemons = collection.find().skip(offset).limit(limit)
+#         pokemons = list(pokemons)
+#
+#         next_url = f"/next?url={next_page_url}"  # Construct the URL for the next page
+#         prev_url = f"/?page={page_number}" if page_number > 1 else None  # Construct the URL for the previous page
+#     else:
+#         # The next page number is out of range, so set the values to None
+#         pokemons = []
+#         next_url = None
+#         prev_url = f"/?page={page_number}" if page_number > 1 else None  # Construct the URL for the previous page
+#
+#     return render_template('pokemon.html', pokemons=pokemons, next_url=next_url, prev_url=prev_url)

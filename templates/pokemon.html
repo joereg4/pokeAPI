@@ -3,36 +3,38 @@
 {% block title %}Pokémon List{% endblock %}
 
 {% block content %}
-    <h1 class="pokemon-list__title">Pokémon List</h1>
-    <div class="pokemon-grid">
-        {% for pokemon in pokemons %}
-            <div class="pokemon-card">
-                <div class="pokemon-card__image-section">
-                    <img class="pokemon-card__image" src="{{ pokemon.sprites['other']['official-artwork']['front_default'] }}" alt="{{ pokemon.name }}">
-                </div>
+<h1 class="pokemon-list__title">Pokémon List</h1>
+<div class="pokemon-grid">
+    {% for pokemon in pokemons %}
+    <div class="pokemon-card">
+        <div class="pokemon-card__image-section">
+            <img class="pokemon-card__image" src="{{ pokemon.sprites['other']['official-artwork']['front_default'] }}"
+                 alt="{{ pokemon.name }}">
+        </div>
 
-                <div class="pokemon-card__info-section">
-                    <a href="{{ url_for('pokemon.get_pokemon', name=pokemon.name) }}" class="pokemon-card__name">{{ pokemon.name }}</a>
-                    <p class="pokemon-card__id-type">{{ pokemon.id }} - {{ pokemon.type }}</p>
-                </div>
-                <div class="pokemon-card__moves-section">
-                    {% set moves_list = [] %}
-                    {% for move in pokemon.moves[:20] %}
-                        {% set _ = moves_list.append(move.name) %}
-                    {% endfor %}
-                    {% set card_moves = moves_list|join(', ') %}
-                    <p class="pokemon-card__moves">{{ card_moves }}</p>
-                </div>
-            </div>
-        {% endfor %}
+        <div class="pokemon-card__info-section">
+            <a href="{{ url_for('pokemon.get_pokemon', name=pokemon.name) }}" class="pokemon-card__name">{{ pokemon.name
+                }}</a>
+            <p class="pokemon-card__id-type">{{ pokemon.id }} - {{ pokemon.type }}</p>
+        </div>
+        <div class="pokemon-card__moves-section">
+            {% set moves_list = [] %}
+            {% for move in pokemon.moves[:20] %}
+            {% set _ = moves_list.append(move.name) %}
+            {% endfor %}
+            {% set card_moves = moves_list|join(', ') %}
+            <p class="pokemon-card__moves">{{ card_moves }}</p>
+        </div>
     </div>
-    <div class="pagination">
-        {% if prev_url %}
-            <a href="/prev?url={{ prev_url }}" class="pagination__link">Previous</a>
-        {% endif %}
-        {% if next_url %}
-            <a href="/next?url={{ next_url }}" class="pagination__link">Next</a>
-        {% endif %}
-    </div>
+    {% endfor %}
+</div>
+<div class="pagination">
+    {% if prev_url %}
+        <a href="{{ prev_url }}" class="pagination__link">Previous</a>
+    {% endif %}
+    {% if next_url %}
+        <a href="{{ next_url }}" class="pagination__link">Next</a>
+    {% endif %}
+</div>
 {% endblock %}
 

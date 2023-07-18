@@ -71,8 +71,12 @@
         {% for pokemon in evolution_chain %}
         <li>
             <figure class="evolution-pokemon{% if pokemon.species_name|lower == data.name|lower %}--current{% endif %}">
-                <div class="evolution-stage">{{ pokemon.evolution_stage }}</div>
-                <img src="{{ pokemon.image_url }}" alt="{{ pokemon.name }} Image">
+                <div class="evolution-stage">
+                    <a href="{{ url_for('pokemon.get_pokemon', name=pokemon.species_name) }}">{{ pokemon.evolution_stage }}</a>
+                </div>
+                <a href="{{ url_for('pokemon.get_pokemon', name=pokemon.species_name) }}">
+                    <img src="{{ pokemon.image_url }}" alt="{{ pokemon.name }} Image">
+                </a>
                 <div class="species-name">
                     <a href="{{ url_for('pokemon.get_pokemon', name=pokemon.species_name) }}">{{ pokemon.species_name|title }}</a>
                 </div>
