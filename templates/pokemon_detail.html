@@ -78,4 +78,14 @@
         {% endfor %}
     </ul>
 </div>
+<h2>Evolution Chain:</h2>
+<div class="evolution-chain">
+  {% for pokemon in evolution_chain %}
+    {{ pokemon }}
+    <div class="evolution-pokemon{% if pokemon.name == current_pokemon %} current{% endif %}">
+      <img src="{{ pokemon.image_url }}" alt="{{ pokemon.name }} Image">
+      <a href="{{ url_for('pokemon.get_pokemon', name=pokemon.name) }}">{{ pokemon.name }}</a>
+    </div>
+  {% endfor %}
+</div>
 {% endblock %}
