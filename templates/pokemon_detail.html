@@ -65,6 +65,22 @@
         {% endfor %}
     </div>
 </div>
+<h2 class="detail-card__title">Evolution Chain:</h2>
+<div class="evolution-chain">
+    <ul class="evolution-chain__list">
+        {% for pokemon in evolution_chain %}
+        <li>
+            <figure class="evolution-pokemon{% if pokemon.species_name|lower == data.name|lower %}--current{% endif %}">
+                <div class="evolution-stage">{{ pokemon.evolution_stage }}</div>
+                <img src="{{ pokemon.image_url }}" alt="{{ pokemon.name }} Image">
+                <div class="species-name">
+                    <a href="{{ url_for('pokemon.get_pokemon', name=pokemon.species_name) }}">{{ pokemon.species_name|title }}</a>
+                </div>
+            </figure>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
 <h2 class="detail-card__title">Pokémon Sprites</h2>
 <div class="sprite-gallery">
     <ul class="sprite-gallery__list">
@@ -77,15 +93,5 @@
         </li>
         {% endfor %}
     </ul>
-</div>
-<h2>Evolution Chain:</h2>
-<div class="evolution-chain">
-  {% for pokemon in evolution_chain %}
-    {{ pokemon }}
-    <div class="evolution-pokemon{% if pokemon.name == current_pokemon %} current{% endif %}">
-      <img src="{{ pokemon.image_url }}" alt="{{ pokemon.name }} Image">
-      <a href="{{ url_for('pokemon.get_pokemon', name=pokemon.name) }}">{{ pokemon.name }}</a>
-    </div>
-  {% endfor %}
 </div>
 {% endblock %}

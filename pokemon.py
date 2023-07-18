@@ -1,5 +1,6 @@
 import requests, json
 
+
 def get_data(pokemon_name):
     from flask import g
 
@@ -120,7 +121,7 @@ class Pokemon:
         return filtered_data
 
     @staticmethod
-    def get_evolution_chain(species_id, evolution_chain=None):
+    def get_evolution_chain(species_id, evolution_chain=None, stage=0):
         if evolution_chain is None:
             evolution_chain = []
         try:
@@ -140,19 +141,35 @@ class Pokemon:
             chain = evolution_chain_response.json()['chain']
 
             # A helper function to traverse the chain
-            def traverse_chain_link(chain_link):
+            def traverse_chain_link(chain_link, stage):
                 species_name = chain_link['species']['name']
                 evolves_to = chain_link['evolves_to']
 
                 card_id, card_name, card_image, card_type, card_moves = get_data(species_name)
-                evolution_chain.append({'species_name': species_name, 'image_url': card_image})
 
+                # Convert the evolution_stage value to text representation
+                if stage == 0:
+                    evolution_stage_text = 'Basic Form'
+                elif stage == 1 or stage == 2:
+                    evolution_stage_text = f'Stage {stage} Evolution'
+                elif stage == 3:
+                    evolution_stage_text = 'Mega Evolution'
+                elif stage == 4:
+                    evolution_stage_text = 'Gigantamax Form'
+                else:
+                    evolution_stage_text = f'Stage {stage}'
+
+                evolution_chain.append(
+                    {'species_name': species_name,
+                     'image_url': card_image,
+                     'evolution_stage': evolution_stage_text
+                     })
                 # Recursive call for every subsequent evolution
                 for evolution in evolves_to:
-                    traverse_chain_link(evolution)
+                    traverse_chain_link(evolution, stage + 1)
 
             # Start traversal from the first pokemon in the chain
-            traverse_chain_link(chain)
+            traverse_chain_link(chain, stage)
 
         except (KeyError, requests.exceptions.RequestException) as e:
             print(f"Error occurred when accessing key in chain or making the request: {e}")
