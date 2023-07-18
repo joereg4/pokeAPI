@@ -240,7 +240,7 @@ a:hover {
     height: auto;
 }
 
-.evolution-chain > .evolution-chain__list > li > figure > img {
+.evolution-chain > .evolution-chain__list > li > figure > a > img {
     width: 60%; /* Default size for non-current Pokémon */
     height: 60%;
     object-fit: contain;
