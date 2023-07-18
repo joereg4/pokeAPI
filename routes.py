@@ -66,8 +66,9 @@ def get_pokemon(name):
         }
 
         # Define the valid sprite names to filter
-        valid_sprites = ['back_default', 'back_female', 'back_shiny', 'back_shiny_female',
-                         'front_default', 'front_female', 'front_shiny', 'front_shiny_female']
+        valid_sprites = ['front_default', 'back_default', 'front_female', 'back_female', 'front_shiny', 'back_shiny',
+                         'front_shiny_female','back_shiny_female'
+                         ]
 
         # Get the sprite data and filter out null values and unwanted sprites
         sprites = {
@@ -75,7 +76,10 @@ def get_pokemon(name):
             if value is not None and key in valid_sprites
         }
 
-        return render_template('pokemon_detail.html', data=data, sprites=sprites)
+        # Sort the sprites based on the desired order
+        sorted_sprites = {key: sprites[key] for key in valid_sprites if key in sprites}
+
+        return render_template('pokemon_detail.html', data=data, sprites=sorted_sprites)
     else:
         return "Pokemon not found", 404
 
