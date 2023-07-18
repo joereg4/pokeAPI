@@ -85,7 +85,6 @@ def get_pokemon(name):
         # Get the evolution chain using the species url
         species_id = pokemon['species']['url'].replace('https://pokeapi.co/api/v2/pokemon-species/', '').strip('/')
         evolution_chain = Pokemon.get_evolution_chain(species_id)
-        print(evolution_chain)
 
         return render_template('pokemon_detail.html', data=data, sprites=sorted_sprites,
                                evolution_chain=evolution_chain)
