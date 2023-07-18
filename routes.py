@@ -1,7 +1,7 @@
 import logging
 
 from flask import Blueprint, render_template, request, g
-from pokemon import Pokemon, get_data
+from pokemon import Pokemon
 from database import get_db
 import requests
 import math
@@ -67,7 +67,7 @@ def get_pokemon(name):
 
         # Define the valid sprite names to filter
         valid_sprites = ['front_default', 'back_default', 'front_female', 'back_female', 'front_shiny', 'back_shiny',
-                         'front_shiny_female','back_shiny_female'
+                         'front_shiny_female', 'back_shiny_female'
                          ]
 
         # Get the sprite data and filter out null values and unwanted sprites
@@ -79,7 +79,16 @@ def get_pokemon(name):
         # Sort the sprites based on the desired order
         sorted_sprites = {key: sprites[key] for key in valid_sprites if key in sprites}
 
-        return render_template('pokemon_detail.html', data=data, sprites=sorted_sprites)
+        # Sort the sprites based on the desired order
+        sorted_sprites = {key: sprites[key] for key in valid_sprites if key in sprites}
+
+        # Get the evolution chain using the species url
+        species_id = pokemon['species']['url'].replace('https://pokeapi.co/api/v2/pokemon-species/', '').strip('/')
+        evolution_chain = Pokemon.get_evolution_chain(species_id)
+        print(evolution_chain)
+
+        return render_template('pokemon_detail.html', data=data, sprites=sorted_sprites,
+                               evolution_chain=evolution_chain)
     else:
         return "Pokemon not found", 404
 
@@ -146,14 +155,7 @@ def get_species_data(id_or_name):
     if response.status_code == 200:
         data = response.json()
 
-        # Filter for English language data if 'effect_entries' field exists
-        effect_entries = data.get('effect_entries', [])
-        data['effect_entries'] = [entry for entry in effect_entries if entry.get('language', {}).get('name') == 'en']
-
-        # Filter for English language data if 'flavor_text_entries' field exists
-        flavor_text_entries = data.get('flavor_text_entries', [])
-        data['flavor_text_entries'] = [entry for entry in flavor_text_entries if
-                                       entry.get('language', {}).get('name') == 'en']
+        data = Pokemon.filter_english_data(data, ['names', 'effect_entries', 'flavor_text_entries'])
 
         return render_template('pokemon_species.html', data=data)
     else:

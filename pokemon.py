@@ -1,3 +1,5 @@
+import requests, json
+
 def get_data(pokemon_name):
     from flask import g
 
@@ -101,6 +103,62 @@ class Pokemon:
             "species": self.species,
             "sprites": self.sprites
         }
+
+    @staticmethod
+    def filter_english_data(data, fields):
+        filtered_data = data.copy()
+        for field in fields:
+            if field in filtered_data:
+                entries = filtered_data[field]
+                if isinstance(entries, list):
+                    filtered_entries = [entry for entry in entries if entry.get('language', {}).get('name') == 'en']
+                    filtered_data[field] = filtered_entries
+                else:
+                    filtered_data[field] = None  # or handle the case when the field is not a list
+            else:
+                filtered_data[field] = None  # or handle the case when the field doesn't exist
+        return filtered_data
+
+    @staticmethod
+    def get_evolution_chain(species_id, evolution_chain=None):
+        if evolution_chain is None:
+            evolution_chain = []
+        try:
+            # Retrieve the species data based on the Pokemon species ID
+            response = requests.get(f"https://pokeapi.co/api/v2/pokemon-species/{species_id}")
+            response.raise_for_status()
+            data = response.json()
+
+            # Filter for English language data if these fields exist
+            data = Pokemon.filter_english_data(data, ['names', 'effect_entries', 'flavor_text_entries'])
+
+            # Get the URL for the evolution chain and fetch its data
+            evolution_chain_url = data['evolution_chain']['url']
+            evolution_chain_response = requests.get(evolution_chain_url)
+            evolution_chain_response.raise_for_status()
+
+            chain = evolution_chain_response.json()['chain']
+
+            # A helper function to traverse the chain
+            def traverse_chain_link(chain_link):
+                species_name = chain_link['species']['name']
+                evolves_to = chain_link['evolves_to']
+
+                card_id, card_name, card_image, card_type, card_moves = get_data(species_name)
+                evolution_chain.append({'species_name': species_name, 'image_url': card_image})
+
+                # Recursive call for every subsequent evolution
+                for evolution in evolves_to:
+                    traverse_chain_link(evolution)
+
+            # Start traversal from the first pokemon in the chain
+            traverse_chain_link(chain)
+
+        except (KeyError, requests.exceptions.RequestException) as e:
+            print(f"Error occurred when accessing key in chain or making the request: {e}")
+            raise
+
+        return evolution_chain
 
     def __str__(self):
         return f"Pokemon {self.id}: {self.name}"
