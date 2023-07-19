@@ -6,8 +6,31 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-    <div class="main-section">
-        {% block content %}{% endblock %}
-    </div>
+<div id="site-header" class="Header-module__headerwrapper">
+    <header class="Header-module__header">
+        <a class="Header-module__homelink" title="Pok&#xE9;API" href="/"><img src="" alt="Pok&#xE9;mon"></a>
+        <nav class="Header-module__nav">
+            <a class="Header-module__link" href="/">Home</a>
+            <a class="Header-module__link" href="/">Link #2</a>
+            <a class="Header-module__link" href="/">Link #3</a>
+            <a class="Header-module__link" href="/">Link #4</a>
+            <div class="search-box">
+                <input type="text" placeholder="Search...">
+                <button type="submit">Search</button>
+            </div>
+        </nav>
+    </header>
+</div>
+<div class="main-section">
+    {% block content %}{% endblock %}
+</div>
 </body>
+<footer id="site-footer" class="Footer-module__footer">
+    <div class="Footer-module__container">
+        <div>Created by <a href="https://joereg4.github.io/">Joe Regenstein</a>, thank you Pok&#xE9;API.
+            Pok&#xE9;mon and Pok&#xE9;mon character names are trademarks of Nintendo.
+        </div>
+    </div>
+</footer>
 </html>
+
