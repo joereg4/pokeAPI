@@ -1,415 +1,397 @@
 *,
 *::after,
 *::before {
-  box-sizing: inherit;
+    box-sizing: inherit;
 }
 
 body {
-  box-sizing: border-box;
-  line-height: 1.35;
-  background-color: #fbfbfb;
-  color: #263238;
-  margin: 0;
+    box-sizing: border-box;
+    line-height: 1.35;
+    background-color: #fbfbfb;
+    color: #263238;
+    margin: 0;
 }
 
 #site-footer,
 #site-header {
-  flex: none;
+    flex: none;
 }
 
 footer {
     display: block;
 }
 
-.nav {
-  margin-bottom: 3rem;
-  font-size: 1.2rem;
-}
-
-.nav__link {
-  text-decoration: none;
-  color: #1c2023;
-}
-
-.nav__link:not(:last-of-type) {
-  margin-right: 2.5rem;
-}
-
-.nav__link--active,
-.nav__link:hover {
-  font-weight: bold;
-}
 
 .main-section {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 .pokemon-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
 }
 
 .pokemon-card {
-  border: 1px solid #ccc;
-  padding: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
 }
 
 .pokemon-card__image-section {
-  text-align: center;
-  width: 100%;
-  overflow: hidden;
+    text-align: center;
+    width: 100%;
+    overflow: hidden;
 }
 
 .pokemon-card__image {
-  width: 100%;
-  height: auto;
-  object-fit: contain;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
 }
 
 .pokemon-card__info-section {
-  margin-top: 10px;
+    margin-top: 10px;
 }
 
 .pokemon-card__name {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 .pokemon-card__id-type {
-  color: #777;
+    color: #777;
 }
 
 .pokemon-card__moves-section {
-  margin-top: 10px;
+    margin-top: 10px;
 }
 
 .pokemon-card__moves {
-  font-style: italic;
+    font-style: italic;
 }
 
 .detail-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  grid-auto-rows: minmax(200px, auto);
-  grid-gap: 1rem;
-  grid-auto-flow: dense;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-auto-rows: minmax(200px, auto);
+    grid-gap: 1rem;
+    grid-auto-flow: dense;
 }
 
 .detail-card__title {
-  text-align: inherit;
-  font-weight: bold;
-  color: #ef5350;
+    text-align: inherit;
+    font-weight: bold;
+    color: #ef5350;
 }
 
 .detail-card__image-section {
-  grid-column: 1 / span 2;
-  text-align: center;
-  width: 100%;
+    grid-column: 1 / span 2;
+    text-align: center;
+    width: 100%;
 }
 
 .detail-card__image img {
-  width: 75%;
-  height: auto;
-  object-fit: contain;
+    width: 75%;
+    height: auto;
+    object-fit: contain;
 }
 
 .detail-card__info-section {
-  grid-column: auto;
-  grid-row: auto;
-  margin-top: 10px;
-  padding-left: 1rem;
+    grid-column: auto;
+    grid-row: auto;
+    margin-top: 10px;
+    padding-left: 1rem;
 }
 
 .detail-card__item {
-  padding: 0;
+    padding: 0;
 }
 
 a {
-  text-decoration: none;
-  color: black;
-  transition: color 0.1s ease-in-out;
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.1s ease-in-out;
 }
 
 a:hover {
-  text-decoration: underline;
-  font-weight: inherit;
-  color: rgba(0, 116, 236, .9294117647058824);
+    text-decoration: underline;
+    font-weight: inherit;
+    color: rgba(0, 116, 236, .9294117647058824);
 }
 
 .detail-card__info-section li {
-  list-style: none;
+    list-style: none;
 }
 
 .detail-card__item {
-  color: inherit;
+    color: inherit;
 }
 
 .detail-card__list {
-  color: inherit;
+    color: inherit;
 }
 
 .detail-card__moves-section {
-  margin-top: 10px;
+    margin-top: 10px;
 }
 
 .detail-card__moves {
-  font-style: italic;
+    font-style: italic;
 }
 
 .pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
 }
 
 .pagination__link {
-  color: inherit;
-  text-decoration: none;
-  outline: none;
-  padding: 0.25rem 0.75rem;
-  border-radius: 6px;
+    color: inherit;
+    text-decoration: none;
+    outline: none;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
 }
 
 .pagination__link:hover {
-  background: #e5e5e5;
+    background: #e5e5e5;
 }
 
 .detail-page {
-  text-transform: capitalize;
+    text-transform: capitalize;
 }
 
 #popup-container {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 9999;
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
 }
 
 #popup-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #fff;
-  padding: 20px;
-  text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    text-align: center;
 }
 
 #close-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  border: none;
-  background: transparent;
-  font-size: 20px;
-  cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    cursor: pointer;
 }
 
 .sprite-gallery > .sprite-gallery__list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  grid-auto-rows: minmax(200px, auto);
-  grid-gap: 1rem;
-  grid-auto-flow: dense;
-  list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    grid-auto-rows: minmax(200px, auto);
+    grid-gap: 1rem;
+    grid-auto-flow: dense;
+    list-style: none;
 }
 
 .sprite-gallery > .sprite-gallery__list > li > figure {
-  height: 96px;
+    height: 96px;
 }
 
 .sprite-gallery > .sprite-gallery__list > li > figure > img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 .sprite-name {
-  text-align: center;
+    text-align: center;
 }
 
 .evolution-pokemon--current {
-  position: relative;
+    position: relative;
 }
 
 .evolution-pokemon--current::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(128, 128, 128, 0.2);
-  border-radius: 5px;
-  z-index: 1;
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(128, 128, 128, 0.2);
+    border-radius: 5px;
+    z-index: 1;
 }
 
 .evolution-chain > .evolution-chain__list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  grid-auto-rows: minmax(200px, auto);
-  grid-gap: 1rem;
-  grid-auto-flow: dense;
-  list-style: none;
-  text-align: center;
-  align-items: center;
-  justify-items: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-auto-rows: minmax(200px, auto);
+    grid-gap: 1rem;
+    grid-auto-flow: dense;
+    list-style: none;
+    text-align: center;
+    align-items: center;
+    justify-items: center;
 }
 
 .evolution-chain > .evolution-chain__list > li > figure {
-  position: relative;
-  text-align: center;
-  height: auto;
+    position: relative;
+    text-align: center;
+    height: auto;
 }
 
 .evolution-chain > .evolution-chain__list > li > figure > a > img {
-  width: 60%;
-  height: 60%;
-  object-fit: contain;
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
 }
 
 .evolution-chain > .evolution-chain__list > li > figure.evolution-pokemon--current > img {
-  width: 60%;
-  height: 60%;
+    width: 60%;
+    height: 60%;
 }
 
 .Header-module__header > .Header-module__homelink,
 .Header-module__link {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
 }
 
 .Header-module__header > .Header-module__homelink:visited,
 .Header-module__link:visited {
-  color: inherit;
+    color: inherit;
 }
 
 .Header-module__header > .Header-module__homelink:hover,
 .Header-module__link:hover {
-  background: #e94141;
+    background: #e94141;
 }
 
 .Header-module__header > .Header-module__homelink > img,
 .Header-module__link
 .Header-module__header > .Header-module__homelink > img,
 .Header-module__link > img {
-  height: 100%;
+    height: 100%;
 }
 
 .Header-module__link_active {
-  background: #c62828;
+    background: #c62828;
 }
 
 .Header-module__link_active:hover {
-  background: #d32b2b;
+    background: #d32b2b;
 }
 
 .Header-module__headerwrapper {
-  background-color: #ef5350;
+    background-color: #ef5350;
 }
 
 .Header-module__headerwrapper > .Header-module__header {
-  margin: 0 auto;
-  height: 3.125rem;
-  max-width: 72rem;
+    margin: 0 auto;
+    height: 3.125rem;
+    max-width: 72rem;
 }
 
 .Header-module__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: stretch;
-  color: #fff;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    color: #fff;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .Header-module__header > .Header-module__homelink {
-  z-index: 2;
-  flex: 0 0;
-  min-width: -webkit-max-content;
-  min-width: -moz-max-content;
-  min-width: max-content;
-  height: 100%;
-  padding: .25em .5em;
+    z-index: 2;
+    flex: 0 0;
+    min-width: -webkit-max-content;
+    min-width: -moz-max-content;
+    min-width: max-content;
+    height: 100%;
+    padding: .25em .5em;
 }
 
 .Header-module__header > .Header-module__nav {
-  --gradient-width: 20px;
-  display: flex;
-  overflow-x: auto;
-  scrollbar-width: thin;
-  padding: 0 0 0 var(--gradient-width);
-  margin-left: calc(var(--gradient-width) * -1);
+    --gradient-width: 20px;
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    padding: 0 0 0 var(--gradient-width);
+    margin-left: calc(var(--gradient-width) * -1);
 }
 
 @media (max-width: 35em) {
-  .Header-module__header > .Header-module__nav {
-    flex: 1 1;
-    min-width: 5em;
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--gradient-width), #000 90%, transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 var(--gradient-width), #000 90%, transparent);
-  }
+    .Header-module__header > .Header-module__nav {
+        flex: 1 1;
+        min-width: 5em;
+        -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--gradient-width), #000 90%, transparent);
+        mask-image: linear-gradient(90deg, transparent, #000 var(--gradient-width), #000 90%, transparent);
+    }
 }
 
 .Header-module__header > .Header-module__nav:before {
-  content: "";
-  flex: 1 1;
+    content: "";
+    flex: 1 1;
 }
 
 .Header-module__header > .Header-module__nav > * {
-  min-width: -webkit-max-content;
-  min-width: -moz-max-content;
-  min-width: max-content;
-  height: 100%;
-  padding: 0 1em;
+    min-width: -webkit-max-content;
+    min-width: -moz-max-content;
+    min-width: max-content;
+    height: 100%;
+    padding: 0 1em;
 }
 
 .Footer-module__footer {
-  border-top: 1px solid #ef5350;
-  padding: 1em;
-  background-color: #fbfbfb;
+    border-top: 1px solid #ef5350;
+    padding: 1em;
+    background-color: #fbfbfb;
 }
 
 .Footer-module__container {
-  width: 80%;
-  margin: auto;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+    width: 80%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
 }
 
 .Footer-module__container div:first-child {
-  grid-column: 1/4;
+    grid-column: 1/4;
 }
 
 .Footer-module__container div:last-child {
-  grid-column: 4;
+    grid-column: 4;
 }
 
 @media screen and (max-width: 768px) {
-  .Footer-module__container {
-    grid-template-columns: repeat(1, 1fr);
-  }
+    .Footer-module__container {
+        grid-template-columns: repeat(1, 1fr);
+    }
 
-  .Footer-module__container div:first-child,
-  .Footer-module__container div:last-child {
-    grid-column: 1;
-  }
+    .Footer-module__container div:first-child,
+    .Footer-module__container div:last-child {
+        grid-column: 1;
+    }
 }
 
 nav ol,
 nav ul {
-  list-style: none;
-  padding: 0;
+    list-style: none;
+    padding: 0;
 }
