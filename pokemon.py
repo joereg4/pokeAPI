@@ -106,9 +106,11 @@ class Pokemon:
         }
 
     @staticmethod
-    def filter_english_data(data, fields):
+    def filter_english_data(data):
         filtered_data = data.copy()
-        for field in fields:
+        fields_to_filter = ['names', 'effect_entries', 'flavor_text_entries', 'color', 'genera', 'habitat', 'shape','descriptions']
+
+        for field in fields_to_filter:
             if field in filtered_data:
                 entries = filtered_data[field]
                 if isinstance(entries, list):
@@ -116,8 +118,7 @@ class Pokemon:
                     filtered_data[field] = filtered_entries
                 else:
                     filtered_data[field] = None  # or handle the case when the field is not a list
-            else:
-                filtered_data[field] = None  # or handle the case when the field doesn't exist
+
         return filtered_data
 
     @staticmethod
@@ -131,8 +132,8 @@ class Pokemon:
             data = response.json()
 
             # Filter for English language data if these fields exist
-            data = Pokemon.filter_english_data(data, ['names', 'effect_entries', 'flavor_text_entries'])
-
+            data = Pokemon.filter_english_data(data)
+            print(f"Evelution Data: {data}")
             # Get the URL for the evolution chain and fetch its data
             evolution_chain_url = data['evolution_chain']['url']
             evolution_chain_response = requests.get(evolution_chain_url)
@@ -175,7 +176,7 @@ class Pokemon:
             print(f"Error occurred when accessing key in chain or making the request: {e}")
             raise
 
-        return evolution_chain
+        return evolution_chain, data
 
     def __str__(self):
         return f"Pokemon {self.id}: {self.name}"

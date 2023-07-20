@@ -80,15 +80,12 @@ def get_pokemon(name):
         # Sort the sprites based on the desired order
         sorted_sprites = {key: sprites[key] for key in valid_sprites if key in sprites}
 
-        # Sort the sprites based on the desired order
-        sorted_sprites = {key: sprites[key] for key in valid_sprites if key in sprites}
-
         # Get the evolution chain using the species url
         species_id = pokemon['species']['url'].replace('https://pokeapi.co/api/v2/pokemon-species/', '').strip('/')
-        evolution_chain = Pokemon.get_evolution_chain(species_id)
+        evolution_chain, species_data = Pokemon.get_evolution_chain(species_id)
 
         return render_template('pokemon_detail.html', data=data, sprites=sorted_sprites,
-                               evolution_chain=evolution_chain)
+                               evolution_chain=evolution_chain, species_data=species_data)
     else:
         return "Pokemon not found", 404
 
@@ -100,9 +97,7 @@ def get_ability_data(ability_id):
         data = response.json()
 
         # Filter for English language data
-        data['effect_entries'] = [entry for entry in data['effect_entries'] if entry['language']['name'] == 'en']
-        data['flavor_text_entries'] = [entry for entry in data['flavor_text_entries'] if
-                                       entry['language']['name'] == 'en']
+        data = Pokemon.filter_english_data(data)
 
         return render_template('pokemon_ability.html', data=data)
     else:
@@ -126,9 +121,8 @@ def get_item_data(id_or_name):
         data = response.json()
 
         # Filter for English language data
-        data['effect_entries'] = [entry for entry in data['effect_entries'] if entry['language']['name'] == 'en']
-        data['flavor_text_entries'] = [entry for entry in data['flavor_text_entries'] if
-                                       entry['language']['name'] == 'en']
+        data = Pokemon.filter_english_data(data)
+
         return render_template('pokemon_item.html', data=data)
     else:
         return "Item not found", 404
@@ -155,7 +149,7 @@ def get_species_data(id_or_name):
     if response.status_code == 200:
         data = response.json()
 
-        data = Pokemon.filter_english_data(data, ['names', 'effect_entries', 'flavor_text_entries'])
+        data = Pokemon.filter_english_data(data)
 
         return render_template('pokemon_species.html', data=data)
     else:
@@ -171,13 +165,7 @@ def get_endpoint_data(api_endpoint, id):
         data = response.json()
 
         # Filter for English language data if 'effect_entries' field exists
-        effect_entries = data.get('effect_entries', [])
-        data['effect_entries'] = [entry for entry in effect_entries if entry.get('language', {}).get('name') == 'en']
-
-        # Filter for English language data if 'flavor_text_entries' field exists
-        flavor_text_entries = data.get('flavor_text_entries', [])
-        data['flavor_text_entries'] = [entry for entry in flavor_text_entries if
-                                       entry.get('language', {}).get('name') == 'en']
+        data = Pokemon.filter_english_data(data)
 
         return render_template('generic.html', data=data)
     else:

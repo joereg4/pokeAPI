@@ -22,7 +22,22 @@
             <li class="detail-card__list">Weight: {{ data.weight }}</li>
             <li class="detail-card__list">Is Default: {{ data.is_default }}</li>
             <li class="detail-card__list">Order: {{ data.order }}</li>
+            <li class="detail-card__list">Base Happiness: {{ species_data.base_happiness }}</li>
+            <li class="detail-card__list">Capture Rate: {{ species_data.capture_rate }}</li>
+            <li class="detail-card__list">Color: {{ species_data.color.name }}</li>
+            <li class="detail-card__list">Egg Groups:
+                {% for egg_group in species_data.egg_groups %}
+                <a href="{{ egg_group.url }}">{{ egg_group.name }}</a>{% if not loop.last %}, {% endif %}
+                {% endfor %}
             </li>
+            <li class="detail-card__list">Gender Rate: {{ species_data.gender_rate }}</li>
+            <li class="detail-card__list">Hatch Counter: {{ species_data.hatch_counter }}</li>
+            <li class="detail-card__list">Has Gender Differences: {{ species_data.has_gender_differences }}</li>
+            <li class="detail-card__list">Habitat: {{ species_data.habitat.name }}</li>
+            <li class="detail-card__list">Is Baby: {{ species_data.is_baby }}</li>
+            <li class="detail-card__list">Is Legendary: {{ species_data.is_legendary }}</li>
+            <li class="detail-card__list">Is Mythical: {{ species_data.is_mythical }}</li>
+            <li class="detail-card__list">Shape: {{ species_data.shape.name }}</li>
         </ul>
     </div>
 
@@ -31,8 +46,9 @@
         <ul class="detail-card__item">
             {% for ability in data.abilities %}
             <li class="detail-card__list">
-                {{ ability.slot }}<a href="{{ url_for('pokemon.get_ability_data', ability_id=ability.url.split('/')[-2]) }}"> {{
-                    ability.name }} </a>
+                {{ ability.slot }}<a
+                    href="{{ url_for('pokemon.get_ability_data', ability_id=ability.url.split('/')[-2]) }}"> {{
+                ability.name }} </a>
             </li>
             {% endfor %}
         </ul>
@@ -72,13 +88,15 @@
         <li>
             <figure class="evolution-pokemon{% if pokemon.species_name|lower == data.name|lower %}--current{% endif %}">
                 <div class="evolution-stage">
-                    <a href="{{ url_for('pokemon.get_pokemon', name=pokemon.species_name) }}">{{ pokemon.evolution_stage }}</a>
+                    <a href="{{ url_for('pokemon.get_pokemon', name=pokemon.species_name) }}">{{ pokemon.evolution_stage
+                        }}</a>
                 </div>
                 <a href="{{ url_for('pokemon.get_pokemon', name=pokemon.species_name) }}">
                     <img src="{{ pokemon.image_url }}" alt="{{ pokemon.name }} Image">
                 </a>
                 <div class="species-name">
-                    <a href="{{ url_for('pokemon.get_pokemon', name=pokemon.species_name) }}">{{ pokemon.species_name|title }}</a>
+                    <a href="{{ url_for('pokemon.get_pokemon', name=pokemon.species_name) }}">{{
+                        pokemon.species_name|title }}</a>
                 </div>
             </figure>
         </li>
@@ -98,4 +116,25 @@
         {% endfor %}
     </ul>
 </div>
-{% endblock %}
+<h2 class="detail-card__title">Flavor Text Entries:</h2>
+<ul>
+
+    {% for entry in species_data.flavor_text_entries %}
+    <li class="detail-card__list">
+        <strong>{{ entry.version.name }}:</strong> {{ entry.flavor_text|replace("POKéMON", "Pokémon") }}
+    </li>
+    {% endfor %}
+</ul>
+<h2 class="detail-card__title">Pokedex:</h2>
+<ul>
+    {% for entry in species_data.pokedex_numbers %}
+    <li class="detail-card__list">
+
+        <a href="{{ url_for('pokemon.get_endpoint_data', api_endpoint=entry.pokedex.url.split('/')[-3], id=entry.pokedex.url.split('/')[-2]) }}">{{
+            entry.entry_number }} {{ entry.pokedex.name }}</a>
+
+    </li>
+    {% endfor %}
+</ul>
+    {{ species_data }}
+    {% endblock %}
