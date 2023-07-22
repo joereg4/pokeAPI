@@ -1,7 +1,9 @@
+import logging
+import math
+import requests
 from flask import Blueprint, render_template, request
-from pokedex import models, utils
-import requests, math, logging
 
+from pokedex import models, utils
 
 pokemon_bp = Blueprint(
     "pokemon", __name__, template_folder="templates", static_folder="static"
