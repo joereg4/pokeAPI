@@ -1,12 +1,7 @@
-import logging
-
 from flask import Blueprint, render_template, request
-from pokedex.models.utils import get_evolution_chain, filter_english_data
-from pokedex.utils.db_utils import get_db
-import requests
-import math
+from pokedex import models, utils
+import requests, math, logging
 
-logging.basicConfig(level=logging.INFO)
 
 pokemon_bp = Blueprint(
     "pokemon", __name__, template_folder="templates", static_folder="static"
@@ -21,7 +16,7 @@ def index():
         "Inside index() function"
     )  # This line will print a message to the console whenever the function is called
 
-    db = get_db()
+    db = utils.get_db()
     collection = db["pokemon"]
 
     page = int(
@@ -62,7 +57,7 @@ def index():
 
 @pokemon_bp.route("/pokemon/<name>")
 def get_pokemon(name):
-    db = get_db()
+    db = utils.get_db()
     collection = db["pokemon"]
 
     pokemon = collection.find_one({"name": name.lower()})
@@ -110,7 +105,7 @@ def get_pokemon(name):
             .replace("https://pokeapi.co/api/v2/pokemon-species/", "")
             .strip("/")
         )
-        evolution_chain, species_data = get_evolution_chain(species_id)
+        evolution_chain, species_data = models.get_evolution_chain(species_id)
 
         return render_template(
             "pokemon_detail.html",
@@ -130,7 +125,7 @@ def get_ability_data(ability_id):
         data = response.json()
 
         # Filter for English language data
-        data = filter_english_data(data)
+        data = models.filter_english_data(data)
 
         return render_template("pokemon_ability.html", data=data)
     else:
@@ -154,7 +149,7 @@ def get_item_data(id_or_name):
         data = response.json()
 
         # Filter for English language data
-        data = filter_english_data(data)
+        data = models.filter_english_data(data)
 
         return render_template("pokemon_item.html", data=data)
     else:
@@ -184,7 +179,7 @@ def get_species_data(id_or_name):
     if response.status_code == 200:
         data = response.json()
 
-        data = filter_english_data(data)
+        data = models.filter_english_data(data)
 
         return render_template("pokemon_species.html", data=data)
     else:
@@ -200,7 +195,7 @@ def get_endpoint_data(api_endpoint, id):
         data = response.json()
 
         # Filter for English language data if 'effect_entries' field exists
-        data = filter_english_data(data)
+        data = models.filter_english_data(data)
 
         return render_template("generic.html", data=data)
     else:
