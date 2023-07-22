@@ -9,10 +9,12 @@ pokemon_bp = Blueprint(
     "pokemon", __name__, template_folder="templates", static_folder="static"
 )
 
-pokeapi_base_url = "https://pokeapi.co/api/v2/"
+BASE_URL = "https://pokeapi.co/api/v2"
+SPRITE_URL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites"
 
 
 @pokemon_bp.route("/")
+@utils.cache.cached(timeout=50)
 def index():
     logging.info(
         "Inside index() function"
@@ -58,6 +60,7 @@ def index():
 
 
 @pokemon_bp.route("/pokemon/<name>")
+@utils.cache.cached(timeout=50)
 def get_pokemon(name):
     db = utils.get_db()
     collection = db["pokemon"]
@@ -104,9 +107,10 @@ def get_pokemon(name):
         # Get the evolution chain using the species url
         species_id = (
             pokemon["species"]["url"]
-            .replace("https://pokeapi.co/api/v2/pokemon-species/", "")
+            .replace(f"{BASE_URL}/pokemon-species/", "")
             .strip("/")
         )
+        logging.info(species_id)
         evolution_chain, species_data = models.get_evolution_chain(species_id)
 
         return render_template(
@@ -120,9 +124,10 @@ def get_pokemon(name):
         return "Pokemon not found", 404
 
 
-@pokemon_bp.route("/ability/<int:ability_id>")
-def get_ability_data(ability_id):
-    response = requests.get(f"https://pokeapi.co/api/v2/ability/{ability_id}")
+@pokemon_bp.route("/ability/<int:_id>")
+@utils.cache.cached(timeout=50)
+def get_ability_data(_id):
+    response = requests.get(f"{BASE_URL}/ability/{_id}")
     if response.status_code == 200:
         data = response.json()
 
@@ -134,9 +139,10 @@ def get_ability_data(ability_id):
         return "Ability not found", 404
 
 
-@pokemon_bp.route("/move/<int:move_id>")
-def get_move_data(move_id):
-    response = requests.get(f"https://pokeapi.co/api/v2/move/{move_id}")
+@pokemon_bp.route("/move/<int:_id>")
+@utils.cache.cached(timeout=50)
+def get_move_data(_id):
+    response = requests.get(f"{BASE_URL}/move/{_id}")
     if response.status_code == 200:
         data = response.json()
         return render_template("pokemon_move.html", data=data)
@@ -145,8 +151,9 @@ def get_move_data(move_id):
 
 
 @pokemon_bp.route("/item/<id_or_name>")
+@utils.cache.cached(timeout=50)
 def get_item_data(id_or_name):
-    response = requests.get(f"https://pokeapi.co/api/v2/item/{id_or_name}")
+    response = requests.get(f"{BASE_URL}/item/{id_or_name}")
     if response.status_code == 200:
         data = response.json()
 
@@ -159,10 +166,11 @@ def get_item_data(id_or_name):
 
 
 @pokemon_bp.route("/pokemon/<id_or_name>/encounters")
+@utils.cache.cached(timeout=50)
 def get_encounter_data(id_or_name):
     logging.info("Accessing encounters for: {id_or_name}")
     response = requests.get(
-        f"https://pokeapi.co/api/v2/pokemon/{id_or_name}/encounters/"
+        f"{BASE_URL}/{id_or_name}/encounters/"
     )
     logging.info(f"Response from PokeAPI: {response.status_code}")
 
@@ -175,9 +183,10 @@ def get_encounter_data(id_or_name):
 
 
 @pokemon_bp.route("/species/<id_or_name>")
+@utils.cache.cached(timeout=50)
 def get_species_data(id_or_name):
-    response = requests.get(f"https://pokeapi.co/api/v2/pokemon-species/{id_or_name}")
-    logging.info(f"https://pokeapi.co/api/v2/pokemon-species/{id_or_name}")
+    response = requests.get(f"{BASE_URL}/pokemon-species/{id_or_name}")
+    logging.info(response)
     if response.status_code == 200:
         data = response.json()
 
@@ -188,9 +197,10 @@ def get_species_data(id_or_name):
         return "Species not found", 404
 
 
-@pokemon_bp.route("/<api_endpoint>/<int:id>")
-def get_endpoint_data(api_endpoint, id):
-    full_url = f"{pokeapi_base_url}/{api_endpoint}/{id}"
+@pokemon_bp.route("/<api_endpoint>/<int:_id>")
+@utils.cache.cached(timeout=50)
+def get_endpoint_data(api_endpoint, _id):
+    full_url = f"{BASE_URL}/{api_endpoint}/{_id}"
     response = requests.get(full_url)
 
     if response.status_code == 200:
