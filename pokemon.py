@@ -1,4 +1,4 @@
-import requests, json
+""" import requests, json
 
 
 def get_data(pokemon_name):
@@ -180,3 +180,4 @@ class Pokemon:
 
     def __str__(self):
         return f"Pokemon {self.id}: {self.name}"
+ """

@@ -1,16 +1,15 @@
 from flask import Flask
 from routes import pokemon_bp
-from database import get_db, close_db
-import logging
-from dotenv import load_dotenv
-import os
-
-load_dotenv(".flaskenv")
-print("Direct FLASK_ENV:", os.environ.get("FLASK_ENV"))
+from pokedex.utils import env, logging
+from pokedex.utils.db_utils import get_db, close_db
 
 
-logging.basicConfig(level=logging.INFO)
+# Load environment variables
+env.load_environment()
+print("Direct FLASK_ENV:", env.get_env_variable("FLASK_ENV"))
 
+# Configure logging
+logging.configure_logging()
 
 def create_app():
     app = Flask(__name__)
@@ -21,8 +20,21 @@ def create_app():
     app.teardown_appcontext(close_db)
     app.register_blueprint(pokemon_bp)
 
+    # Set the configuration
+    if env.get_env_variable("FLASK_ENV") == "development":
+        app.config["DEBUG_PRINT_ROUTES"] = True
+        for key, value in app.config.items():
+            print(f"{key}: {value}")
+            print("---- FLASK CONFIG END ----")
+    else:
+        app.config["DEBUG_PRINT_ROUTES"] = False
 
-    for rule in app.url_map.iter_rules():
-            logging.info(rule)
+    if app.config["DEBUG_PRINT_ROUTES"]:
+        for rule in app.url_map.iter_rules():
+            print(rule)
 
     return app
+
+if __name__ == '__main__':
+    app = create_app()
+    app.run()
