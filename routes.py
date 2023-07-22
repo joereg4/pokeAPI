@@ -17,7 +17,7 @@ pokeapi_base_url = 'https://pokeapi.co/api/v2/'
 
 @pokemon_bp.route('/')
 def index():
-    print("Inside index() function")  # This line will print a message to the console whenever the function is called
+    logging.info("Inside index() function")  # This line will print a message to the console whenever the function is called
 
     db = get_db()
     collection = db['pokemon']
@@ -130,9 +130,9 @@ def get_item_data(id_or_name):
 
 @pokemon_bp.route('/pokemon/<id_or_name>/encounters')
 def get_encounter_data(id_or_name):
-    print("Accessing encounters for:", id_or_name)
+    logging.info("Accessing encounters for: {id_or_name}")
     response = requests.get(f'https://pokeapi.co/api/v2/pokemon/{id_or_name}/encounters/')
-    print(f'Response from PokeAPI: {response.status_code}')
+    logging.info(f'Response from PokeAPI: {response.status_code}')
 
     if response.status_code == 200:
         data = response.json()
@@ -145,7 +145,7 @@ def get_encounter_data(id_or_name):
 @pokemon_bp.route('/species/<id_or_name>')
 def get_species_data(id_or_name):
     response = requests.get(f'https://pokeapi.co/api/v2/pokemon-species/{id_or_name}')
-    print(f'https://pokeapi.co/api/v2/pokemon-species/{id_or_name}')
+    logging.info(f'https://pokeapi.co/api/v2/pokemon-species/{id_or_name}')
     if response.status_code == 200:
         data = response.json()
 
