@@ -1,5 +1,6 @@
 import requests
 
+BASE_URL = "https://pokeapi.co/api/v2"
 
 def get_data(pokemon_name):
     from flask import g
@@ -59,7 +60,7 @@ def get_evolution_chain(species_id, evolution_chain=None, stage=0):
     try:
         # Retrieve the species data based on the Pokemon species ID
         response = requests.get(
-            f"https://pokeapi.co/api/v2/pokemon-species/{species_id}"
+            f"{BASE_URL}/pokemon-species/{species_id}"
         )
         response.raise_for_status()
         data = response.json()

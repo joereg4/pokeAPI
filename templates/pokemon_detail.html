@@ -47,7 +47,7 @@
             {% for ability in data.abilities %}
             <li class="detail-card__list">
                 {{ ability.slot }}<a
-                    href="{{ url_for('pokemon.get_ability_data', ability_id=ability.url.split('/')[-2]) }}"> {{
+                    href="{{ url_for('pokemon.get_ability_data', _id=ability.url.split('/')[-2]) }}"> {{
                 ability.name }} </a>
             </li>
             {% endfor %}
@@ -76,7 +76,7 @@
     <h2 class="detail-card__title">Moves</h2>
     <div class="detail-card__moves">
         {% for move in data.moves %}
-        <a href="{{ url_for('pokemon.get_move_data', move_id=move.url.split('/')[-2]) }}">{{ move.name }}</a>{% if not
+        <a href="{{ url_for('pokemon.get_move_data', _id=move.url.split('/')[-2]) }}">{{ move.name }}</a>{% if not
         loop.last %}, {% endif %}
         {% endfor %}
     </div>
@@ -130,7 +130,7 @@
     {% for entry in species_data.pokedex_numbers %}
     <li class="detail-card__list">
 
-        <a href="{{ url_for('pokemon.get_endpoint_data', api_endpoint=entry.pokedex.url.split('/')[-3], id=entry.pokedex.url.split('/')[-2]) }}">{{
+        <a href="{{ url_for('pokemon.get_endpoint_data', api_endpoint=entry.pokedex.url.split('/')[-3], _id=entry.pokedex.url.split('/')[-2]) }}">{{
             entry.entry_number }} {{ entry.pokedex.name }}</a>
 
     </li>
