@@ -1,9 +1,8 @@
 import logging
 
-from flask import Blueprint, render_template, request, g
-from pokedex.models.pokemon import Pokemon
+from flask import Blueprint, render_template, request
 from pokedex.models.utils import get_evolution_chain, filter_english_data
-from pokedex.utils.db_utils import get_db, close_db
+from pokedex.utils.db_utils import get_db
 import requests
 import math
 

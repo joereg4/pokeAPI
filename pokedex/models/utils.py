@@ -1,6 +1,4 @@
 import requests
-from pokedex.models.pokemon import Pokemon
-
 
 
 def get_data(pokemon_name):
