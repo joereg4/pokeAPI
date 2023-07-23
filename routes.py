@@ -78,6 +78,9 @@ def get_pokemon(name_or_id):
             "moves": data.get("moves", []),
             "held_items": data.get("held_items", []),
         }
+        print(data.get("held_items", []))
+        species_data = models.pokemon_species(data["id"])
+        logging.info(f"species_data: {species_data}")
 
         # Define the valid sprite names to filter
         valid_sprites = [
@@ -90,18 +93,7 @@ def get_pokemon(name_or_id):
             "front_shiny_female",
             "back_shiny_female",
         ]
-        id_ = data["id"]
-        logging.info(f"id being fed to chain: {id_}")
 
-        species_data = models.pokemon_species(id_)
-        url = species_data['evolution_chain']['url']
-        evolution_id = models.get_species_id_from_url(url)
-
-        evolution_chain_data = models.evolution_chain(evolution_id)
-        pokemon_name = evolution_chain_data["chain"]["species"]["name"]
-        logging.info(f"name being fed to chain: {pokemon_name}")
-        evolution_chain = models.get_chain(evolution_chain_data, pokemon_name)
-        print(f"Evo Data: {evolution_chain}")
         # Get the sprite data and filter out null values and unwanted sprites
         sprites = {
             key: value
@@ -112,9 +104,21 @@ def get_pokemon(name_or_id):
         # Sort the sprites based on the desired order
         sorted_sprites = {key: sprites[key] for key in valid_sprites if key in sprites}
 
+        # Build Evolution Chain
+
+        evolution_id = models.get_species_id_from_url(species_data['evolution_chain']['url'])
+
+        # Using evolution_id get the chain
+        evolution_chain_data = models.evolution_chain(evolution_id)
+        pokemon_name = evolution_chain_data["chain"]["species"]["name"]
+        logging.info(f"name being fed to chain: {pokemon_name}")
+        evolution_chain = models.get_chain(evolution_chain_data, pokemon_name)
+        # print(f"Evo Data: {evolution_chain}")
+
         return render_template(
             "test_detail.html",
             data=data,
+            species_data=species_data,
             sorted_sprites=sorted_sprites,
             evolution_chain=evolution_chain,
         )
@@ -128,9 +132,6 @@ def get_ability_data(id_):
     response = requests.get(f"{BASE_URL}/ability/{id_}")
     if response.status_code == 200:
         data = response.json()
-
-        # Filter for English language data
-        data = models.filter_english_data(data)
 
         return render_template("pokemon_ability.html", data=data)
     else:
@@ -154,9 +155,6 @@ def get_item_data(id_or_name):
     response = requests.get(f"{BASE_URL}/item/{id_or_name}")
     if response.status_code == 200:
         data = response.json()
-
-        # Filter for English language data
-        data = models.filter_english_data(data)
 
         return render_template("pokemon_item.html", data=data)
     else:
@@ -188,8 +186,6 @@ def get_species_data(id_or_name):
     if response.status_code == 200:
         data = response.json()
 
-        data = models.filter_english_data(data)
-
         return render_template("pokemon_species.html", data=data)
     else:
         return "Species not found", 404
@@ -208,9 +204,6 @@ def get_endpoint_data(api_endpoint, id_):
 
     if response.status_code == 200:
         data = response.json()
-
-        # Filter for English language data if 'effect_entries' field exists
-        data = models.filter_english_data(data)
 
         return render_template("generic.html", data=data)
     else:
