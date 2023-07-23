@@ -18,6 +18,23 @@
                 <li class="detail-card__list">Weight: {{ data.weight }}</li>
                 <li class="detail-card__list">Is Default: {{ data.is_default }}</li>
                 <li class="detail-card__list">Order: {{ data.order }}</li>
+                <li class="detail-card__list">Base Happiness: {{ species_data.base_happiness }}</li>
+                <li class="detail-card__list">Capture Rate: {{ species_data.capture_rate }}</li>
+                <li class="detail-card__list">Color: {{ species_data.color.name }}</li>
+                <li class="detail-card__list">Egg Groups:
+                    {% for egg_group in species_data.egg_groups %}
+                        <a href="{{ egg_group.url }}">{{ egg_group.name }}</a>{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </li>
+
+                <li class="detail-card__list">Gender Rate: {{ species_data.gender_rate }}</li>
+                <li class="detail-card__list">Hatch Counter: {{ species_data.hatch_counter }}</li>
+                <li class="detail-card__list">Has Gender Differences: {{ species_data.has_gender_differences }}</li>
+                <li class="detail-card__list">Habitat: {{ species_data.habitat.name }}</li>
+                <li class="detail-card__list">Is Baby: {{ species_data.is_baby }}</li>
+                <li class="detail-card__list">Is Legendary: {{ species_data.is_legendary }}</li>
+                <li class="detail-card__list">Is Mythical: {{ species_data.is_mythical }}</li>
+                <li class="detail-card__list">Shape: {{ species_data.shape.name }}</li>
             </ul>
         </div>
         <div class="detail-card__info-section">
@@ -28,6 +45,20 @@
                         {{ ability.slot }}: {{ ability.ability['name'] }}
                     </li>
                 {% endfor %}
+            </ul>
+        </div>
+        <div class="detail-card__info-section">
+            <h2 class="detail-card__title">Held items</h2>
+            <ul class="detail-card__item">
+                {% if data.held_items %}
+                    {% for held_item in data.held_items %}
+                        <li class="item-section__list">
+                            <a href="{{ url_for('pokemon.get_item_data', id_or_name=held_item.item.url.split('/')[-2]) }}"> {{ held_item.item.name }} </a>
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    None
+                {% endif %}
             </ul>
         </div>
     </div>
@@ -78,4 +109,23 @@
             {% endfor %}
         </ul>
     </div>
+    <h2 class="detail-card__title">Flavor Text Entries:</h2>
+    <ul>
+
+        {% for entry in species_data.flavor_text_entries %}
+            <li class="detail-card__list">
+                <strong>{{ entry.version.name }}:</strong> {{ entry.flavor_text|replace("POKéMON", "Pokémon") }}
+            </li>
+        {% endfor %}
+    </ul>
+    <h2 class="detail-card__title">Pokedex:</h2>
+    <ul>
+        {% for entry in species_data.pokedex_numbers %}
+            <li class="detail-card__list">
+
+                <a href="{{ url_for('pokemon.get_endpoint_data', api_endpoint=entry.pokedex.url.split('/')[-3], id_=entry.pokedex.url.split('/')[-2]) }}">{{ entry.entry_number }} {{ entry.pokedex.name }}</a>
+
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}
