@@ -6,7 +6,7 @@ from .common import (
 )
 from .interface import APIMetadata, APIResource, APIResourceList, SpriteResource
 from .loaders import *
-from .pokemon import get_chain
+from .pokemon import get_chain, get_species_id_from_url
 __all__ = [
     "APIResource",
     "APIMetadata",
