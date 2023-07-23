@@ -90,16 +90,12 @@ def get_pokemon(name_or_id):
             "front_shiny_female",
             "back_shiny_female",
         ]
-        id_= data["id"]
+        id_ = data["id"]
         logging.info(f"id being fed to chain: {id_}")
 
         species_data = models.pokemon_species(id_)
-        print(f"Species Data: {species_data}")
         url = species_data['evolution_chain']['url']
         evolution_id = models.get_species_id_from_url(url)
-        print(f"evolution_id: {evolution_id}")
-
-
 
         evolution_chain_data = models.evolution_chain(evolution_id)
         pokemon_name = evolution_chain_data["chain"]["species"]["name"]
@@ -115,8 +111,6 @@ def get_pokemon(name_or_id):
 
         # Sort the sprites based on the desired order
         sorted_sprites = {key: sprites[key] for key in valid_sprites if key in sprites}
-
-
 
         return render_template(
             "test_detail.html",
@@ -204,7 +198,6 @@ def get_species_data(id_or_name):
 @pokemon_bp.route("/<api_endpoint>/<int:id_>")
 @utils.cache.cached(timeout=50)
 def get_endpoint_data(api_endpoint, id_):
-
     try:
         models.get_data(api_endpoint, id_)
     except ValueError as e:
