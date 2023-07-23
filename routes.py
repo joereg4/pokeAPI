@@ -90,9 +90,21 @@ def get_pokemon(name_or_id):
             "front_shiny_female",
             "back_shiny_female",
         ]
-        evolution_chain = models.evolution_chain(data["id"])
-        pokemon_name = evolution_chain["chain"]["species"]["name"]
-        evolution_chain = models.get_chain(evolution_chain, pokemon_name)
+        id_= data["id"]
+        logging.info(f"id being fed to chain: {id_}")
+
+        species_data = models.pokemon_species(id_)
+        print(f"Species Data: {species_data}")
+        url = species_data['evolution_chain']['url']
+        evolution_id = models.get_species_id_from_url(url)
+        print(f"evolution_id: {evolution_id}")
+
+
+
+        evolution_chain_data = models.evolution_chain(evolution_id)
+        pokemon_name = evolution_chain_data["chain"]["species"]["name"]
+        logging.info(f"name being fed to chain: {pokemon_name}")
+        evolution_chain = models.get_chain(evolution_chain_data, pokemon_name)
         print(f"Evo Data: {evolution_chain}")
         # Get the sprite data and filter out null values and unwanted sprites
         sprites = {
@@ -110,6 +122,7 @@ def get_pokemon(name_or_id):
             "test_detail.html",
             data=data,
             sorted_sprites=sorted_sprites,
+            evolution_chain=evolution_chain,
         )
     else:
         return "Pokemon not found", 404
