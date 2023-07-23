@@ -1,3 +1,36 @@
+import requests
+from .api import get_data, get_sprite
+from .common import api_url_build, sprite_url_build
+from .loaders import *
+
+
+def get_chain(data, species_name):
+    # Base evolution (start of the chain)
+    base_species = data["chain"]["species"]["name"]
+
+    # Recursive function to find and return the full evolution chain
+    def traverse_chain(chain):
+        current_species = chain["species"]["name"]
+        evolves_to = chain.get("evolves_to", [])
+
+        if not evolves_to:  # End of chain
+            return [current_species]
+        return [current_species] + traverse_chain(evolves_to[0])
+
+    # If the given species is not the base, we start by finding the base
+    if species_name != base_species:
+        while data["chain"]["species"]["name"] != species_name:
+            if not data["chain"]["evolves_to"]:  # Check if the list is empty
+                raise ValueError(f"Species '{species_name}' not found in the evolution chain.")
+            data["chain"] = data["chain"]["evolves_to"][0]
+
+    # Once we find the species (or if it's the base), we traverse the chain
+    return traverse_chain(data["chain"])
+
+
+
+
+
 class Pokemon:
     def __init__(self, data):
         self.id = data.get("id")
@@ -37,3 +70,9 @@ class Pokemon:
 
     def __str__(self):
         return f"Pokemon {self.id}: {self.name}"
+
+
+
+
+
+

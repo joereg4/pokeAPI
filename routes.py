@@ -59,27 +59,24 @@ def index():
     )
 
 
-@pokemon_bp.route("/pokemon/<name>")
-@utils.cache.cached(timeout=50)
-def get_pokemon(name):
-    db = utils.get_db()
-    collection = db["pokemon"]
+@pokemon_bp.route("/pokemon/<name_or_id>")
+def get_pokemon(name_or_id):
+    data = models.pokemon_detail(name_or_id)
 
-    pokemon = collection.find_one({"name": name.lower()})
-    if pokemon is not None:
+    if data is not None:
         data = {
-            "name": pokemon["name"].title(),
-            "id": pokemon["id"],
-            "sprites": pokemon["sprites"],
-            "species": pokemon["species"],
-            "base_experience": pokemon["base_experience"],
-            "height": pokemon["height"],
-            "weight": pokemon["weight"],
-            "is_default": pokemon["is_default"],
-            "order": pokemon["order"],
-            "abilities": pokemon.get("abilities", []),
-            "moves": pokemon.get("moves", []),
-            "held_items": pokemon.get("held_items", []),
+            "name": data["name"].title(),
+            "id": data["id"],
+            "sprites": data["sprites"],
+            "species": data["species"],
+            "base_experience": data["base_experience"],
+            "height": data["height"],
+            "weight": data["weight"],
+            "is_default": data["is_default"],
+            "order": data["order"],
+            "abilities": data.get("abilities", []),
+            "moves": data.get("moves", []),
+            "held_items": data.get("held_items", []),
         }
 
         # Define the valid sprite names to filter
@@ -93,41 +90,35 @@ def get_pokemon(name):
             "front_shiny_female",
             "back_shiny_female",
         ]
-
+        evolution_chain = models.evolution_chain(data["id"])
+        pokemon_name = evolution_chain["chain"]["species"]["name"]
+        evolution_chain = models.get_chain(evolution_chain, pokemon_name)
+        print(evolution_chain)
         # Get the sprite data and filter out null values and unwanted sprites
         sprites = {
             key: value
-            for key, value in pokemon["sprites"].items()
+            for key, value in data["sprites"].items()
             if value is not None and key in valid_sprites
         }
 
         # Sort the sprites based on the desired order
         sorted_sprites = {key: sprites[key] for key in valid_sprites if key in sprites}
 
-        # Get the evolution chain using the species url
-        species_id = (
-            pokemon["species"]["url"]
-            .replace(f"{BASE_URL}/pokemon-species/", "")
-            .strip("/")
-        )
-        logging.info(species_id)
-        evolution_chain, species_data = models.get_evolution_chain(species_id)
+
 
         return render_template(
-            "pokemon_detail.html",
+            "test_detail.html",
             data=data,
-            sprites=sorted_sprites,
-            evolution_chain=evolution_chain,
-            species_data=species_data,
+            sorted_sprites=sorted_sprites,
         )
     else:
         return "Pokemon not found", 404
 
 
-@pokemon_bp.route("/ability/<int:_id>")
+@pokemon_bp.route("/ability/<int:id_>")
 @utils.cache.cached(timeout=50)
-def get_ability_data(_id):
-    response = requests.get(f"{BASE_URL}/ability/{_id}")
+def get_ability_data(id_):
+    response = requests.get(f"{BASE_URL}/ability/{id_}")
     if response.status_code == 200:
         data = response.json()
 
@@ -139,10 +130,10 @@ def get_ability_data(_id):
         return "Ability not found", 404
 
 
-@pokemon_bp.route("/move/<int:_id>")
+@pokemon_bp.route("/move/<int:id_>")
 @utils.cache.cached(timeout=50)
-def get_move_data(_id):
-    response = requests.get(f"{BASE_URL}/move/{_id}")
+def get_move_data(id_):
+    response = requests.get(f"{BASE_URL}/move/{id_}")
     if response.status_code == 200:
         data = response.json()
         return render_template("pokemon_move.html", data=data)
@@ -197,10 +188,16 @@ def get_species_data(id_or_name):
         return "Species not found", 404
 
 
-@pokemon_bp.route("/<api_endpoint>/<int:_id>")
+@pokemon_bp.route("/<api_endpoint>/<int:id_>")
 @utils.cache.cached(timeout=50)
-def get_endpoint_data(api_endpoint, _id):
-    full_url = f"{BASE_URL}/{api_endpoint}/{_id}"
+def get_endpoint_data(api_endpoint, id_):
+
+    try:
+        models.get_data(api_endpoint, id_)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+    full_url = f"{BASE_URL}/{api_endpoint}/{id_}"
     response = requests.get(full_url)
 
     if response.status_code == 200:

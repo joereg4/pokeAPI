@@ -23,7 +23,7 @@ def create_app():
     app.register_blueprint(pokemon_bp)
 
     # Set the configuration
-    if utils.env.get_env_variable("FLASK_ENV") == "development":
+    if utils.env.get_env_variable("FLASK_ENV") == "production":
         app.config["DEBUG_PRINT_ROUTES"] = True
         for key, value in app.config.items():
             print(f"{key}: {value}")
