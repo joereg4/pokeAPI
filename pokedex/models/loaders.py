@@ -615,4 +615,4 @@ def language(id_or_name, **kwargs):
 
 
 def sprite(sprite_type, sprite_id, **kwargs):
-    return SpriteResource(sprite_type, sprite_id, **kwargs)
+    return SpriteResource.fetch_sprite_data(sprite_type, sprite_id, **kwargs)

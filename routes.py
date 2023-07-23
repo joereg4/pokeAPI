@@ -93,7 +93,7 @@ def get_pokemon(name_or_id):
         evolution_chain = models.evolution_chain(data["id"])
         pokemon_name = evolution_chain["chain"]["species"]["name"]
         evolution_chain = models.get_chain(evolution_chain, pokemon_name)
-        print(evolution_chain)
+        print(f"Evo Data: {evolution_chain}")
         # Get the sprite data and filter out null values and unwanted sprites
         sprites = {
             key: value
