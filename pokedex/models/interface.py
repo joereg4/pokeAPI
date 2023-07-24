@@ -258,11 +258,6 @@ class SpriteResource(object):
             self._load()
             self.__loaded = True
 
-    @classmethod
-    def fetch_sprite_data(cls, sprite_type, sprite_id, **kwargs):
-        url = sprite_url_build(sprite_type, sprite_id, **kwargs)
-        return get_sprite(sprite_type, sprite_id, **kwargs)
-
     def _load(self):
         data = get_sprite(self.sprite_type, self.sprite_id, **self.__orginal_kwargs)
         self.__dict__.update(data)
