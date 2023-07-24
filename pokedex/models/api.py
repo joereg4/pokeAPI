@@ -83,6 +83,7 @@ def filter_english_data(data):
         "habitat",
         "shape",
         "descriptions",
+        "version_group",
     ]
 
     for field in fields_to_filter:
