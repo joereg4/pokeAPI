@@ -71,6 +71,7 @@ def get_sprite(sprite_type, sprite_id, **kwargs):
 
     return data
 
+
 def filter_english_data(data):
     filtered_data = data.copy()
     fields_to_filter = [
@@ -100,6 +101,3 @@ def filter_english_data(data):
                 ] = None  # or handle the case when the field is not a list
 
     return filtered_data
-
-
-
