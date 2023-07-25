@@ -80,7 +80,7 @@ def get_pokemon(id_or_name):
         }
         print(data.get("held_items", []))
         species_data = models.pokemon_species(data["id"])
-        logging.info(f"species_data: {species_data}")
+        #logging.info(f"species_data: {species_data}")
 
         # Define the valid sprite names to filter
         valid_sprites = [
@@ -111,7 +111,7 @@ def get_pokemon(id_or_name):
         # Using evolution_id get the chain
         evolution_chain_data = models.evolution_chain(evolution_id)
         pokemon_name = evolution_chain_data["chain"]["species"]["name"]
-        logging.info(f"name being fed to chain: {pokemon_name}")
+        #logging.info(f"name being fed to chain: {pokemon_name}")
         evolution_chain = models.get_chain(evolution_chain_data, pokemon_name)
 
         return render_template(
@@ -137,15 +137,15 @@ def get_ability_data(id_):
         return "Ability not found", 404
 
 
-@pokemon_bp.route("/move/<int:id_>")
+@pokemon_bp.route("/move/<int:id_or_name>")
 @utils.cache.cached(timeout=50)
-def get_move_data(id_):
-    response = requests.get(f"{BASE_URL}/move/{id_}")
-    if response.status_code == 200:
-        data = response.json()
-        return render_template("pokemon_move.html", data=data)
-    else:
-        return "Move not found", 404
+def get_move_data(id_or_name):
+    try:
+        data = models.APIResource.fetch_data("move", id_or_name)
+        logging.info("Move data: {data}")
+        return render_template("pokemon_item.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
 '''
