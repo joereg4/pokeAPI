@@ -70,8 +70,8 @@ def validate(endpoint, resource_id=None):
 
 
 def api_url_build(endpoint, resource_id=None, subresource=None):
-    validate(endpoint, resource_id)
 
+    validate(endpoint, resource_id)
     if resource_id is not None:
         if subresource is not None:
             return "/".join([BASE_URL, endpoint, str(resource_id), subresource, ""])

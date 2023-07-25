@@ -8,15 +8,16 @@
     <h2>Attribute</h2>
     <ul>
         {% for entry in data.attributes %}
-        <a href="{{ url_for('pokemon.get_endpoint_data', api_endpoint=entry.url.split('/')[-3], id_=entry.url.split('/')[-2]) }}">{{
-            entry.name }}</a>
+        <a href="{{ url_for('pokemon.get_endpoint_data', api_endpoint=entry.url.split('/')[-3], id_or_name=entry.url.split('/')[-2]) }}">
+            {{ entry.name }}</a>
         {% if not loop.last %}, {% endif %}
         {% endfor %}
     </ul>
 
     <h2>Category:</h2>
-    <a href="{{ url_for('pokemon.get_endpoint_data',api_endpoint=data.category.url.split('/')[-3], id_=data.category.url.split('/')[-2]) }}">{{
-        data.category.name }}</a>
+    {{ data.category.url.split('/')[-3] }}
+    <a href="{{ url_for('pokemon.get_item_category_data', id_or_name=data.category.url.split('/')[-2]) }}">
+        {{ data.category.name }}</a>
 
     <h2>Cost:</h2>
     <p>{{ data.cost }}</p>
@@ -35,4 +36,5 @@
         {% endfor %}
     </ul>
 </div>
+    {{ data }}
 {% endblock %}

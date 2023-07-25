@@ -73,6 +73,7 @@ def get_sprite(sprite_type, sprite_id, **kwargs):
 
 
 def filter_english_data(data):
+    print("Filter English")
     filtered_data = data.copy()
     fields_to_filter = [
         "names",
@@ -93,12 +94,10 @@ def filter_english_data(data):
                 filtered_entries = [
                     entry
                     for entry in entries
-                    if entry.get("language", {}).get("name") == "en"
+                    if isinstance(entry, dict) and
+                       isinstance(entry.get("language", {}), dict) and
+                       entry["language"].get("name") == "en"
                 ]
                 filtered_data[field] = filtered_entries
-            else:
-                filtered_data[
-                    field
-                ] = None  # or handle the case when the field is not a list
 
     return filtered_data
