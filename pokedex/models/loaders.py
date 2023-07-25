@@ -3,6 +3,7 @@
 
 from .interface import APIResource, SpriteResource
 
+
 def pokemon_detail(id_or_name, **kwargs):
     """Quick pokemon lookup.
 
@@ -12,8 +13,8 @@ def pokemon_detail(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    data = APIResource.fetch_data("pokemon", id_or_name, **kwargs)
-    return data
+    return APIResource.fetch_data("pokemon", id_or_name, **kwargs)
+
 
 def berry(id_or_name, **kwargs):
     """Quick berry lookup.
@@ -24,7 +25,7 @@ def berry(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("berry", id_or_name, **kwargs)
+    return APIResource.fetch_data("berry", id_or_name, **kwargs)
 
 
 def berry_firmness(id_or_name, **kwargs):
@@ -36,7 +37,7 @@ def berry_firmness(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("berry-firmness", id_or_name, **kwargs)
+    return APIResource.fetch_data("berry-firmness", id_or_name, **kwargs)
 
 
 def berry_flavor(id_or_name, **kwargs):
@@ -48,7 +49,7 @@ def berry_flavor(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("berry-flavor", id_or_name, **kwargs)
+    return APIResource.fetch_data("berry-flavor", id_or_name, **kwargs)
 
 
 def contest_type(id_or_name, **kwargs):
@@ -60,7 +61,7 @@ def contest_type(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("contest-type", id_or_name, **kwargs)
+    return APIResource.fetch_data("contest-type", id_or_name, **kwargs)
 
 
 def contest_effect(id_, **kwargs):
@@ -72,7 +73,7 @@ def contest_effect(id_, **kwargs):
     :param id_: id of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("contest-effect", id_, **kwargs)
+    return APIResource.fetch_data("contest-effect", id_, **kwargs)
 
 
 def super_contest_effect(id_, **kwargs):
@@ -84,7 +85,7 @@ def super_contest_effect(id_, **kwargs):
     :param id_: id of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("super-contest-effect", id_, **kwargs)
+    return APIResource.fetch_data("super-contest-effect", id_, **kwargs)
 
 
 def encounter_method(id_or_name, **kwargs):
@@ -96,7 +97,7 @@ def encounter_method(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("encounter-method", id_or_name, **kwargs)
+    return APIResource.fetch_data("encounter-method", id_or_name, **kwargs)
 
 
 def encounter_condition(id_or_name, **kwargs):
@@ -108,7 +109,7 @@ def encounter_condition(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("encounter-condition", id_or_name, **kwargs)
+    return APIResource.fetch_data("encounter-condition", id_or_name, **kwargs)
 
 
 def encounter_condition_value(id_or_name, **kwargs):
@@ -120,7 +121,7 @@ def encounter_condition_value(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("encounter-condition-value", id_or_name, **kwargs)
+    return APIResource.fetch_data("encounter-condition-value", id_or_name, **kwargs)
 
 
 def evolution_chain(id_, **kwargs):
@@ -132,9 +133,8 @@ def evolution_chain(id_, **kwargs):
     :param id_: id of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    data = APIResource.fetch_data("evolution-chain", id_, **kwargs)
+    return APIResource.fetch_data("evolution-chain", id_, **kwargs)
 
-    return data
 
 def evolution_trigger(id_or_name, **kwargs):
     """Quick evolution-trigger lookup.
@@ -145,7 +145,7 @@ def evolution_trigger(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("evolution-trigger", id_or_name, **kwargs)
+    return APIResource.fetch_data("evolution-trigger", id_or_name, **kwargs)
 
 
 def generation(id_or_name, **kwargs):
@@ -157,7 +157,7 @@ def generation(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("generation", id_or_name, **kwargs)
+    return APIResource.fetch_data("generation", id_or_name, **kwargs)
 
 
 def pokedex(id_or_name, **kwargs):
@@ -169,7 +169,7 @@ def pokedex(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("pokedex", id_or_name, **kwargs)
+    return APIResource.fetch_data("pokedex", id_or_name, **kwargs)
 
 
 def version(id_or_name, **kwargs):
@@ -181,7 +181,7 @@ def version(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("version", id_or_name, **kwargs)
+    return APIResource.fetch_data("version", id_or_name, **kwargs)
 
 
 def version_group(id_or_name, **kwargs):
@@ -193,7 +193,7 @@ def version_group(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("version-group", id_or_name, **kwargs)
+    return APIResource.fetch_data("version-group", id_or_name, **kwargs)
 
 
 def item(id_or_name, **kwargs):
@@ -205,7 +205,7 @@ def item(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("item", id_or_name, **kwargs)
+    return APIResource.fetch_data("item", id_or_name, **kwargs)
 
 
 def item_attribute(id_or_name, **kwargs):
@@ -217,7 +217,7 @@ def item_attribute(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("item-attribute", id_or_name, **kwargs)
+    return APIResource.fetch_data("item-attribute", id_or_name, **kwargs)
 
 
 def item_category(id_or_name, **kwargs):
@@ -229,7 +229,7 @@ def item_category(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("item-category", id_or_name, **kwargs)
+    return APIResource.fetch_data("item-category", id_or_name, **kwargs)
 
 
 def item_fling_effect(id_or_name, **kwargs):
@@ -241,7 +241,7 @@ def item_fling_effect(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("item-fling-effect", id_or_name, **kwargs)
+    return APIResource.fetch_data("item-fling-effect", id_or_name, **kwargs)
 
 
 def item_pocket(id_or_name, **kwargs):
@@ -253,7 +253,7 @@ def item_pocket(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("item-pocket", id_or_name, **kwargs)
+    return APIResource.fetch_data("item-pocket", id_or_name, **kwargs)
 
 
 def machine(id_, **kwargs):
@@ -265,7 +265,7 @@ def machine(id_, **kwargs):
     :param id_: id of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("machine", id_, **kwargs)
+    return APIResource.fetch_data("machine", id_, **kwargs)
 
 
 def move(id_or_name, **kwargs):
@@ -277,7 +277,7 @@ def move(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("move", id_or_name, **kwargs)
+    return APIResource.fetch_data("move", id_or_name, **kwargs)
 
 
 def move_ailment(id_or_name, **kwargs):
@@ -289,7 +289,7 @@ def move_ailment(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("move-ailment", id_or_name, **kwargs)
+    return APIResource.fetch_data("move-ailment", id_or_name, **kwargs)
 
 
 def move_battle_style(id_or_name, **kwargs):
@@ -301,7 +301,7 @@ def move_battle_style(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("move-battle-style", id_or_name, **kwargs)
+    return APIResource.fetch_data("move-battle-style", id_or_name, **kwargs)
 
 
 def move_category(id_or_name, **kwargs):
@@ -313,7 +313,7 @@ def move_category(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("move-category", id_or_name, **kwargs)
+    return APIResource.fetch_data("move-category", id_or_name, **kwargs)
 
 
 def move_damage_class(id_or_name, **kwargs):
@@ -325,7 +325,7 @@ def move_damage_class(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("move-damage-class", id_or_name, **kwargs)
+    return APIResource.fetch_data("move-damage-class", id_or_name, **kwargs)
 
 
 def move_learn_method(id_or_name, **kwargs):
@@ -337,7 +337,7 @@ def move_learn_method(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("move-learn-method", id_or_name, **kwargs)
+    return APIResource.fetch_data("move-learn-method", id_or_name, **kwargs)
 
 
 def move_target(id_or_name, **kwargs):
@@ -349,7 +349,7 @@ def move_target(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("move-target", id_or_name, **kwargs)
+    return APIResource.fetch_data("move-target", id_or_name, **kwargs)
 
 
 def location(id_, **kwargs):
@@ -361,7 +361,7 @@ def location(id_, **kwargs):
     :param id_: id of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("location", id_, **kwargs)
+    return APIResource.fetch_data("location", id_, **kwargs)
 
 
 def location_area(id_, **kwargs):
@@ -373,7 +373,7 @@ def location_area(id_, **kwargs):
     :param id_: id of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("location-area", id_, **kwargs)
+    return APIResource.fetch_data("location-area", id_, **kwargs)
 
 
 def pal_park_area(id_or_name, **kwargs):

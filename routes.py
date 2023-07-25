@@ -59,9 +59,9 @@ def index():
     )
 
 
-@pokemon_bp.route("/pokemon/<name_or_id>")
-def get_pokemon(name_or_id):
-    data = models.pokemon_detail(name_or_id)
+@pokemon_bp.route("/pokemon/<id_or_name>")
+def get_pokemon(id_or_name):
+    data = models.pokemon_detail(id_or_name)
 
     if data is not None:
         data = {
@@ -149,16 +149,18 @@ def get_move_data(id_):
         return "Move not found", 404
 
 
+'''
 @pokemon_bp.route("/item/<id_or_name>")
 @utils.cache.cached(timeout=50)
 def get_item_data(id_or_name):
     response = requests.get(f"{BASE_URL}/item/{id_or_name}")
     if response.status_code == 200:
         data = response.json()
-
+        data = models.filter_english_data(data)
         return render_template("pokemon_item.html", data=data)
     else:
         return "Item not found", 404
+'''
 
 
 @pokemon_bp.route("/pokemon/<id_or_name>/encounters")
@@ -191,20 +193,58 @@ def get_species_data(id_or_name):
         return "Species not found", 404
 
 
-@pokemon_bp.route("/<api_endpoint>/<int:id_>")
+@pokemon_bp.route("/item/<int:id_or_name>")
 @utils.cache.cached(timeout=50)
-def get_endpoint_data(api_endpoint, id_):
+def get_item_data(id_or_name):
     try:
-        models.get_data(api_endpoint, id_)
+        data = models.APIResource.fetch_data("item", id_or_name)
+        return render_template("pokemon_item.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
-    full_url = f"{BASE_URL}/{api_endpoint}/{id_}"
-    response = requests.get(full_url)
 
-    if response.status_code == 200:
-        data = response.json()
-
+@pokemon_bp.route("/pokedex/<int:id_or_name>")
+@utils.cache.cached(timeout=50)
+def get_pokedex_data(id_or_name):
+    try:
+        data = models.pokedex(id_or_name)
         return render_template("generic.html", data=data)
-    else:
-        return "Endpoint not found", 404
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/item-category/<int:id_or_name>")
+@utils.cache.cached(timeout=50)
+def get_item_category_data(id_or_name):
+    try:
+        data = models.item_category(id_or_name)
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/<api_endpoint>/<id_or_name>")
+@utils.cache.cached(timeout=50)
+def get_endpoint_data(api_endpoint, id_or_name):
+    try:
+        # Convert the endpoint from hyphenated form to underscore form
+        endpoint_pythonic = api_endpoint.replace('-', '_')
+
+        # Check if id_or_name can be converted to an integer
+        try:
+            id_or_name = int(id_or_name)
+        except ValueError:
+            pass  # if the conversion fails, it remains a string
+        print(f"id_or_name: {id_or_name}, Type: {type(id_or_name)}")
+
+        # Check if the function exists in the models module
+        if hasattr(models, endpoint_pythonic):
+            func = getattr(models, endpoint_pythonic)  # get the function from models by its name
+            data = func(id_or_name)
+            return render_template("generic.html", data=data)
+        else:
+            raise ValueError(f"No such endpoint: {api_endpoint}")
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
