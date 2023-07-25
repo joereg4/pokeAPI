@@ -8,9 +8,9 @@
 
 <div class="move-details">
     <h2>Effects</h2>
+    {{ data }}
     <ul>
         {% for entry in data['effect_entries'] %}
-        {% if entry['language']['name'] == 'en' %}
         <li>{{ entry['effect'] }}</li>
         {% endif %}
         {% endfor %}
@@ -19,7 +19,6 @@
     <h2>Flavor Texts</h2>
     <ul>
         {% for entry in data['flavor_text_entries'] %}
-        {% if entry['language']['name'] == 'en' %}
         <li><strong>{{ entry['version_group']['name'] }}:</strong> {{ entry['flavor_text'] }}</li>
         {% endif %}
         {% endfor %}

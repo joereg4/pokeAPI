@@ -9,20 +9,21 @@ from .loaders import *
 def get_chain(data, name):
     # Base evolution (start of the chain)
     base_species = data["chain"]["species"]["name"]
-    logging.info(f"base_species: {base_species}")
+
+    # logging.info(f"base_species: {base_species}")
 
     # Recursive function to find and return the full evolution chain with details
     def traverse_chain(chain):
         current_species = chain["species"]["name"]
-        logging.info(f"current_species: {current_species}")
+        # logging.info(f"current_species: {current_species}")
 
         # Extract species ID
         species_id = get_species_id_from_url(chain["species"]["url"])
-        logging.info(f" species_id: { species_id}")
+        # logging.info(f" species_id: { species_id}")
 
         evolves_to = chain.get("evolves_to", [])
 
-        logging.info(f" evolves_to: { evolves_to}")
+        # logging.info(f" evolves_to: { evolves_to}")
 
         evolution_details = {}
         if chain["evolution_details"]:
@@ -35,7 +36,7 @@ def get_chain(data, name):
                 "trade_species", "turn_upside_down", "trigger"
             ]
             evolution_details = {attr: details[attr] for attr in attributes_to_grab}
-        logging.info(f" evolution_details: {evolution_details}")
+        # logging.info(f" evolution_details: {evolution_details}")
 
         # Assuming you have a function called 'sprite' that fetches the sprite using species_id
         sprite_data = sprite_url_build("pokemon", species_id, other=True, official_artwork=True)
@@ -47,9 +48,8 @@ def get_chain(data, name):
             **evolution_details  # This unpacks the dictionary items into current_pokemon_info
         }
 
-
         if not evolves_to:  # End of chain
-            print(f"current_pokemon_info: {current_pokemon_info}")
+            # print(f"current_pokemon_info: {current_pokemon_info}")
             return [current_pokemon_info]
         return [current_pokemon_info] + traverse_chain(evolves_to[0])
 
@@ -110,9 +110,3 @@ class Pokemon:
 
     def __str__(self):
         return f"Pokemon {self.id}: {self.name}"
-
-
-
-
-
-

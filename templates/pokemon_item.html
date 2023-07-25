@@ -15,7 +15,7 @@
     </ul>
 
     <h2>Category:</h2>
-    {{ data.category.url.split('/')[-3] }}
+
     <a href="{{ url_for('pokemon.get_item_category_data', id_or_name=data.category.url.split('/')[-2]) }}">
         {{ data.category.name }}</a>
 
