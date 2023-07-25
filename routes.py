@@ -113,10 +113,9 @@ def get_pokemon(id_or_name):
         pokemon_name = evolution_chain_data["chain"]["species"]["name"]
         logging.info(f"name being fed to chain: {pokemon_name}")
         evolution_chain = models.get_chain(evolution_chain_data, pokemon_name)
-        # print(f"Evo Data: {evolution_chain}")
 
         return render_template(
-            "test_detail.html",
+            "pokemon_detail.html",
             data=data,
             species_data=species_data,
             sorted_sprites=sorted_sprites,
