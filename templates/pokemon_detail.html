@@ -42,7 +42,7 @@
             <ul class="detail-card__item">
                 {% for ability in data.abilities %}
                     <li class="detail-card__list">
-                        {{ ability.slot }}: {{ ability.ability['name'] }}
+                        {{ ability.slot }}: <a href="{{ url_for('pokemon.get_ability', id_or_name=ability.ability['url'].split('/')[-2]) }}"> {{ ability.ability['name'] }} </a>
                     </li>
                 {% endfor %}
             </ul>
@@ -66,7 +66,7 @@
         <h2 class="detail-card__title">Moves</h2>
         <div class="detail-card__moves">
             {% for move_detail in data.moves %}
-                <a href="{{ url_for('pokemon.get_move_data', id_or_name=move_detail.move.url.split('/')[-2]) }}">{{ move_detail.move.name }}</a>{% if not
+                <a href="{{ url_for('pokemon.get_move', id_or_name=move_detail.move.url.split('/')[-2]) }}">{{ move_detail.move.name }}</a>{% if not
         loop.last %}, {% endif %}
             {% endfor %}
         </div>

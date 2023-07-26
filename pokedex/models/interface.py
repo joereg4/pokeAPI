@@ -110,7 +110,7 @@ class APIResource(object):
             self._load()
 
     @classmethod
-    def fetch_data(cls, endpoint, name_or_id, force_lookup=False, custom=None):
+    def fetch_data(cls, endpoint: object, name_or_id: object, force_lookup: object = False, custom: object = None) -> object:
         """Class method to fetch data directly."""
         instance = cls(endpoint, name_or_id, lazy_load=True, force_lookup=force_lookup, custom=custom)
         return instance._load()

@@ -3,38 +3,76 @@
 {% block title %}Item Detail{% endblock %}
 
 {% block content %}
-<h1 class="detail-page">{{ data.name }}</h1>
-<div class="item-details">
-    <h2>Attribute</h2>
-    <ul>
-        {% for entry in data.attributes %}
-        <a href="{{ url_for('pokemon.get_endpoint_data', api_endpoint=entry.url.split('/')[-3], id_or_name=entry.url.split('/')[-2]) }}">
-            {{ entry.name }}</a>
-        {% if not loop.last %}, {% endif %}
-        {% endfor %}
-    </ul>
+    <h1 class="detail-page">{{ data.name }}</h1>
+    <img src="{{ data.sprites.default }}" alt="{{ data.name }} Sprite" class="item-sprite">
 
-    <h2>Category:</h2>
+    <div class="item-details">
+        <h2>Attribute</h2>
+        <ul>
+            {% for entry in data.attributes %}
+                <a href="{{ url_for('pokemon.get_endpoint_data', api_endpoint=entry.url.split('/')[-3], id_or_name=entry.url.split('/')[-2]) }}">
+                    {{ entry.name }}</a>
+                {% if not loop.last %}, {% endif %}
+            {% endfor %}
+        </ul>
 
-    <a href="{{ url_for('pokemon.get_item_category_data', id_or_name=data.category.url.split('/')[-2]) }}">
-        {{ data.category.name }}</a>
+        <h2>Category:</h2>
+        <a href="{{ url_for('pokemon.get_item_category_data', id_or_name=data.category.url.split('/')[-2]) }}">
+            {{ data.category.name }}</a>
 
-    <h2>Cost:</h2>
-    <p>{{ data.cost }}</p>
+        <h2>Cost:</h2>
+        <p>{{ data.cost }}</p>
 
-    <h2>Effect:</h2>
-    <ul>
-        {% for entry in data.effect_entries %}
-        <li>{{ entry.effect }}</li>
-        {% endfor %}
-    </ul>
+        <h2>Effect:</h2>
+        <ul>
+            {% for entry in data.effect_entries %}
+                <li>{{ entry.effect }}</li>
+            {% endfor %}
+        </ul>
 
-    <h2>Flavor Texts:</h2>
-    <ul>
-        {% for entry in data.flavor_text_entries %}
-        <li><strong>{{ entry['version_group']['name'] }}:</strong> {{ entry['text'] }}</li>
-        {% endfor %}
-    </ul>
-</div>
-    {{ data }}
+        <h2>Flavor Texts:</h2>
+        <ul>
+            {% for entry in data.flavor_text_entries %}
+                <li><strong>{{ entry['version_group']['name'] }}:</strong> {{ entry['text'] }}</li>
+            {% endfor %}
+        </ul>
+
+        <!-- New content begins here -->
+
+        <h2>Fling Effect</h2>
+        <p>
+            <a href="{{ data.fling_effect.url }}">{{ data.fling_effect.name }}</a>
+        </p>
+
+        <h2>Fling Power</h2>
+        <p>{{ data.fling_power }}</p>
+
+        <h2>Game Indices</h2>
+        <ul>
+            {% for game in data.game_indices %}
+                <li>
+                    <a href="{{ game.generation.url }}">{{ game.generation.name }}</a> (Game
+                    Index: {{ game.game_index }})
+                </li>
+            {% endfor %}
+        </ul>
+
+        <h2>Held By Pokemon</h2>
+        <ul>
+            {% for holder in data.held_by_pokemon %}
+                <li>
+                    <a href="{{ holder.pokemon.url }}">{{ holder.pokemon.name }}</a> holds this item in:
+                    <ul>
+                        {% for version_detail in holder.version_details %}
+                            <li>
+                                Version: <a
+                                    href="{{ version_detail.version.url }}">{{ version_detail.version.name }}</a>,
+                                Rarity: {{ version_detail.rarity }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 {% endblock %}
