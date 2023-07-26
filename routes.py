@@ -84,7 +84,7 @@ def get_pokemon(id_or_name):
 
     if data is not None:
         data = {
-            "name": data["name"].title(),
+            "name": data['name'].title(),
             "id": data["id"],
             "sprites": data["sprites"],
             "species": data["species"],
