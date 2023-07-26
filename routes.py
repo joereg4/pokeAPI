@@ -55,7 +55,7 @@ def index():
     )  # Construct the previous page URL
 
     return render_template(
-        "pokemon.html", pokemons=pokemons, next_url=next_url, prev_url=prev_url
+        "list.html", pokemons=pokemons, next_url=next_url, prev_url=prev_url
     )
 
 
@@ -115,7 +115,7 @@ def get_pokemon(id_or_name):
         evolution_chain = models.get_chain(evolution_chain_data, pokemon_name)
 
         return render_template(
-            "pokemon_detail.html",
+            "detail.html",
             data=data,
             species_data=species_data,
             sorted_sprites=sorted_sprites,
@@ -134,7 +134,7 @@ def get_ability(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = models.APIResource.fetch_data("ability", id_or_name)
-        return render_template("pokemon_ability.html", data=data)
+        return render_template("ability.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
@@ -352,25 +352,9 @@ def get_move(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = models.APIResource.fetch_data("move", id_or_name)
-        return render_template("pokemon_move.html", data=data)
+        return render_template("move.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
-
-
-@pokemon_bp.route("/pokemon/<id_or_name>/encounters")
-def get_encounter_data(id_or_name):
-    logging.info("Accessing encounters for: {id_or_name}")
-    response = requests.get(
-        f"{BASE_URL}/{id_or_name}/encounters/"
-    )
-    logging.info(f"Response from PokeAPI: {response.status_code}")
-
-    if response.status_code == 200:
-        data = response.json()
-
-        return render_template("pokemon_encounter.html", data=data)
-    else:
-        return "Encounter not found", 404
 
 
 @pokemon_bp.route("/species/<id_or_name>")
@@ -380,7 +364,7 @@ def get_species_data(id_or_name):
     if response.status_code == 200:
         data = response.json()
 
-        return render_template("pokemon_species.html", data=data)
+        return render_template("species.html", data=data)
     else:
         return "Species not found", 404
 
@@ -389,7 +373,7 @@ def get_species_data(id_or_name):
 def get_item_data(id_or_name):
     try:
         data = models.item(id_or_name)
-        return render_template("pokemon_item.html", data=data)
+        return render_template("item.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
