@@ -17,7 +17,7 @@
         </ul>
 
         <h2>Category:</h2>
-        <a href="{{ url_for('pokemon.get_item_category_data', id_or_name=data.category.url.split('/')[-2]) }}">
+        <a href="{{ url_for('pokemon.get_item_category', id_or_name=data.category.url.split('/')[-2]) }}">
             {{ data.category.name }}</a>
 
         <h2>Cost:</h2>
