@@ -1,6 +1,5 @@
 import logging
 import math
-import requests
 from flask import Blueprint, render_template, request
 
 from pokedex import models, utils
@@ -33,12 +32,12 @@ def index():
 
     total_pokemons = collection.count_documents(
         {}
-    )  # Total number of pokemons in the collection
+    )  # Total number of Pokémon in the collection
     total_pages = math.ceil(
         total_pokemons / limit
     )  # Calculate the total number of pages
 
-    # Get the pokemons for the current page using the offset and limit
+    # Get the Pokémon for the current page using the offset and limit
     pokemons = collection.find().skip(offset).limit(limit)
     pokemons = list(pokemons)
 
@@ -61,7 +60,27 @@ def index():
 
 @pokemon_bp.route("/pokemon/<id_or_name>")
 def get_pokemon(id_or_name):
-    data = models.pokemon_detail(id_or_name)
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+
+    try:
+        def get_location_area_encounters(val):
+            params = val.split("/")[-3:]
+            params[1] = int(params[1])
+            print(f"Encounters Parms: {params}")
+            return params
+
+        data = models.APIResource.fetch_data(
+            "pokemon",
+            id_or_name,
+            #custom={"location_area_encounters": get_location_area_encounters}, **kwargs
+        )
+        #some pokemon have encounters /pokemon/<id_or_name>/encounters, need to figure out how to handle
+
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
 
     if data is not None:
         data = {
@@ -78,7 +97,7 @@ def get_pokemon(id_or_name):
             "moves": data.get("moves", []),
             "held_items": data.get("held_items", []),
         }
-        print(data.get("held_items", []))
+
         species_data = models.pokemon_species(data["id"])
         # logging.info(f"species_data: {species_data}")
 
@@ -343,6 +362,85 @@ def get_growth_rate(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
+@pokemon_bp.route("/item/<id_or_name>")
+def get_item(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = models.APIResource.fetch_data("item", id_or_name)
+        return render_template("item.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/item_attribute/<id_or_name>")
+def get_item_attribute(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = models.APIResource.fetch_data("item-attribute", id_or_name)
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/item_category/<id_or_name>")
+def get_item_category(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = models.APIResource.fetch_data("item-category", id_or_name)
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/item_fling_effect/<id_or_name>")
+def get_item_fling_effect(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = models.APIResource.fetch_data("item-fling-effect", id_or_name)
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/item_pocket/<id_or_name>")
+def get_item_pocket(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = models.APIResource.fetch_data("item-pocket", id_or_name)
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/machine/<int:id_>")
+def get_machine(id_):
+    try:
+        data = models.APIResource.fetch_data("machine", id_)
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
 @pokemon_bp.route("/move/<id_or_name>")
 def get_move(id_or_name):
     # Check if id_or_name can be converted to an integer
@@ -357,16 +455,209 @@ def get_move(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/species/<id_or_name>")
-def get_species_data(id_or_name):
-    response = requests.get(f"{BASE_URL}/pokemon-species/{id_or_name}")
-    logging.info(response)
-    if response.status_code == 200:
-        data = response.json()
+@pokemon_bp.route("/move_ailment/<id_or_name>")
+def get_move_ailment(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = models.APIResource.fetch_data("move-ailment", id_or_name)
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
 
-        return render_template("species.html", data=data)
-    else:
-        return "Species not found", 404
+
+@pokemon_bp.route("/move_battle_style/<id_or_name>")
+def get_move_battle_style(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = models.APIResource.fetch_data("move-battle-style", id_or_name)
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/move_category/<id_or_name>")
+def get_move_category(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = models.APIResource.fetch_data("move-category", id_or_name)
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/move_damage_class/<id_or_name>")
+def get_move_damage_class(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = models.APIResource.fetch_data("move-damage-class", id_or_name)
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/move_learn_method/<id_or_name>")
+def get_move_learn_method(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = models.APIResource.fetch_data("move-learn-method", id_or_name)
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/move_target/<id_or_name>")
+def get_move_target(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = models.APIResource.fetch_data("move-target", id_or_name)
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/location/<int:id_>")
+def get_location(id_):
+    try:
+        data = models.APIResource.fetch_data("location", id_)
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/location_area/<id_or_name>")
+def get_location_area(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = models.APIResource.fetch_data("location-area", id_or_name)
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/pal_park_area/<id_or_name>")
+def get_pal_park_area(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = models.APIResource.fetch_data("pal-park-area", id_or_name)
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/pokeathlon_stat/<id_or_name>")
+def get_pokeathlon_stat(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = models.APIResource.fetch_data("pokeathlon-stat", id_or_name)
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/pokedex/<id_or_name>")
+def get_pokedex(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = models.APIResource.fetch_data("pokedex", id_or_name)
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/pokemon_color/<id_or_name>")
+def get_pokemon_color(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = models.APIResource.fetch_data("pokemon-color", id_or_name)
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/pokemon_form/<id_or_name>")
+def get_pokemon_form(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = models.APIResource.fetch_data("pokemon-form", id_or_name)
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/pokemon_habitat/<id_or_name>")
+def get_pokemon_habitat(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = models.APIResource.fetch_data("pokemon-habitat", id_or_name)
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/pokemon_shape/<id_or_name>")
+def get_pokemon_shape(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = models.APIResource.fetch_data("pokemon-shape", id_or_name)
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
 @pokemon_bp.route("/pokemon_species/<id_or_name>")
@@ -377,35 +668,55 @@ def get_pokemon_species(id_or_name):
     except ValueError:
         pass  # if the conversion fails, it remains a string
     try:
-        data = models.APIResource.fetch_data("pokemon-species", id_or_name)
-        return render_template("species.html", data=data)
+        def get_evolution_chain(val):
+            params = val["url"].split("/")[-3:-1]
+            params[1] = int(params[1])
+            return params
+
+        data = models.APIResource.fetch_data("pokemon-species", id_or_name, custom={"evolution_chain": get_evolution_chain})
+        return data
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/item/<int:id_or_name>")
-def get_item(id_or_name):
+@pokemon_bp.route("/region/<id_or_name>")
+def get_region(id_or_name):
+    # Check if id_or_name can be converted to an integer
     try:
-        data = models.item(id_or_name)
-        return render_template("item.html", data=data)
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = models.APIResource.fetch_data("region", id_or_name)
+        return data
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/pokedex/<int:id_or_name>")
-def get_pokedex(id_or_name):
+@pokemon_bp.route("/stat/<id_or_name>")
+def get_stat(id_or_name):
+    # Check if id_or_name can be converted to an integer
     try:
-        data = models.pokedex(id_or_name)
-        return render_template("generic.html", data=data)
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = models.APIResource.fetch_data("stat", id_or_name)
+        return data
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/item-category/<int:id_or_name>")
-def get_item_category(id_or_name):
+@pokemon_bp.route("/type/<id_or_name>")
+def get_type(id_or_name):
+    # Check if id_or_name can be converted to an integer
     try:
-        data = models.item_category(id_or_name)
-        return render_template("generic.html", data=data)
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = models.APIResource.fetch_data("type", id_or_name)
+        return data
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
