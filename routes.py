@@ -287,7 +287,7 @@ def get_evolution_chain(id_):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/evolution_trigger/<int:id_or_name>")
+@pokemon_bp.route("/evolution_trigger/<id_or_name>")
 def get_evolution_trigger(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -301,7 +301,7 @@ def get_evolution_trigger(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/gender/<int:id_or_name>")
+@pokemon_bp.route("/gender/<id_or_name>")
 def get_gender(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -369,8 +369,22 @@ def get_species_data(id_or_name):
         return "Species not found", 404
 
 
+@pokemon_bp.route("/pokemon_species/<id_or_name>")
+def get_pokemon_species(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = models.APIResource.fetch_data("pokemon-species", id_or_name)
+        return render_template("species.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
 @pokemon_bp.route("/item/<int:id_or_name>")
-def get_item_data(id_or_name):
+def get_item(id_or_name):
     try:
         data = models.item(id_or_name)
         return render_template("item.html", data=data)
@@ -379,7 +393,7 @@ def get_item_data(id_or_name):
 
 
 @pokemon_bp.route("/pokedex/<int:id_or_name>")
-def get_pokedex_data(id_or_name):
+def get_pokedex(id_or_name):
     try:
         data = models.pokedex(id_or_name)
         return render_template("generic.html", data=data)
@@ -388,7 +402,7 @@ def get_pokedex_data(id_or_name):
 
 
 @pokemon_bp.route("/item-category/<int:id_or_name>")
-def get_item_category_data(id_or_name):
+def get_item_category(id_or_name):
     try:
         data = models.item_category(id_or_name)
         return render_template("generic.html", data=data)
