@@ -397,7 +397,7 @@ def region(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("region", id_or_name, **kwargs)
+    return APIResource.fetch_data("region", id_or_name, **kwargs)
 
 
 def ability(id_or_name, **kwargs):
@@ -409,7 +409,7 @@ def ability(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("ability", id_or_name, **kwargs)
+    return APIResource.fetch_data("abilities", id_or_name, **kwargs)
 
 
 def characteristic(id_, **kwargs):
