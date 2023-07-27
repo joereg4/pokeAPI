@@ -1,29 +1,19 @@
 import logging
 
-import requests
-from .api import get_data, get_sprite
-from .common import api_url_build, sprite_url_build
-from .loaders import *
+from .common import sprite_url_build
 
 
 def get_chain(data, name):
-    # Base evolution (start of the chain)
-    base_species = data["chain"]["species"]["name"]
-
     # logging.info(f"base_species: {base_species}")
 
     # Recursive function to find and return the full evolution chain with details
     def traverse_chain(chain):
         current_species = chain["species"]["name"]
-        # logging.info(f"current_species: {current_species}")
 
         # Extract species ID
         species_id = get_species_id_from_url(chain["species"]["url"])
-        # logging.info(f" species_id: { species_id}")
 
         evolves_to = chain.get("evolves_to", [])
-
-        # logging.info(f" evolves_to: { evolves_to}")
 
         evolution_details = {}
         if chain["evolution_details"]:
@@ -36,24 +26,21 @@ def get_chain(data, name):
                 "trade_species", "turn_upside_down", "trigger"
             ]
             evolution_details = {attr: details[attr] for attr in attributes_to_grab}
-        # logging.info(f" evolution_details: {evolution_details}")
 
-        # Assuming you have a function called 'sprite' that fetches the sprite using species_id
         sprite_data = sprite_url_build("pokemon", species_id, other=True, official_artwork=True)
 
         current_pokemon_info = {
             "name": current_species,
-            "species_id": species_id,  # Incorporating species_id
-            "sprite": sprite_data,  # Incorporating sprite data
-            **evolution_details  # This unpacks the dictionary items into current_pokemon_info
+            "species_id": species_id,
+            "sprite": sprite_data,
+            **evolution_details
         }
 
-        if not evolves_to:  # End of chain
-            # print(f"current_pokemon_info: {current_pokemon_info}")
-            return [current_pokemon_info]
-        return [current_pokemon_info] + traverse_chain(evolves_to[0])
+        evolutions = []
+        for evolution in evolves_to:  # Traverse through all possible evolutions
+            evolutions.extend(traverse_chain(evolution))
 
-    # Extract the species ID from the end of the URL
+        return [current_pokemon_info] + evolutions
 
     # Main part of your function
     base_species = data["chain"]["species"]["name"]
