@@ -126,7 +126,7 @@ def get_pokemon(id_or_name):
         # Build Evolution Chain
 
         evolution_id = models.get_species_id_from_url(species_data['evolution_chain']['url'])
-
+        print(f"Evolution ID: {evolution_id}")
         # Using evolution_id get the chain
         evolution_chain_data = models.evolution_chain(evolution_id)
         pokemon_name = evolution_chain_data["chain"]["species"]["name"]
