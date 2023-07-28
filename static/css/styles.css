@@ -47,23 +47,20 @@ a:hover {
 }
 
 .pokemon-grid > a > .pokemon-card {
-
     padding: 10px;
-    transition: border-width 0.1s ease-in-out; /* Adjusted to transition border-width */
 }
-
 
 .pokemon-grid > a {
     text-decoration: none;
     color: inherit;
     border: 1px solid #ccc;
+    transition: border-width 0.1s ease-in-out;
 }
 
 .pokemon-grid > a:hover {
     border: 1px solid rgba(0, 116, 236, .9294117647058824);
     text-decoration: none;
 }
-
 
 .pokemon-card__image-section {
     text-align: center;
