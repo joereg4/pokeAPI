@@ -93,13 +93,13 @@
                 <li>
                     <figure class="evolution-pokemon{% if pokemon.name|lower == data.name|lower %}--current{% endif %}">
                         <div class="evolution-stage">
-                            <a href="{{ url_for('pokemon.get_pokemon', id_or_name=pokemon.name) }}">{{ pokemon.species_id }}</a>
+                            <a href="{{ url_for('pokemon.get_pokemon_detail', id_or_name=pokemon.name) }}">{{ pokemon.species_id }}</a>
                         </div>
                         <a href="">
                             <img src="{{ pokemon.sprite }}" alt="{{ pokemon.name }} Image">
                         </a>
                         <div class="species-name">
-                            <a href="{{ url_for('pokemon.get_pokemon', id_or_name=pokemon.name) }}">{{ pokemon.name|title }}</a>
+                            <a href="{{ url_for('pokemon.get_pokemon_detail', id_or_name=pokemon.name) }}">{{ pokemon.name|title }}</a>
                         </div>
                         <div class="species-name">
                             {{ pokemon.min_level }}
