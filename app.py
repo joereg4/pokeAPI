@@ -14,7 +14,6 @@ print("Direct FLASK_ENV:", utils.env.get_env_variable("FLASK_ENV"))
 
 def create_app():
     app = Flask(__name__)
-    utils.configure_caching(app)
 
     with app.app_context():
         utils.get_db()

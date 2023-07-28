@@ -11,7 +11,7 @@
         <a class="Header-module__homelink" title="Pok&#xE9;API" href="/"><img src="" alt="Pok&#xE9;mon"></a>
         <nav class="Header-module__nav">
             <a class="Header-module__link" href="/">Home</a>
-            <a class="Header-module__link" href="/">Link #2</a>
+            <a class="Header-module__link" href="{{ url_for('pokemon.get_pokemon_list', page=1) }}">Pokemon List</a>
             <a class="Header-module__link" href="/">Link #3</a>
             <a class="Header-module__link" href="/">Link #4</a>
             <div class="search-box">
