@@ -1,6 +1,6 @@
 from flask import g
 from pymongo import MongoClient
-from pokedex.utils.env import get_env_variable
+from pokedex.env import get_env_variable
 
 def get_db():
     if 'db' not in g:
