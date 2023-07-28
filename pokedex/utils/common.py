@@ -59,6 +59,61 @@ ENDPOINTS = [
 SPRITE_EXT = "png"
 
 
+def get_chain(data, name):
+    # logging.info(f"base_species: {base_species}")
+
+    # Recursive function to find and return the full evolution chain with details
+    def traverse_chain(chain):
+        current_species = chain["species"]["name"]
+
+        # Extract species ID
+        species_id = get_species_id_from_url(chain["species"]["url"])
+
+        evolves_to = chain.get("evolves_to", [])
+
+        evolution_details = {}
+        if chain["evolution_details"]:
+            details = chain["evolution_details"][0]
+            attributes_to_grab = [
+                "gender", "held_item", "known_move", "known_move_type",
+                "location", "min_level", "min_happiness", "min_beauty",
+                "min_affection", "needs_overworld_rain", "party_species",
+                "party_type", "relative_physical_stats", "time_of_day",
+                "trade_species", "turn_upside_down", "trigger"
+            ]
+            evolution_details = {attr: details[attr] for attr in attributes_to_grab}
+
+        sprite_data = sprite_url_build("pokemon", species_id, other=True, official_artwork=True)
+
+        current_pokemon_info = {
+            "name": current_species,
+            "species_id": species_id,
+            "sprite": sprite_data,
+            **evolution_details
+        }
+
+        evolutions = []
+        for evolution in evolves_to:  # Traverse through all possible evolutions
+            evolutions.extend(traverse_chain(evolution))
+
+        return [current_pokemon_info] + evolutions
+
+    # Main part of your function
+    base_species = data["chain"]["species"]["name"]
+    if name != base_species:
+        while data["chain"]["species"]["name"] != name:
+            if not data["chain"]["evolves_to"]:  # Check if the list is empty
+                raise ValueError(f"Species '{name}' not found in the evolution chain.")
+            data["chain"] = data["chain"]["evolves_to"][0]
+
+    # Once we find the species (or if it's the base), we traverse the chain
+    return traverse_chain(data["chain"])
+
+
+def get_species_id_from_url(url):
+    return int(url.rstrip('/').split('/')[-1])
+
+
 def validate(endpoint, resource_id=None):
     if endpoint not in ENDPOINTS:
         raise ValueError("Unknown API endpoint '{}'".format(endpoint))

@@ -224,8 +224,8 @@ class APIMetadata(object):
     This class emulates a dictionary, but attribute lookup is via the `.`
     operator, not indexing. (ex. instance.attr, not instance['attr']).
 
-    Used for "Common Models" classes and APIResource helper classes.
-    https://pokeapi.co/docsv2/#common-models
+    Used for "Common utils" classes and APIResource helper classes.
+    https://pokeapi.co/docsv2/#common-utils
     """
 
     def __init__(self, data):
