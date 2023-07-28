@@ -1,5 +1,6 @@
 import logging
 import math
+import requests
 from flask import Blueprint, render_template, request
 
 from pokedex import models, utils
@@ -10,6 +11,26 @@ pokemon_bp = Blueprint(
 
 BASE_URL = "https://pokeapi.co/api/v2"
 SPRITE_URL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites"
+
+
+@pokemon_bp.route('/pokemon/')
+def get_pokemon_list():
+    page = request.args.get('page', 1, type=int)
+    per_page = 20
+    offset = (page - 1) * per_page
+    endpoint = f"{BASE_URL}/pokemon/?limit={per_page}&offset={offset}"
+
+    response = requests.get(endpoint)
+    data = response.json()
+
+    pokemon_list = []
+
+    # Fetch details for each Pokémon in the current set
+    for pokemon in data["results"]:
+        pokemon = models.APIResource.fetch_data("pokemon", pokemon["name"])
+        pokemon_list.append(pokemon)
+
+    return render_template('list.html', pokemon_list=pokemon_list, current_page=page)
 
 
 @pokemon_bp.route("/")
@@ -59,7 +80,7 @@ def index():
 
 
 @pokemon_bp.route("/pokemon/<id_or_name>")
-def get_pokemon(id_or_name):
+def get_pokemon_detail(id_or_name):
     try:
         id_or_name = int(id_or_name)
     except ValueError:
@@ -75,9 +96,9 @@ def get_pokemon(id_or_name):
         data = models.APIResource.fetch_data(
             "pokemon",
             id_or_name,
-            #custom={"location_area_encounters": get_location_area_encounters}, **kwargs
+            # custom={"location_area_encounters": get_location_area_encounters}, **kwargs
         )
-        #some pokemon have encounters /pokemon/<id_or_name>/encounters, need to figure out how to handle
+        # some pokemon have encounters /pokemon/<id_or_name>/encounters, need to figure out how to handle
 
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -673,7 +694,8 @@ def get_pokemon_species(id_or_name):
             params[1] = int(params[1])
             return params
 
-        data = models.APIResource.fetch_data("pokemon-species", id_or_name, custom={"evolution_chain": get_evolution_chain})
+        data = models.APIResource.fetch_data("pokemon-species", id_or_name,
+                                             custom={"evolution_chain": get_evolution_chain})
         return data
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status

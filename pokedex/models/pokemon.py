@@ -1,5 +1,4 @@
 import logging
-
 from .common import sprite_url_build
 
 
