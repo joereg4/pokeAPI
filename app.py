@@ -1,12 +1,12 @@
 from flask import Flask
 from routes import pokemon_bp
-from pokedex import utils
+import pokedex
 import logging
 
 logging.basicConfig(level=logging.INFO)
 
 # Load environment variables
-utils.env.load_environment()
+pokedex.env.load_environment()
 
 
 def create_app(test_config=None):
@@ -17,15 +17,15 @@ def create_app(test_config=None):
         app.config.update(test_config)
     else:
         # Use the default configurations
-        if utils.env.get_env_variable("FLASK_ENV") == "development":
+        if pokedex.env.get_env_variable("FLASK_ENV") == "development":
             app.config["DEBUG_PRINT_ROUTES"] = True
         else:
             app.config["DEBUG_PRINT_ROUTES"] = False
 
     with app.app_context():
-        utils.get_db()
+        pokedex.get_db()
 
-    app.teardown_appcontext(utils.close_db)
+    app.teardown_appcontext(pokedex.close_db)
     app.register_blueprint(pokemon_bp)
 
     if app.config["DEBUG_PRINT_ROUTES"]:
