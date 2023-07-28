@@ -1,9 +1,7 @@
 import pytest
 import json
 from unittest.mock import patch
-from flask import render_template
 from app import create_app
-from pokedex import utils
 
 
 @pytest.fixture
@@ -49,11 +47,11 @@ def test_get_pokemon_list_route(mock_get, client):
     assert response.status_code == 200
     assert b"bulbasaur" in response.data
 
-    @patch('pokedex.pokedex.APIResource.fetch_data')
-    @patch('pokedex.pokedex.pokemon_species')
-    @patch('pokedex.pokedex.get_species_id_from_url')
-    @patch('pokedex.pokedex.evolution_chain')
-    @patch('pokedex.pokedex.get_chain')
+    @patch('pokedex.APIResource.fetch_data')
+    @patch('pokedex.pokemon_species')
+    @patch('pokedex.get_species_id_from_url')
+    @patch('pokedex.evolution_chain')
+    @patch('pokedex.get_chain')
     def test_get_pokemon_detail_route(mock_get_chain, mock_evolution_chain, mock_species_id_url, mock_species,
                                       mock_fetch_data, client):
         # Define mock return values using the read_mock_data function
