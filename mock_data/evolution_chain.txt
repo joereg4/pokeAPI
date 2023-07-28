@@ -1,0 +1,81 @@
+{
+  'baby_trigger_item': None,
+  'chain': {
+    'evolution_details': [],
+    'evolves_to': [
+      {
+        'evolution_details': [
+          {
+            'gender': None,
+            'held_item': None,
+            'item': None,
+            'known_move': None,
+            'known_move_type': None,
+            'location': None,
+            'min_affection': None,
+            'min_beauty': None,
+            'min_happiness': None,
+            'min_level': 16,
+            'needs_overworld_rain': False,
+            'party_species': None,
+            'party_type': None,
+            'relative_physical_stats': None,
+            'time_of_day': '',
+            'trade_species': None,
+            'trigger': {
+              'name': 'level-up',
+              'url': 'https://pokeapi.co/api/v2/evolution-trigger/1/'
+            },
+            'turn_upside_down': False
+          }
+        ],
+        'evolves_to': [
+          {
+            'evolution_details': [
+              {
+                'gender': None,
+                'held_item': None,
+                'item': None,
+                'known_move': None,
+                'known_move_type': None,
+                'location': None,
+                'min_affection': None,
+                'min_beauty': None,
+                'min_happiness': None,
+                'min_level': 32,
+                'needs_overworld_rain': False,
+                'party_species': None,
+                'party_type': None,
+                'relative_physical_stats': None,
+                'time_of_day': '',
+                'trade_species': None,
+                'trigger': {
+                  'name': 'level-up',
+                  'url': 'https://pokeapi.co/api/v2/evolution-trigger/1/'
+                },
+                'turn_upside_down': False
+              }
+            ],
+            'evolves_to': [],
+            'is_baby': False,
+            'species': {
+              'name': 'venusaur',
+              'url': 'https://pokeapi.co/api/v2/pokemon-species/3/'
+            }
+          }
+        ],
+        'is_baby': False,
+        'species': {
+          'name': 'ivysaur',
+          'url': 'https://pokeapi.co/api/v2/pokemon-species/2/'
+        }
+      }
+    ],
+    'is_baby': False,
+    'species': {
+      'name': 'bulbasaur',
+      'url': 'https://pokeapi.co/api/v2/pokemon-species/1/'
+    }
+  },
+  'id': 1
+}

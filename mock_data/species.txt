@@ -1,0 +1,438 @@
+{
+  'base_happiness': 50,
+  'capture_rate': 45,
+  'color': None,
+  'egg_groups': [
+    {
+      'name': 'monster',
+      'url': 'https://pokeapi.co/api/v2/egg-group/1/'
+    },
+    {
+      'name': 'plant',
+      'url': 'https://pokeapi.co/api/v2/egg-group/7/'
+    }
+  ],
+  'evolution_chain': {
+    'url': 'https://pokeapi.co/api/v2/evolution-chain/1/'
+  },
+  'evolves_from_species': None,
+  'flavor_text_entries': [
+    {
+      'flavor_text': 'A strange seed was\nplanted on its\nback at birth.\x0cThe plant sprouts\nand grows with\nthis POKéMON.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'red',
+        'url': 'https://pokeapi.co/api/v2/version/1/'
+      }
+    },
+    {
+      'flavor_text': 'A strange seed was\nplanted on its\nback at birth.\x0cThe plant sprouts\nand grows with\nthis POKéMON.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'blue',
+        'url': 'https://pokeapi.co/api/v2/version/2/'
+      }
+    },
+    {
+      'flavor_text': 'It can go for days\nwithout eating a\nsingle morsel.\x0cIn the bulb on\nits back, it\nstores energy.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'yellow',
+        'url': 'https://pokeapi.co/api/v2/version/3/'
+      }
+    },
+    {
+      'flavor_text': 'The seed on its\nback is filled\nwith nutrients.\x0cThe seed grows\nsteadily larger as\nits body grows.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'gold',
+        'url': 'https://pokeapi.co/api/v2/version/4/'
+      }
+    },
+    {
+      'flavor_text': 'It carries a seed\non its back right\nfrom birth. As it\x0cgrows older, the\nseed also grows\nlarger.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'silver',
+        'url': 'https://pokeapi.co/api/v2/version/5/'
+      }
+    },
+    {
+      'flavor_text': 'While it is young,\nit uses the\nnutrients that are\x0cstored in the\nseeds on its back\nin order to grow.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'crystal',
+        'url': 'https://pokeapi.co/api/v2/version/6/'
+      }
+    },
+    {
+      'flavor_text': 'BULBASAUR can be seen napping in\nbright sunlight.\nThere is a seed on its back.\x0cBy soaking up the sun’s rays, the seed\ngrows progressively larger.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'ruby',
+        'url': 'https://pokeapi.co/api/v2/version/7/'
+      }
+    },
+    {
+      'flavor_text': 'BULBASAUR can be seen napping in\nbright sunlight.\nThere is a seed on its back.\x0cBy soaking up the sun’s rays, the seed\ngrows progressively larger.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'sapphire',
+        'url': 'https://pokeapi.co/api/v2/version/8/'
+      }
+    },
+    {
+      'flavor_text': 'BULBASAUR can be seen napping in bright\nsunlight. There is a seed on its back.\nBy soaking up the sun’s rays, the seed\ngrows progressively larger.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'emerald',
+        'url': 'https://pokeapi.co/api/v2/version/9/'
+      }
+    },
+    {
+      'flavor_text': 'There is a plant seed on its back right\nfrom the day this POKéMON is born.\nThe seed slowly grows larger.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'firered',
+        'url': 'https://pokeapi.co/api/v2/version/10/'
+      }
+    },
+    {
+      'flavor_text': 'A strange seed was planted on its back at\nbirth. The plant sprouts and grows with\nthis POKéMON.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'leafgreen',
+        'url': 'https://pokeapi.co/api/v2/version/11/'
+      }
+    },
+    {
+      'flavor_text': 'For some time after its birth, it\ngrows by gaining nourishment from\nthe seed on its back.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'diamond',
+        'url': 'https://pokeapi.co/api/v2/version/12/'
+      }
+    },
+    {
+      'flavor_text': 'For some time after its birth, it\ngrows by gaining nourishment from\nthe seed on its back.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'pearl',
+        'url': 'https://pokeapi.co/api/v2/version/13/'
+      }
+    },
+    {
+      'flavor_text': 'For some time after its birth, it\ngrows by gaining nourishment from\nthe seed on its back.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'platinum',
+        'url': 'https://pokeapi.co/api/v2/version/14/'
+      }
+    },
+    {
+      'flavor_text': 'The seed on its back is filled\nwith nutrients. The seed grows\nsteadily larger as its body grows.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'heartgold',
+        'url': 'https://pokeapi.co/api/v2/version/15/'
+      }
+    },
+    {
+      'flavor_text': 'It carries a seed on its back right\nfrom birth. As it grows older, the\nseed also grows larger.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'soulsilver',
+        'url': 'https://pokeapi.co/api/v2/version/16/'
+      }
+    },
+    {
+      'flavor_text': 'For some time after its birth, it\ngrows by gaining nourishment from\nthe seed on its back.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'black',
+        'url': 'https://pokeapi.co/api/v2/version/17/'
+      }
+    },
+    {
+      'flavor_text': 'For some time after its birth, it\ngrows by gaining nourishment from\nthe seed on its back.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'white',
+        'url': 'https://pokeapi.co/api/v2/version/18/'
+      }
+    },
+    {
+      'flavor_text': 'For some time after its birth, it\ngrows by gaining nourishment from\nthe seed on its back.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'black-2',
+        'url': 'https://pokeapi.co/api/v2/version/21/'
+      }
+    },
+    {
+      'flavor_text': 'For some time after its birth, it\ngrows by gaining nourishment from\nthe seed on its back.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'white-2',
+        'url': 'https://pokeapi.co/api/v2/version/22/'
+      }
+    },
+    {
+      'flavor_text': 'A strange seed was planted on its back at birth.\nThe plant sprouts and grows with this Pokémon.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'x',
+        'url': 'https://pokeapi.co/api/v2/version/23/'
+      }
+    },
+    {
+      'flavor_text': 'For some time after its birth, it grows by gaining\nnourishment from the seed on its back.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'y',
+        'url': 'https://pokeapi.co/api/v2/version/24/'
+      }
+    },
+    {
+      'flavor_text': 'Bulbasaur can be seen napping in bright sunlight.\nThere is a seed on its back. By soaking up the sun’s rays,\nthe seed grows progressively larger.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'omega-ruby',
+        'url': 'https://pokeapi.co/api/v2/version/25/'
+      }
+    },
+    {
+      'flavor_text': 'Bulbasaur can be seen napping in bright sunlight.\nThere is a seed on its back. By soaking up the sun’s rays,\nthe seed grows progressively larger.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'alpha-sapphire',
+        'url': 'https://pokeapi.co/api/v2/version/26/'
+      }
+    },
+    {
+      'flavor_text': 'It can go for days without eating a single morsel.\nIn the bulb on its back, it stores energy.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'lets-go-pikachu',
+        'url': 'https://pokeapi.co/api/v2/version/31/'
+      }
+    },
+    {
+      'flavor_text': 'It can go for days without eating a single morsel.\nIn the bulb on its back, it stores energy.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'lets-go-eevee',
+        'url': 'https://pokeapi.co/api/v2/version/32/'
+      }
+    },
+    {
+      'flavor_text': 'There is a plant seed on its back right from the\nday this Pokémon is born. The seed slowly\ngrows larger.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'sword',
+        'url': 'https://pokeapi.co/api/v2/version/33/'
+      }
+    },
+    {
+      'flavor_text': 'While it is young, it uses the nutrients that are\nstored in the seed on its back in order to grow.',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'version': {
+        'name': 'shield',
+        'url': 'https://pokeapi.co/api/v2/version/34/'
+      }
+    }
+  ],
+  'form_descriptions': [],
+  'forms_switchable': False,
+  'gender_rate': 1,
+  'genera': [
+    {
+      'genus': 'Seed Pokémon',
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      }
+    }
+  ],
+  'generation': {
+    'name': 'generation-i',
+    'url': 'https://pokeapi.co/api/v2/generation/1/'
+  },
+  'growth_rate': {
+    'name': 'medium-slow',
+    'url': 'https://pokeapi.co/api/v2/growth-rate/4/'
+  },
+  'habitat': None,
+  'has_gender_differences': False,
+  'hatch_counter': 20,
+  'id': 1,
+  'is_baby': False,
+  'is_legendary': False,
+  'is_mythical': False,
+  'name': 'bulbasaur',
+  'names': [
+    {
+      'language': {
+        'name': 'en',
+        'url': 'https://pokeapi.co/api/v2/language/9/'
+      },
+      'name': 'Bulbasaur'
+    }
+  ],
+  'order': 1,
+  'pal_park_encounters': [
+    {
+      'area': {
+        'name': 'field',
+        'url': 'https://pokeapi.co/api/v2/pal-park-area/2/'
+      },
+      'base_score': 50,
+      'rate': 30
+    }
+  ],
+  'pokedex_numbers': [
+    {
+      'entry_number': 1,
+      'pokedex': {
+        'name': 'national',
+        'url': 'https://pokeapi.co/api/v2/pokedex/1/'
+      }
+    },
+    {
+      'entry_number': 1,
+      'pokedex': {
+        'name': 'kanto',
+        'url': 'https://pokeapi.co/api/v2/pokedex/2/'
+      }
+    },
+    {
+      'entry_number': 226,
+      'pokedex': {
+        'name': 'original-johto',
+        'url': 'https://pokeapi.co/api/v2/pokedex/3/'
+      }
+    },
+    {
+      'entry_number': 231,
+      'pokedex': {
+        'name': 'updated-johto',
+        'url': 'https://pokeapi.co/api/v2/pokedex/7/'
+      }
+    },
+    {
+      'entry_number': 80,
+      'pokedex': {
+        'name': 'kalos-central',
+        'url': 'https://pokeapi.co/api/v2/pokedex/12/'
+      }
+    },
+    {
+      'entry_number': 1,
+      'pokedex': {
+        'name': 'letsgo-kanto',
+        'url': 'https://pokeapi.co/api/v2/pokedex/26/'
+      }
+    },
+    {
+      'entry_number': 68,
+      'pokedex': {
+        'name': 'isle-of-armor',
+        'url': 'https://pokeapi.co/api/v2/pokedex/28/'
+      }
+    }
+  ],
+  'shape': None,
+  'varieties': [
+    {
+      'is_default': True,
+      'pokemon': {
+        'name': 'bulbasaur',
+        'url': 'https://pokeapi.co/api/v2/pokemon/1/'
+      }
+    }
+  ]
+}

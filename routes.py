@@ -107,9 +107,11 @@ def get_pokemon_detail(id_or_name):
 
         evolution_id = utils.get_species_id_from_url(species_data['evolution_chain']['url'])
         print(f"Evolution ID: {evolution_id}")
+
         # Using evolution_id get the chain
         evolution_chain_data = utils.evolution_chain(evolution_id)
         pokemon_name = evolution_chain_data["chain"]["species"]["name"]
+
         # logging.info(f"name being fed to chain: {pokemon_name}")
         evolution_chain = utils.get_chain(evolution_chain_data, pokemon_name)
 
