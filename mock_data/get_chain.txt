@@ -1,0 +1,57 @@
+[
+  {
+    'name': 'bulbasaur',
+    'species_id': 1,
+    'sprite': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png'
+  },
+  {
+    'name': 'ivysaur',
+    'species_id': 2,
+    'sprite': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/2.png',
+    'gender': None,
+    'held_item': None,
+    'known_move': None,
+    'known_move_type': None,
+    'location': None,
+    'min_level': 16,
+    'min_happiness': None,
+    'min_beauty': None,
+    'min_affection': None,
+    'needs_overworld_rain': False,
+    'party_species': None,
+    'party_type': None,
+    'relative_physical_stats': None,
+    'time_of_day': '',
+    'trade_species': None,
+    'turn_upside_down': False,
+    'trigger': {
+      'name': 'level-up',
+      'url': 'https://pokeapi.co/api/v2/evolution-trigger/1/'
+    }
+  },
+  {
+    'name': 'venusaur',
+    'species_id': 3,
+    'sprite': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png',
+    'gender': None,
+    'held_item': None,
+    'known_move': None,
+    'known_move_type': None,
+    'location': None,
+    'min_level': 32,
+    'min_happiness': None,
+    'min_beauty': None,
+    'min_affection': None,
+    'needs_overworld_rain': False,
+    'party_species': None,
+    'party_type': None,
+    'relative_physical_stats': None,
+    'time_of_day': '',
+    'trade_species': None,
+    'turn_upside_down': False,
+    'trigger': {
+      'name': 'level-up',
+      'url': 'https://pokeapi.co/api/v2/evolution-trigger/1/'
+    }
+  }
+]
