@@ -5,11 +5,8 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
-
-
 # Load environment variables
 utils.env.load_environment()
-print("Direct FLASK_ENV:", utils.env.get_env_variable("FLASK_ENV"))
 
 
 def create_app():
@@ -22,7 +19,7 @@ def create_app():
     app.register_blueprint(pokemon_bp)
 
     # Set the configuration
-    if utils.env.get_env_variable("FLASK_ENV") == "production":
+    if utils.env.get_env_variable("FLASK_ENV") == "development":
         app.config["DEBUG_PRINT_ROUTES"] = True
         for key, value in app.config.items():
             print(f"{key}: {value}")
@@ -35,6 +32,7 @@ def create_app():
             print(rule)
 
     return app
+
 
 if __name__ == '__main__':
     app = create_app()
