@@ -4,14 +4,21 @@ from flask import Blueprint, render_template, request
 import requests
 import pokedex
 
-
-
 pokemon_bp = Blueprint(
     "pokemon", __name__, template_folder="templates", static_folder="static"
 )
 
 BASE_URL = "https://pokeapi.co/api/v2"
 SPRITE_URL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites"
+POKEMON_PER_PAGE = 20
+
+
+@pokemon_bp.errorhandler(ValueError)
+def handle_value_error(error):
+    # Log the error if needed
+    logging.error(str(error))
+    # Return a custom error message and a 400 Bad Request status code
+    return str(error), 400
 
 
 @pokemon_bp.route("/")
@@ -22,7 +29,7 @@ def index():
 @pokemon_bp.route('/pokemon/')
 def get_pokemon_list():
     page = request.args.get('page', 1, type=int)
-    per_page = 20
+    per_page = POKEMON_PER_PAGE
     offset = (page - 1) * per_page
     endpoint = f"{BASE_URL}/pokemon/?limit={per_page}&offset={offset}"
 
@@ -657,7 +664,7 @@ def get_pokemon_species(id_or_name):
             return params
 
         data = pokedex.APIResource.fetch_data("pokemon-species", id_or_name,
-                                             custom={"evolution_chain": get_evolution_chain})
+                                              custom={"evolution_chain": get_evolution_chain})
         return data
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
