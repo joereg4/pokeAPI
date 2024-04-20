@@ -22,10 +22,10 @@ def create_app(test_config=None):
         else:
             app.config["DEBUG_PRINT_ROUTES"] = False
 
-    with app.app_context():
-        pokedex.get_db()
+    #with app.app_context():
+    #    pokedex.get_db()
 
-    app.teardown_appcontext(pokedex.close_db)
+    #app.teardown_appcontext(pokedex.close_db)
     app.register_blueprint(pokemon_bp)
 
     if app.config["DEBUG_PRINT_ROUTES"]:
@@ -38,10 +38,6 @@ def create_app(test_config=None):
 
     return app
 
-
-if __name__ == '__main__':
-    app = create_app()
-    app.run()
 
 if __name__ == '__main__':
     app = create_app()
