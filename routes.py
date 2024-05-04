@@ -1,8 +1,8 @@
 import logging
-import math
 from flask import Blueprint, render_template, request
 import requests
 import pokedex
+import sys
 
 pokemon_bp = Blueprint(
     "pokemon", __name__, template_folder="templates", static_folder="static"
@@ -366,7 +366,7 @@ def get_item(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/item_attribute/<id_or_name>")
+@pokemon_bp.route("/item-attribute/<id_or_name>")
 def get_item_attribute(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -725,9 +725,9 @@ def get_endpoint_data(api_endpoint, id_or_name):
             pass  # if the conversion fails, it remains a string
         print(f"id_or_name: {id_or_name}, Type: {type(id_or_name)}")
 
-        # Check if the function exists in the utils module
-        if hasattr(utils, endpoint_pythonic):
-            func = getattr(utils, endpoint_pythonic)  # get the function from utils by its name
+        # Check if the function exists in the __all__ list
+        if endpoint_pythonic in pokedex.__all__:
+            func = getattr(sys.modules[__name__], endpoint_pythonic)  # get the function from current module by its name
             data = func(id_or_name)
             return render_template("generic.html", data=data)
         else:
