@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import os
-import requests
 
 BASE_URL = "https://pokeapi.co/api/v2"
 SPRITE_URL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites"

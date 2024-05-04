@@ -1,74 +1,60 @@
-# api.py
-# -*- coding: utf-8 -*-
-
 import requests
-
 from .cache import get_sprite_path, load, load_sprite, save, save_sprite
 from .common import api_url_build, sprite_url_build
 
 
+def _http_get(url, **params):
+    response = requests.get(url, params=params)
+    response.raise_for_status()
+    return response
+
+
 def _call_api(endpoint, resource_id=None, subresource=None):
     url = api_url_build(endpoint, resource_id, subresource)
-
-    # Get a list of resources at the endpoint, if no resource_id is given.
     get_endpoint_list = resource_id is None
+    response = _http_get(url)
 
-    response = requests.get(url)
-    response.raise_for_status()
-
-    data = response.json()
-    data = filter_english_data(data)
+    data = filter_english_data(response.json())
 
     if get_endpoint_list and data["count"] != len(data["results"]):
-        # We got a section of all results; we want ALL of them.
         items = data["count"]
-        num_items = dict(limit=items)
-
-        response = requests.get(url, params=num_items)
-        response.raise_for_status()
-
+        response = _http_get(url, limit=items)
         data = response.json()
-
     return data
 
 
 def get_data(endpoint, resource_id=None, subresource=None, **kwargs):
-    if not kwargs.get("force_lookup", False):
+    force_lookup = kwargs.get("force_lookup", False)
+
+    if not force_lookup:
         try:
-            data = load(endpoint, resource_id, subresource)
-            return data
+            return load(endpoint, resource_id, subresource)
         except KeyError:
             pass
-
     data = _call_api(endpoint, resource_id, subresource)
     save(data, endpoint, resource_id, subresource)
-
     return data
 
 
 def _call_sprite_api(sprite_type, sprite_id, **kwargs):
     url = sprite_url_build(sprite_type, sprite_id, **kwargs)
-
-    response = requests.get(url)
-    response.raise_for_status()
+    response = _http_get(url)
 
     abs_path = get_sprite_path(sprite_type, sprite_id, **kwargs)
     data = dict(img_data=response.content, path=abs_path)
-
     return data
 
 
 def get_sprite(sprite_type, sprite_id, **kwargs):
-    if not kwargs.get("force_lookup", False):
+    force_lookup = kwargs.get("force_lookup", False)
+
+    if not force_lookup:
         try:
-            data = load_sprite(sprite_type, sprite_id, **kwargs)
-            return data
+            return load_sprite(sprite_type, sprite_id, **kwargs)
         except FileNotFoundError:
             pass
-
     data = _call_sprite_api(sprite_type, sprite_id, **kwargs)
     save_sprite(data, sprite_type, sprite_id, **kwargs)
-
     return data
 
 
@@ -86,7 +72,6 @@ def filter_english_data(data):
         "descriptions",
         "version_group",
     ]
-
     for field in fields_to_filter:
         if field in filtered_data:
             entries = filtered_data[field]
@@ -99,5 +84,4 @@ def filter_english_data(data):
                        entry["language"].get("name") == "en"
                 ]
                 filtered_data[field] = filtered_entries
-
     return filtered_data
