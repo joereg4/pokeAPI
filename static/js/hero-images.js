@@ -7,9 +7,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Row configurations: each entry is [number of images, size multiplier, top offset percentage]
     const rowConfigs = [
-        [9, 3, -10],   // Row 1: 15 images, 3x base size, bottom
+        [9, 3, -10],  // Row 1: 15 images, 3x base size, bottom
         [11, 2, 40],  // Row 2: 10 images, 2x base size, 40% from bottom
-        [9, 1.5, 65]    // Row 3: 5 images, 1.5x base size, 70% from bottom
+        [9, 1.5, 65]  // Row 3: 5 images, 1.5x base size, 70% from bottom
     ];
 
     function getRandomInt(min, max) {
