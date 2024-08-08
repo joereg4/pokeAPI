@@ -280,7 +280,7 @@ def get_egg_group(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("egg-group", id_or_name)
-        return render_template("generic.html", data=data)
+        return render_template("egg_group_detail.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
