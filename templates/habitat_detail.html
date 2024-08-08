@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ data.name | title }} - Pokémon Habitat{% endblock %}
+
+{% block content %}
+<div class="habitat-detail-section">
+    <h1>{{ data.name | title }} Habitat</h1>
+    <h2>Pokémon Species in this Habitat</h2>
+    <ul class="pokemon-list">
+        {% for pokemon_species in data.pokemon_species %}
+            <li><a href="{{ url_for('pokemon.get_pokemon_detail', id_or_name=pokemon_species.name) }}">{{ pokemon_species.name | title }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

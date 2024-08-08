@@ -392,6 +392,22 @@ def get_growth_rate(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
+@pokemon_bp.route("/habitat/<id_or_name>")
+def get_habitat(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        response = requests.get(f"https://pokeapi.co/api/v2/pokemon-habitat/{id_or_name}/")
+        response.raise_for_status()
+        data = response.json()
+        return render_template("habitat_detail.html", data=data)
+    except requests.exceptions.HTTPError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
 @pokemon_bp.route("/item/<id_or_name>")
 def get_item(id_or_name):
     # Check if id_or_name can be converted to an integer
