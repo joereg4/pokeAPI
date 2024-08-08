@@ -101,6 +101,7 @@ def get_pokemon_detail(id_or_name):
             "abilities": data.get("abilities", []),
             "moves": data.get("moves", []),
             "held_items": data.get("held_items", []),
+            "types": data.get("types", []),
         }
 
         species_data = pokedex.pokemon_species(data["id"])
