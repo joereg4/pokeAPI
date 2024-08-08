@@ -95,7 +95,7 @@
                         <div class="evolution-stage">
                             <a href="{{ url_for('pokemon.get_pokemon_detail', id_or_name=pokemon.name) }}">{{ pokemon.species_id }}</a>
                         </div>
-                        <a href="">
+                        <a href="{{ url_for('pokemon.get_pokemon_detail', id_or_name=pokemon.name) }}">
                             <img src="{{ pokemon.sprite }}" alt="{{ pokemon.name }} Image">
                         </a>
                         <div class="species-name">
