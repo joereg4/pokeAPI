@@ -152,6 +152,28 @@ def get_pokemon_detail(id_or_name):
         return "Pokemon not found", 404
 
 
+def fetch_all_results(url):
+    results = []
+    while url:
+        response = requests.get(url)
+        data = response.json()
+        results.extend(data["results"])
+        url = data.get("next")  # Get the next page URL, if it exists
+    return results
+
+@pokemon_bp.route("/types")
+def types_list():
+    url = "https://pokeapi.co/api/v2/type"
+    types = fetch_all_results(url)
+    return render_template("types.html", types=types)
+
+@pokemon_bp.route("/abilities")
+def abilities_list():
+    url = "https://pokeapi.co/api/v2/ability"
+    abilities = fetch_all_results(url)
+    return render_template("abilities.html", abilities=abilities)
+
+
 @pokemon_bp.route("/ability/<id_or_name>")
 def get_ability(id_or_name):
     # Check if id_or_name can be converted to an integer
@@ -718,16 +740,17 @@ def get_stat(id_or_name):
 
 @pokemon_bp.route("/type/<id_or_name>")
 def get_type(id_or_name):
-    # Check if id_or_name can be converted to an integer
     try:
         id_or_name = int(id_or_name)
     except ValueError:
         pass  # if the conversion fails, it remains a string
+
     try:
         data = pokedex.APIResource.fetch_data("type", id_or_name)
-        return data
+        return render_template("type_detail.html", type_data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
+
 
 
 @pokemon_bp.route("/<api_endpoint>/<id_or_name>")
