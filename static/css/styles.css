@@ -478,3 +478,140 @@ nav a {
     cursor: pointer;
 }
 
+.hero-section {
+    text-align: center;
+    background: url('https://example.com/hero-background.jpg') no-repeat center center;
+    background-size: cover;
+    color: #fff;
+    padding: 100px 20px;
+}
+
+.hero-section h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+}
+
+.hero-section p {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+}
+
+.featured-section {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.pokemon-grid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.pokemon-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    width: 200px;
+}
+
+.pokemon-card img {
+    width: 100px;
+    height: 100px;
+}
+
+.pokemon-card h3 {
+    margin: 10px 0;
+}
+
+.details-link {
+    display: block;
+    margin-top: 10px;
+    color: #2a75bb;
+    text-decoration: none;
+}
+
+.statistics-section {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: #f4f4f9;
+}
+
+.statistics-grid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.statistic {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 150px;
+}
+
+.statistic h3 {
+    margin: 0;
+    font-size: 2em;
+    color: #ffcb05;
+}
+
+.hero-section {
+    position: relative;
+    text-align: center;
+    background-color: #f4f4f9;
+    height: 500px; /* Confined space for the images */
+    overflow: hidden;
+    padding: 20px;
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+}
+
+.hero-section h1,
+.hero-section p {
+    position: relative;
+    z-index: 1;
+    color: #2a75bb;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #2a75bb;
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    position: absolute; /* Position it absolutely within the hero section */
+    left: 50%; /* Center horizontally */
+    top: 50%; /* Center vertically */
+    transform: translate(-50%, -50%); /* Center both horizontally and vertically */
+    z-index: 2; /* Ensure it is above other elements */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add subtle drop shadow */
+}
+
+.hero-images {
+    position: absolute;
+    top: 160px; /* Adjust to keep images below the header text */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 50%; /* Adjust height to avoid overlapping with CTA */
+    z-index: 0;
+    overflow: visible; /* Ensure images do not overflow the container */
+}
+
+.hero-img {
+    object-fit: contain;
+    position: absolute;
+}
+
+.cell {
+    position: absolute;
+    box-sizing: border-box; /* Ensure border is included in width and height */
+}
