@@ -36,7 +36,7 @@
                 <li class="detail-card__list">Gender Rate: {{ species_data.gender_rate }}</li>
                 <li class="detail-card__list">Hatch Counter: {{ species_data.hatch_counter }}</li>
                 <li class="detail-card__list">Has Gender Differences: {{ species_data.has_gender_differences }}</li>
-                <li class="detail-card__list">Habitat: {{ species_data.habitat.name }}</li>
+                <li class="detail-card__list">Habitat: <a href="{{ url_for('pokemon.get_habitat', id_or_name=species_data.habitat.name) }}">{{ species_data.habitat.name }}</a></li>
                 <li class="detail-card__list">Is Baby: {{ species_data.is_baby }}</li>
                 <li class="detail-card__list">Is Legendary: {{ species_data.is_legendary }}</li>
                 <li class="detail-card__list">Is Mythical: {{ species_data.is_mythical }}</li>
