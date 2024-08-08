@@ -23,7 +23,24 @@ def handle_value_error(error):
 
 @pokemon_bp.route("/")
 def index():
-    return render_template("index.html")
+    # Fetch total Pokémon count
+    pokemon_count_response = requests.get("https://pokeapi.co/api/v2/pokemon?limit=1")
+    pokemon_count = pokemon_count_response.json()["count"]
+
+    # Fetch total types count
+    types_count_response = requests.get("https://pokeapi.co/api/v2/type")
+    types_count = len(types_count_response.json()["results"])
+
+    # Fetch total abilities count
+    abilities_count_response = requests.get("https://pokeapi.co/api/v2/ability")
+    abilities_count = len(abilities_count_response.json()["results"])
+
+    return render_template(
+        "index.html",
+        pokemon_count=pokemon_count,
+        types_count=types_count,
+        abilities_count=abilities_count
+    )
 
 
 @pokemon_bp.route('/pokemon/')
