@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Pokémon Abilities{% endblock %}
+
+{% block content %}
+<div class="abilities-section">
+    <h1>Pokémon Abilities</h1>
+    <ul class="abilities-list">
+        {% for ability in abilities %}
+            <li><a href="{{ url_for('pokemon.get_ability', id_or_name=ability.name) }}">{{ ability.name }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

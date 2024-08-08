@@ -36,20 +36,21 @@
 <div class="statistics-section">
     <h2>Pokémon Statistics</h2>
     <div class="statistics-grid">
-        <div class="statistic">
+        <a href="{{ url_for('pokemon.get_pokemon_list', page=1) }}" class="statistic">
             <h3>{{ pokemon_count }}</h3>
             <p>Total Pokémon</p>
-        </div>
-        <div class="statistic">
+        </a>
+        <a href="{{ url_for('pokemon.types_list') }}" class="statistic">
             <h3>{{ types_count }}</h3>
             <p>Types</p>
-        </div>
-        <div class="statistic">
+        </a>
+        <a href="{{ url_for('pokemon.abilities_list') }}" class="statistic">
             <h3>{{ abilities_count }}</h3>
             <p>Abilities</p>
-        </div>
+        </a>
     </div>
 </div>
+
 <script src="{{ url_for('pokemon.static', filename='js/hero-images.js') }}"></script>
 <script src="{{ url_for('pokemon.static', filename='js/random-featured-pokemon.js') }}"></script>
 {% endblock %}

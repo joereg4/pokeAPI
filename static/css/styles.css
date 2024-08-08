@@ -615,3 +615,9 @@ nav a {
     position: absolute;
     box-sizing: border-box; /* Ensure border is included in width and height */
 }
+
+.statistics-grid a.statistic {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
