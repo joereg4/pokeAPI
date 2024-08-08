@@ -8,31 +8,29 @@
     <link rel="stylesheet" href="{{ url_for('pokemon.static', filename='css/styles.css') }}">
 </head>
 <body>
-<header>
-    <div class="header-wrapper">
-        <a href="/" title="Pokémon API"><img src="{{ url_for('pokemon.static', filename='img/logo.png') }}"
-                                             alt="Pokémon"></a>
-        <nav>
-            <a href="/">Home</a>
-            <a href="{{ url_for('pokemon.get_pokemon_list', page=1) }}">Pokémon List</a>
-            <a href="#">Link #3</a>
-            <a href="#">Link #4</a>
-            <div class="search-box">
-                <input type="text" placeholder="Search...">
-                <button type="submit">Search</button>
-            </div>
-        </nav>
-    </div>
-</header>
-<div class="main-section">
-    {% block content %}{% endblock %}
-</div>
-<footer>
-    <div class="footer-container">
-        <div>Created by <a href="https://joereg4.github.io/">Joe Regenstein</a>, thank you PokéAPI. Pokémon and Pokémon
-            character names are trademarks of Nintendo.
+    <header>
+        <div class="header-wrapper">
+            <a href="/" title="Pokémon API"><img src="{{ url_for('pokemon.static', filename='img/pokedexlogo.png') }}" alt="Pokémon"></a>
+            <nav>
+                <a href="/">Home</a>
+                <a href="{{ url_for('pokemon.get_pokemon_list', page=1) }}">Pokémon List</a>
+                <a href="#">Link #3</a>
+                <a href="#">Link #4</a>
+                <div class="search-box">
+                    <input type="text" placeholder="Search...">
+                    <button type="submit">Search</button>
+                </div>
+            </nav>
         </div>
+    </header>
+
+    <div class="main-section">
+        {% block content %}{% endblock %}
     </div>
-</footer>
+    <footer>
+        <div class="footer-container">
+            <div>Created by <a href="https://joereg4.github.io/">Joe Regenstein</a>, thank you PokéAPI. Pokémon and Pokémon character names are trademarks of Nintendo.</div>
+        </div>
+    </footer>
 </body>
 </html>
