@@ -13,6 +13,11 @@
         <div class="detail-card__info-section">
             <h2 class="detail-card__title">Attributes</h2>
             <ul class="detail-card__item">
+                <li class="detail-card__list">Types:
+                    {% for type in data.types %}
+                        {{ type.type.name }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </li>
                 <li class="detail-card__list">Base Experience: {{ data.base_experience }}</li>
                 <li class="detail-card__list">Height: {{ data.height }}</li>
                 <li class="detail-card__list">Weight: {{ data.weight }}</li>
@@ -23,7 +28,8 @@
                 <li class="detail-card__list">Color: {{ species_data.color.name }}</li>
                 <li class="detail-card__list">Egg Groups:
                     {% for egg_group in species_data.egg_groups %}
-                        <a href="{{ url_for('pokemon.get_egg_group', id_or_name=egg_group.url.split('/')[-2]) }}">{{ egg_group.name }}</a>{% if not loop.last %}, {% endif %}
+                        <a href="{{ url_for('pokemon.get_egg_group', id_or_name=egg_group.url.split('/')[-2]) }}">{{ egg_group.name }}</a>
+                        {% if not loop.last %}, {% endif %}
                     {% endfor %}
                 </li>
 
@@ -42,7 +48,8 @@
             <ul class="detail-card__item">
                 {% for ability in data.abilities %}
                     <li class="detail-card__list">
-                        {{ ability.slot }}: <a href="{{ url_for('pokemon.get_ability', id_or_name=ability.ability['url'].split('/')[-2]) }}"> {{ ability.ability['name'] }} </a>
+                        {{ ability.slot }}: <a
+                            href="{{ url_for('pokemon.get_ability', id_or_name=ability.ability['url'].split('/')[-2]) }}"> {{ ability.ability['name'] }} </a>
                     </li>
                 {% endfor %}
             </ul>
@@ -66,7 +73,8 @@
         <h2 class="detail-card__title">Moves</h2>
         <div class="detail-card__moves">
             {% for move_detail in data.moves %}
-                <a href="{{ url_for('pokemon.get_move', id_or_name=move_detail.move.url.split('/')[-2]) }}">{{ move_detail.move.name }}</a>{% if not
+                <a href="{{ url_for('pokemon.get_move', id_or_name=move_detail.move.url.split('/')[-2]) }}">{{ move_detail.move.name }}</a>
+                {% if not
         loop.last %}, {% endif %}
             {% endfor %}
         </div>
