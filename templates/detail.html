@@ -15,7 +15,7 @@
             <ul class="detail-card__item">
                 <li class="detail-card__list">Types:
                     {% for type in data.types %}
-                        {{ type.type.name }}{% if not loop.last %}, {% endif %}
+                        <a href="{{ url_for('pokemon.get_type', id_or_name=type.type.name) }}">{{ type.type.name }}</a>{% if not loop.last %}, {% endif %}
                     {% endfor %}
                 </li>
                 <li class="detail-card__list">Base Experience: {{ data.base_experience }}</li>
