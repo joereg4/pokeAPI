@@ -79,7 +79,6 @@ def index():
     )
 
 
-
 @pokemon_bp.route('/pokemon/')
 def get_pokemon_list():
     page = request.args.get('page', 1, type=int)
@@ -194,7 +193,6 @@ def get_pokemon_detail(id_or_name):
         )
     else:
         return "Pokemon not found", 404
-
 
 
 def fetch_all_results(url):
@@ -576,7 +574,11 @@ def get_move(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("move", id_or_name)
-        return render_template("move.html", data=data)
+
+        # Fetch additional details for the move
+        category = pokedex.APIResource.fetch_data("move-category", data["meta"]["category"]["name"])
+
+        return render_template("move_detail.html", data=data, category=category, )
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
@@ -611,16 +613,20 @@ def get_move_battle_style(id_or_name):
 
 @pokemon_bp.route("/move_category/<id_or_name>")
 def get_move_category(id_or_name):
-    # Check if id_or_name can be converted to an integer
     try:
-        id_or_name = int(id_or_name)
-    except ValueError:
-        pass  # if the conversion fails, it remains a string
-    try:
-        data = pokedex.APIResource.fetch_data("move-category", id_or_name)
-        return render_template("generic.html", data=data)
-    except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
+        category = pokedex.APIResource.fetch_data("move-category", id_or_name)
+        print(category)
+        # Optionally, fetch each move's detailed data if needed
+        moves = []
+        for move in category["moves"]:
+            move_detail = pokedex.APIResource.fetch_data("move", move["name"])
+            moves.append(move_detail)
+
+        return render_template(
+            "move_category.html", category=category, moves=moves,
+        )
+    except Exception as e:
+        return str(e), 404
 
 
 @pokemon_bp.route("/move_damage_class/<id_or_name>")
