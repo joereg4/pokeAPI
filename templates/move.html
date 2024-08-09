@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
-{% block title %}Move Detail{% endblock %}
+{% block title %}{{ data['name'] | title }} - Move Detail{% endblock %}
 
 {% block content %}
 
-    <h1>Move Detail</h1>
+    <h1>Move: {{ data['name'] | title }}</h1>
 
     <div class="move-details">
         <h2>Effects</h2>
@@ -18,9 +18,8 @@
         <h2>Flavor Texts</h2>
         <ul>
             {% for entry in data['flavor_text_entries'] %}
-                <li><strong>{{ entry['version_group']['name'] }}:</strong> {{ entry['flavor_text'] }}</li>
+                <li><strong>{{ entry['version_group']['name'] | title }}:</strong> {{ entry['flavor_text'] }}</li>
             {% endfor %}
         </ul>
     </div>
-    {{ data }}
 {% endblock %}
