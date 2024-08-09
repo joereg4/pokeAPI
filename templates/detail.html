@@ -23,6 +23,7 @@
                 <li class="detail-card__list">Weight: {{ data.weight }}</li>
                 <li class="detail-card__list">Is Default: {{ data.is_default }}</li>
                 <li class="detail-card__list">Order: {{ data.order }}</li>
+                {% if species_data %}
                 <li class="detail-card__list">Base Happiness: {{ species_data.base_happiness }}</li>
                 <li class="detail-card__list">Capture Rate: {{ species_data.capture_rate }}</li>
                 <li class="detail-card__list">Color: <a href="{{ url_for('pokemon.get_color', id_or_name=species_data.color.name) }}">{{ species_data.color.name }}</a></li>
@@ -31,16 +32,7 @@
                         <a href="{{ url_for('pokemon.get_egg_group', id_or_name=egg_group.url.split('/')[-2]) }}">{{ egg_group.name }}</a>
                         {% if not loop.last %}, {% endif %}
                     {% endfor %}
-                </li>
-
-                <li class="detail-card__list">Gender Rate: {{ species_data.gender_rate }}</li>
-                <li class="detail-card__list">Hatch Counter: {{ species_data.hatch_counter }}</li>
-                <li class="detail-card__list">Has Gender Differences: {{ species_data.has_gender_differences }}</li>
-                <li class="detail-card__list">Habitat: <a href="{{ url_for('pokemon.get_habitat', id_or_name=species_data.habitat.name) }}">{{ species_data.habitat.name }}</a></li>
-                <li class="detail-card__list">Is Baby: {{ species_data.is_baby }}</li>
-                <li class="detail-card__list">Is Legendary: {{ species_data.is_legendary }}</li>
-                <li class="detail-card__list">Is Mythical: {{ species_data.is_mythical }}</li>
-                <li class="detail-card__list">Shape: {{ species_data.shape.name }}</li>
+                {% endif %}
             </ul>
         </div>
         <div class="detail-card__info-section">
@@ -97,6 +89,7 @@
     <h2 class="detail-card__title">Evolution Chain:</h2>
     <div class="evolution-chain">
         <ul class="evolution-chain__list">
+        {% if species_data %}
             {% for pokemon in evolution_chain %}
                 <li>
                     <figure class="evolution-pokemon{% if pokemon.name|lower == data.name|lower %}--current{% endif %}">
@@ -115,6 +108,9 @@
                     </figure>
                 </li>
             {% endfor %}
+        {% else %}
+        No Evolution Chain Available
+        {% endif %}
         </ul>
     </div>
     <h2 class="detail-card__title">Flavor Text Entries:</h2>
