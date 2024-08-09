@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Pokémon Habitats{% endblock %}
+
+{% block content %}
+    <h1>Pokémon Habitats</h1>
+    <div class="habitats-list">
+        <ul>
+            {% for habitat in habitats %}
+                <li>
+                    <a href="{{ url_for('pokemon.get_habitat', id_or_name=habitat.name) }}">{{ habitat.name | replace('-', ' ') | capitalize }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
