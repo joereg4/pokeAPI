@@ -15,7 +15,7 @@
             <ul class="detail-card__item">
                 <li class="detail-card__list">Types:
                     {% for type in data.types %}
-                        <a href="{{ url_for('pokemon.get_type', id_or_name=type.type.name) }}">{{ type.type.name }}</a>
+                        <a href="{{ url_for('pokemon.get_type', id_or_name=type.type.name) }}">{{ type.type.name | title }}</a>
                         {% if not loop.last %}, {% endif %}
                     {% endfor %}
                 </li>
@@ -28,13 +28,23 @@
                     <li class="detail-card__list">Base Happiness: {{ species_data.base_happiness }}</li>
                     <li class="detail-card__list">Capture Rate: {{ species_data.capture_rate }}</li>
                     <li class="detail-card__list">Color: <a
-                            href="{{ url_for('pokemon.get_color', id_or_name=species_data.color.name) }}">{{ species_data.color.name }}</a>
+                            href="{{ url_for('pokemon.get_color', id_or_name=species_data.color.name) }}">{{ species_data.color.name | title }}</a>
                     </li>
                     <li class="detail-card__list">Egg Groups:
-                    {% for egg_group in species_data.egg_groups %}
-                        <a href="{{ url_for('pokemon.get_egg_group', id_or_name=egg_group.url.split('/')[-2]) }}">{{ egg_group.name }}</a>
-                        {% if not loop.last %}, {% endif %}
-                    {% endfor %}
+                        {% for egg_group in species_data.egg_groups %}
+                            <a href="{{ url_for('pokemon.get_egg_group', id_or_name=egg_group.url.split('/')[-2]) }}">{{ egg_group.name | title }}</a>
+                            {% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    <li class="detail-card__list">Gender Rate: {{ species_data.gender_rate }}</li>
+                    <li class="detail-card__list">Hatch Counter: {{ species_data.hatch_counter }}</li>
+                    <li class="detail-card__list">Has Gender Differences: {{ species_data.has_gender_differences | title }}</li>
+                    <li class="detail-card__list">Habitat: <a
+                            href="{{ url_for('pokemon.get_habitat', id_or_name=species_data.habitat.name) }}">{{ species_data.habitat.name | title }}</a>
+                    </li>
+                    <li class="detail-card__list">Is Baby: {{ species_data.is_baby }}</li>
+                    <li class="detail-card__list">Is Legendary: {{ species_data.is_legendary }}</li>
+                    <li class="detail-card__list">Is Mythical: {{ species_data.is_mythical }}</li>
+                    <li class="detail-card__list">Shape: {{ species_data.shape.name | title }}</li>
                 {% endif %}
             </ul>
         </div>
@@ -112,7 +122,7 @@
                     </li>
                 {% endfor %}
             {% else %}
-            <div style="text-align: center">No Data Available</div>
+                <div style="text-align: center">No Data Available</div>
             {% endif %}
         </ul>
     </div>

@@ -73,14 +73,18 @@ def index():
 
     # Fetch total colors count
     color_count_response = requests.get("https://pokeapi.co/api/v2/pokemon-color?limit=1")
-    color_count = types_count_response.json()["count"]
+    color_count = color_count_response.json()["count"]
 
+    # Fetch total habitat count
+    habitat_count_response = requests.get("https://pokeapi.co/api/v2/pokemon-habitat?limit=1")
+    habitat_count = habitat_count_response.json()["count"]
     return render_template(
         "index.html",
         pokemon_count=pokemon_count,
         types_count=types_count,
         abilities_count=abilities_count,
         color_count=color_count,
+        habitat_count=habitat_count,
     )
 
 
@@ -210,26 +214,32 @@ def fetch_all_results(url):
     return results
 
 
-@pokemon_bp.route("/types")
-def types_list():
-    url = "https://pokeapi.co/api/v2/type"
-    types = fetch_all_results(url)
-    return render_template("types.html", types=types)
+@pokemon_bp.route("/abilities")
+def abilities_list():
+    url = "https://pokeapi.co/api/v2/ability"
+    abilities = fetch_all_results(url)
+    return render_template("abilities.html", abilities=abilities)
 
 
 @pokemon_bp.route("/colors")
 def colors_list():
     url = "https://pokeapi.co/api/v2/pokemon-color"
     colors = fetch_all_results(url)
-    print(colors)
     return render_template("colors.html", colors=colors)
 
 
-@pokemon_bp.route("/abilities")
-def abilities_list():
-    url = "https://pokeapi.co/api/v2/ability"
-    abilities = fetch_all_results(url)
-    return render_template("abilities.html", abilities=abilities)
+@pokemon_bp.route("/habitats")
+def habitats_list():
+    url = "https://pokeapi.co/api/v2/pokemon-habitat"
+    habitats = fetch_all_results(url)
+    return render_template("habitats.html", habitats=habitats)
+
+
+@pokemon_bp.route("/types")
+def types_list():
+    url = "https://pokeapi.co/api/v2/type"
+    types = fetch_all_results(url)
+    return render_template("types.html", types=types)
 
 
 @pokemon_bp.route("/ability/<id_or_name>")
