@@ -46,13 +46,13 @@
                 <h3>{{ pokemon_count }}</h3>
                 <p>Total Pokémon</p>
             </a>
-            <a href="{{ url_for('pokemon.types_list') }}" class="statistic">
-                <h3>{{ types_count }}</h3>
-                <p>Types</p>
-            </a>
             <a href="{{ url_for('pokemon.abilities_list') }}" class="statistic">
                 <h3>{{ abilities_count }}</h3>
                 <p>Abilities</p>
+            </a>
+            <a href="{{ url_for('pokemon.types_list') }}" class="statistic">
+                <h3>{{ types_count }}</h3>
+                <p>Types</p>
             </a>
             <a href="{{ url_for('pokemon.colors_list') }}" class="statistic">
                 <h3>{{ color_count }}</h3>
