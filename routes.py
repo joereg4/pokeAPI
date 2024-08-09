@@ -71,11 +71,16 @@ def index():
     abilities_count_response = requests.get("https://pokeapi.co/api/v2/ability?limit=1")
     abilities_count = abilities_count_response.json()["count"]
 
+    # Fetch total colors count
+    color_count_response = requests.get("https://pokeapi.co/api/v2/pokemon-color?limit=1")
+    color_count = types_count_response.json()["count"]
+
     return render_template(
         "index.html",
         pokemon_count=pokemon_count,
         types_count=types_count,
-        abilities_count=abilities_count
+        abilities_count=abilities_count,
+        color_count=color_count,
     )
 
 
@@ -210,6 +215,14 @@ def types_list():
     url = "https://pokeapi.co/api/v2/type"
     types = fetch_all_results(url)
     return render_template("types.html", types=types)
+
+
+@pokemon_bp.route("/colors")
+def colors_list():
+    url = "https://pokeapi.co/api/v2/pokemon-color"
+    colors = fetch_all_results(url)
+    print(colors)
+    return render_template("colors.html", colors=colors)
 
 
 @pokemon_bp.route("/abilities")
@@ -641,6 +654,7 @@ def get_move_category_list():
         )
     except Exception as e:
         return str(e), 404
+
 
 @pokemon_bp.route("/move_damage_class/<id_or_name>")
 def get_move_damage_class(id_or_name):

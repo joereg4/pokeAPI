@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Pokémon Colors{% endblock %}
+
+{% block content %}
+    <h1>Pokémon Colors</h1>
+    <div class="colors-list">
+        <ul>
+            {% for color in colors %}
+                <li>
+                    <a href="{{ url_for('pokemon.get_color', id_or_name=color.name) }}">{{ color.name | capitalize }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
+
