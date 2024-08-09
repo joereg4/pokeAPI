@@ -3,54 +3,64 @@
 {% block title %}Home - Pokédex API{% endblock %}
 
 {% block content %}
-<div class="hero-section">
-    <h1>Welcome to the Pokédex API</h1>
-    <p>Explore the vast world of Pokémon with our comprehensive API.</p>
-    <div class="hero-images" id="hero-images"></div>
-    <a href="{{ url_for('pokemon.get_pokemon_list', page=1) }}" class="cta-button">Get Started</a>
-</div>
-<div class="featured-section">
-    <h2>Featured Pokémon</h2>
-    <div class="pokemon-grid">
-        <div class="pokemon-card">
-            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png" alt="Bulbasaur">
-            <h3>Bulbasaur</h3>
-            <p>Type: Grass/Poison</p>
-            <a href="{{ url_for('pokemon.get_pokemon_detail', id_or_name='bulbasaur') }}" class="details-link">View Details</a>
-        </div>
-        <div class="pokemon-card">
-            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png" alt="Pikachu">
-            <h3>Pikachu</h3>
-            <p>Type: Electric</p>
-            <a href="{{ url_for('pokemon.get_pokemon_detail', id_or_name='pikachu') }}" class="details-link">View Details</a>
-        </div>
-        <div class="pokemon-card">
-            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/150.png" alt="Mewtwo">
-            <h3>Mewtwo</h3>
-            <p>Type: Psychic</p>
-            <a href="{{ url_for('pokemon.get_pokemon_detail', id_or_name='mewtwo') }}" class="details-link">View Details</a>
+    <div class="hero-section">
+        <h1>Welcome to the Pokédex API</h1>
+        <p>Explore the vast world of Pokémon with our comprehensive API.</p>
+        <div class="hero-images" id="hero-images"></div>
+        <a href="{{ url_for('pokemon.get_pokemon_list', page=1) }}" class="cta-button">Get Started</a>
+    </div>
+    <div class="featured-section">
+        <h2>Featured Pokémon</h2>
+        <div class="pokemon-grid">
+            <div class="pokemon-card">
+                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"
+                     alt="Bulbasaur">
+                <h3>Bulbasaur</h3>
+                <p>Type: Grass/Poison</p>
+                <a href="{{ url_for('pokemon.get_pokemon_detail', id_or_name='bulbasaur') }}" class="details-link">View
+                    Details</a>
+            </div>
+            <div class="pokemon-card">
+                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"
+                     alt="Pikachu">
+                <h3>Pikachu</h3>
+                <p>Type: Electric</p>
+                <a href="{{ url_for('pokemon.get_pokemon_detail', id_or_name='pikachu') }}" class="details-link">View
+                    Details</a>
+            </div>
+            <div class="pokemon-card">
+                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/150.png"
+                     alt="Mewtwo">
+                <h3>Mewtwo</h3>
+                <p>Type: Psychic</p>
+                <a href="{{ url_for('pokemon.get_pokemon_detail', id_or_name='mewtwo') }}" class="details-link">View
+                    Details</a>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="statistics-section">
-    <h2>Pokémon Statistics</h2>
-    <div class="statistics-grid">
-        <a href="{{ url_for('pokemon.get_pokemon_list', page=1) }}" class="statistic">
-            <h3>{{ pokemon_count }}</h3>
-            <p>Total Pokémon</p>
-        </a>
-        <a href="{{ url_for('pokemon.types_list') }}" class="statistic">
-            <h3>{{ types_count }}</h3>
-            <p>Types</p>
-        </a>
-        <a href="{{ url_for('pokemon.abilities_list') }}" class="statistic">
-            <h3>{{ abilities_count }}</h3>
-            <p>Abilities</p>
-        </a>
+    <div class="statistics-section">
+        <h2>Pokémon Statistics</h2>
+        <div class="statistics-grid">
+            <a href="{{ url_for('pokemon.get_pokemon_list', page=1) }}" class="statistic">
+                <h3>{{ pokemon_count }}</h3>
+                <p>Total Pokémon</p>
+            </a>
+            <a href="{{ url_for('pokemon.types_list') }}" class="statistic">
+                <h3>{{ types_count }}</h3>
+                <p>Types</p>
+            </a>
+            <a href="{{ url_for('pokemon.abilities_list') }}" class="statistic">
+                <h3>{{ abilities_count }}</h3>
+                <p>Abilities</p>
+            </a>
+            <a href="{{ url_for('pokemon.colors_list') }}" class="statistic">
+                <h3>{{ color_count }}</h3>
+                <p>Colors</p>
+            </a>
+        </div>
     </div>
-</div>
 
-<script src="{{ url_for('pokemon.static', filename='js/hero-images.js') }}"></script>
-<script src="{{ url_for('pokemon.static', filename='js/random-featured-pokemon.js') }}"></script>
+    <script src="{{ url_for('pokemon.static', filename='js/hero-images.js') }}"></script>
+    <script src="{{ url_for('pokemon.static', filename='js/random-featured-pokemon.js') }}"></script>
 {% endblock %}
