@@ -1,33 +1,34 @@
-{% if pokemon_list %}
-            <div class="pokemon-grid">
-                {% for pokemon in pokemon_list %}
-                    <a href="{{ url_for('pokemon.get_pokemon_detail', id_or_name=pokemon.name) }}">
-                        <div class="pokemon-card">
-                            <div class="pokemon-card__image-section">
-                                <img class="pokemon-card__image"
-                                     src="{{ pokemon.sprites['other']['official-artwork']['front_default'] }}"
-                                     alt="{{ pokemon.name }}">
-                            </div>
-
-                            <div class="pokemon-card__info-section">
-                                <span class="pokemon-card__name">{{ pokemon.name }}</span>
-                                {% set type_names = [] %}
-                                {% for type_entry in pokemon.types %}
-                                    {% set _ = type_names.append(type_entry.type.name) %}
-                                {% endfor %}
-                                <p class="pokemon-card__id-type">{{ pokemon.id }} - {{ type_names|join(', ') }}</p>
-                            </div>
-                            <div class="pokemon-card__moves-section">
-                                {% set moves_list = [] %}
-                                {% for move in pokemon.moves[:20] %}
-                                    {% set _ = moves_list.append(move.move.name) %}
-                                {% endfor %}
-                                <p class="pokemon-card__moves">{{ moves_list|join(', ') }}</p>
-                            </div>
-                        </div>
-                    </a>
-                {% endfor %}
+<div class="pokemon-grid">
+    {% for pokemon in pokemon_list %}
+        <a href="{{ url_for('pokemon.get_pokemon_detail', id_or_name=pokemon.name) }}">
+            <div class="pokemon-card">
+                <div class="pokemon-card__image-section">
+                    {% if pokemon.sprites and pokemon.sprites['other']['official-artwork']['front_default'] %}
+                        <img class="pokemon-card__image"
+                             src="{{ pokemon.sprites['other']['official-artwork']['front_default'] }}"
+                             alt="{{ pokemon.name }}">
+                    {% else %}
+                        <img class="pokemon-card__image"
+                             src="/static/images/default_pokemon.png"  <!-- Use a default image path -->
+                             alt="No image available">
+                    {% endif %}
+                </div>
+                <div class="pokemon-card__info-section">
+                    <span class="pokemon-card__name">{{ pokemon.name }}</span>
+                    {% set type_names = [] %}
+                    {% for type_entry in pokemon.types %}
+                        {% set _ = type_names.append(type_entry.type.name) %}
+                    {% endfor %}
+                    <p class="pokemon-card__id-type">{{ pokemon.id }} - {{ type_names|join(', ') }}</p>
+                </div>
+                <div class="pokemon-card__moves-section">
+                    {% set moves_list = [] %}
+                    {% for move in pokemon.moves[:20] %}
+                        {% set _ = moves_list.append(move.move.name) %}
+                    {% endfor %}
+                    <p class="pokemon-card__moves">{{ moves_list|join(', ') }}</p>
+                </div>
             </div>
-        {% else %}
-            <p>No Pokémon found in this category.</p>
-        {% endif %}
+        </a>
+    {% endfor %}
+</div>
