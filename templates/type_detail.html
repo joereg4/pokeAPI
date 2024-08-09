@@ -1,54 +1,50 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ type_data.name | title }} - Pokémon Type{% endblock %}
+{% block title %}{{ data.name | title }} - Pokémon Type{% endblock %}
 
 {% block content %}
-<div class="type-detail-section">
-    <h1>{{ type_data.name | title }}</h1>
-    <h2>Damage Relations</h2>
-    <div class="damage-relations">
-        <h3>Double Damage From</h3>
-        <ul>
-            {% for relation in type_data.damage_relations.double_damage_from %}
-                <li>{{ relation.name | title }}</li>
-            {% endfor %}
-        </ul>
-        <h3>Double Damage To</h3>
-        <ul>
-            {% for relation in type_data.damage_relations.double_damage_to %}
-                <li>{{ relation.name | title }}</li>
-            {% endfor %}
-        </ul>
-        <h3>Half Damage From</h3>
-        <ul>
-            {% for relation in type_data.damage_relations.half_damage_from %}
-                <li>{{ relation.name | title }}</li>
-            {% endfor %}
-        </ul>
-        <h3>Half Damage To</h3>
-        <ul>
-            {% for relation in type_data.damage_relations.half_damage_to %}
-                <li>{{ relation.name | title }}</li>
-            {% endfor %}
-        </ul>
-        <h3>No Damage From</h3>
-        <ul>
-            {% for relation in type_data.damage_relations.no_damage_from %}
-                <li>{{ relation.name | title }}</li>
-            {% endfor %}
-        </ul>
-        <h3>No Damage To</h3>
-        <ul>
-            {% for relation in type_data.damage_relations.no_damage_to %}
-                <li>{{ relation.name | title }}</li>
-            {% endfor %}
-        </ul>
+    <div class="type-detail-section">
+        <h1>{{ data.name | title }}</h1>
+        <h2>Damage Relations</h2>
+        <div class="damage-relations">
+            <h3>Double Damage From</h3>
+            <ul>
+                {% for relation in data.damage_relations.double_damage_from %}
+                    <li>{{ relation.name | title }}</li>
+                {% endfor %}
+            </ul>
+            <h3>Double Damage To</h3>
+            <ul>
+                {% for relation in data.damage_relations.double_damage_to %}
+                    <li>{{ relation.name | title }}</li>
+                {% endfor %}
+            </ul>
+            <h3>Half Damage From</h3>
+            <ul>
+                {% for relation in data.damage_relations.half_damage_from %}
+                    <li>{{ relation.name | title }}</li>
+                {% endfor %}
+            </ul>
+            <h3>Half Damage To</h3>
+            <ul>
+                {% for relation in data.damage_relations.half_damage_to %}
+                    <li>{{ relation.name | title }}</li>
+                {% endfor %}
+            </ul>
+            <h3>No Damage From</h3>
+            <ul>
+                {% for relation in data.damage_relations.no_damage_from %}
+                    <li>{{ relation.name | title }}</li>
+                {% endfor %}
+            </ul>
+            <h3>No Damage To</h3>
+            <ul>
+                {% for relation in data.damage_relations.no_damage_to %}
+                    <li>{{ relation.name | title }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <h2>Pokémon with {{ data.name | title }} Type</h2>
+        {% include '_pokemon_list.html' %}
     </div>
-    <h2>Pokémon with {{ type_data.name | title }} Type</h2>
-    <ul>
-        {% for pokemon in type_data.pokemon %}
-            <li>{{ pokemon.pokemon.name | title }}</li>
-        {% endfor %}
-    </ul>
-</div>
 {% endblock %}

@@ -13,6 +13,31 @@ SPRITE_URL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites"
 POKEMON_PER_PAGE = 20
 
 
+def create_pokemon_list(data):
+    try:
+        # Possible keys that might contain the Pokémon species list
+        possible_keys = ["pokemon", "pokemon_species"]
+
+        # Identify the correct key by checking which one exists in the data
+        key = next((k for k in possible_keys if k in data), None)
+
+        if not key:
+            raise ValueError("No valid key found in data for Pokémon list.")
+
+        # Build the Pokémon list based on the identified key
+        pokemon_list = []
+        for pokemon_entry in data[key]:
+            # The key structure is different depending on the data source
+            pokemon_name = pokemon_entry["name"] if key == "pokemon_species" else pokemon_entry["pokemon"]["name"]
+            pokemon = pokedex.APIResource.fetch_data("pokemon", pokemon_name)
+            pokemon_list.append(pokemon)
+
+        return pokemon_list
+    except ValueError as e:
+        print(f"Error fetching Pokémon data: {e}")
+        return []
+
+
 @pokemon_bp.errorhandler(ValueError)
 def handle_value_error(error):
     # Log the error if needed
@@ -161,11 +186,13 @@ def fetch_all_results(url):
         url = data.get("next")  # Get the next page URL, if it exists
     return results
 
+
 @pokemon_bp.route("/types")
 def types_list():
     url = "https://pokeapi.co/api/v2/type"
     types = fetch_all_results(url)
     return render_template("types.html", types=types)
+
 
 @pokemon_bp.route("/abilities")
 def abilities_list():
@@ -394,17 +421,21 @@ def get_growth_rate(id_or_name):
 
 @pokemon_bp.route("/habitat/<id_or_name>")
 def get_habitat(id_or_name):
-    # Check if id_or_name can be converted to an integer
     try:
         id_or_name = int(id_or_name)
     except ValueError:
         pass  # if the conversion fails, it remains a string
+
     try:
-        response = requests.get(f"https://pokeapi.co/api/v2/pokemon-habitat/{id_or_name}/")
-        response.raise_for_status()
-        data = response.json()
-        return render_template("habitat_detail.html", data=data)
-    except requests.exceptions.HTTPError as e:
+        data = pokedex.APIResource.fetch_data("pokemon-habitat", id_or_name)
+        if not data:
+            return "No data found", 404  # Handle case where no data is returned
+
+        # Use the create_pokemon_list function with the correct key
+        pokemon_list = create_pokemon_list(data)
+
+        return render_template("habitat_detail.html", data=data, pokemon_list=pokemon_list)
+    except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
@@ -763,10 +794,10 @@ def get_type(id_or_name):
 
     try:
         data = pokedex.APIResource.fetch_data("type", id_or_name)
-        return render_template("type_detail.html", type_data=data)
+        pokemon_list = create_pokemon_list(data)
+        return render_template("type_detail.html", data=data, pokemon_list=pokemon_list)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
-
 
 
 @pokemon_bp.route("/<api_endpoint>/<id_or_name>")
