@@ -1,21 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title %}Move Category{% endblock %}
+{% block title %}Move Category List{% endblock %}
 
 {% block content %}
-<h1>Move Category: {{ category['name'] | title }}</h1>
-
-<div class="move-category-details">
-    <h2>Moves</h2>
+    <h1>Move Category List</h1>
     <ul>
-        {% for move in moves %}
-            <li>
-                <a href="{{ url_for('pokemon.get_move', id_or_name=move['name']) }}">
-                    {{ move['name'] | title }}
-                </a>
-                - Power: {{ move['power'] }}, Accuracy: {{ move['accuracy'] }}%, PP: {{ move['pp'] }}
-            </li>
+        {% for category in category_list %}
+            <li><a href="{{ url_for('pokemon.get_move_category', id_or_name=category.name) }}">{{ category.name }}</a></li>
         {% endfor %}
     </ul>
-</div>
 {% endblock %}

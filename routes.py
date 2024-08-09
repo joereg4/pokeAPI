@@ -623,11 +623,24 @@ def get_move_category(id_or_name):
             moves.append(move_detail)
 
         return render_template(
-            "move_category.html", category=category, moves=moves,
+            "move_category_detail.html", category=category, moves=moves,
         )
     except Exception as e:
         return str(e), 404
 
+
+@pokemon_bp.route("/move_category_list/")
+def get_move_category_list():
+    try:
+        # Fetch the full list of move categories
+        response = requests.get("https://pokeapi.co/api/v2/move-category/")
+        category_list = response.json()
+
+        return render_template(
+            "move_category.html", category_list=category_list["results"],
+        )
+    except Exception as e:
+        return str(e), 404
 
 @pokemon_bp.route("/move_damage_class/<id_or_name>")
 def get_move_damage_class(id_or_name):
