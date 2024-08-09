@@ -21,6 +21,9 @@ def create_pokemon_list(data):
         # Identify the correct key by checking which one exists in the data
         key = next((k for k in possible_keys if k in data), None)
 
+        print(f"Data received: {data}")
+        print(f"Key used: {key}")
+
         if not key:
             raise ValueError("No valid key found in data for Pokémon list.")
 
@@ -31,7 +34,7 @@ def create_pokemon_list(data):
             pokemon_name = pokemon_entry["name"] if key == "pokemon_species" else pokemon_entry["pokemon"]["name"]
             pokemon = pokedex.APIResource.fetch_data("pokemon", pokemon_name)
             pokemon_list.append(pokemon)
-
+        print(pokemon_list)
         return pokemon_list
     except ValueError as e:
         print(f"Error fetching Pokémon data: {e}")
@@ -266,6 +269,28 @@ def get_characteristic(id_):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
+@pokemon_bp.route("/color/<id_or_name>")
+def get_color(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+
+    try:
+        data = pokedex.APIResource.fetch_data("pokemon-color", id_or_name)
+        print(data)
+        if not data:
+            return "No data found", 404  # Handle case where no data is returned
+
+        # Use the create_pokemon_list function with the correct key
+        pokemon_list = create_pokemon_list(data)
+
+        return render_template("color_detail.html", data=data, pokemon_list=pokemon_list)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
 @pokemon_bp.route("/contest_effect/<int:id_>")
 def get_contest_effect(id_):
     try:
@@ -305,9 +330,16 @@ def get_egg_group(id_or_name):
         id_or_name = int(id_or_name)
     except ValueError:
         pass  # if the conversion fails, it remains a string
+
     try:
         data = pokedex.APIResource.fetch_data("egg-group", id_or_name)
-        return render_template("egg_group_detail.html", data=data)
+        if not data:
+            return "No data found", 404  # Handle case where no data is returned
+
+        # Use the create_pokemon_list function with the correct key
+        pokemon_list = create_pokemon_list(data)
+
+        return render_template("egg_group_detail.html", data=data, pokemon_list=pokemon_list)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
