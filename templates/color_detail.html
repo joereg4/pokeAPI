@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ data.name | title }} - Color{% endblock %}
+{% block title %}{{ data.name | title }} - Pokémon Color{% endblock %}
 
 {% block content %}
 <div class="color-detail-section">
     <h1>{{ data.name | title }} Color</h1>
-    <h2>Pokémon with this color</h2>
+    <h2>Pokémon Species with this Color</h2>
     {% include '_pokemon_list.html' %}
 </div>
 {% endblock %}

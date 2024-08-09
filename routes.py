@@ -32,9 +32,17 @@ def create_pokemon_list(data):
         for pokemon_entry in data[key]:
             # The key structure is different depending on the data source
             pokemon_name = pokemon_entry["name"] if key == "pokemon_species" else pokemon_entry["pokemon"]["name"]
+            print(f"Pokemon name: {pokemon_name}")
+
+            # Fetch the Pokémon data
             pokemon = pokedex.APIResource.fetch_data("pokemon", pokemon_name)
-            pokemon_list.append(pokemon)
-        print(pokemon_list)
+
+            # Check if the 'sprites' key exists in the Pokémon data
+            if "sprites" in pokemon:
+                pokemon_list.append(pokemon)
+            else:
+                print(f"Warning: No sprites found for Pokémon {pokemon_name}")
+
         return pokemon_list
     except ValueError as e:
         print(f"Error fetching Pokémon data: {e}")
