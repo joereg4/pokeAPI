@@ -64,12 +64,12 @@ def index():
     pokemon_count = pokemon_count_response.json()["count"]
 
     # Fetch total types count
-    types_count_response = requests.get("https://pokeapi.co/api/v2/type")
-    types_count = len(types_count_response.json()["results"])
+    types_count_response = requests.get("https://pokeapi.co/api/v2/type?limit=1")
+    types_count = types_count_response.json()["count"]
 
     # Fetch total abilities count
-    abilities_count_response = requests.get("https://pokeapi.co/api/v2/ability")
-    abilities_count = len(abilities_count_response.json()["results"])
+    abilities_count_response = requests.get("https://pokeapi.co/api/v2/ability?limit=1")
+    abilities_count = abilities_count_response.json()["count"]
 
     return render_template(
         "index.html",
@@ -77,6 +77,7 @@ def index():
         types_count=types_count,
         abilities_count=abilities_count
     )
+
 
 
 @pokemon_bp.route('/pokemon/')
