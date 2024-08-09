@@ -15,7 +15,8 @@
             <ul class="detail-card__item">
                 <li class="detail-card__list">Types:
                     {% for type in data.types %}
-                        <a href="{{ url_for('pokemon.get_type', id_or_name=type.type.name) }}">{{ type.type.name }}</a>{% if not loop.last %}, {% endif %}
+                        <a href="{{ url_for('pokemon.get_type', id_or_name=type.type.name) }}">{{ type.type.name }}</a>
+                        {% if not loop.last %}, {% endif %}
                     {% endfor %}
                 </li>
                 <li class="detail-card__list">Base Experience: {{ data.base_experience }}</li>
@@ -24,10 +25,12 @@
                 <li class="detail-card__list">Is Default: {{ data.is_default }}</li>
                 <li class="detail-card__list">Order: {{ data.order }}</li>
                 {% if species_data %}
-                <li class="detail-card__list">Base Happiness: {{ species_data.base_happiness }}</li>
-                <li class="detail-card__list">Capture Rate: {{ species_data.capture_rate }}</li>
-                <li class="detail-card__list">Color: <a href="{{ url_for('pokemon.get_color', id_or_name=species_data.color.name) }}">{{ species_data.color.name }}</a></li>
-                <li class="detail-card__list">Egg Groups:
+                    <li class="detail-card__list">Base Happiness: {{ species_data.base_happiness }}</li>
+                    <li class="detail-card__list">Capture Rate: {{ species_data.capture_rate }}</li>
+                    <li class="detail-card__list">Color: <a
+                            href="{{ url_for('pokemon.get_color', id_or_name=species_data.color.name) }}">{{ species_data.color.name }}</a>
+                    </li>
+                    <li class="detail-card__list">Egg Groups:
                     {% for egg_group in species_data.egg_groups %}
                         <a href="{{ url_for('pokemon.get_egg_group', id_or_name=egg_group.url.split('/')[-2]) }}">{{ egg_group.name }}</a>
                         {% if not loop.last %}, {% endif %}
@@ -89,45 +92,52 @@
     <h2 class="detail-card__title">Evolution Chain:</h2>
     <div class="evolution-chain">
         <ul class="evolution-chain__list">
-        {% if species_data %}
-            {% for pokemon in evolution_chain %}
-                <li>
-                    <figure class="evolution-pokemon{% if pokemon.name|lower == data.name|lower %}--current{% endif %}">
-                        <div class="evolution-stage">
-                            <a href="{{ url_for('pokemon.get_pokemon_detail', id_or_name=pokemon.name) }}">{{ pokemon.species_id }}</a>
-                        </div>
-                        <a href="{{ url_for('pokemon.get_pokemon_detail', id_or_name=pokemon.name) }}">
-                            <img src="{{ pokemon.sprite }}" alt="{{ pokemon.name }} Image">
-                        </a>
-                        <div class="species-name">
-                            <a href="{{ url_for('pokemon.get_pokemon_detail', id_or_name=pokemon.name) }}">{{ pokemon.name|title }}</a>
-                        </div>
-                        <div class="species-name">
-                            {{ pokemon.min_level }}
-                        </div>
-                    </figure>
-                </li>
-            {% endfor %}
-        {% else %}
-        No Evolution Chain Available
-        {% endif %}
+            {% if species_data %}
+                {% for pokemon in evolution_chain %}
+                    <li>
+                        <figure class="evolution-pokemon{% if pokemon.name|lower == data.name|lower %}--current{% endif %}">
+                            <div class="evolution-stage">
+                                <a href="{{ url_for('pokemon.get_pokemon_detail', id_or_name=pokemon.name) }}">{{ pokemon.species_id }}</a>
+                            </div>
+                            <a href="{{ url_for('pokemon.get_pokemon_detail', id_or_name=pokemon.name) }}">
+                                <img src="{{ pokemon.sprite }}" alt="{{ pokemon.name }} Image">
+                            </a>
+                            <div class="species-name">
+                                <a href="{{ url_for('pokemon.get_pokemon_detail', id_or_name=pokemon.name) }}">{{ pokemon.name|title }}</a>
+                            </div>
+                            <div class="species-name">
+                                {{ pokemon.min_level }}
+                            </div>
+                        </figure>
+                    </li>
+                {% endfor %}
+            {% else %}
+            <div style="text-align: center">No Data Available</div>
+            {% endif %}
         </ul>
     </div>
     <h2 class="detail-card__title">Flavor Text Entries:</h2>
     <ul>
-
-        {% for entry in species_data.flavor_text_entries %}
-            <li class="detail-card__list">
-                <strong>{{ entry.version.name }}:</strong> {{ entry.flavor_text|replace("POKéMON", "Pokémon") }}
-            </li>
-        {% endfor %}
+        {% if species_data %}
+            {% for entry in species_data.flavor_text_entries %}
+                <li class="detail-card__list">
+                    <strong>{{ entry.version.name }}:</strong> {{ entry.flavor_text|replace("POKéMON", "Pokémon") }}
+                </li>
+            {% endfor %}
+        {% else %}
+            <div style="text-align: center">No Data Available</div>
+        {% endif %}
     </ul>
     <h2 class="detail-card__title">Pokedex:</h2>
     <ul>
-        {% for entry in species_data.pokedex_numbers %}
-            <li class="detail-card__list">
-                <a href="{{ url_for('pokemon.get_endpoint_data', api_endpoint=entry.pokedex.url.split('/')[-3], id_or_name=entry.pokedex.url.split('/')[-2]) }}">{{ entry.entry_number }} {{ entry.pokedex.name }}</a>
-            </li>
-        {% endfor %}
+        {% if species_data %}
+            {% for entry in species_data.pokedex_numbers %}
+                <li class="detail-card__list">
+                    <a href="{{ url_for('pokemon.get_endpoint_data', api_endpoint=entry.pokedex.url.split('/')[-3], id_or_name=entry.pokedex.url.split('/')[-2]) }}">{{ entry.entry_number }} {{ entry.pokedex.name }}</a>
+                </li>
+            {% endfor %}
+        {% else %}
+            <div style="text-align: center">No Data Available</div>
+        {% endif %}
     </ul>
 {% endblock %}
