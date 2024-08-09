@@ -37,7 +37,8 @@
                         {% endfor %}
                     <li class="detail-card__list">Gender Rate: {{ species_data.gender_rate }}</li>
                     <li class="detail-card__list">Hatch Counter: {{ species_data.hatch_counter }}</li>
-                    <li class="detail-card__list">Has Gender Differences: {{ species_data.has_gender_differences | title }}</li>
+                    <li class="detail-card__list">Has Gender
+                        Differences: {{ species_data.has_gender_differences | title }}</li>
                     <li class="detail-card__list">Habitat: <a
                             href="{{ url_for('pokemon.get_habitat', id_or_name=species_data.habitat.name) }}">{{ species_data.habitat.name | title }}</a>
                     </li>
@@ -116,7 +117,11 @@
                                 <a href="{{ url_for('pokemon.get_pokemon_detail', id_or_name=pokemon.name) }}">{{ pokemon.name|title }}</a>
                             </div>
                             <div class="species-name">
-                                {{ pokemon.min_level }}
+                                {% if pokemon.min_level %}
+                                    Min. Lvl {{ pokemon.min_level }}
+                                {% else %}
+                                    <br>
+                                {% endif %}
                             </div>
                         </figure>
                     </li>
