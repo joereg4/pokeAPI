@@ -1,5 +1,6 @@
 import logging
 from flask import Blueprint, render_template, request
+from cache import cache
 import requests
 import pokedex
 import sys
@@ -106,9 +107,11 @@ def get_pokemon_list():
         pokemon_list.append(pokemon)
 
     return render_template('list.html', pokemon_list=pokemon_list, current_page=page)
+    cache.set(cache_key, rendered_template, timeout=300)
 
 
 @pokemon_bp.route("/pokemon/<id_or_name>")
+@cache.cached(timeout=300)
 def get_pokemon_detail(id_or_name):
     try:
         id_or_name = int(id_or_name)
@@ -215,6 +218,7 @@ def fetch_all_results(url):
 
 
 @pokemon_bp.route("/abilities")
+@cache.cached(timeout=300)
 def abilities_list():
     url = "https://pokeapi.co/api/v2/ability"
     abilities = fetch_all_results(url)
@@ -222,6 +226,7 @@ def abilities_list():
 
 
 @pokemon_bp.route("/colors")
+@cache.cached(timeout=300)
 def colors_list():
     url = "https://pokeapi.co/api/v2/pokemon-color"
     colors = fetch_all_results(url)
@@ -229,6 +234,7 @@ def colors_list():
 
 
 @pokemon_bp.route("/habitats")
+@cache.cached(timeout=300)
 def habitats_list():
     url = "https://pokeapi.co/api/v2/pokemon-habitat"
     habitats = fetch_all_results(url)
@@ -236,6 +242,7 @@ def habitats_list():
 
 
 @pokemon_bp.route("/types")
+@cache.cached(timeout=300)
 def types_list():
     url = "https://pokeapi.co/api/v2/type"
     types = fetch_all_results(url)
@@ -308,6 +315,7 @@ def get_characteristic(id_):
 
 
 @pokemon_bp.route("/color/<id_or_name>")
+@cache.cached(timeout=300)
 def get_color(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -490,6 +498,7 @@ def get_growth_rate(id_or_name):
 
 
 @pokemon_bp.route("/habitat/<id_or_name>")
+@cache.cached(timeout=300)
 def get_habitat(id_or_name):
     try:
         id_or_name = int(id_or_name)
@@ -510,6 +519,7 @@ def get_habitat(id_or_name):
 
 
 @pokemon_bp.route("/item/<id_or_name>")
+@cache.cached(timeout=300)
 def get_item(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -589,6 +599,7 @@ def get_machine(id_):
 
 
 @pokemon_bp.route("/move/<id_or_name>")
+@cache.cached(timeout=300)
 def get_move(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -635,6 +646,7 @@ def get_move_battle_style(id_or_name):
 
 
 @pokemon_bp.route("/move_category/<id_or_name>")
+@cache.cached(timeout=300)
 def get_move_category(id_or_name):
     try:
         category = pokedex.APIResource.fetch_data("move-category", id_or_name)
@@ -653,6 +665,7 @@ def get_move_category(id_or_name):
 
 
 @pokemon_bp.route("/move_category_list/")
+@cache.cached(timeout=300)
 def get_move_category_list():
     try:
         # Fetch the full list of move categories
@@ -878,6 +891,7 @@ def get_stat(id_or_name):
 
 
 @pokemon_bp.route("/type/<id_or_name>")
+@cache.cached(timeout=300)
 def get_type(id_or_name):
     try:
         id_or_name = int(id_or_name)
