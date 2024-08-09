@@ -22,9 +22,6 @@ def create_pokemon_list(data):
         # Identify the correct key by checking which one exists in the data
         key = next((k for k in possible_keys if k in data), None)
 
-        print(f"Data received: {data}")
-        print(f"Key used: {key}")
-
         if not key:
             raise ValueError("No valid key found in data for Pokémon list.")
 
@@ -33,7 +30,6 @@ def create_pokemon_list(data):
         for pokemon_entry in data[key]:
             # The key structure is different depending on the data source
             pokemon_name = pokemon_entry["name"] if key == "pokemon_species" else pokemon_entry["pokemon"]["name"]
-            print(f"Pokemon name: {pokemon_name}")
 
             # Fetch the Pokémon data
             pokemon = pokedex.APIResource.fetch_data("pokemon", pokemon_name)
@@ -187,7 +183,6 @@ def get_pokemon_detail(id_or_name):
         if species_data:
             # Build Evolution Chain only if species data is available
             evolution_id = pokedex.get_species_id_from_url(species_data['evolution_chain']['url'])
-            print(f"Evolution ID: {evolution_id}")
 
             # Using evolution_id get the chain
             evolution_chain_data = pokedex.evolution_chain(evolution_id)
@@ -325,7 +320,6 @@ def get_color(id_or_name):
 
     try:
         data = pokedex.APIResource.fetch_data("pokemon-color", id_or_name)
-        print(data)
         if not data:
             return "No data found", 404  # Handle case where no data is returned
 
