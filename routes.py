@@ -140,8 +140,12 @@ def get_pokemon_detail(id_or_name):
             "types": data.get("types", []),
         }
 
-        species_data = pokedex.pokemon_species(data["id"])
-        # logging.info(f"species_data: {species_data}")
+        # Try to fetch species data, but continue without it if it fails
+        species_data = None
+        try:
+            species_data = pokedex.pokemon_species(data["id"])
+        except requests.exceptions.HTTPError:
+            print(f"Warning: No species data found for Pokémon {data['name']}")
 
         # Define the valid sprite names to filter
         valid_sprites = [
@@ -165,17 +169,20 @@ def get_pokemon_detail(id_or_name):
         # Sort the sprites based on the desired order
         sorted_sprites = {key: sprites[key] for key in valid_sprites if key in sprites}
 
-        # Build Evolution Chain
+        # Initialize evolution_chain to None
+        evolution_chain = None
 
-        evolution_id = pokedex.get_species_id_from_url(species_data['evolution_chain']['url'])
-        print(f"Evolution ID: {evolution_id}")
+        if species_data:
+            # Build Evolution Chain only if species data is available
+            evolution_id = pokedex.get_species_id_from_url(species_data['evolution_chain']['url'])
+            print(f"Evolution ID: {evolution_id}")
 
-        # Using evolution_id get the chain
-        evolution_chain_data = pokedex.evolution_chain(evolution_id)
-        pokemon_name = evolution_chain_data["chain"]["species"]["name"]
+            # Using evolution_id get the chain
+            evolution_chain_data = pokedex.evolution_chain(evolution_id)
+            pokemon_name = evolution_chain_data["chain"]["species"]["name"]
 
-        # logging.info(f"name being fed to chain: {pokemon_name}")
-        evolution_chain = pokedex.get_chain(evolution_chain_data, pokemon_name)
+            # logging.info(f"name being fed to chain: {pokemon_name}")
+            evolution_chain = pokedex.get_chain(evolution_chain_data, pokemon_name)
 
         return render_template(
             "detail.html",
@@ -186,6 +193,7 @@ def get_pokemon_detail(id_or_name):
         )
     else:
         return "Pokemon not found", 404
+
 
 
 def fetch_all_results(url):
