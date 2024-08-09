@@ -9,8 +9,10 @@
                              alt="{{ pokemon.name }}">
                     {% else %}
                         <img class="pokemon-card__image"
-                             src="/static/images/default_pokemon.png"  <!-- Use a default image path -->
-                             alt="No image available">
+                             src="{{ url_for('static', filename='img/default_pokemon.png') }}"
+                        <!-- Use a default image path -->
+                        alt="No image available">
+
                     {% endif %}
                 </div>
                 <div class="pokemon-card__info-section">
