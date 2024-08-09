@@ -10,37 +10,37 @@
             <h3>Double Damage From</h3>
             <ul>
                 {% for relation in data.damage_relations.double_damage_from %}
-                    <li>{{ relation.name | title }}</li>
+                    <li><a href="{{ url_for('pokemon.get_type', id_or_name=relation.name) }}">{{ relation.name | title  }}</a></li>
                 {% endfor %}
             </ul>
             <h3>Double Damage To</h3>
             <ul>
                 {% for relation in data.damage_relations.double_damage_to %}
-                    <li>{{ relation.name | title }}</li>
+                    <li><a href="{{ url_for('pokemon.get_type', id_or_name=relation.name) }}">{{ relation.name | title  }}</a></li>
                 {% endfor %}
             </ul>
             <h3>Half Damage From</h3>
             <ul>
                 {% for relation in data.damage_relations.half_damage_from %}
-                    <li>{{ relation.name | title }}</li>
+                    <li><a href="{{ url_for('pokemon.get_type', id_or_name=relation.name) }}">{{ relation.name | title  }}</a></li>
                 {% endfor %}
             </ul>
             <h3>Half Damage To</h3>
             <ul>
                 {% for relation in data.damage_relations.half_damage_to %}
-                    <li>{{ relation.name | title }}</li>
+                    <li><a href="{{ url_for('pokemon.get_type', id_or_name=relation.name) }}">{{ relation.name | title  }}</a></li>
                 {% endfor %}
             </ul>
             <h3>No Damage From</h3>
             <ul>
                 {% for relation in data.damage_relations.no_damage_from %}
-                    <li>{{ relation.name | title }}</li>
+                    <li><a href="{{ url_for('pokemon.get_type', id_or_name=relation.name) }}">{{ relation.name | title  }}</a></li>
                 {% endfor %}
             </ul>
             <h3>No Damage To</h3>
             <ul>
                 {% for relation in data.damage_relations.no_damage_to %}
-                    <li>{{ relation.name | title }}</li>
+                    <li><a href="{{ url_for('pokemon.get_type', id_or_name=relation.name) }}">{{ relation.name | title  }}</a></li>
                 {% endfor %}
             </ul>
         </div>
