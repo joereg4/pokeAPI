@@ -911,7 +911,6 @@ def get_endpoint_data(api_endpoint, id_or_name):
             id_or_name = int(id_or_name)
         except ValueError:
             pass  # if the conversion fails, it remains a string
-        print(f"id_or_name: {id_or_name}, Type: {type(id_or_name)}")
 
         # Check if the function exists in the __all__ list
         if endpoint_pythonic in pokedex.__all__:
