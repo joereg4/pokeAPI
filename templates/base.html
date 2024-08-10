@@ -16,10 +16,8 @@
                 <a href="{{ url_for('pokemon.get_pokemon_list', page=1) }}">Pokémon List</a>
                 <a href="#">Link #3</a>
                 <a href="#">Link #4</a>
-                <div class="search-box">
-                    <input type="text" placeholder="Search...">
-                    <button type="submit">Search</button>
-                </div>
+                <!-- Include the search functionality -->
+                {% include 'search.html' %}
             </nav>
         </div>
     </header>
