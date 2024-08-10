@@ -6,6 +6,9 @@
     <title>{% block title %}Pokédex API{% endblock %}</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('pokemon.static', filename='css/styles.css') }}">
+
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <header>
@@ -30,5 +33,10 @@
             <div>Created by <a href="https://joereg4.github.io/">Joe Regenstein</a>, thank you PokéAPI. Pokémon and Pokémon character names are trademarks of Nintendo.</div>
         </div>
     </footer>
+<script>
+    const resources = {{ resources_json | safe }};
+    console.log(resources);  // Check if the data is loaded
+    console.log(Array.isArray(resources));  // This should log `true` if `resources` is an array
+</script>
 </body>
 </html>

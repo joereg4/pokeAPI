@@ -1,5 +1,5 @@
 import logging
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, json, current_app
 from cache import cache
 import requests
 import pokedex
@@ -54,8 +54,17 @@ def handle_value_error(error):
     return str(error), 400
 
 
+@pokemon_bp.context_processor
+def inject_resources():
+    with current_app.app_context():
+        pokedex.load_resources()
+
+    return dict(resources_json=json.dumps(pokedex.resources_dict))
+
+
 @pokemon_bp.route("/")
 def index():
+    pokedex.load_resources()  # Load resources from the CSV
     # Fetch total Pokémon count
     pokemon_count_response = requests.get("https://pokeapi.co/api/v2/pokemon?limit=1")
     pokemon_count = pokemon_count_response.json()["count"]
