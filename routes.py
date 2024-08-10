@@ -644,7 +644,6 @@ def get_move_battle_style(id_or_name):
 def get_move_category(id_or_name):
     try:
         category = pokedex.APIResource.fetch_data("move-category", id_or_name)
-        print(category)
         # Optionally, fetch each move's detailed data if needed
         moves = []
         for move in category["moves"]:
