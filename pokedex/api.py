@@ -59,7 +59,6 @@ def get_sprite(sprite_type, sprite_id, **kwargs):
 
 
 def filter_english_data(data):
-    print("Filter English")
     filtered_data = data.copy()
     fields_to_filter = [
         "names",
