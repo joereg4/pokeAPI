@@ -605,3 +605,46 @@ nav a {
     color: inherit;
     display: block;
 }
+
+.search-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+}
+
+#search-box {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+}
+
+
+#suggestions {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    max-height: 200px; /* Allows for a decent amount of suggestions to be displayed */
+    overflow-y: auto; /* Enables scrolling if the content exceeds the max-height */
+    position: absolute;
+    width: 100%;
+    z-index: 1000; /* Ensure it is on top of other elements */
+}
+
+#suggestions li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+#suggestions li:hover {
+    background-color: #f0f0f0;
+}
+
+
+#suggestions li a {
+    text-decoration: none;
+    color: black;
+    display: block;
+}
