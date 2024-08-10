@@ -1,5 +1,5 @@
 import logging
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, jsonify
 from cache import cache
 import requests
 import pokedex
@@ -104,6 +104,16 @@ def get_pokemon_list():
 
     return render_template('list.html', pokemon_list=pokemon_list, current_page=page)
     cache.set(cache_key, rendered_template, timeout=300)
+
+
+@pokemon_bp.route('/search', methods=['GET'])
+def search():
+    query = request.args.get('q', '').lower()
+    if query:
+        # Filter resources that start with the query
+        results = {name: resource for name, resource in resources_dict.items() if name.startswith(query)}
+        return jsonify(results)
+    return jsonify({})
 
 
 @pokemon_bp.route("/pokemon/<id_or_name>")
