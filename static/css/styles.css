@@ -91,12 +91,10 @@ a:hover {
 .pokemon-grid > a {
     text-decoration: none;
     color: inherit;
-    border: 1px solid #ccc;
-    transition: border-width 0.1s ease-in-out;
 }
 
 .pokemon-grid > a:hover {
-    border: 1px solid rgba(0, 116, 236, .9294117647058824);
+    transform: translateY(-5px); /* Move the card slightly up on hover */
     text-decoration: none;
 }
 
@@ -169,7 +167,6 @@ a:hover {
 .detail-card__item {
     padding: 0;
 }
-
 
 .detail-card__info-section li {
     list-style: none;
@@ -500,11 +497,14 @@ nav a {
     text-align: center;
     width: 200px;
     height: 95%;
+    overflow: hidden; /* Ensures content does not overflow the border-radius */
+    border: 1px solid #ccc; /* Ensure the border follows the rounded corners */
 }
 
 .pokemon-card img {
     width: 100px;
     height: 100px;
+    border-radius: 8px; /* Match the card's border-radius */
 }
 
 .pokemon-card h3 {
@@ -759,4 +759,32 @@ nav a {
 
 .type-pill:hover {
     opacity: 0.8; /* Slightly fade on hover */
+}
+
+/* Pokedex Detail */
+.pokedex-section {
+    text-align: center;
+    margin: 20px;
+}
+
+.pokedex-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 20px;
+}
+
+.pokedex-entry {
+    width: 120px;
+    text-align: center;
+}
+
+.pokedex-entry img {
+    width: 100px;
+    height: 100px;
+}
+
+.pokedex-entry p {
+    margin-top: 10px;
+    font-weight: bold;
 }
