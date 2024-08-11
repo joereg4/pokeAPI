@@ -13,12 +13,6 @@
         <div class="detail-card__info-section">
             <h2 class="detail-card__title">Attributes</h2>
             <ul class="detail-card__item">
-                <li class="detail-card__list">Types:
-                    {% for type in data.types %}
-                        <a href="{{ url_for('pokemon.get_type', id_or_name=type.type.name) }}">{{ type.type.name | title }}</a>
-                        {% if not loop.last %}, {% endif %}
-                    {% endfor %}
-                </li>
                 <li class="detail-card__list">Base Experience: {{ data.base_experience }}</li>
                 <li class="detail-card__list">Height: {{ data.height }}</li>
                 <li class="detail-card__list">Weight: {{ data.weight }}</li>
@@ -50,6 +44,21 @@
             </ul>
         </div>
         <div class="detail-card__info-section">
+            <h2 class="detail-card__title">Stats</h2>
+            <ul class="detail-card__item">
+                {% for stat in data.stats %}
+                    <li class="detail-card__list">
+                        <strong>{{ stat.stat.name | replace('-', ' ') | title }}:</strong>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: {{ stat.base_stat / 2 }}%;"></div>
+                            <span class="progress-value">{{ stat.base_stat }}</span>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="detail-card__info-section">
             <h2 class="detail-card__title">Abilities</h2>
             <ul class="detail-card__item">
                 {% for ability in data.abilities %}
@@ -75,13 +84,80 @@
             </ul>
         </div>
     </div>
+    <div class="detail-card__info-section">
+        <h2 class="detail-card__title">Type Effectiveness</h2>
+        {% for type_name, relations in type_effectiveness.items() %}
+            <h3><a href="{{ url_for('pokemon.get_type', id_or_name=type_name) }}">{{ type_name | title }}</a></h3>
+            <ul class="detail-card__item">
+                <li class="detail-card__list"><strong>Double Damage To:</strong>
+                    {% if relations.double_damage_to %}
+                        {% for type in relations.double_damage_to %}
+                            <a href="{{ url_for('pokemon.get_type', id_or_name=type) }}">{{ type | title }}</a>
+                            {% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        None
+                    {% endif %}
+                </li>
+                <li class="detail-card__list"><strong>Half Damage To:</strong>
+                    {% if relations.half_damage_to %}
+                        {% for type in relations.half_damage_to %}
+                            <a href="{{ url_for('pokemon.get_type', id_or_name=type) }}">{{ type | title }}</a>
+                            {% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        None
+                    {% endif %}
+                </li>
+                <li class="detail-card__list"><strong>No Damage To:</strong>
+                    {% if relations.no_damage_to %}
+                        {% for type in relations.no_damage_to %}
+                            <a href="{{ url_for('pokemon.get_type', id_or_name=type) }}">{{ type | title }}</a>
+                            {% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        None
+                    {% endif %}
+                </li>
+                <li class="detail-card__list"><strong>Double Damage From:</strong>
+                    {% if relations.double_damage_from %}
+                        {% for type in relations.double_damage_from %}
+                            <a href="{{ url_for('pokemon.get_type', id_or_name=type) }}">{{ type | title }}</a>
+                            {% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        None
+                    {% endif %}
+                </li>
+                <li class="detail-card__list"><strong>Half Damage From:</strong>
+                    {% if relations.half_damage_from %}
+                        {% for type in relations.half_damage_from %}
+                            <a href="{{ url_for('pokemon.get_type', id_or_name=type) }}">{{ type | title }}</a>
+                            {% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        None
+                    {% endif %}
+                </li>
+                <li class="detail-card__list"><strong>No Damage From:</strong>
+                    {% if relations.no_damage_from %}
+                        {% for type in relations.no_damage_from %}
+                            <a href="{{ url_for('pokemon.get_type', id_or_name=type) }}">{{ type | title }}</a>
+                            {% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        None
+                    {% endif %}
+                </li>
+            </ul>
+        {% endfor %}
+    </div>
     <div class="detail-card__moves-section">
         <h2 class="detail-card__title">Moves</h2>
         <div class="detail-card__moves">
             {% for move_detail in data.moves %}
                 <a href="{{ url_for('pokemon.get_move', id_or_name=move_detail.move.name) }}">{{ move_detail.move.name }}</a>
-                {% if not
-        loop.last %}, {% endif %}
+                {% if not loop.last %}, {% endif %}
             {% endfor %}
         </div>
         <h2 class="detail-card__title">Pokémon Sprites</h2>
