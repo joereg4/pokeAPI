@@ -256,24 +256,26 @@
             {% endif %}
         </ul>
     </div>
+    <!-- Flavor Text Sections -->
     <h2 class="detail-card__title">Flavor Text Entries:</h2>
     <ul>
         {% if species_data %}
             {% for entry in species_data.flavor_text_entries %}
                 <li class="detail-card__list">
-                    <strong>{{ entry.version.name }}:</strong> {{ entry.flavor_text|replace("POKéMON", "Pokémon") }}
+                    <strong>{{ entry.version.name | title }}:</strong> {{ entry.flavor_text|replace("POKéMON", "Pokémon") }}
                 </li>
             {% endfor %}
         {% else %}
             <div style="text-align: center">No Data Available</div>
         {% endif %}
     </ul>
+    <!-- Pokedex Section -->
     <h2 class="detail-card__title">Pokedex:</h2>
     <ul>
         {% if species_data %}
             {% for entry in species_data.pokedex_numbers %}
                 <li class="detail-card__list">
-                    <a href="{{ url_for('pokemon.get_endpoint_data', api_endpoint=entry.pokedex.url.split('/')[-3], id_or_name=entry.pokedex.url.split('/')[-2]) }}">{{ entry.entry_number }} {{ entry.pokedex.name }}</a>
+                    <a href="{{ url_for('pokemon.get_endpoint_data', api_endpoint=entry.pokedex.url.split('/')[-3], id_or_name=entry.pokedex.url.split('/')[-2]) }}">{{ entry.entry_number }} {{ entry.pokedex.name | title }}</a>
                 </li>
             {% endfor %}
         {% else %}
