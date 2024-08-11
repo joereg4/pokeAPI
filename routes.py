@@ -16,20 +16,35 @@ POKEMON_PER_PAGE = 20
 
 def create_pokemon_list(data):
     try:
-        # Possible keys that might contain the Pokémon species list
-        possible_keys = ["pokemon", "pokemon_species"]
+        # If data is a list, assume it contains the Pokémon entries directly
+        if isinstance(data, list):
+            pokemon_entries = data
+        else:
+            # Possible keys that might contain the Pokémon species list
+            possible_keys = ["pokemon", "pokemon_species"]
 
-        # Identify the correct key by checking which one exists in the data
-        key = next((k for k in possible_keys if k in data), None)
+            # Identify the correct key by checking which one exists in the data
+            key = next((k for k in possible_keys if k in data), None)
 
-        if not key:
-            raise ValueError("No valid key found in data for Pokémon list.")
+            if not key:
+                raise ValueError("No valid key found in data for Pokémon list.")
+
+            # Assign the Pokémon entries based on the identified key
+            pokemon_entries = data[key]
 
         # Build the Pokémon list based on the identified key
         pokemon_list = []
-        for pokemon_entry in data[key]:
+        for pokemon_entry in pokemon_entries:
             # The key structure is different depending on the data source
-            pokemon_name = pokemon_entry["name"] if key == "pokemon_species" else pokemon_entry["pokemon"]["name"]
+            if isinstance(pokemon_entry, dict):
+                pokemon_name = pokemon_entry["name"] if "name" in pokemon_entry else pokemon_entry.get("pokemon", {}).get("name")
+            else:
+                print(f"Warning: Invalid Pokémon entry structure: {pokemon_entry}")
+                continue
+
+            if not pokemon_name:
+                print(f"Warning: Could not find Pokémon name in entry: {pokemon_entry}")
+                continue
 
             # Fetch the Pokémon data
             pokemon = pokedex.APIResource.fetch_data("pokemon", pokemon_name)
@@ -44,6 +59,7 @@ def create_pokemon_list(data):
     except ValueError as e:
         print(f"Error fetching Pokémon data: {e}")
         return []
+
 
 
 def fetch_all_results(url):
@@ -739,24 +755,17 @@ def get_pokemon(id_or_name):
 
 
 @pokemon_bp.route('/pokemon/')
+@cache.cached(timeout=300)
 def get_pokemon_list():
-    page = request.args.get('page', 1, type=int)
-    per_page = POKEMON_PER_PAGE
-    offset = (page - 1) * per_page
-    endpoint = f"{BASE_URL}/pokemon/?limit={per_page}&offset={offset}"
+    try:
+        url = "https://pokeapi.co/api/v2/pokemon"
+        data = fetch_all_results(url)
+        pokemon_list = create_pokemon_list(data)
 
-    response = requests.get(endpoint)
-    data = response.json()
-
-    pokemon_list = []
-
-    # Fetch details for each Pokémon in the current set
-    for pokemon in data["results"]:
-        pokemon = pokedex.APIResource.fetch_data("pokemon", pokemon["name"])
-        pokemon_list.append(pokemon)
-
-    return render_template('list.html', pokemon_list=pokemon_list, current_page=page)
-    cache.set(cache_key, rendered_template, timeout=300)
+        return render_template('pokemon_list.html', pokemon_list=pokemon_list)
+    # cache.set(cache_key, rendered_template, timeout=300)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
 @pokemon_bp.route("/pokemon_color/<id_or_name>")
