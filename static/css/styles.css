@@ -716,7 +716,7 @@ nav a {
     color: #fff; /* White text color */
     text-align: center;
     font-size: 0.9em;
-    margin: 2px 5px;
+    margin: 2px 0px;
     text-decoration: none; /* No underline for links */
     font-weight: bold;
 }

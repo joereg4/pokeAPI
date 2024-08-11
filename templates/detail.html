@@ -97,7 +97,7 @@
                         <span class="type-pill" style="background-color: {{ type.color }};">
                         <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
                     </span>
-                        {% if not loop.last %}, {% endif %}
+                        {% if not loop.last %}{% endif %}
                     {% endfor %}
                 </li>
                 <li class="detail-card__list"><strong>Half Damage To:</strong>
@@ -105,7 +105,7 @@
                         <span class="type-pill" style="background-color: {{ type.color }};">
                         <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
                     </span>
-                        {% if not loop.last %}, {% endif %}
+                        {% if not loop.last %}{% endif %}
                     {% endfor %}
                 </li>
                 <li class="detail-card__list"><strong>No Damage To:</strong>
@@ -113,7 +113,7 @@
                         <span class="type-pill" style="background-color: {{ type.color }};">
                         <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
                     </span>
-                        {% if not loop.last %}, {% endif %}
+                        {% if not loop.last %}{% endif %}
                     {% endfor %}
                 </li>
                 <li class="detail-card__list"><strong>Double Damage From:</strong>
@@ -121,7 +121,7 @@
                         <span class="type-pill" style="background-color: {{ type.color }};">
                         <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
                     </span>
-                        {% if not loop.last %}, {% endif %}
+                        {% if not loop.last %}{% endif %}
                     {% endfor %}
                 </li>
                 <li class="detail-card__list"><strong>Half Damage From:</strong>
@@ -129,7 +129,7 @@
                         <span class="type-pill" style="background-color: {{ type.color }};">
                         <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
                     </span>
-                        {% if not loop.last %}, {% endif %}
+                        {% if not loop.last %}{% endif %}
                     {% endfor %}
                 </li>
                 <li class="detail-card__list"><strong>No Damage From:</strong>
@@ -137,7 +137,7 @@
                         <span class="type-pill" style="background-color: {{ type.color }};">
                         <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
                     </span>
-                        {% if not loop.last %}, {% endif %}
+                        {% if not loop.last %}{% endif %}
                     {% endfor %}
                 </li>
             </ul>
