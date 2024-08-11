@@ -729,3 +729,44 @@ nav a {
 .type-pill:hover {
     opacity: 0.8; /* Slightly fade on hover */
 }
+
+.detail-card__moves-section {
+    margin-top: 20px;
+}
+
+.move-categories {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: stretch;
+}
+
+.move-category {
+    flex: 1;
+    margin: 0 10px;
+    max-height: 610px; /* Set a maximum height for the columns */
+    display: flex;
+    flex-direction: column;
+}
+
+.move-category h3 {
+    text-align: center;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.move-category ul {
+    list-style: none;
+    padding: 0;
+}
+
+.move-category li {
+    margin-bottom: 5px;
+}
+
+/* Specific styles for columns with more than 25 moves */
+.move-category ul.long-list {
+    max-height: 610px; /* Adjust the max height as needed */
+    overflow-y: auto;
+}

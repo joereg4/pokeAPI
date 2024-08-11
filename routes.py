@@ -1,5 +1,5 @@
 import logging
-from flask import Blueprint, render_template, request, json, current_app
+from flask import Blueprint, render_template, request, json, current_app, url_for
 from cache import cache
 import requests
 import pokedex
@@ -736,6 +736,35 @@ def get_pokemon(id_or_name):
             "stats": data.get("stats", []),
         }
 
+        # Categorize moves by how they're learned
+        move_categories = {
+            "level_up": [],
+            "tm_hm": [],
+            "breeding": [],
+            "tutor": [],
+            "other": [],
+        }
+
+        for move_detail in data.get("moves", []):
+            move_learned_method = move_detail["version_group_details"][0]["move_learn_method"]["name"]
+            move_data = {
+                "name": move_detail["move"]["name"].replace("-", " ").title(),
+                "url": url_for("pokemon.get_move", id_or_name=move_detail["move"]["name"]),
+                "level_learned_at": move_detail["version_group_details"][0]["level_learned_at"]
+            }
+
+            if move_learned_method == "level-up":
+                move_categories["level_up"].append(move_data)
+            elif move_learned_method == "machine":
+                move_categories["tm_hm"].append(move_data)
+            elif move_learned_method == "egg":
+                move_categories["breeding"].append(move_data)
+            elif move_learned_method == "tutor":
+                move_categories["tutor"].append(move_data)
+            else:
+                move_categories["other"].append(move_data)
+        print(f"Move Level Data: {move_categories}")
+
         # Define the type colors dictionary
         type_colors = {
             "normal": "#A8A77A",
@@ -830,6 +859,7 @@ def get_pokemon(id_or_name):
             sorted_sprites=sorted_sprites,
             evolution_chain=evolution_chain,
             type_effectiveness=type_effectiveness,
+            move_categories=move_categories,
         )
     else:
         return "Pokemon not found", 404
