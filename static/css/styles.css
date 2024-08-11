@@ -29,6 +29,8 @@ header {
 }
 
 .header-wrapper a {
+    margin-top: auto;
+    margin-bottom: auto;
     text-decoration: none;
     color: #2a75bb;
     font-weight: bold;
@@ -453,6 +455,7 @@ nav {
 nav a {
     text-transform: uppercase;
     font-weight: 600;
+
 }
 
 .search-box {
