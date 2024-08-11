@@ -5,45 +5,84 @@
 {% block content %}
     <div class="type-detail-section">
         <h1>{{ data.name | title }}</h1>
+
+        <!-- Type Effectiveness Section -->
         <h2>Damage Relations</h2>
-        <div class="damage-relations">
-            <h3>Double Damage From</h3>
-            <ul>
-                {% for relation in data.damage_relations.double_damage_from %}
-                    <li><a href="{{ url_for('pokemon.get_type', id_or_name=relation.name) }}">{{ relation.name | title  }}</a></li>
-                {% endfor %}
-            </ul>
-            <h3>Double Damage To</h3>
-            <ul>
-                {% for relation in data.damage_relations.double_damage_to %}
-                    <li><a href="{{ url_for('pokemon.get_type', id_or_name=relation.name) }}">{{ relation.name | title  }}</a></li>
-                {% endfor %}
-            </ul>
-            <h3>Half Damage From</h3>
-            <ul>
-                {% for relation in data.damage_relations.half_damage_from %}
-                    <li><a href="{{ url_for('pokemon.get_type', id_or_name=relation.name) }}">{{ relation.name | title  }}</a></li>
-                {% endfor %}
-            </ul>
-            <h3>Half Damage To</h3>
-            <ul>
-                {% for relation in data.damage_relations.half_damage_to %}
-                    <li><a href="{{ url_for('pokemon.get_type', id_or_name=relation.name) }}">{{ relation.name | title  }}</a></li>
-                {% endfor %}
-            </ul>
-            <h3>No Damage From</h3>
-            <ul>
-                {% for relation in data.damage_relations.no_damage_from %}
-                    <li><a href="{{ url_for('pokemon.get_type', id_or_name=relation.name) }}">{{ relation.name | title  }}</a></li>
-                {% endfor %}
-            </ul>
-            <h3>No Damage To</h3>
-            <ul>
-                {% for relation in data.damage_relations.no_damage_to %}
-                    <li><a href="{{ url_for('pokemon.get_type', id_or_name=relation.name) }}">{{ relation.name | title  }}</a></li>
-                {% endfor %}
-            </ul>
+        <div class="damage-relations-grid">
+            <div class="damage-relation-column">
+                <h3 class="type-title">Double Damage From</h3>
+                <ul>
+                    {% for relation in data.damage_relations.double_damage_from %}
+                        <li>
+                            <span class="type-pill" style="background-color: {{ type_colors[relation.name] }};">
+                                <a href="{{ url_for('pokemon.get_type', id_or_name=relation.name) }}">{{ relation.name | title  }}</a>
+                            </span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="damage-relation-column">
+                <h3 class="type-title">Double Damage To</h3>
+                <ul>
+                    {% for relation in data.damage_relations.double_damage_to %}
+                        <li>
+                            <span class="type-pill" style="background-color: {{ type_colors[relation.name] }};">
+                                <a href="{{ url_for('pokemon.get_type', id_or_name=relation.name) }}">{{ relation.name | title  }}</a>
+                            </span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="damage-relation-column">
+                <h3 class="type-title">Half Damage From</h3>
+                <ul>
+                    {% for relation in data.damage_relations.half_damage_from %}
+                        <li>
+                            <span class="type-pill" style="background-color: {{ type_colors[relation.name] }};">
+                                <a href="{{ url_for('pokemon.get_type', id_or_name=relation.name) }}">{{ relation.name | title  }}</a>
+                            </span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="damage-relation-column">
+                <h3 class="type-title">Half Damage To</h3>
+                <ul>
+                    {% for relation in data.damage_relations.half_damage_to %}
+                        <li>
+                            <span class="type-pill" style="background-color: {{ type_colors[relation.name] }};">
+                                <a href="{{ url_for('pokemon.get_type', id_or_name=relation.name) }}">{{ relation.name | title  }}</a>
+                            </span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="damage-relation-column">
+                <h3 class="type-title">No Damage From</h3>
+                <ul>
+                    {% for relation in data.damage_relations.no_damage_from %}
+                        <li>
+                            <span class="type-pill" style="background-color: {{ type_colors[relation.name] }};">
+                                <a href="{{ url_for('pokemon.get_type', id_or_name=relation.name) }}">{{ relation.name | title  }}</a>
+                            </span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="damage-relation-column">
+                <h3 class="type-title">No Damage To</h3>
+                <ul>
+                    {% for relation in data.damage_relations.no_damage_to %}
+                        <li>
+                            <span class="type-pill" style="background-color: {{ type_colors[relation.name] }};">
+                                <a href="{{ url_for('pokemon.get_type', id_or_name=relation.name) }}">{{ relation.name | title  }}</a>
+                            </span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
+
         <h2>Pokémon with {{ data.name | title }} Type</h2>
         {% include '_pokemon_list.html' %}
     </div>

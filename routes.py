@@ -13,6 +13,40 @@ BASE_URL = "https://pokeapi.co/api/v2"
 SPRITE_URL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites"
 POKEMON_PER_PAGE = 60
 
+# Define the valid sprite names to filter
+valid_sprites = [
+    "front_default",
+    "back_default",
+    "front_female",
+    "back_female",
+    "front_shiny",
+    "back_shiny",
+    "front_shiny_female",
+    "back_shiny_female",
+]
+
+# Define colors for Types
+type_colors = {
+    "normal": "#A8A77A",
+    "fire": "#EE8130",
+    "water": "#6390F0",
+    "electric": "#F7D02C",
+    "grass": "#7AC74C",
+    "ice": "#96D9D6",
+    "fighting": "#C22E28",
+    "poison": "#A33EA1",
+    "ground": "#E2BF65",
+    "flying": "#A98FF3",
+    "psychic": "#F95587",
+    "bug": "#A6B91A",
+    "rock": "#B6A136",
+    "ghost": "#735797",
+    "dragon": "#6F35FC",
+    "dark": "#705746",
+    "steel": "#B7B7CE",
+    "fairy": "#D685AD"
+}
+
 
 def create_pokemon_list(data):
     try:
@@ -765,28 +799,6 @@ def get_pokemon(id_or_name):
                 move_categories["other"].append(move_data)
         print(f"Move Level Data: {move_categories}")
 
-        # Define the type colors dictionary
-        type_colors = {
-            "normal": "#A8A77A",
-            "fire": "#EE8130",
-            "water": "#6390F0",
-            "electric": "#F7D02C",
-            "grass": "#7AC74C",
-            "ice": "#96D9D6",
-            "fighting": "#C22E28",
-            "poison": "#A33EA1",
-            "ground": "#E2BF65",
-            "flying": "#A98FF3",
-            "psychic": "#F95587",
-            "bug": "#A6B91A",
-            "rock": "#B6A136",
-            "ghost": "#735797",
-            "dragon": "#6F35FC",
-            "dark": "#705746",
-            "steel": "#B7B7CE",
-            "fairy": "#D685AD"
-        }
-
         # Fetch and process type effectiveness
         type_effectiveness = {}
         for type_info in data["types"]:
@@ -815,18 +827,6 @@ def get_pokemon(id_or_name):
             species_data = pokedex.pokemon_species(data["id"])
         except requests.exceptions.HTTPError:
             print(f"Warning: No species data found for Pokémon {data['name']}")
-
-        # Define the valid sprite names to filter
-        valid_sprites = [
-            "front_default",
-            "back_default",
-            "front_female",
-            "back_female",
-            "front_shiny",
-            "back_shiny",
-            "front_shiny_female",
-            "back_shiny_female",
-        ]
 
         # Get the sprite data and filter out null values and unwanted sprites
         sprites = {
@@ -1004,7 +1004,13 @@ def get_type(id_or_name):
     try:
         data = pokedex.APIResource.fetch_data("type", id_or_name)
         pokemon_list = create_pokemon_list(data)
-        return render_template("type_detail.html", data=data, pokemon_list=pokemon_list)
+
+        return render_template(
+            "type_detail.html",
+            data=data,
+            pokemon_list=pokemon_list,
+            type_colors=type_colors
+        )
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
