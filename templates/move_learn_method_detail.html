@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ data.name | title }} - Move Learn Method{% endblock %}
+
+{% block content %}
+    <h1 class="detail-card__title">{{ data.name | replace("-", " ") | title }} Move Learn Method</h1>
+    <div class="detail-grid">
+        <!-- Description Section -->
+        <div class="detail-card__info-section">
+            {% if data.descriptions %}
+                <h2 class="detail-card__title">Description</h2>
+                <p>{{ data.descriptions[0].description }}</p>
+            {% endif %}
+        </div>
+        
+        <!-- Version Groups Section -->
+        <div class="detail-card__info-section">
+            <h2 class="detail-card__title">Version Groups</h2>
+            <ul class="detail-card__item">
+                {% for version_group in data.version_groups %}
+                    <li class="detail-card__list">
+                        <a href="{{ url_for('pokemon.get_version_group', id_or_name=version_group.name) }}">{{ version_group.name | replace("-", " ") | title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}
