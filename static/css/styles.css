@@ -672,3 +672,60 @@ nav a {
     color: #000;
     font-weight: bold;
 }
+
+.type-effectiveness-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.type-section {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.type-title {
+    display: flex;
+    align-items: center;
+}
+
+.type-icon {
+    width: 20px;
+    height: 20px;
+    margin-left: 8px;
+}
+
+.type-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    margin: 2px;
+    border-radius: 12px;
+    color: white;
+    text-align: center;
+}
+
+.relation {
+    margin-bottom: 10px;
+}
+
+.type-pill {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 25px;
+    color: #fff; /* White text color */
+    text-align: center;
+    font-size: 0.9em;
+    margin: 2px 5px;
+    text-decoration: none; /* No underline for links */
+    font-weight: bold;
+}
+
+.type-pill a {
+    color: inherit; /* Ensures the link color is the same as the pill text color */
+    text-decoration: none;
+}
+
+.type-pill:hover {
+    opacity: 0.8; /* Slightly fade on hover */
+}

@@ -696,7 +696,7 @@ def get_pokemon_list():
 
 
 @pokemon_bp.route("/pokemon/<id_or_name>")
-#@cache.cached(timeout=300)
+# @cache.cached(timeout=300)
 def get_pokemon(id_or_name):
     try:
         id_or_name = int(id_or_name)
@@ -736,18 +736,48 @@ def get_pokemon(id_or_name):
             "stats": data.get("stats", []),
         }
 
+        # Define the type colors dictionary
+        type_colors = {
+            "normal": "#A8A77A",
+            "fire": "#EE8130",
+            "water": "#6390F0",
+            "electric": "#F7D02C",
+            "grass": "#7AC74C",
+            "ice": "#96D9D6",
+            "fighting": "#C22E28",
+            "poison": "#A33EA1",
+            "ground": "#E2BF65",
+            "flying": "#A98FF3",
+            "psychic": "#F95587",
+            "bug": "#A6B91A",
+            "rock": "#B6A136",
+            "ghost": "#735797",
+            "dragon": "#6F35FC",
+            "dark": "#705746",
+            "steel": "#B7B7CE",
+            "fairy": "#D685AD"
+        }
+
         # Fetch and process type effectiveness
         type_effectiveness = {}
         for type_info in data["types"]:
-            type_data = pokedex.APIResource.fetch_data("type", type_info["type"]["name"])
+            type_name = type_info["type"]["name"]
+            type_data = pokedex.APIResource.fetch_data("type", type_name)
             damage_relations = type_data.get("damage_relations", {})
-            type_effectiveness[type_info["type"]["name"]] = {
-                "double_damage_to": [rel["name"] for rel in damage_relations.get("double_damage_to", [])],
-                "half_damage_to": [rel["name"] for rel in damage_relations.get("half_damage_to", [])],
-                "no_damage_to": [rel["name"] for rel in damage_relations.get("no_damage_to", [])],
-                "double_damage_from": [rel["name"] for rel in damage_relations.get("double_damage_from", [])],
-                "half_damage_from": [rel["name"] for rel in damage_relations.get("half_damage_from", [])],
-                "no_damage_from": [rel["name"] for rel in damage_relations.get("no_damage_from", [])],
+            type_effectiveness[type_name] = {
+                "color": type_colors.get(type_name, "#FFFFFF"),  # Add color for the type
+                "double_damage_to": [{"name": rel["name"], "color": type_colors.get(rel["name"], "#FFFFFF")} for rel in
+                                     damage_relations.get("double_damage_to", [])],
+                "half_damage_to": [{"name": rel["name"], "color": type_colors.get(rel["name"], "#FFFFFF")} for rel in
+                                   damage_relations.get("half_damage_to", [])],
+                "no_damage_to": [{"name": rel["name"], "color": type_colors.get(rel["name"], "#FFFFFF")} for rel in
+                                 damage_relations.get("no_damage_to", [])],
+                "double_damage_from": [{"name": rel["name"], "color": type_colors.get(rel["name"], "#FFFFFF")} for rel
+                                       in damage_relations.get("double_damage_from", [])],
+                "half_damage_from": [{"name": rel["name"], "color": type_colors.get(rel["name"], "#FFFFFF")} for rel in
+                                     damage_relations.get("half_damage_from", [])],
+                "no_damage_from": [{"name": rel["name"], "color": type_colors.get(rel["name"], "#FFFFFF")} for rel in
+                                   damage_relations.get("no_damage_from", [])],
             }
 
         # Try to fetch species data, but continue without it if it fails
