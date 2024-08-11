@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ data.name | title }} - Pokédex{% endblock %}
+
+{% block content %}
+
+
+    <h1 class="detail-card__title">{{ data.name | title }} Pokédex</h1>
+    <div class="detail-grid">
+        <div class="detail-card__info-section">
+            {% if data.descriptions %}
+                <h2 class="detail-card__title">Description</h2>
+                <p>{{ data.descriptions[0].description }}</p>
+            {% endif %}
+        </div>
+        <!-- Region Section -->
+        <div class="detail-card__info-section">
+            <h2 class="detail-card__title">Region</h2>
+            <p>
+                <a href="{{ url_for('pokemon.get_region', id_or_name=data.region.name)}}">{{ data.region.name | title }}</a>
+            </p>
+        </div>
+        <!-- Version Groups Section -->
+        <div class="detail-card__info-section">
+            <h2 class="detail-card__title">Version Groups</h2>
+            <ul class="detail-card__item">
+                {% for version_group in data.version_groups %}
+                    <li class="detail-card__list">
+                        <a href="{{ url_for('pokemon.get_version_group', id_or_name=version_group.name) }}">{{ version_group.name | title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <h2 class="detail-card__title">Pokémon in {{ data.name | title }}</h2>
+    {% include '_pokemon_list.html' %}
+    </div>
+{% endblock %}

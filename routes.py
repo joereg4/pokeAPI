@@ -55,7 +55,7 @@ def create_pokemon_list(data):
             pokemon_entries = data
         else:
             # Possible keys that might contain the Pokémon species list
-            possible_keys = ["pokemon", "pokemon_species"]
+            possible_keys = ["pokemon", "pokemon_species", "pokemon_entries"]
 
             # Identify the correct key by checking which one exists in the data
             key = next((k for k in possible_keys if k in data), None)
@@ -64,7 +64,10 @@ def create_pokemon_list(data):
                 raise ValueError("No valid key found in data for Pokémon list.")
 
             # Assign the Pokémon entries based on the identified key
-            pokemon_entries = data[key]
+            if key == "pokemon_entries":
+                pokemon_entries = [entry["pokemon_species"] for entry in data[key]]
+            else:
+                pokemon_entries = data[key]
 
         # Build the Pokémon list based on the identified key
         pokemon_list = []
@@ -681,15 +684,17 @@ def get_pokeathlon_stat(id_or_name):
 
 
 @pokemon_bp.route("/pokedex/<id_or_name>")
+#@cache.cached(timeout=300)
 def get_pokedex(id_or_name):
-    # Check if id_or_name can be converted to an integer
     try:
         id_or_name = int(id_or_name)
     except ValueError:
         pass  # if the conversion fails, it remains a string
+
     try:
         data = pokedex.APIResource.fetch_data("pokedex", id_or_name)
-        return render_template("generic.html", data=data)
+        pokemon_list = create_pokemon_list(data)
+        return render_template("pokedex_detail.html", data=data, pokemon_list=pokemon_list)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 

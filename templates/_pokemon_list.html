@@ -14,13 +14,14 @@
                     {% endif %}
                 </div>
                 <div class="pokemon-card__info-section">
-                    <span class="pokemon-card__name">{{ pokemon.name }}</span>
+                    <span class="pokemon-card__name">{{ pokemon.name | title }}</span>
                     {% set type_names = [] %}
                     {% for type_entry in pokemon.types %}
                         {% set _ = type_names.append(type_entry.type.name) %}
                     {% endfor %}
-                    <p class="pokemon-card__id-type">{{ pokemon.id }} - {{ type_names|join(', ') }}</p>
+                    <p class="pokemon-card__id-type">{{ pokemon.id }} - {{ type_names|join(', ') | title }}</p>
                 </div>
+            <!--
                 <div class="pokemon-card__moves-section">
                     {% set moves_list = [] %}
                     {% for move in pokemon.moves[:20] %}
@@ -28,6 +29,7 @@
                     {% endfor %}
                     <p class="pokemon-card__moves">{{ moves_list|join(', ') }}</p>
                 </div>
+                -->
             </div>
         </a>
     {% endfor %}
