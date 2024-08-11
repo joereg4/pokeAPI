@@ -673,63 +673,6 @@ nav a {
     font-weight: bold;
 }
 
-.type-effectiveness-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-
-.type-section {
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 8px;
-}
-
-.type-title {
-    display: flex;
-    align-items: center;
-}
-
-.type-icon {
-    width: 20px;
-    height: 20px;
-    margin-left: 8px;
-}
-
-.type-badge {
-    display: inline-block;
-    padding: 4px 8px;
-    margin: 2px;
-    border-radius: 12px;
-    color: white;
-    text-align: center;
-}
-
-.relation {
-    margin-bottom: 10px;
-}
-
-.type-pill {
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 25px;
-    color: #fff; /* White text color */
-    text-align: center;
-    font-size: 0.9em;
-    margin: 2px 0px;
-    text-decoration: none; /* No underline for links */
-    font-weight: bold;
-}
-
-.type-pill a {
-    color: inherit; /* Ensures the link color is the same as the pill text color */
-    text-decoration: none;
-}
-
-.type-pill:hover {
-    opacity: 0.8; /* Slightly fade on hover */
-}
-
 .detail-card__moves-section {
     margin-top: 20px;
 }
@@ -769,4 +712,51 @@ nav a {
 .move-category ul.long-list {
     max-height: 610px; /* Adjust the max height as needed */
     overflow-y: auto;
+}
+
+/* Type Effectiveness */
+.type-effectiveness-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.type-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.type-effectiveness-column {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.type-effectiveness-list {
+    margin-bottom: 6px; /* Add some spacing between rows */
+    min-height: 16px; /* Set a minimum height to make all rows the same height */
+    display: flex;
+    align-items: center; /* Center content vertically */
+}
+
+.type-pill {
+    display: inline-block;
+    padding: 3px 6px;
+    border-radius: 15px;
+    color: #fff; /* White text color */
+    text-align: center;
+    font-size: 0.85em;
+    margin: 2px 4px;
+    text-decoration: none; /* No underline for links */
+    font-weight: bold;
+}
+
+.type-pill a {
+    color: inherit; /* Ensures the link color is the same as the pill text color */
+    text-decoration: none;
+}
+
+.type-pill:hover {
+    opacity: 0.8; /* Slightly fade on hover */
 }

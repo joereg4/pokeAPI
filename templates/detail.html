@@ -85,64 +85,70 @@
         </div>
     </div>
 
-    <div class="detail-card__info-section">
-        <h2 class="detail-card__title">Type Effectiveness</h2>
+    <!-- Type Effectiveness Section -->
+    <h2 class="detail-card__title">Type Effectiveness</h2>
+    <!-- Type Effectiveness Section -->
+    <div class="type-effectiveness-grid">
         {% for type_name, relations in type_effectiveness.items() %}
-            <h3 class="type-title" style="color: {{ relations.color }};">
-                <a href="{{ url_for('pokemon.get_type', id_or_name=type_name) }}">{{ type_name | title }}</a>
-            </h3>
-            <ul class="detail-card__item">
-                <li class="detail-card__list"><strong>Double Damage To:</strong>
-                    {% for type in relations.double_damage_to %}
-                        <span class="type-pill" style="background-color: {{ type.color }};">
-                        <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
-                    </span>
-                        {% if not loop.last %}{% endif %}
-                    {% endfor %}
-                </li>
-                <li class="detail-card__list"><strong>Half Damage To:</strong>
-                    {% for type in relations.half_damage_to %}
-                        <span class="type-pill" style="background-color: {{ type.color }};">
-                        <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
-                    </span>
-                        {% if not loop.last %}{% endif %}
-                    {% endfor %}
-                </li>
-                <li class="detail-card__list"><strong>No Damage To:</strong>
-                    {% for type in relations.no_damage_to %}
-                        <span class="type-pill" style="background-color: {{ type.color }};">
-                        <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
-                    </span>
-                        {% if not loop.last %}{% endif %}
-                    {% endfor %}
-                </li>
-                <li class="detail-card__list"><strong>Double Damage From:</strong>
-                    {% for type in relations.double_damage_from %}
-                        <span class="type-pill" style="background-color: {{ type.color }};">
-                        <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
-                    </span>
-                        {% if not loop.last %}{% endif %}
-                    {% endfor %}
-                </li>
-                <li class="detail-card__list"><strong>Half Damage From:</strong>
-                    {% for type in relations.half_damage_from %}
-                        <span class="type-pill" style="background-color: {{ type.color }};">
-                        <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
-                    </span>
-                        {% if not loop.last %}{% endif %}
-                    {% endfor %}
-                </li>
-                <li class="detail-card__list"><strong>No Damage From:</strong>
-                    {% for type in relations.no_damage_from %}
-                        <span class="type-pill" style="background-color: {{ type.color }};">
-                        <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
-                    </span>
-                        {% if not loop.last %}{% endif %}
-                    {% endfor %}
-                </li>
-            </ul>
+            <div class="type-section">
+                <h3 class="type-title" style="color: {{ relations.color }};">
+                    <a href="{{ url_for('pokemon.get_type', id_or_name=type_name) }}">{{ type_name | title }}</a>
+                </h3>
+                <ul class="detail-card__item">
+                    <li class="type-effectiveness-list"><strong>Double Damage To:</strong>
+                        {% for type in relations.double_damage_to %}
+                            <span class="type-pill" style="background-color: {{ type.color }};">
+                            <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
+                        </span>
+                            {% if not loop.last %}{% endif %}
+                        {% endfor %}
+                    </li>
+                    <li class="type-effectiveness-list"><strong>Half Damage To:</strong>
+                        {% for type in relations.half_damage_to %}
+                            <span class="type-pill" style="background-color: {{ type.color }};">
+                            <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
+                        </span>
+                            {% if not loop.last %}{% endif %}
+                        {% endfor %}
+                    </li>
+                    <li class="type-effectiveness-list"><strong>No Damage To:</strong>
+                        {% for type in relations.no_damage_to %}
+                            <span class="type-pill" style="background-color: {{ type.color }};">
+                            <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
+                        </span>
+                            {% if not loop.last %}{% endif %}
+                        {% endfor %}
+                    </li>
+                    <li class="type-effectiveness-list"><strong>Double Damage From:</strong>
+                        {% for type in relations.double_damage_from %}
+                            <span class="type-pill" style="background-color: {{ type.color }};">
+                            <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
+                        </span>
+                            {% if not loop.last %}{% endif %}
+                        {% endfor %}
+                    </li>
+                    <li class="type-effectiveness-list"><strong>Half Damage From:</strong>
+                        {% for type in relations.half_damage_from %}
+                            <span class="type-pill" style="background-color: {{ type.color }};">
+                            <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
+                        </span>
+                            {% if not loop.last %}{% endif %}
+                        {% endfor %}
+                    </li>
+                    <li class="type-effectiveness-list"><strong>No Damage From:</strong>
+                        {% for type in relations.no_damage_from %}
+                            <span class="type-pill" style="background-color: {{ type.color }};">
+                            <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
+                        </span>
+                            {% if not loop.last %}{% endif %}
+                        {% endfor %}
+                    </li>
+                </ul>
+            </div>
         {% endfor %}
     </div>
+
+
     <!-- Moves Section -->
     <div class="detail-card__moves-section">
         <h2 class="detail-card__title">Moves</h2>
