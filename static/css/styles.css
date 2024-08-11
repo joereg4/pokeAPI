@@ -709,7 +709,7 @@ nav a {
 }
 
 /* Specific styles for columns with more than 25 moves */
-.move-category ul.long-list {
+ul.long-list {
     max-height: 610px; /* Adjust the max height as needed */
     overflow-y: auto;
 }
