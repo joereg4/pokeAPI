@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ data.name | title }} - Version Group{% endblock %}
+
+{% block content %}
+    <div class="detail-section">
+        <h1 class="detail-card__title">{{ data.name | title }} Version Group</h1>
+        <div class="detail-grid">
+            <!-- Generation Section -->
+            <div class="detail-card__info-section">
+                <h2 class="detail-card__title">Generation</h2>
+                <p>
+                    <a href="{{ url_for('pokemon.get_generation', id_or_name=data.generation.name) }}">{{ data.generation.name | title }}</a>
+                </p>
+            </div>
+
+            <!-- Regions Section -->
+            <div class="detail-card__info-section">
+                <h2 class="detail-card__title">Regions</h2>
+                <ul class="detail-card__item">
+                    {% for region in data.regions %}
+                        <li class="detail-card__list">
+                            <a href="{{ url_for('pokemon.get_region', id_or_name=region.name) }}">{{ region.name | title }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Pokedexes Section -->
+            <div class="detail-card__info-section">
+                <h2 class="detail-card__title">Pokedexes</h2>
+                <ul class="detail-card__item">
+                    {% for pokedex in data.pokedexes %}
+                        <li class="detail-card__list">
+                            <a href="{{ url_for('pokemon.get_pokedex', id_or_name=pokedex.name) }}">{{ pokedex.name | title }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Versions Section -->
+            <div class="detail-card__info-section">
+                <h2 class="detail-card__title">Versions</h2>
+                <ul class="detail-card__item">
+                    {% for version in data.versions %}
+                        <li class="detail-card__list">
+                            <a href="{{ url_for('pokemon.get_version', id_or_name=version.name) }}">{{ version.name | title }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Move Learn Methods Section -->
+            <div class="detail-card__info-section">
+                <h2 class="detail-card__title">Move Learn Methods</h2>
+                <ul class="detail-card__item">
+                    {% for method in data.move_learn_methods %}
+                        <li class="detail-card__list">
+                            <a href="{{ url_for('pokemon.get_move_learn_method', id_or_name=method.name) }}">{{ method.name | title }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}

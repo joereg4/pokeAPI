@@ -370,7 +370,11 @@ def get_generation(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("generation", id_or_name)
-        return render_template("generic.html", data=data)
+
+        # Use the create_pokemon_list function with the correct key
+        pokemon_list = create_pokemon_list(data)
+
+        return render_template("generation_detail.html", data=data, pokemon_list=pokemon_list)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
@@ -622,7 +626,7 @@ def get_move_learn_method(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("move-learn-method", id_or_name)
-        return render_template("generic.html", data=data)
+        return render_template("move_learn_method_detail.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
@@ -684,7 +688,7 @@ def get_pokeathlon_stat(id_or_name):
 
 
 @pokemon_bp.route("/pokedex/<id_or_name>")
-#@cache.cached(timeout=300)
+# @cache.cached(timeout=300)
 def get_pokedex(id_or_name):
     try:
         id_or_name = int(id_or_name)
@@ -749,10 +753,7 @@ def get_pokemon(id_or_name):
             print(f"Encounters Parms: {params}")
             return params
 
-        data = pokedex.APIResource.fetch_data(
-            "pokemon",
-            id_or_name,
-        )
+        data = pokedex.APIResource.fetch_data("pokemon", id_or_name, )
 
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -970,7 +971,7 @@ def get_region(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("region", id_or_name)
-        return render_template("generic.html", data=data)
+        return render_template("region_detail.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
@@ -1037,7 +1038,7 @@ def get_version(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("version", id_or_name)
-        return render_template("generic.html", data=data)
+        return render_template("version_detail.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
@@ -1051,7 +1052,7 @@ def get_version_group(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("version-group", id_or_name)
-        return render_template("generic.html", data=data)
+        return render_template("version_group_detail.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
