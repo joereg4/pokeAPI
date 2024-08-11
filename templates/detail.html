@@ -143,16 +143,65 @@
             </ul>
         {% endfor %}
     </div>
+    <!-- Moves Section -->
+    <div class="detail-card__moves-section">
+        <h2 class="detail-card__title">Moves</h2>
+        <div class="move-categories">
+            <!-- Level Up Moves -->
+            <div class="move-category">
+                <h3>Level Up</h3>
+                <ul class="{% if move_categories.level_up|length > 25 %}long-list{% endif %}">
+                    {% for move in move_categories.level_up|sort(attribute='level_learned_at') %}
+                        <li><strong>Level {{ move.level_learned_at }}:</strong> <a
+                                href="{{ move.url }}">{{ move.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- TM/HM Moves -->
+            <div class="move-category">
+                <h3>TM/HM</h3>
+                <ul class="{% if move_categories.tm_hm|length > 25 %}long-list{% endif %}">
+                    {% for move in move_categories.tm_hm|sort(attribute='name') %}
+                        <li><a href="{{ move.url }}">{{ move.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Breeding Moves -->
+            <div class="move-category">
+                <h3>Breeding</h3>
+                <ul class="{% if move_categories.breeding|length > 25 %}long-list{% endif %}">
+                    {% for move in move_categories.breeding|sort(attribute='name') %}
+                        <li><a href="{{ move.url }}">{{ move.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Tutor Moves -->
+            <div class="move-category">
+                <h3>Tutor</h3>
+                <ul class="{% if move_categories.tutor|length > 25 %}long-list{% endif %}">
+                    {% for move in move_categories.tutor|sort(attribute='name') %}
+                        <li><a href="{{ move.url }}">{{ move.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Other Moves -->
+            <div class="move-category">
+                <h3>Other</h3>
+                <ul class="{% if move_categories.other|length > 25 %}long-list{% endif %}">
+                    {% for move in move_categories.other|sort(attribute='name') %}
+                        <li><a href="{{ move.url }}">{{ move.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
 
 
     <div class="detail-card__moves-section">
-        <h2 class="detail-card__title">Moves</h2>
-        <div class="detail-card__moves">
-            {% for move_detail in data.moves %}
-                <a href="{{ url_for('pokemon.get_move', id_or_name=move_detail.move.name) }}">{{ move_detail.move.name }}</a>
-                {% if not loop.last %}, {% endif %}
-            {% endfor %}
-        </div>
         <h2 class="detail-card__title">Pokémon Sprites</h2>
         <div class="sprite-gallery">
             <ul class="sprite-gallery__list">
