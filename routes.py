@@ -696,7 +696,7 @@ def get_pokemon_list():
 
 
 @pokemon_bp.route("/pokemon/<id_or_name>")
-@cache.cached(timeout=300)
+#@cache.cached(timeout=300)
 def get_pokemon(id_or_name):
     try:
         id_or_name = int(id_or_name)
@@ -733,7 +733,22 @@ def get_pokemon(id_or_name):
             "moves": data.get("moves", []),
             "held_items": data.get("held_items", []),
             "types": data.get("types", []),
+            "stats": data.get("stats", []),
         }
+
+        # Fetch and process type effectiveness
+        type_effectiveness = {}
+        for type_info in data["types"]:
+            type_data = pokedex.APIResource.fetch_data("type", type_info["type"]["name"])
+            damage_relations = type_data.get("damage_relations", {})
+            type_effectiveness[type_info["type"]["name"]] = {
+                "double_damage_to": [rel["name"] for rel in damage_relations.get("double_damage_to", [])],
+                "half_damage_to": [rel["name"] for rel in damage_relations.get("half_damage_to", [])],
+                "no_damage_to": [rel["name"] for rel in damage_relations.get("no_damage_to", [])],
+                "double_damage_from": [rel["name"] for rel in damage_relations.get("double_damage_from", [])],
+                "half_damage_from": [rel["name"] for rel in damage_relations.get("half_damage_from", [])],
+                "no_damage_from": [rel["name"] for rel in damage_relations.get("no_damage_from", [])],
+            }
 
         # Try to fetch species data, but continue without it if it fails
         species_data = None
@@ -784,6 +799,7 @@ def get_pokemon(id_or_name):
             species_data=species_data,
             sorted_sprites=sorted_sprites,
             evolution_chain=evolution_chain,
+            type_effectiveness=type_effectiveness,
         )
     else:
         return "Pokemon not found", 404
