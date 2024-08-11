@@ -37,7 +37,8 @@ def create_pokemon_list(data):
         for pokemon_entry in pokemon_entries:
             # The key structure is different depending on the data source
             if isinstance(pokemon_entry, dict):
-                pokemon_name = pokemon_entry["name"] if "name" in pokemon_entry else pokemon_entry.get("pokemon", {}).get("name")
+                pokemon_name = pokemon_entry["name"] if "name" in pokemon_entry else pokemon_entry.get("pokemon",
+                                                                                                       {}).get("name")
             else:
                 print(f"Warning: Invalid Pokémon entry structure: {pokemon_entry}")
                 continue
@@ -59,7 +60,6 @@ def create_pokemon_list(data):
     except ValueError as e:
         print(f"Error fetching Pokémon data: {e}")
         return []
-
 
 
 def fetch_all_results(url):
@@ -660,6 +660,20 @@ def get_pokedex(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
+@pokemon_bp.route('/pokemon/')
+@cache.cached(timeout=300)
+def get_pokemon_list():
+    try:
+        url = "https://pokeapi.co/api/v2/pokemon"
+        data = fetch_all_results(url)
+        pokemon_list = create_pokemon_list(data)
+
+        return render_template('pokemon_list.html', pokemon_list=pokemon_list)
+    # cache.set(cache_key, rendered_template, timeout=300)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
 @pokemon_bp.route("/pokemon/<id_or_name>")
 @cache.cached(timeout=300)
 def get_pokemon(id_or_name):
@@ -752,20 +766,6 @@ def get_pokemon(id_or_name):
         )
     else:
         return "Pokemon not found", 404
-
-
-@pokemon_bp.route('/pokemon/')
-@cache.cached(timeout=300)
-def get_pokemon_list():
-    try:
-        url = "https://pokeapi.co/api/v2/pokemon"
-        data = fetch_all_results(url)
-        pokemon_list = create_pokemon_list(data)
-
-        return render_template('pokemon_list.html', pokemon_list=pokemon_list)
-    # cache.set(cache_key, rendered_template, timeout=300)
-    except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
 @pokemon_bp.route("/pokemon_color/<id_or_name>")
