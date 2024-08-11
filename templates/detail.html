@@ -28,7 +28,7 @@
                     <li class="detail-card__list">Base Happiness: {{ species_data.base_happiness }}</li>
                     <li class="detail-card__list">Capture Rate: {{ species_data.capture_rate }}</li>
                     <li class="detail-card__list">Color: <a
-                            href="{{ url_for('pokemon.get_color', id_or_name=species_data.color.name) }}">{{ species_data.color.name | title }}</a>
+                            href="{{ url_for('pokemon.get_pokemon_color', id_or_name=species_data.color.name) }}">{{ species_data.color.name | title }}</a>
                     </li>
                     <li class="detail-card__list">Egg Groups:
                         {% for egg_group in species_data.egg_groups %}
@@ -40,7 +40,7 @@
                     <li class="detail-card__list">Has Gender
                         Differences: {{ species_data.has_gender_differences | title }}</li>
                     <li class="detail-card__list">Habitat: <a
-                            href="{{ url_for('pokemon.get_habitat', id_or_name=species_data.habitat.name) }}">{{ species_data.habitat.name | title }}</a>
+                            href="{{ url_for('pokemon.get_pokemon_habitat', id_or_name=species_data.habitat.name) }}">{{ species_data.habitat.name | title }}</a>
                     </li>
                     <li class="detail-card__list">Is Baby: {{ species_data.is_baby }}</li>
                     <li class="detail-card__list">Is Legendary: {{ species_data.is_legendary }}</li>
@@ -108,13 +108,13 @@
                     <li>
                         <figure class="evolution-pokemon{% if pokemon.name|lower == data.name|lower %}--current{% endif %}">
                             <div class="evolution-stage">
-                                <a href="{{ url_for('pokemon.get_pokemon_detail', id_or_name=pokemon.name) }}">{{ pokemon.species_id }}</a>
+                                <a href="{{ url_for('pokemon.get_pokemon', id_or_name=pokemon.name) }}">{{ pokemon.species_id }}</a>
                             </div>
-                            <a href="{{ url_for('pokemon.get_pokemon_detail', id_or_name=pokemon.name) }}">
+                            <a href="{{ url_for('pokemon.get_pokemon', id_or_name=pokemon.name) }}">
                                 <img src="{{ pokemon.sprite }}" alt="{{ pokemon.name }} Image">
                             </a>
                             <div class="species-name">
-                                <a href="{{ url_for('pokemon.get_pokemon_detail', id_or_name=pokemon.name) }}">{{ pokemon.name|title }}</a>
+                                <a href="{{ url_for('pokemon.get_pokemon', id_or_name=pokemon.name) }}">{{ pokemon.name|title }}</a>
                             </div>
                             <div class="species-name">
                                 {% if pokemon.min_level %}

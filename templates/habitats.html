@@ -8,7 +8,7 @@
         <ul>
             {% for habitat in habitats %}
                 <li>
-                    <a href="{{ url_for('pokemon.get_habitat', id_or_name=habitat.name) }}">{{ habitat.name | replace('-', ' ') | capitalize }}</a>
+                    <a href="{{ url_for('pokemon.get_pokemon_habitat', id_or_name=habitat.name) }}">{{ habitat.name | replace('-', ' ') | capitalize }}</a>
                 </li>
             {% endfor %}
         </ul>

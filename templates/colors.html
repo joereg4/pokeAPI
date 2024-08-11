@@ -8,7 +8,7 @@
         <ul>
             {% for color in colors %}
                 <li>
-                    <a href="{{ url_for('pokemon.get_color', id_or_name=color.name) }}">{{ color.name | capitalize }}</a>
+                    <a href="{{ url_for('pokemon.get_pokemon_color', id_or_name=color.name) }}">{{ color.name | capitalize }}</a>
                 </li>
             {% endfor %}
         </ul>

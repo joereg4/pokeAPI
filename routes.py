@@ -46,6 +46,16 @@ def create_pokemon_list(data):
         return []
 
 
+def fetch_all_results(url):
+    results = []
+    while url:
+        response = requests.get(url)
+        data = response.json()
+        results.extend(data["results"])
+        url = data.get("next")  # Get the next page URL, if it exists
+    return results
+
+
 @pokemon_bp.errorhandler(ValueError)
 def handle_value_error(error):
     # Log the error if needed
@@ -94,173 +104,12 @@ def index():
     )
 
 
-@pokemon_bp.route('/pokemon/')
-def get_pokemon_list():
-    page = request.args.get('page', 1, type=int)
-    per_page = POKEMON_PER_PAGE
-    offset = (page - 1) * per_page
-    endpoint = f"{BASE_URL}/pokemon/?limit={per_page}&offset={offset}"
-
-    response = requests.get(endpoint)
-    data = response.json()
-
-    pokemon_list = []
-
-    # Fetch details for each Pokémon in the current set
-    for pokemon in data["results"]:
-        pokemon = pokedex.APIResource.fetch_data("pokemon", pokemon["name"])
-        pokemon_list.append(pokemon)
-
-    return render_template('list.html', pokemon_list=pokemon_list, current_page=page)
-    cache.set(cache_key, rendered_template, timeout=300)
-
-
-@pokemon_bp.route('/search', methods=['GET'])
-def search():
-    query = request.args.get('q', '').lower()
-    if query:
-        # Filter resources that start with the query
-        results = {name: resource for name, resource in resources_dict.items() if name.startswith(query)}
-        return jsonify(results)
-    return jsonify({})
-
-
-@pokemon_bp.route("/pokemon/<id_or_name>")
-@cache.cached(timeout=300)
-def get_pokemon_detail(id_or_name):
-    try:
-        id_or_name = int(id_or_name)
-    except ValueError:
-        pass  # if the conversion fails, it remains a string
-
-    try:
-        def get_location_area_encounters(val):
-            params = val.split("/")[-3:]
-            params[1] = int(params[1])
-            print(f"Encounters Parms: {params}")
-            return params
-
-        data = pokedex.APIResource.fetch_data(
-            "pokemon",
-            id_or_name,
-            # custom={"location_area_encounters": get_location_area_encounters}, **kwargs
-        )
-        # some pokemon have encounters /pokemon/<id_or_name>/encounters, need to figure out how to handle
-
-    except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
-
-    if data is not None:
-        data = {
-            "name": data['name'].title(),
-            "id": data["id"],
-            "sprites": data["sprites"],
-            "species": data["species"],
-            "base_experience": data["base_experience"],
-            "height": data["height"],
-            "weight": data["weight"],
-            "is_default": data["is_default"],
-            "order": data["order"],
-            "abilities": data.get("abilities", []),
-            "moves": data.get("moves", []),
-            "held_items": data.get("held_items", []),
-            "types": data.get("types", []),
-        }
-
-        # Try to fetch species data, but continue without it if it fails
-        species_data = None
-        try:
-            species_data = pokedex.pokemon_species(data["id"])
-        except requests.exceptions.HTTPError:
-            print(f"Warning: No species data found for Pokémon {data['name']}")
-
-        # Define the valid sprite names to filter
-        valid_sprites = [
-            "front_default",
-            "back_default",
-            "front_female",
-            "back_female",
-            "front_shiny",
-            "back_shiny",
-            "front_shiny_female",
-            "back_shiny_female",
-        ]
-
-        # Get the sprite data and filter out null values and unwanted sprites
-        sprites = {
-            key: value
-            for key, value in data["sprites"].items()
-            if value is not None and key in valid_sprites
-        }
-
-        # Sort the sprites based on the desired order
-        sorted_sprites = {key: sprites[key] for key in valid_sprites if key in sprites}
-
-        # Initialize evolution_chain to None
-        evolution_chain = None
-
-        if species_data:
-            # Build Evolution Chain only if species data is available
-            evolution_id = pokedex.get_species_id_from_url(species_data['evolution_chain']['url'])
-
-            # Using evolution_id get the chain
-            evolution_chain_data = pokedex.evolution_chain(evolution_id)
-            pokemon_name = evolution_chain_data["chain"]["species"]["name"]
-
-            # logging.info(f"name being fed to chain: {pokemon_name}")
-            evolution_chain = pokedex.get_chain(evolution_chain_data, pokemon_name)
-
-        return render_template(
-            "detail.html",
-            data=data,
-            species_data=species_data,
-            sorted_sprites=sorted_sprites,
-            evolution_chain=evolution_chain,
-        )
-    else:
-        return "Pokemon not found", 404
-
-
-def fetch_all_results(url):
-    results = []
-    while url:
-        response = requests.get(url)
-        data = response.json()
-        results.extend(data["results"])
-        url = data.get("next")  # Get the next page URL, if it exists
-    return results
-
-
 @pokemon_bp.route("/abilities")
 @cache.cached(timeout=300)
-def abilities_list():
+def get_abilities_list():
     url = "https://pokeapi.co/api/v2/ability"
     abilities = fetch_all_results(url)
     return render_template("abilities.html", abilities=abilities)
-
-
-@pokemon_bp.route("/colors")
-@cache.cached(timeout=300)
-def colors_list():
-    url = "https://pokeapi.co/api/v2/pokemon-color"
-    colors = fetch_all_results(url)
-    return render_template("colors.html", colors=colors)
-
-
-@pokemon_bp.route("/habitats")
-@cache.cached(timeout=300)
-def habitats_list():
-    url = "https://pokeapi.co/api/v2/pokemon-habitat"
-    habitats = fetch_all_results(url)
-    return render_template("habitats.html", habitats=habitats)
-
-
-@pokemon_bp.route("/types")
-@cache.cached(timeout=300)
-def types_list():
-    url = "https://pokeapi.co/api/v2/type"
-    types = fetch_all_results(url)
-    return render_template("types.html", types=types)
 
 
 @pokemon_bp.route("/ability/<id_or_name>")
@@ -328,26 +177,12 @@ def get_characteristic(id_):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/color/<id_or_name>")
+@pokemon_bp.route("/colors")
 @cache.cached(timeout=300)
-def get_color(id_or_name):
-    # Check if id_or_name can be converted to an integer
-    try:
-        id_or_name = int(id_or_name)
-    except ValueError:
-        pass  # if the conversion fails, it remains a string
-
-    try:
-        data = pokedex.APIResource.fetch_data("pokemon-color", id_or_name)
-        if not data:
-            return "No data found", 404  # Handle case where no data is returned
-
-        # Use the create_pokemon_list function with the correct key
-        pokemon_list = create_pokemon_list(data)
-
-        return render_template("color_detail.html", data=data, pokemon_list=pokemon_list)
-    except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
+def get_colors_list():
+    url = "https://pokeapi.co/api/v2/pokemon-color"
+    colors = fetch_all_results(url)
+    return render_template("colors.html", colors=colors)
 
 
 @pokemon_bp.route("/contest_effect/<int:id_>")
@@ -368,15 +203,6 @@ def get_contest_type(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("contest-type", id_or_name)
-        return render_template("generic.html", data=data)
-    except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
-
-
-@pokemon_bp.route("/super_contest_effect/<int:id_>")
-def get_super_contest_effect(id_):
-    try:
-        data = pokedex.APIResource.fetch_data("super-contest-effect", id_)
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -510,25 +336,12 @@ def get_growth_rate(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/habitat/<id_or_name>")
+@pokemon_bp.route("/habitats")
 @cache.cached(timeout=300)
-def get_habitat(id_or_name):
-    try:
-        id_or_name = int(id_or_name)
-    except ValueError:
-        pass  # if the conversion fails, it remains a string
-
-    try:
-        data = pokedex.APIResource.fetch_data("pokemon-habitat", id_or_name)
-        if not data:
-            return "No data found", 404  # Handle case where no data is returned
-
-        # Use the create_pokemon_list function with the correct key
-        pokemon_list = create_pokemon_list(data)
-
-        return render_template("habitat_detail.html", data=data, pokemon_list=pokemon_list)
-    except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
+def get_habitats_list():
+    url = "https://pokeapi.co/api/v2/pokemon-habitat"
+    habitats = fetch_all_results(url)
+    return render_template("habitats.html", habitats=habitats)
 
 
 @pokemon_bp.route("/item/<id_or_name>")
@@ -546,7 +359,7 @@ def get_item(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/item-attribute/<id_or_name>")
+@pokemon_bp.route("/item_attribute/<id_or_name>")
 def get_item_attribute(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -597,6 +410,48 @@ def get_item_pocket(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("item-pocket", id_or_name)
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/language/<id_or_name>")
+def get_language(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = pokedex.APIResource.fetch_data("language", id_or_name)
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/location/<id_or_name>")
+def get_location(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = pokedex.APIResource.fetch_data("location", id_or_name)
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/location_area/<id_or_name>")
+def get_location_area(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = pokedex.APIResource.fetch_data("location-area", id_or_name)
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -733,24 +588,15 @@ def get_move_target(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/location/<int:id_>")
-def get_location(id_):
-    try:
-        data = pokedex.APIResource.fetch_data("location", id_)
-        return render_template("generic.html", data=data)
-    except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
-
-
-@pokemon_bp.route("/location_area/<id_or_name>")
-def get_location_area(id_or_name):
+@pokemon_bp.route("/nature/<id_or_name>")
+def get_nature(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
         id_or_name = int(id_or_name)
     except ValueError:
         pass  # if the conversion fails, it remains a string
     try:
-        data = pokedex.APIResource.fetch_data("location-area", id_or_name)
+        data = pokedex.APIResource.fetch_data("nature", id_or_name)
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -798,16 +644,139 @@ def get_pokedex(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
+@pokemon_bp.route("/pokemon/<id_or_name>")
+@cache.cached(timeout=300)
+def get_pokemon(id_or_name):
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+
+    try:
+        def get_location_area_encounters(val):
+            params = val.split("/")[-3:]
+            params[1] = int(params[1])
+            print(f"Encounters Parms: {params}")
+            return params
+
+        data = pokedex.APIResource.fetch_data(
+            "pokemon",
+            id_or_name,
+        )
+
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+    if data is not None:
+        data = {
+            "name": data['name'].title(),
+            "id": data["id"],
+            "sprites": data["sprites"],
+            "species": data["species"],
+            "base_experience": data["base_experience"],
+            "height": data["height"],
+            "weight": data["weight"],
+            "is_default": data["is_default"],
+            "order": data["order"],
+            "abilities": data.get("abilities", []),
+            "moves": data.get("moves", []),
+            "held_items": data.get("held_items", []),
+            "types": data.get("types", []),
+        }
+
+        # Try to fetch species data, but continue without it if it fails
+        species_data = None
+        try:
+            species_data = pokedex.pokemon_species(data["id"])
+        except requests.exceptions.HTTPError:
+            print(f"Warning: No species data found for Pokémon {data['name']}")
+
+        # Define the valid sprite names to filter
+        valid_sprites = [
+            "front_default",
+            "back_default",
+            "front_female",
+            "back_female",
+            "front_shiny",
+            "back_shiny",
+            "front_shiny_female",
+            "back_shiny_female",
+        ]
+
+        # Get the sprite data and filter out null values and unwanted sprites
+        sprites = {
+            key: value
+            for key, value in data["sprites"].items()
+            if value is not None and key in valid_sprites
+        }
+
+        # Sort the sprites based on the desired order
+        sorted_sprites = {key: sprites[key] for key in valid_sprites if key in sprites}
+
+        # Initialize evolution_chain to None
+        evolution_chain = None
+
+        if species_data:
+            # Build Evolution Chain only if species data is available
+            evolution_id = pokedex.get_species_id_from_url(species_data['evolution_chain']['url'])
+
+            # Using evolution_id get the chain
+            evolution_chain_data = pokedex.evolution_chain(evolution_id)
+            pokemon_name = evolution_chain_data["chain"]["species"]["name"]
+
+            # logging.info(f"name being fed to chain: {pokemon_name}")
+            evolution_chain = pokedex.get_chain(evolution_chain_data, pokemon_name)
+
+        return render_template(
+            "detail.html",
+            data=data,
+            species_data=species_data,
+            sorted_sprites=sorted_sprites,
+            evolution_chain=evolution_chain,
+        )
+    else:
+        return "Pokemon not found", 404
+
+
+@pokemon_bp.route('/pokemon/')
+def get_pokemon_list():
+    page = request.args.get('page', 1, type=int)
+    per_page = POKEMON_PER_PAGE
+    offset = (page - 1) * per_page
+    endpoint = f"{BASE_URL}/pokemon/?limit={per_page}&offset={offset}"
+
+    response = requests.get(endpoint)
+    data = response.json()
+
+    pokemon_list = []
+
+    # Fetch details for each Pokémon in the current set
+    for pokemon in data["results"]:
+        pokemon = pokedex.APIResource.fetch_data("pokemon", pokemon["name"])
+        pokemon_list.append(pokemon)
+
+    return render_template('list.html', pokemon_list=pokemon_list, current_page=page)
+    cache.set(cache_key, rendered_template, timeout=300)
+
+
 @pokemon_bp.route("/pokemon_color/<id_or_name>")
+@cache.cached(timeout=300)
 def get_pokemon_color(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
         id_or_name = int(id_or_name)
     except ValueError:
         pass  # if the conversion fails, it remains a string
+
     try:
         data = pokedex.APIResource.fetch_data("pokemon-color", id_or_name)
-        return render_template("generic.html", data=data)
+        if not data:
+            return "No data found", 404  # Handle case where no data is returned
+
+        # Use the create_pokemon_list function with the correct key
+        pokemon_list = create_pokemon_list(data)
+
+        return render_template("color_detail.html", data=data, pokemon_list=pokemon_list)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
@@ -827,15 +796,22 @@ def get_pokemon_form(id_or_name):
 
 
 @pokemon_bp.route("/pokemon_habitat/<id_or_name>")
+@cache.cached(timeout=300)
 def get_pokemon_habitat(id_or_name):
-    # Check if id_or_name can be converted to an integer
     try:
         id_or_name = int(id_or_name)
     except ValueError:
         pass  # if the conversion fails, it remains a string
+
     try:
         data = pokedex.APIResource.fetch_data("pokemon-habitat", id_or_name)
-        return render_template("generic.html", data=data)
+        if not data:
+            return "No data found", 404  # Handle case where no data is returned
+
+        # Use the create_pokemon_list function with the correct key
+        pokemon_list = create_pokemon_list(data)
+
+        return render_template("habitat_detail.html", data=data, pokemon_list=pokemon_list)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
@@ -869,7 +845,7 @@ def get_pokemon_species(id_or_name):
 
         data = pokedex.APIResource.fetch_data("pokemon-species", id_or_name,
                                               custom={"evolution_chain": get_evolution_chain})
-        return data
+        return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
@@ -883,7 +859,7 @@ def get_region(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("region", id_or_name)
-        return data
+        return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
@@ -897,7 +873,16 @@ def get_stat(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("stat", id_or_name)
-        return data
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/super_contest_effect/<int:id_>")
+def get_super_contest_effect(id_):
+    try:
+        data = pokedex.APIResource.fetch_data("super-contest-effect", id_)
+        return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
@@ -914,6 +899,42 @@ def get_type(id_or_name):
         data = pokedex.APIResource.fetch_data("type", id_or_name)
         pokemon_list = create_pokemon_list(data)
         return render_template("type_detail.html", data=data, pokemon_list=pokemon_list)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/types")
+@cache.cached(timeout=300)
+def get_types_list():
+    url = "https://pokeapi.co/api/v2/type"
+    types = fetch_all_results(url)
+    return render_template("types.html", types=types)
+
+
+@pokemon_bp.route("/version/<id_or_name>")
+def get_version(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = pokedex.APIResource.fetch_data("version", id_or_name)
+        return render_template("generic.html", data=data)
+    except ValueError as e:
+        return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/version_group/<id_or_name>")
+def get_version_group(id_or_name):
+    # Check if id_or_name can be converted to an integer
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # if the conversion fails, it remains a string
+    try:
+        data = pokedex.APIResource.fetch_data("version-group", id_or_name)
+        return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
