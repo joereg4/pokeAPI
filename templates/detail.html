@@ -5,11 +5,13 @@
 {% block content %}
     <h1>#{{ data.id }} {{ data.name }} </h1>
     <div class="detail-grid">
+        <!-- Official Image -->
         <div class="detail-card__image-section">
             <div class="detail-card__image">
                 <img src="{{ data.sprites['other']['official-artwork']['front_default'] }}" alt="{{ data.name }}">
             </div>
         </div>
+       <!-- Attributes Section -->
         <div class="detail-card__info-section">
             <h2 class="detail-card__title">Attributes</h2>
             <ul class="detail-card__item">
@@ -43,6 +45,7 @@
                 {% endif %}
             </ul>
         </div>
+       <!-- Stats Section -->
         <div class="detail-card__info-section">
             <h2 class="detail-card__title">Stats</h2>
             <ul class="detail-card__item">
@@ -57,25 +60,23 @@
                 {% endfor %}
             </ul>
         </div>
-
+        <!-- Abilities and Held Items Section -->
         <div class="detail-card__info-section">
             <h2 class="detail-card__title">Abilities</h2>
             <ul class="detail-card__item">
                 {% for ability in data.abilities %}
                     <li class="detail-card__list">
-                        {{ ability.slot }}: <a
-                            href="{{ url_for('pokemon.get_ability', id_or_name=ability.ability['url'].split('/')[-2]) }}"> {{ ability.ability['name'] }} </a>
+                       Slot {{ ability.slot }}: <a
+                            href="{{ url_for('pokemon.get_ability', id_or_name=ability.ability['url'].split('/')[-2]) }}"> {{ ability.ability['name'] | title }} </a>
                     </li>
                 {% endfor %}
             </ul>
-        </div>
-        <div class="detail-card__info-section">
             <h2 class="detail-card__title">Held items</h2>
             <ul class="detail-card__item">
                 {% if data.held_items %}
                     {% for held_item in data.held_items %}
                         <li class="item-section__list">
-                            <a href="{{ url_for('pokemon.get_item', id_or_name=held_item.item.url.split('/')[-2]) }}"> {{ held_item.item.name }} </a>
+                            <a href="{{ url_for('pokemon.get_item', id_or_name=held_item.item.url.split('/')[-2]) }}"> {{ held_item.item.name | title }} </a>
                         </li>
                     {% endfor %}
                 {% else %}
