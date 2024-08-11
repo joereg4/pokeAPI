@@ -16,7 +16,7 @@
             <a href="/" title="Pokémon API"><img src="{{ url_for('pokemon.static', filename='img/pokedexlogo.png') }}" alt="Pokémon"></a>
             <nav>
                 <a href="/">Home</a>
-                <a href="{{ url_for('pokemon.get_pokemon_list', page=1) }}">Pokémon List</a>
+                <a href="{{ url_for('pokemon.get_pokemon_list') }}">Pokémon List</a>
                 <a href="#">Link #3</a>
                 <a href="#">Link #4</a>
                 <!-- Include the search functionality -->
