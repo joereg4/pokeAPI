@@ -42,7 +42,7 @@
     <div class="statistics-section">
         <h2>Pokémon Statistics</h2>
         <div class="statistics-grid">
-            <a href="{{ url_for('pokemon.get_pokemon_list') }}" class="statistic">
+            <a href="{{ url_for('pokemon.get_pokemon_list',page=1) }}" class="statistic">
                 <h3>{{ pokemon_count }}</h3>
                 <p>Total Pokémon</p>
             </a>

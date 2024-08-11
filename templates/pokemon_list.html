@@ -5,4 +5,9 @@
 {% block content %}
     <h1 class="pokemon-list__title">Pokémon List</h1>
     {% include '_pokemon_list.html' %}
+    <div class="pagination">
+        <a class="pagination__link" href="{{ url_for('pokemon.get_pokemon_list', page=current_page-1) }}"
+                {% if current_page == 1 %} class="disabled" {% endif %}>Previous</a>
+        <a class="pagination__link" href="{{ url_for('pokemon.get_pokemon_list', page=current_page+1) }}">Next</a>
+    </div>
 {% endblock %}

@@ -11,7 +11,7 @@ pokemon_bp = Blueprint(
 
 BASE_URL = "https://pokeapi.co/api/v2"
 SPRITE_URL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites"
-POKEMON_PER_PAGE = 20
+POKEMON_PER_PAGE = 60
 
 
 def create_pokemon_list(data):
@@ -661,17 +661,38 @@ def get_pokedex(id_or_name):
 
 
 @pokemon_bp.route('/pokemon/')
-@cache.cached(timeout=300)
 def get_pokemon_list():
-    try:
-        url = "https://pokeapi.co/api/v2/pokemon"
-        data = fetch_all_results(url)
-        pokemon_list = create_pokemon_list(data)
+    page = request.args.get('page', 1, type=int)
+    per_page = POKEMON_PER_PAGE
+    offset = (page - 1) * per_page
+    endpoint = f"{BASE_URL}/pokemon/?limit={per_page}&offset={offset}"
 
-        return render_template('pokemon_list.html', pokemon_list=pokemon_list)
-    # cache.set(cache_key, rendered_template, timeout=300)
-    except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
+    response = requests.get(endpoint)
+    data = response.json()
+
+    pokemon_list = []
+
+    # Fetch details for each Pokémon in the current set
+    for pokemon in data["results"]:
+        pokemon = pokedex.APIResource.fetch_data("pokemon", pokemon["name"])
+        pokemon_list.append(pokemon)
+
+    return render_template('pokemon_list.html', pokemon_list=pokemon_list, current_page=page)
+    cache.set(cache_key, rendered_template, timeout=300)
+
+
+# @pokemon_bp.route('/pokemon/')
+# @cache.cached(timeout=300)
+# def get_pokemon_list():
+#     try:
+#         url = "https://pokeapi.co/api/v2/pokemon"
+#         data = fetch_all_results(url)
+#         pokemon_list = create_pokemon_list(data)
+#
+#         return render_template('pokemon_list.html', pokemon_list=pokemon_list)
+#     # cache.set(cache_key, rendered_template, timeout=300)
+#     except ValueError as e:
+#         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
 @pokemon_bp.route("/pokemon/<id_or_name>")
