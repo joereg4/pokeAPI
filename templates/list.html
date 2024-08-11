@@ -6,7 +6,7 @@
     <h1 class="pokemon-list__title">Pokémon List</h1>
     <div class="pokemon-grid">
         {% for pokemon in pokemon_list %}
-            <a href="{{ url_for('pokemon.get_pokemon_detail', id_or_name=pokemon.name) }}">
+            <a href="{{ url_for('pokemon.get_pokemon', id_or_name=pokemon.name) }}">
                 <div class="pokemon-card">
                     <div class="pokemon-card__image-section">
                         <img class="pokemon-card__image"
