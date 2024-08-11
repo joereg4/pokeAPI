@@ -988,7 +988,7 @@ def get_super_contest_effect(id_):
 
 
 @pokemon_bp.route("/type/<id_or_name>")
-#@cache.cached(timeout=300)
+@cache.cached(timeout=300)
 def get_type(id_or_name):
     try:
         id_or_name = int(id_or_name)
