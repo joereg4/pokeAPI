@@ -55,7 +55,7 @@ def create_pokemon_list(data):
             pokemon_entries = data
         else:
             # Possible keys that might contain the Pokémon species list
-            possible_keys = ["pokemon", "pokemon_species", "pokemon_entries"]
+            possible_keys = ["pokemon", "pokemon_species", "pokemon_entries", "pokemon_encounters"]
 
             # Identify the correct key by checking which one exists in the data
             key = next((k for k in possible_keys if k in data), None)
@@ -86,6 +86,21 @@ def create_pokemon_list(data):
 
             # Fetch the Pokémon data
             pokemon = pokedex.APIResource.fetch_data("pokemon", pokemon_name)
+
+            # Add encounter details if available
+            if key == "pokemon_encounters":
+                version_details = pokemon_entry.get("version_details", [])
+                pokemon['version_details'] = []
+
+                for version_detail in version_details:
+                    encounter_info = {
+                        'version_name': version_detail['version']['name'],
+                        'method': version_detail['encounter_details'][0]['method']['name'],
+                        'max_level': version_detail['encounter_details'][0]['max_level'],
+                        'min_level': version_detail['encounter_details'][0]['min_level'],
+                        'chance': version_detail['encounter_details'][0]['chance']
+                    }
+                    pokemon['version_details'].append(encounter_info)
 
             # Check if the 'sprites' key exists in the Pokémon data
             if "sprites" in pokemon:
@@ -490,28 +505,28 @@ def get_language(id_or_name):
 
 @pokemon_bp.route("/location/<id_or_name>")
 def get_location(id_or_name):
-    # Check if id_or_name can be converted to an integer
     try:
         id_or_name = int(id_or_name)
     except ValueError:
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("location", id_or_name)
-        return render_template("generic.html", data=data)
+        return render_template("location_detail.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
 @pokemon_bp.route("/location_area/<id_or_name>")
 def get_location_area(id_or_name):
-    # Check if id_or_name can be converted to an integer
     try:
         id_or_name = int(id_or_name)
     except ValueError:
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("location-area", id_or_name)
-        return render_template("generic.html", data=data)
+        pokemon_list = create_pokemon_list(data)
+
+        return render_template("location_area_detail.html", data=data, pokemon_list=pokemon_list)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
