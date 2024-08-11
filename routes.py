@@ -93,7 +93,7 @@ def create_pokemon_list(data):
             else:
                 print(f"Warning: No sprites found for Pokémon {pokemon_name}")
 
-        pokemon_list.sort(key=lambda x: x.get("order", float("inf")))
+        pokemon_list.sort(key=lambda x: x.get("id", float("inf")))
 
         return pokemon_list
     except ValueError as e:
