@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ data.name | title }} Region Details{% endblock %}
+
+{% block content %}
+    <div class="detail-section">
+        <h1 class="detail-card__title">{{ data.name | title }} Region</h1>
+
+        <div class="detail-grid">
+
+            <!-- Main Generation Section -->
+            <div class="detail-card__info-section">
+                <h2 class="detail-card__title">Main Generation</h2>
+                 <ul class="{% if data.pokedexes|length > 25 %}long-list{% endif %}">
+                <li class="detail-card__list">
+                    <a href="{{ url_for('pokemon.get_generation', id_or_name=data.main_generation.name) }}">
+                        {{ data.main_generation.name | replace("-", " ") | title }}
+                    </a>
+                </li>
+                 </ul>
+            </div>
+
+            <!-- Pokedexes Section -->
+            <div class="detail-card__info-section">
+                <h2 class="detail-card__title">Pokedexes</h2>
+                <ul class="{% if data.pokedexes|length > 25 %}long-list{% endif %}">
+                    {% for pokedex in data.pokedexes %}
+                        <li class="detail-card__list">
+                            <a href="{{ url_for('pokemon.get_pokedex', id_or_name=pokedex.name) }}">
+                                {{ pokedex.name | replace("-", " ") | title }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Version Groups Section -->
+            <div class="detail-card__info-section">
+                <h2 class="detail-card__title">Version Groups</h2>
+                <ul class="{% if data.version_groups|length > 25 %}long-list{% endif %}">
+                    {% for version_group in data.version_groups %}
+                        <li class="detail-card__list">
+                            <a href="{{ url_for('pokemon.get_version_group', id_or_name=version_group.name) }}">
+                                {{ version_group.name | replace("-", " ") | title }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Locations Section -->
+            <div class="detail-card__info-section">
+                <h2 class="detail-card__title">Locations</h2>
+                <ul class="{% if data.locations|length > 25 %}long-list{% endif %}">
+                    {% for location in data.locations %}
+                        <li class="detail-card__list">
+                            <a href="{{ url_for('pokemon.get_location', id_or_name=location.name) }}">
+                                {{ location.name | replace("-", " ") | title }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
