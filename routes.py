@@ -1,9 +1,14 @@
 import logging
 from flask import Blueprint, render_template, request, json, current_app, url_for
+from markupsafe import Markup
+
 from cache import cache
 import requests
 import pokedex
 import sys
+import pandas as pd
+import os
+import markdown
 
 pokemon_bp = Blueprint(
     "pokemon", __name__, template_folder="templates", static_folder="static"
@@ -46,6 +51,23 @@ type_colors = {
     "steel": "#B7B7CE",
     "fairy": "#D685AD"
 }
+
+
+def get_csv_file_path():
+    csv_url = url_for('static', filename='resources.csv')
+
+    csv_path = os.path.join(current_app.root_path, csv_url.lstrip('/'))
+
+    return csv_path
+
+
+def get_pokemon_summary(pokemon_name,df):
+    row = df[(df['resource'] == 'pokemon-species') & (df['name'].str.lower() == pokemon_name.lower())]
+
+    if not row.empty:
+        return row.iloc[0]['summary']
+    else:
+        return None
 
 
 def create_pokemon_list(data):
@@ -742,8 +764,11 @@ def get_pokemon_list():
 
 
 @pokemon_bp.route("/pokemon/<id_or_name>")
-@cache.cached(timeout=300)
+#@cache.cached(timeout=300)
 def get_pokemon(id_or_name):
+    csv_file_path = get_csv_file_path()
+    df = pd.read_csv(csv_file_path)
+
     try:
         id_or_name = int(id_or_name)
     except ValueError:
@@ -861,6 +886,15 @@ def get_pokemon(id_or_name):
             # logging.info(f"name being fed to chain: {pokemon_name}")
             evolution_chain = pokedex.get_chain(evolution_chain_data, pokemon_name)
 
+        # Retrieve the summary for the Pokémon
+        summary = get_pokemon_summary(data['name'],df)
+
+        # Convert the markdown summary to HTML
+        if summary:
+            summary_html = Markup(markdown.markdown(summary))
+        else:
+            summary_html = None
+
         return render_template(
             "detail.html",
             data=data,
@@ -869,6 +903,7 @@ def get_pokemon(id_or_name):
             evolution_chain=evolution_chain,
             type_effectiveness=type_effectiveness,
             move_categories=move_categories,
+            summary_html=summary_html,
         )
     else:
         return "Pokemon not found", 404

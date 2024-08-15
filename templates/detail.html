@@ -11,7 +11,7 @@
                 <img src="{{ data.sprites['other']['official-artwork']['front_default'] }}" alt="{{ data.name }}">
             </div>
         </div>
-       <!-- Attributes Section -->
+        <!-- Attributes Section -->
         <div class="detail-card__info-section">
             <h2 class="detail-card__title">Attributes</h2>
             <ul class="detail-card__item">
@@ -45,7 +45,7 @@
                 {% endif %}
             </ul>
         </div>
-       <!-- Stats Section -->
+        <!-- Stats Section -->
         <div class="detail-card__info-section">
             <h2 class="detail-card__title">Stats</h2>
             <ul class="detail-card__item">
@@ -66,7 +66,7 @@
             <ul class="detail-card__item">
                 {% for ability in data.abilities %}
                     <li class="detail-card__list">
-                       Slot {{ ability.slot }}: <a
+                        Slot {{ ability.slot }}: <a
                             href="{{ url_for('pokemon.get_ability', id_or_name=ability.ability['url'].split('/')[-2]) }}"> {{ ability.ability['name'] | title }} </a>
                     </li>
                 {% endfor %}
@@ -85,7 +85,12 @@
             </ul>
         </div>
     </div>
-
+    {% if summary_html %}
+        <div class="detail-card__info-section">
+            <h2 class="detail-card__title">Summary</h2>
+            <p>{{ summary_html | safe }}</p>
+        </div>
+    {% endif %}
     <!-- Type Effectiveness Section -->
     <h2 class="detail-card__title">Type Effectiveness</h2>
     <!-- Type Effectiveness Section -->
