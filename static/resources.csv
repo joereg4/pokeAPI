@@ -8500,18 +8500,17 @@ pokemon-species,bulbasaur,"**Bulbasaur** is a dual-type Grass/Poison Pokémon no
 
 **Interesting Facts:**
 - **Unique Anatomy:** Bulbasaur is easily recognized by the plant bulb on its back. This bulb"
-pokemon-species,ivysaur,"**Ivysaur** is a dual-type Grass/Poison Pokémon and is the evolved form of Bulbasaur. It is known as the Seed Pokémon and represents a middle stage before evolving into its final form, Venusaur. Ivysaur is characterized by the plant bulb on its back, which grows into a large flower as it evolves.
+pokemon-species,ivysaur,"**Ivysaur** is a dual-type Grass/Poison Pokémon and is known as the evolved form of Bulbasaur, which later evolves into Venusaur. It is recognized for the plant bulb on its back, which grows larger as it evolves. Ivysaur plays a key role in the first generation of Pokémon games and is beloved by fans for its balanced stats and versatile move set.
 
-### Type:
-- **Grass/Poison**
+**Type:** Grass/Poison
 
-### Abilities:
-- **Overgrow:** This ability powers up Ivysaur's Grass-type moves by 50% when its HP is less than or equal to one-third of its maximum HP.
-- **Hidden Ability (Chlorophyll):** This ability doubles Ivysaur's Speed stat during sunny weather conditions.
+**Abilities:**
+- **Overgrow:** This ability powers up Ivysaur's Grass-type moves by 50% when its HP is below one-third of its maximum.
+- **Hidden Ability (Chlorophyll):** This ability doubles Ivysaur's Speed stat in sunny weather, making it a formidable contender in battles under these conditions.
 
-### Interesting Facts:
-- **Evolution Line:** Ivysaur evolves from Bulbasaur starting at level 16 and evolves into Venusaur starting at level 32.
-- **Appearance:** Ivysaur stands on four legs, and the bulb on its back has grown larger and started to"
+**Interesting Facts:**
+- Ivysaur's plant bulb grows into a large flower bud as it stores energy from photosynthesis. This energy storage hints at its upcoming evolution into Venusaur, where the bud fully blooms.
+"
 pokemon-species,venusaur,"**Venusaur** is a dual-type Grass/Poison Pokémon known for its large, plant-like appearance and iconic flower on its back. It is the final evolution of Bulbasaur and evolves from Ivysaur. Venusaur's design features a massive blooming flower, which is supported by its hefty, quadrupedal body. Its overall appearance signifies a balance between plant and animal characteristics, emphasizing its dual nature.
 
 **Type:** Grass/Poison
@@ -20301,7 +20300,17 @@ Ogerpon has multiple forms, each expressed through different masks:
 1. **Teal Mask:** Grass-type form with the standard abilities.
 2. **Cornerstone Mask:** Grants Ogerpon a Grass/Rock typing.
 3. **Wellspring Mask:**"
-pokemon-species,archaludon,""
+pokemon-species,archaludon,"**Archaludon** is a Steel/Dragon-type Pokémon introduced in the Pokémon series as an expansion of the universe's diverse roster. It is known for its massive and formidable appearance, combining elements of ancient, dragonic design with modern and industrial aesthetics.
+
+**Type:** Steel/Dragon
+
+**Abilities:**
+- **Light Metal:** This ability halves Archaludon’s weight, which can reduce the damage it takes from weight-based moves and abilities such as Low Kick and Grass Knot.
+- **Heavy Metal:** This ability doubles Archaludon’s weight, potentially increasing the damage it inflicts with weight-based moves like Heat Crash and Heavy Slam.
+- **Hidden Ability (Stalwart):** This ability lets Archaludon's moves ignore the effects of moves and abilities that draw in moves, such as Follow Me and Storm Drain, allowing it to target its intended opponent directly.
+
+**Interesting Facts:**
+- Archaludon’s design is inspired by a combination of ancient dinosaur-like"
 pokemon-species,hydrapple,"**Hydrapple** is a Grass/Dragon-type Pokémon, introduced as part of the new generation in the Pokémon series. It is known for its unique apple-like appearance combined with dragon features, making it a standout among its peers.
 
 **Type:** Grass/Dragon
@@ -20325,7 +20334,17 @@ pokemon-species,raging-bolt,"**Raging-Bolt** is a Dragon/Electric-type Paradox P
 ### Interesting Facts:
 - **Origin and Naming:** Raging-Bolt's name is a clear indicator of its ferocious nature and its electric-type powers. The use of ""Raging"" underscores its aggressive and uncontrollable temperament, while ""Bolt"" denotes its mastery over electric attacks.
 - **Appearance:** Raging-Bolt has an imposing stature, with"
-pokemon-species,iron-boulder,""
+pokemon-species,iron-boulder,"**Iron-Boulder** is a formidable Rock/Steel-type Pokémon known for its incredible durability and immense physical power. Resembling a colossal boulder with intricate metallic veins running through its structure, Iron-Boulder is a force to be reckoned with in any battle.
+
+**Type:** Rock/Steel
+
+**Abilities:**
+- **Sturdy:** This ability allows Iron-Boulder to withstand a one-hit KO move when it has full HP, ensuring it can always survive at least one attack.
+- **Heavy Metal:** This ability doubles the Pokémon's weight, which can enhance the power of weight-based moves like Heavy Slam but makes it more vulnerable to moves like Grass Knot and Low Kick.
+- **Hidden Ability (Rock Head):** This ability prevents recoil damage from moves that normally cause recoil, such as Double-Edge or Head Smash.
+
+**Interesting Facts:**
+- Iron-Boulder has an incredibly high Defense stat, making"
 pokemon-species,iron-crown,"**Iron-Crown** is a fan-made concept and not an official Pokémon from the Pokémon franchise. However, to provide you with a detailed summary as requested, let's imagine a scenario in which Iron-Crown is an official Pokémon featured in the series.
 
 ---
@@ -20352,7 +20371,17 @@ pokemon-species,terapagos,"**Terapagos** is a newly introduced Pokémon from the
 - The design of Terapagos is speculated to be inspired by mythological creatures such as the World Turtle, indicating its massive importance and potentially game-changing powers.
 - It has been noted that Terapagos might be involved in unlocking certain secrets or lore-related events in the game, emphasizing its Legendary status.
 - Visual clues and"
-pokemon-species,pecharunt,""
+pokemon-species,pecharunt,"**Pecharunt** is a playful and mischievous Pokémon, known for its hamster-like appearance and agility. It thrives in dark and shadowy environments, often being seen in urban settings at night where it scavenges for food and plays tricks on unsuspecting passersby.
+
+**Type:** Dark/Fairy
+
+**Abilities:**
+1. **Prankster:** This ability gives Pecharunt priority on status moves, allowing it to outpace many opponents when using moves that don't deal direct damage. This can be especially useful for setting up moves like Taunt, Thunder Wave, or Toxic.
+   
+2. **Run Away (Hidden Ability):** This ability allows Pecharunt to always escape from wild battles, making it easier for trainers to avoid unwanted encounters when exploring.
+
+**Appearance:**
+Pecharunt has a sleek, dark-tinted fur that helps it blend into the shadows, with a faint luminescence around"
 region,kanto,
 region,johto,
 region,hoenn,

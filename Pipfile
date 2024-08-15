@@ -9,6 +9,8 @@ python-dotenv = "*"
 gunicorn = "*"
 Flask-Caching = "*"
 requests = "*"
+pandas = "*"
+markdown = "*"
 
 [dev-packages]
 pytest = "*"
