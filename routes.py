@@ -832,7 +832,6 @@ def get_pokemon(id_or_name):
                 move_categories["tutor"].append(move_data)
             else:
                 move_categories["other"].append(move_data)
-        print(f"Move Level Data: {move_categories}")
 
         # Fetch and process type effectiveness
         type_effectiveness = {}
