@@ -1,6 +1,7 @@
-python-dotenv
-flask
-Flask-Caching
-pymongo
-requests
-gunicorn
+python-dotenv~=1.0.1
+flask~=3.0.3
+requests~=2.32.3
+pytest~=7.4.0
+Werkzeug~=3.0.3
+pandas~=2.2.2
+MarkupSafe~=2.1.5
