@@ -8,7 +8,6 @@ import pokedex
 import sys
 import pandas as pd
 import os
-import markdown
 
 pokemon_bp = Blueprint(
     "pokemon", __name__, template_folder="templates", static_folder="static"
@@ -764,7 +763,7 @@ def get_pokemon_list():
 
 
 @pokemon_bp.route("/pokemon/<id_or_name>")
-#@cache.cached(timeout=300)
+@cache.cached(timeout=300)
 def get_pokemon(id_or_name):
     csv_file_path = get_csv_file_path()
     df = pd.read_csv(csv_file_path)
