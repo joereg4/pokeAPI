@@ -8,3 +8,4 @@ MarkupSafe~=2.1.5
 Markdown~=3.6
 Flask-Caching~=2.3.0
 gunicorn~=23.0.0
+pokemontcgsdk~=3.4.0
