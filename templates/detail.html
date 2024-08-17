@@ -287,4 +287,24 @@
             <div style="text-align: center">No Data Available</div>
         {% endif %}
     </ul>
+    <!-- Card Section -->
+    <h2 class="detail-card__title">Cards:</h2>
+    <div class="pokemon-card-grid">
+        {% if cards %}
+            {% for card in cards %}
+                <div class="pokemon-cards">
+                    <div class="pokemon-cards__info-section">
+                        <div class="pokemon-cards__name"><b>{{ card.name }}</b> <br> Artist: {{ card.artist }} <br> Set: {{ card.set_name }}</div>
+                    </div>
+                    <div class="pokemon-card__image-section">
+                        <img class="pokemon-cards__image" src="{{ card.large_image }}" alt="card.name">
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div style="text-align: center">No Data Available</div>
+        {% endif %}
+    </div>
+    </div>
+
 {% endblock %}

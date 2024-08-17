@@ -3,6 +3,7 @@ import logging
 import markdown
 from flask import Blueprint, render_template, request, json, current_app, url_for
 from markupsafe import Markup
+from pokemontcgsdk import Card
 
 from cache import cache
 import requests
@@ -62,13 +63,35 @@ def get_csv_file_path():
     return csv_path
 
 
-def get_pokemon_summary(pokemon_name,df):
+def get_pokemon_summary(pokemon_name, df):
     row = df[(df['resource'] == 'pokemon-species') & (df['name'].str.lower() == pokemon_name.lower())]
 
     if not row.empty:
         return row.iloc[0]['summary']
     else:
         return None
+
+
+def get_pokemon_cards(pokemon_name):
+    try:
+        data = Card.where(q='name:{}'.format(pokemon_name))
+
+        card_list = []
+
+        for card in data:
+            card_list.append({
+                'id': card.id,
+                'name': card.name,
+                'artist': card.artist,
+                'large_image': card.images.large,
+                'set_name': card.set.name
+            })
+
+        return card_list
+
+    except ValueError as e:
+        print(f"Error fetching Pokémon cards: {e}")
+        return []
 
 
 def create_pokemon_list(data):
@@ -765,7 +788,7 @@ def get_pokemon_list():
 
 
 @pokemon_bp.route("/pokemon/<id_or_name>")
-@cache.cached(timeout=300)
+#@cache.cached(timeout=300)
 def get_pokemon(id_or_name):
     csv_file_path = get_csv_file_path()
     df = pd.read_csv(csv_file_path)
@@ -887,13 +910,18 @@ def get_pokemon(id_or_name):
             evolution_chain = pokedex.get_chain(evolution_chain_data, pokemon_name)
 
         # Retrieve the summary for the Pokémon
-        summary = get_pokemon_summary(data['name'],df)
+        summary = get_pokemon_summary(data['name'], df)
 
         # Convert the markdown summary to HTML
         if summary:
             summary_html = Markup(markdown.markdown(summary))
         else:
             summary_html = None
+
+        cards = get_pokemon_cards(data['name'])
+
+        print(f"Pokemon {data['name']} has {len(cards)} cards")
+        print(f"Card data {cards}")
 
         return render_template(
             "detail.html",
@@ -904,6 +932,7 @@ def get_pokemon(id_or_name):
             type_effectiveness=type_effectiveness,
             move_categories=move_categories,
             summary_html=summary_html,
+            cards=cards,
         )
     else:
         return "Pokemon not found", 404

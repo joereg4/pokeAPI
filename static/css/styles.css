@@ -814,9 +814,40 @@ ul.long-list {
     gap: 20px;
 }
 
+.pokemon-card-grid {
+    display: flex;
+    justify-content: center;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    flex-wrap: wrap;
+}
 
+.pokemon-cards {
+    background-color: #fff;
+    position: relative;
+    border-radius: 8px;
+    text-align: center;
+    overflow: hidden; /* Ensures content does not overflow the border-radius */
+}
 
+.pokemon-cards img {
+    width: 250px;
+    border-radius: 12px; /* Match the card's border-radius */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
+.pokemon-cards h3 {
+    margin: 10px 0;
+}
 
+.pokemon-cards__info-section {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
 
+.pokemon-cards__name {
+    overflow-wrap: break-word;
+    width: 250px;
+    height: 50px;
+}
 
