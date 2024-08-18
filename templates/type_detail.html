@@ -1,105 +1,43 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ data.name | title }} - Pokémon Type{% endblock %}
+{% block title %}{{ type_effectiveness.name | title }} - Pokémon Type{% endblock %}
 
 {% block content %}
-    <div class="type-detail-section">
-        <h1 class="detail-card__title">{{ data.name | title }}</h1>
-
-        <!-- Type Effectiveness Section -->
-        <div class="damage-relations-grid">
-            <!-- Double Damage -->
-            <div class="damage-relation-column">
-                <h2 class="detail-card__title">Double Damage</h2>
-                <ul>
-                    <li class="type-effectiveness-list">
-                        <div class="type-effectiveness-item">
-                            <h3>From:</h3>
-                            <div class="type-pill-container">
-                                {% for relation in data.damage_relations.double_damage_from %}
-                                    <span class="type-pill" style="background-color: {{ type_colors[relation.name] }};">
-                                    <a href="{{ url_for('pokemon.get_type', id_or_name=relation.name) }}">{{ relation.name | title }}</a>
-                                </span>
+    <!-- Type Effectiveness -->
+    <section>
+        <div class="container pt-5">
+            <h2>Type Effectiveness</h2>
+            <img class="my-2" src="{{ url_for('pokemon.static', filename='img/Type/Nameplate/' + type_effectiveness.name | lower + '_np.png') }}"
+                 style="height: 40px">
+            {% for type_name, relations in type_effectiveness.items() %}
+                <!-- Type Name Row -->
+                {% set relation_types = [
+                        {'name': 'Double Damage To', 'relation': relations.double_damage_to},
+                        {'name': 'Half Damage To', 'relation': relations.half_damage_to},
+                        {'name': 'No Damage To', 'relation': relations.no_damage_to},
+                        {'name': 'Double Damage From', 'relation': relations.double_damage_from},
+                        {'name': 'Half Damage From', 'relation': relations.half_damage_from},
+                        {'name': 'No Damage From', 'relation': relations.no_damage_from}
+                    ] %}
+                {% for relation in relation_types %}
+                    {% if relation.relation %}
+                        <div class="row pb-1 border-bottom">
+                            <div class="col-2"><strong>{{ relation.name }}</strong></div>
+                            <div class="col-10 d-flex flex-wrap">
+                                {% for type in relation.relation %}
+                                    <div class="me-2">
+                                        <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">
+                                            <img src="{{ url_for('pokemon.static', filename='img/Type/Nameplate/' + type.name | lower + '_np.png') }}"
+                                                 style="height: 25px">
+                                        </a>
+                                    </div>
                                 {% endfor %}
                             </div>
                         </div>
-                    </li>
-                    <li class="type-effectiveness-list">
-                        <div class="type-effectiveness-item">
-                            <h3>To:</h3>
-                            <div class="type-pill-container">
-                                {% for relation in data.damage_relations.double_damage_to %}
-                                    <span class="type-pill" style="background-color: {{ type_colors[relation.name] }};">
-                                    <a href="{{ url_for('pokemon.get_type', id_or_name=relation.name) }}">{{ relation.name | title }}</a>
-                                </span>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <!-- Half Damage -->
-            <div class="damage-relation-column">
-                <h2 class="detail-card__title">Half Damage</h2>
-                <ul>
-                    <li class="type-effectiveness-list">
-                        <div class="type-effectiveness-item">
-                            <h3>From:</h3>
-                            <div class="type-pill-container">
-                                {% for relation in data.damage_relations.half_damage_from %}
-                                    <span class="type-pill" style="background-color: {{ type_colors[relation.name] }};">
-                                    <a href="{{ url_for('pokemon.get_type', id_or_name=relation.name) }}">{{ relation.name | title }}</a>
-                                </span>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </li>
-                    <li class="type-effectiveness-list">
-                        <div class="type-effectiveness-item">
-                            <h3>To:</h3>
-                            <div class="type-pill-container">
-                                {% for relation in data.damage_relations.half_damage_to %}
-                                    <span class="type-pill" style="background-color: {{ type_colors[relation.name] }};">
-                                    <a href="{{ url_for('pokemon.get_type', id_or_name=relation.name) }}">{{ relation.name | title }}</a>
-                                </span>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <!-- No Damage -->
-            <div class="damage-relation-column">
-                <h2 class="detail-card__title">No Damage</h2>
-                <ul>
-                    <li class="type-effectiveness-list">
-                        <div class="type-effectiveness-item">
-                            <h3>From:</h3>
-                            <div class="type-pill-container">
-                                {% for relation in data.damage_relations.no_damage_from %}
-                                    <span class="type-pill" style="background-color: {{ type_colors[relation.name] }};">
-                                    <a href="{{ url_for('pokemon.get_type', id_or_name=relation.name) }}">{{ relation.name | title }}</a>
-                                </span>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </li>
-                    <li class="type-effectiveness-list">
-                        <div class="type-effectiveness-item">
-                            <h3>To:</h3>
-                            <div class="type-pill-container">
-                                {% for relation in data.damage_relations.no_damage_to %}
-                                    <span class="type-pill" style="background-color: {{ type_colors[relation.name] }};">
-                                    <a href="{{ url_for('pokemon.get_type', id_or_name=relation.name) }}">{{ relation.name | title }}</a>
-                                </span>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
         </div>
-        <h2 class="detail-card__title">{{ data.name | title }} Type Pokémon</h2>
-        {% include '_pokemon_list.html' %}
-    </div>
+    </section>
 {% endblock %}
+

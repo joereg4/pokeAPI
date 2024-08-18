@@ -1080,7 +1080,7 @@ def get_type(id_or_name):
 
         return render_template(
             "type_detail.html",
-            data=data,
+            type_effectiveness=data,
             pokemon_list=pokemon_list,
             type_colors=type_colors
         )

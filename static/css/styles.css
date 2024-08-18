@@ -26,4 +26,8 @@
     pointer-events: none;
 }
 
+.move-scroll {
+        max-height: 310px; /* Adjust the height as needed */
+        overflow-y: auto;  /* Enable vertical scrolling */
+    }
 
