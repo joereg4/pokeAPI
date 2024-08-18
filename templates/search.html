@@ -1,7 +1,7 @@
 <!-- search.html -->
-<div class="search-container">
-    <input type="text" id="search-box" placeholder="Search Pokémon, Berry, etc.">
-    <ul id="suggestions"></ul>
+<div class="dropdown">
+    <input  style="--bs-focus-ring-color: rgba(var(--bs-secondary-rgb), .75)" class="form-control me-5 dropdown-toggle focus-ring" type="text" id="search-box" placeholder="Search Pokémon, Berry, etc." aria-expanded="false" aria-haspopup="true" autocomplete="off">
+    <ul id="suggestions" class="dropdown-menu" aria-labelledby="search-box"></ul>
 </div>
 
 <script src="{{ url_for('pokemon.static', filename='js/search.js') }}"></script>
