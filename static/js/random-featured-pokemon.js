@@ -1,10 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
     const maxPokemonId = 898; // Maximum number of Pokémon
-    const numFeatured = 3; // Number of Pokémon to feature
-    const featuredContainer = document.querySelector('.pokemon-grid');
-
-    // Array of Pokémon that will be featured (can be expanded)
-    const featuredPokemon = [];
+    const numFeatured = 4; // Number of Pokémon to feature
+    const featuredContainer = document.getElementById('feature-section'); // Target the correct ID
 
     function getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -23,30 +20,42 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function createPokemonCard(pokemon) {
+        const col = document.createElement('div');
+        col.classList.add('col');
+
         const card = document.createElement('div');
-        card.classList.add('pokemon-card');
+        card.classList.add('card'); // Add Bootstrap's card class
+        card.style.width = '100%'; // Use a responsive width instead of 1fr
 
         const img = document.createElement('img');
         img.src = pokemon.sprite;
         img.alt = pokemon.name;
+        img.classList.add('card-img-top'); // Add Bootstrap's card image class
 
-        const name = document.createElement('h3');
+        const cardBody = document.createElement('div');
+        cardBody.classList.add('card-body'); // Add Bootstrap's card body class
+
+        const name = document.createElement('h5');
+        name.classList.add('card-title'); // Add Bootstrap's card title class
         name.textContent = pokemon.name;
 
         const type = document.createElement('p');
+        type.classList.add('card-text'); // Add Bootstrap's card text class
         type.textContent = `Type: ${pokemon.type}`;
 
         const link = document.createElement('a');
         link.href = `/pokemon/${pokemon.name.toLowerCase()}`;
-        link.classList.add('details-link');
+        link.classList.add('btn', 'btn-primary'); // Add Bootstrap's button classes
         link.textContent = 'View Details';
 
+        cardBody.appendChild(name);
+        cardBody.appendChild(type);
+        cardBody.appendChild(link);
         card.appendChild(img);
-        card.appendChild(name);
-        card.appendChild(type);
-        card.appendChild(link);
+        card.appendChild(cardBody);
+        col.appendChild(card);
 
-        return card;
+        return col; // Return the entire column with the card inside
     }
 
     function displayFeaturedPokemon() {
