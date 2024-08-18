@@ -221,7 +221,7 @@ def index():
 
 
 @pokemon_bp.route("/abilities")
-#@cache.cached(timeout=300)
+@cache.cached(timeout=300)
 def get_abilities_list():
     url = "https://pokeapi.co/api/v2/ability"
     abilities = fetch_all_results(url)
@@ -294,7 +294,7 @@ def get_characteristic(id_):
 
 
 @pokemon_bp.route("/colors")
-#@cache.cached(timeout=300)
+@cache.cached(timeout=300)
 def get_colors_list():
     url = "https://pokeapi.co/api/v2/pokemon-color"
     colors = fetch_all_results(url)
@@ -457,7 +457,7 @@ def get_growth_rate(id_or_name):
 
 
 @pokemon_bp.route("/habitats")
-#@cache.cached(timeout=300)
+@cache.cached(timeout=300)
 def get_habitats_list():
     url = "https://pokeapi.co/api/v2/pokemon-habitat"
     habitats = fetch_all_results(url)
@@ -465,7 +465,7 @@ def get_habitats_list():
 
 
 @pokemon_bp.route("/item/<id_or_name>")
-#@cache.cached(timeout=300)
+@cache.cached(timeout=300)
 def get_item(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -587,7 +587,7 @@ def get_machine(id_):
 
 
 @pokemon_bp.route("/move/<id_or_name>")
-#@cache.cached(timeout=300)
+@cache.cached(timeout=300)
 def get_move(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -634,7 +634,7 @@ def get_move_battle_style(id_or_name):
 
 
 @pokemon_bp.route("/move_category/<id_or_name>")
-#@cache.cached(timeout=300)
+@cache.cached(timeout=300)
 def get_move_category(id_or_name):
     try:
         category = pokedex.APIResource.fetch_data("move-category", id_or_name)
@@ -652,7 +652,7 @@ def get_move_category(id_or_name):
 
 
 @pokemon_bp.route("/move_category_list/")
-#@cache.cached(timeout=300)
+@cache.cached(timeout=300)
 def get_move_category_list():
     try:
         # Fetch the full list of move categories
@@ -751,7 +751,7 @@ def get_pokeathlon_stat(id_or_name):
 
 
 @pokemon_bp.route("/pokedex/<id_or_name>")
-#@cache.cached(timeout=300)
+@cache.cached(timeout=300)
 def get_pokedex(id_or_name):
     try:
         id_or_name = int(id_or_name)
@@ -939,7 +939,7 @@ def get_pokemon(id_or_name):
 
 
 @pokemon_bp.route("/pokemon_color/<id_or_name>")
-#@cache.cached(timeout=300)
+@cache.cached(timeout=300)
 def get_pokemon_color(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -975,7 +975,7 @@ def get_pokemon_form(id_or_name):
 
 
 @pokemon_bp.route("/pokemon_habitat/<id_or_name>")
-#@cache.cached(timeout=300)
+@cache.cached(timeout=300)
 def get_pokemon_habitat(id_or_name):
     try:
         id_or_name = int(id_or_name)
@@ -1067,7 +1067,7 @@ def get_super_contest_effect(id_):
 
 
 @pokemon_bp.route("/type/<id_or_name>")
-#@cache.cached(timeout=300)
+@cache.cached(timeout=300)
 def get_type(id_or_name):
     try:
         id_or_name = int(id_or_name)
@@ -1089,7 +1089,7 @@ def get_type(id_or_name):
 
 
 @pokemon_bp.route("/types")
-#@cache.cached(timeout=300)
+@cache.cached(timeout=300)
 def get_types_list():
     url = "https://pokeapi.co/api/v2/type"
     types = fetch_all_results(url)
