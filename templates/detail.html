@@ -4,307 +4,381 @@
 
 {% block content %}
     <h1>#{{ data.id }} {{ data.name }} </h1>
-    <div class="detail-grid">
-        <!-- Official Image -->
-        <div class="detail-card__image-section">
-            <div class="detail-card__image">
-                <img src="{{ data.sprites['other']['official-artwork']['front_default'] }}" alt="{{ data.name }}">
+    <!-- Image, Attributes, Stats, Abilities and Held Items  -->
+    <section>
+        <div class="container">
+            <div class="row">
+                <!-- Official Image -->
+                <div class="col">
+                    <img src="{{ data.sprites['other']['official-artwork']['front_default'] }}" alt="{{ data.name }}">
+                </div>
+                <!-- Attributes Section -->
+                <div class="col">
+                    <h2 class="detail-card__title">Attributes</h2>
+                    <ul class="detail-card__item">
+                        <li class="detail-card__list">Base Experience: {{ data.base_experience }}</li>
+                        <li class="detail-card__list">Height: {{ data.height }}</li>
+                        <li class="detail-card__list">Weight: {{ data.weight }}</li>
+                        <li class="detail-card__list">Is Default: {{ data.is_default }}</li>
+                        <li class="detail-card__list">Order: {{ data.order }}</li>
+                        {% if species_data %}
+                            <li class="detail-card__list">Base Happiness: {{ species_data.base_happiness }}</li>
+                            <li class="detail-card__list">Capture Rate: {{ species_data.capture_rate }}</li>
+                            <li class="detail-card__list">Color: <a
+                                    href="{{ url_for('pokemon.get_pokemon_color', id_or_name=species_data.color.name) }}">{{ species_data.color.name | title }}</a>
+                            </li>
+                            <li class="detail-card__list">Egg Groups:
+                                {% for egg_group in species_data.egg_groups %}
+                                    <a href="{{ url_for('pokemon.get_egg_group', id_or_name=egg_group.url.split('/')[-2]) }}">{{ egg_group.name | title }}</a>
+                                    {% if not loop.last %}, {% endif %}
+                                {% endfor %}
+                            <li class="detail-card__list">Gender Rate: {{ species_data.gender_rate }}</li>
+                            <li class="detail-card__list">Hatch Counter: {{ species_data.hatch_counter }}</li>
+                            <li class="detail-card__list">Has Gender
+                                Differences: {{ species_data.has_gender_differences | title }}</li>
+                            <li class="detail-card__list">Habitat: <a
+                                    href="{{ url_for('pokemon.get_pokemon_habitat', id_or_name=species_data.habitat.name) }}">{{ species_data.habitat.name | title }}</a>
+                            </li>
+                            <li class="detail-card__list">Is Baby: {{ species_data.is_baby }}</li>
+                            <li class="detail-card__list">Is Legendary: {{ species_data.is_legendary }}</li>
+                            <li class="detail-card__list">Is Mythical: {{ species_data.is_mythical }}</li>
+                            <li class="detail-card__list">Shape: {{ species_data.shape.name | title }}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <!-- Stats Section -->
+                <div class="col">
+                    <h2>Stats</h2>
+                    <ul>
+                        {% for stat in data.stats %}
+                            <li class="list-unstyled">
+                                <strong>{% if stat.stat.name == 'hp' %} {{ stat.stat.name | upper }} {% else %} {{ stat.stat.name | replace('-', ' ') | title }} {% endif %}</strong>
+                                <div class="progress" role="progressbar"
+                                     aria-label="{{ stat.stat.name | replace('-', ' ') | title }}"
+                                     aria-valuenow="{{ stat.base_stat }}" aria-valuemin="0"
+                                     aria-valuemax="{% if stat.stat.name == 'hp' %}
+                                    255
+                                    {% elif stat.stat.name == 'attack' %}
+                                    190
+                                    {% elif stat.stat.name == 'defense' %}
+                                    230
+                                    {% elif stat.stat.name == 'special-attack' %}
+                                    194
+                                    {% elif stat.stat.name == 'special-defense' %}
+                                    230
+                                    {% elif stat.stat.name == 'speed' %}
+                                    180
+                                    {% endif %}">
+                                    <div class="progress-bar" style="width:
+                                            {% if stat.stat.name == 'hp' %}
+                                                {{ (stat.base_stat / 255) * 100 }}%
+                                            {% elif stat.stat.name == 'attack' %}
+                                                {{ (stat.base_stat / 190) * 100 }}%
+                                            {% elif stat.stat.name == 'defense' %}
+                                                {{ (stat.base_stat / 230) * 100 }}%
+                                            {% elif stat.stat.name == 'special-attack' %}
+                                                {{ (stat.base_stat / 194) * 100 }}%
+                                            {% elif stat.stat.name == 'special-defense' %}
+                                                {{ (stat.base_stat / 230) * 100 }}%
+                                            {% elif stat.stat.name == 'speed' %}
+                                                {{ (stat.base_stat / 180) * 100 }}%
+                                            {% endif %};"
+                                         aria-valuenow="{{ stat.base_stat }}">
+                                        {{ stat.base_stat }}
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Abilities and Held Items Section -->
+                <div class="col">
+                    <h2 class="detail-card__title">Abilities</h2>
+                    <ul class="detail-card__item">
+                        {% for ability in data.abilities %}
+                            <li class="detail-card__list">
+                                Slot {{ ability.slot }}: <a
+                                    href="{{ url_for('pokemon.get_ability', id_or_name=ability.ability['url'].split('/')[-2]) }}"> {{ ability.ability['name'] | title }} </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <h2 class="detail-card__title">Held items</h2>
+                    <ul class="detail-card__item">
+                        {% if data.held_items %}
+                            {% for held_item in data.held_items %}
+                                <li class="item-section__list">
+                                    <a href="{{ url_for('pokemon.get_item', id_or_name=held_item.item.url.split('/')[-2]) }}"> {{ held_item.item.name | title }} </a>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            None
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
         </div>
-        <!-- Attributes Section -->
-        <div class="detail-card__info-section">
-            <h2 class="detail-card__title">Attributes</h2>
-            <ul class="detail-card__item">
-                <li class="detail-card__list">Base Experience: {{ data.base_experience }}</li>
-                <li class="detail-card__list">Height: {{ data.height }}</li>
-                <li class="detail-card__list">Weight: {{ data.weight }}</li>
-                <li class="detail-card__list">Is Default: {{ data.is_default }}</li>
-                <li class="detail-card__list">Order: {{ data.order }}</li>
-                {% if species_data %}
-                    <li class="detail-card__list">Base Happiness: {{ species_data.base_happiness }}</li>
-                    <li class="detail-card__list">Capture Rate: {{ species_data.capture_rate }}</li>
-                    <li class="detail-card__list">Color: <a
-                            href="{{ url_for('pokemon.get_pokemon_color', id_or_name=species_data.color.name) }}">{{ species_data.color.name | title }}</a>
-                    </li>
-                    <li class="detail-card__list">Egg Groups:
-                        {% for egg_group in species_data.egg_groups %}
-                            <a href="{{ url_for('pokemon.get_egg_group', id_or_name=egg_group.url.split('/')[-2]) }}">{{ egg_group.name | title }}</a>
-                            {% if not loop.last %}, {% endif %}
-                        {% endfor %}
-                    <li class="detail-card__list">Gender Rate: {{ species_data.gender_rate }}</li>
-                    <li class="detail-card__list">Hatch Counter: {{ species_data.hatch_counter }}</li>
-                    <li class="detail-card__list">Has Gender
-                        Differences: {{ species_data.has_gender_differences | title }}</li>
-                    <li class="detail-card__list">Habitat: <a
-                            href="{{ url_for('pokemon.get_pokemon_habitat', id_or_name=species_data.habitat.name) }}">{{ species_data.habitat.name | title }}</a>
-                    </li>
-                    <li class="detail-card__list">Is Baby: {{ species_data.is_baby }}</li>
-                    <li class="detail-card__list">Is Legendary: {{ species_data.is_legendary }}</li>
-                    <li class="detail-card__list">Is Mythical: {{ species_data.is_mythical }}</li>
-                    <li class="detail-card__list">Shape: {{ species_data.shape.name | title }}</li>
-                {% endif %}
-            </ul>
+    </section>
+
+    <!-- Ai Summary -->
+    <section>
+        <div class="container pt-5">
+            <h2>Summary</h2>
+            <div class="row">
+                <div class="col">
+                    {% if summary_html %}
+                        <p>{{ summary_html | safe }}</p>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-        <!-- Stats Section -->
-        <div class="detail-card__info-section">
-            <h2 class="detail-card__title">Stats</h2>
-            <ul class="detail-card__item">
-                {% for stat in data.stats %}
-                    <li class="detail-card__list">
-                        <strong>{{ stat.stat.name | replace('-', ' ') | title }}:</strong>
-                        <div class="progress-bar-container">
-                            <div class="progress-bar" style="width: {{ stat.base_stat / 2 }}%;"></div>
-                            <span class="progress-value">{{ stat.base_stat }}</span>
+    </section>
+    <!-- Type Effectiveness -->
+    <section>
+        <div class="container pt-5">
+            <h2>Type Effectiveness</h2>
+            <div class="row">
+                <!-- Damage To -->
+                <div class="col">
+                    {% for type_name, relations in type_effectiveness.items() %}
+                        <div class="type-section">
+                            <h3 class="type-title" style="color: {{ relations.color }};">
+                                <a href="{{ url_for('pokemon.get_type', id_or_name=type_name) }}">{{ type_name | title }}</a>
+                            </h3>
+                            <ul class="detail-card__item">
+                                <li class="type-effectiveness-list"><strong>Double Damage To:</strong>
+                                    {% for type in relations.double_damage_to %}
+                                        <span class="type-pill" style="background-color: {{ type.color }};">
+                            <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
+                        </span>
+                                        {% if not loop.last %}{% endif %}
+                                    {% endfor %}
+                                </li>
+                                <li class="type-effectiveness-list"><strong>Half Damage To:</strong>
+                                    {% for type in relations.half_damage_to %}
+                                        <span class="type-pill" style="background-color: {{ type.color }};">
+                            <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
+                        </span>
+                                        {% if not loop.last %}{% endif %}
+                                    {% endfor %}
+                                </li>
+                                <li class="type-effectiveness-list"><strong>No Damage To:</strong>
+                                    {% for type in relations.no_damage_to %}
+                                        <span class="type-pill" style="background-color: {{ type.color }};">
+                            <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
+                        </span>
+                                        {% if not loop.last %}{% endif %}
+                                    {% endfor %}
+                                </li>
+                                <li class="type-effectiveness-list"><strong>Double Damage From:</strong>
+                                    {% for type in relations.double_damage_from %}
+                                        <span class="type-pill" style="background-color: {{ type.color }};">
+                            <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
+                        </span>
+                                        {% if not loop.last %}{% endif %}
+                                    {% endfor %}
+                                </li>
+                                <li class="type-effectiveness-list"><strong>Half Damage From:</strong>
+                                    {% for type in relations.half_damage_from %}
+                                        <span class="type-pill" style="background-color: {{ type.color }};">
+                            <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
+                        </span>
+                                        {% if not loop.last %}{% endif %}
+                                    {% endfor %}
+                                </li>
+                                <li class="type-effectiveness-list"><strong>No Damage From:</strong>
+                                    {% for type in relations.no_damage_from %}
+                                        <span class="type-pill" style="background-color: {{ type.color }};">
+                            <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
+                        </span>
+                                        {% if not loop.last %}{% endif %}
+                                    {% endfor %}
+                                </li>
+                            </ul>
                         </div>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-        <!-- Abilities and Held Items Section -->
-        <div class="detail-card__info-section">
-            <h2 class="detail-card__title">Abilities</h2>
-            <ul class="detail-card__item">
-                {% for ability in data.abilities %}
-                    <li class="detail-card__list">
-                        Slot {{ ability.slot }}: <a
-                            href="{{ url_for('pokemon.get_ability', id_or_name=ability.ability['url'].split('/')[-2]) }}"> {{ ability.ability['name'] | title }} </a>
-                    </li>
-                {% endfor %}
-            </ul>
-            <h2 class="detail-card__title">Held items</h2>
-            <ul class="detail-card__item">
-                {% if data.held_items %}
-                    {% for held_item in data.held_items %}
-                        <li class="item-section__list">
-                            <a href="{{ url_for('pokemon.get_item', id_or_name=held_item.item.url.split('/')[-2]) }}"> {{ held_item.item.name | title }} </a>
-                        </li>
                     {% endfor %}
-                {% else %}
-                    None
-                {% endif %}
-            </ul>
-        </div>
-    </div>
-    {% if summary_html %}
-        <div class="detail-card__info-section">
-            <h2 class="detail-card__title">Summary</h2>
-            <p>{{ summary_html | safe }}</p>
-        </div>
-    {% endif %}
-    <!-- Type Effectiveness Section -->
-    <h2 class="detail-card__title">Type Effectiveness</h2>
-    <!-- Type Effectiveness Section -->
-    <div class="type-effectiveness-grid">
-        {% for type_name, relations in type_effectiveness.items() %}
-            <div class="type-section">
-                <h3 class="type-title" style="color: {{ relations.color }};">
-                    <a href="{{ url_for('pokemon.get_type', id_or_name=type_name) }}">{{ type_name | title }}</a>
-                </h3>
-                <ul class="detail-card__item">
-                    <li class="type-effectiveness-list"><strong>Double Damage To:</strong>
-                        {% for type in relations.double_damage_to %}
-                            <span class="type-pill" style="background-color: {{ type.color }};">
-                            <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
-                        </span>
-                            {% if not loop.last %}{% endif %}
-                        {% endfor %}
-                    </li>
-                    <li class="type-effectiveness-list"><strong>Half Damage To:</strong>
-                        {% for type in relations.half_damage_to %}
-                            <span class="type-pill" style="background-color: {{ type.color }};">
-                            <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
-                        </span>
-                            {% if not loop.last %}{% endif %}
-                        {% endfor %}
-                    </li>
-                    <li class="type-effectiveness-list"><strong>No Damage To:</strong>
-                        {% for type in relations.no_damage_to %}
-                            <span class="type-pill" style="background-color: {{ type.color }};">
-                            <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
-                        </span>
-                            {% if not loop.last %}{% endif %}
-                        {% endfor %}
-                    </li>
-                    <li class="type-effectiveness-list"><strong>Double Damage From:</strong>
-                        {% for type in relations.double_damage_from %}
-                            <span class="type-pill" style="background-color: {{ type.color }};">
-                            <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
-                        </span>
-                            {% if not loop.last %}{% endif %}
-                        {% endfor %}
-                    </li>
-                    <li class="type-effectiveness-list"><strong>Half Damage From:</strong>
-                        {% for type in relations.half_damage_from %}
-                            <span class="type-pill" style="background-color: {{ type.color }};">
-                            <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
-                        </span>
-                            {% if not loop.last %}{% endif %}
-                        {% endfor %}
-                    </li>
-                    <li class="type-effectiveness-list"><strong>No Damage From:</strong>
-                        {% for type in relations.no_damage_from %}
-                            <span class="type-pill" style="background-color: {{ type.color }};">
-                            <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
-                        </span>
-                            {% if not loop.last %}{% endif %}
-                        {% endfor %}
-                    </li>
-                </ul>
-            </div>
-        {% endfor %}
-    </div>
+                </div>
+                <!-- Damage From -->
+                <div class="col">
 
-
-    <!-- Moves Section -->
-    <div class="detail-card__moves-section">
-        <h2 class="detail-card__title">Moves</h2>
-        <div class="move-categories">
-            <!-- Level Up Moves -->
-            <div class="move-category">
-                <h3>Level Up</h3>
-                <ul class="{% if move_categories.level_up|length > 25 %}long-list{% endif %}">
-                    {% for move in move_categories.level_up|sort(attribute='level_learned_at') %}
-                        <li><strong>Level {{ move.level_learned_at }}:</strong> <a
-                                href="{{ move.url }}">{{ move.name }}</a></li>
-                    {% endfor %}
-                </ul>
-            </div>
-
-            <!-- TM/HM Moves -->
-            <div class="move-category">
-                <h3>TM/HM</h3>
-                <ul class="{% if move_categories.tm_hm|length > 25 %}long-list{% endif %}">
-                    {% for move in move_categories.tm_hm|sort(attribute='name') %}
-                        <li><a href="{{ move.url }}">{{ move.name }}</a></li>
-                    {% endfor %}
-                </ul>
-            </div>
-
-            <!-- Breeding Moves -->
-            <div class="move-category">
-                <h3>Breeding</h3>
-                <ul class="{% if move_categories.breeding|length > 25 %}long-list{% endif %}">
-                    {% for move in move_categories.breeding|sort(attribute='name') %}
-                        <li><a href="{{ move.url }}">{{ move.name }}</a></li>
-                    {% endfor %}
-                </ul>
-            </div>
-
-            <!-- Tutor Moves -->
-            <div class="move-category">
-                <h3>Tutor</h3>
-                <ul class="{% if move_categories.tutor|length > 25 %}long-list{% endif %}">
-                    {% for move in move_categories.tutor|sort(attribute='name') %}
-                        <li><a href="{{ move.url }}">{{ move.name }}</a></li>
-                    {% endfor %}
-                </ul>
-            </div>
-
-            <!-- Other Moves -->
-            <div class="move-category">
-                <h3>Other</h3>
-                <ul class="{% if move_categories.other|length > 25 %}long-list{% endif %}">
-                    {% for move in move_categories.other|sort(attribute='name') %}
-                        <li><a href="{{ move.url }}">{{ move.name }}</a></li>
-                    {% endfor %}
-                </ul>
+                </div>
             </div>
         </div>
-    </div>
-
-
-    <div class="detail-card__moves-section">
-        <h2 class="detail-card__title">Pokémon Sprites</h2>
-        <div class="sprite-gallery">
-            <ul class="sprite-gallery__list">
+    </section>
+    <!-- Pokémon Sprites -->
+    <section>
+        <div class="container pt-5">
+            <h2>Pokémon Sprites</h2>
+            <div class="row">
                 {% for name, url in sorted_sprites.items() %}
                     {% if url and "other" not in name and "versions" not in name %}
-                        <li>
-                            <figure>
+                        <div class="col">
+                            <div class="h-100">
                                 <img src="{{ url }}" alt="{{ name }}">
-                                <div class="sprite-name">{{ name|replace("_", " ")|title }}</div>
-                            </figure>
-                        </li>
+                                <div>{{ name|replace("_", " ")|title }}</div>
+                            </div>
+                        </div>
                     {% endif %}
                 {% endfor %}
-            </ul>
+            </div>
         </div>
-    </div>
-    <h2 class="detail-card__title">Evolution Chain:</h2>
-    <div class="evolution-chain">
-        <ul class="evolution-chain__list">
-            {% if species_data %}
-                {% for pokemon in evolution_chain %}
-                    <li>
-                        <figure class="evolution-pokemon{% if pokemon.name|lower == data.name|lower %}--current{% endif %}">
-                            <div class="evolution-stage">
-                                <a href="{{ url_for('pokemon.get_pokemon', id_or_name=pokemon.name) }}">{{ pokemon.species_id }}</a>
+    </section>
+    <!-- Evolution Chain -->
+    <section>
+        <div class="container pt-5">
+            <h2>Evolution Chain</h2>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-5 g-4">
+                {% if species_data %}
+                    {% for pokemon in evolution_chain %}
+                        <div class="col">
+                            <div class="card text-center h-100{% if pokemon.name|lower == data.name|lower %}  border-dark shadow{% endif %}">
+                                <div class="card-header">
+                                    {{ pokemon.name|title }} - {{ pokemon.species_id }}
+                                </div>
+                                <img src="{{ pokemon.sprite }}" class="card-img-top" alt="{{ pokemon.name }} Image">
+                                <div class="card-body">
+                                    <p class="card-text">
+                                        {% if pokemon.min_level %}
+                                            Min. Lvl {{ pokemon.min_level }}
+                                        {% else %}
+                                            <br>
+                                        {% endif %}
+                                    </p>
+                                    <a href="{{ url_for('pokemon.get_pokemon', id_or_name=pokemon.name) }}"
+                                       class="btn btn-primary">View Details</a>
+                                </div>
                             </div>
-                            <a href="{{ url_for('pokemon.get_pokemon', id_or_name=pokemon.name) }}">
-                                <img src="{{ pokemon.sprite }}" alt="{{ pokemon.name }} Image">
-                            </a>
-                            <div class="species-name">
-                                <a href="{{ url_for('pokemon.get_pokemon', id_or_name=pokemon.name) }}">{{ pokemon.name|title }}</a>
-                            </div>
-                            <div class="species-name">
-                                {% if pokemon.min_level %}
-                                    Min. Lvl {{ pokemon.min_level }}
-                                {% else %}
-                                    <br>
-                                {% endif %}
-                            </div>
-                        </figure>
-                    </li>
-                {% endfor %}
-            {% else %}
-                <div style="text-align: center">No Data Available</div>
-            {% endif %}
-        </ul>
-    </div>
-    <!-- Flavor Text Sections -->
-    <h2 class="detail-card__title">Flavor Text Entries:</h2>
-    <ul>
-        {% if species_data %}
-            {% for entry in species_data.flavor_text_entries %}
-                <li class="detail-card__list">
-                    <strong>{{ entry.version.name | title }}:</strong> {{ entry.flavor_text|replace("POKéMON", "Pokémon") }}
-                </li>
-            {% endfor %}
-        {% else %}
-            <div style="text-align: center">No Data Available</div>
-        {% endif %}
-    </ul>
-    <!-- Pokedex Section -->
-    <h2 class="detail-card__title">Pokedex:</h2>
-    <ul>
-        {% if species_data %}
-            {% for entry in species_data.pokedex_numbers %}
-                <li class="detail-card__list">
-                    <a href="{{ url_for('pokemon.get_endpoint_data', api_endpoint=entry.pokedex.url.split('/')[-3], id_or_name=entry.pokedex.url.split('/')[-2]) }}">{{ entry.entry_number }} {{ entry.pokedex.name | title }}</a>
-                </li>
-            {% endfor %}
-        {% else %}
-            <div style="text-align: center">No Data Available</div>
-        {% endif %}
-    </ul>
-    <!-- Card Section -->
-    <h2 class="detail-card__title">Cards:</h2>
-    <div class="pokemon-card-grid">
-        {% if cards %}
-            {% for card in cards %}
-                <div class="pokemon-cards">
-                    <div class="pokemon-cards__info-section">
-                        <div class="pokemon-cards__name"><b>{{ card.name }}</b> <br> Artist: {{ card.artist }} <br> Set: {{ card.set_name }}</div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col">
+                        No Data Available
                     </div>
-                    <div class="pokemon-card__image-section">
-                        <img class="pokemon-cards__image" src="{{ card.large_image }}" alt="card.name">
-                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+    <!-- Moves -->
+    <section>
+        <div class="container pt-5">
+            <h2>Moves</h2>
+            <div class="row">
+                <!-- Level Up -->
+                <div class="col">
+                    <h3>Level Up</h3>
+                    <ul class="{% if move_categories.level_up|length > 25 %}long-list{% endif %}">
+                        {% for move in move_categories.level_up|sort(attribute='level_learned_at') %}
+                            <li><strong>Level {{ move.level_learned_at }}:</strong> <a
+                                    href="{{ move.url }}">{{ move.name }}</a></li>
+                        {% endfor %}
+                    </ul>
                 </div>
-            {% endfor %}
-        {% else %}
-            <div style="text-align: center">No Data Available</div>
-        {% endif %}
-    </div>
-    </div>
-
+                <!-- TM/HM -->
+                <div class="col">
+                    <h3>TM/HM</h3>
+                    <ul class="{% if move_categories.tm_hm|length > 25 %}long-list{% endif %}">
+                        {% for move in move_categories.tm_hm|sort(attribute='name') %}
+                            <li><a href="{{ move.url }}">{{ move.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <!-- Breeding -->
+                <div class="col">
+                    <h3>Breeding</h3>
+                    <ul class="{% if move_categories.breeding|length > 25 %}long-list{% endif %}">
+                        {% for move in move_categories.breeding|sort(attribute='name') %}
+                            <li><a href="{{ move.url }}">{{ move.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <!-- Tutor -->
+                <div class="col">
+                    <h3>Tutor</h3>
+                    <ul class="{% if move_categories.tutor|length > 25 %}long-list{% endif %}">
+                        {% for move in move_categories.tutor|sort(attribute='name') %}
+                            <li><a href="{{ move.url }}">{{ move.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <!-- Other -->
+                <div class="col">
+                    <h3>Other</h3>
+                    <ul class="{% if move_categories.other|length > 25 %}long-list{% endif %}">
+                        {% for move in move_categories.other|sort(attribute='name') %}
+                            <li><a href="{{ move.url }}">{{ move.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Flavor Texts -->
+    <section>
+        <div class="container pt-5">
+            <h2>Flavor Text Entries</h2>
+            <div class="row">
+                <div class="col">
+                    <ul>
+                        {% if species_data %}
+                            {% for entry in species_data.flavor_text_entries %}
+                                <li>
+                                    <strong>{{ entry.version.name | title }}:</strong>
+                                    {{ entry.flavor_text|replace("POKéMON", "Pokémon") }}
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <div>
+                                No Data Available
+                            </div>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Pokédex -->
+    <section>
+        <div class="container pt-5">
+            <h2>Pokedex</h2>
+            <div class="row">
+                <div class="col">
+                    {% if species_data %}
+                        {% for entry in species_data.pokedex_numbers %}
+                            <li class="detail-card__list">
+                                <a href="{{ url_for('pokemon.get_endpoint_data', api_endpoint=entry.pokedex.url.split('/')[-3], id_or_name=entry.pokedex.url.split('/')[-2]) }}">{{ entry.entry_number }} {{ entry.pokedex.name | title }}</a>
+                            </li>
+                        {% endfor %}
+                    {% else %}
+                        <div style="text-align: center">No Data Available</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Cards -->
+    <section>
+        <div class="container pt-5">
+            <h2>Cards</h2>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+                {% if cards %}
+                    {% for card in cards %}
+                        <div class="col">
+                            <div class="card h-100">
+                                <div class="card-header text-center">{{ card.name }}</div>
+                                <img src="{{ card.large_image }}" class="card-img-top" alt="card.name">
+                                <div class="card-body">
+                                    <p class="card-text"> Created by <strong>{{ card.artist | title }}</strong> for the
+                                        <strong>{{ card.set_name }}</strong> set.</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col">
+                        No Data Available
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
 {% endblock %}
