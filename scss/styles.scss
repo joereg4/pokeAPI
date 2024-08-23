@@ -1,0 +1,32 @@
+.hero-container {
+    position: relative;
+    width: 100%;
+    height: 350px; /* Adjust the height as needed */
+    background-color: #f8f9fa; /* Light background */
+    overflow: hidden; /* Ensure the images stay within the container */
+}
+
+.hero-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.hero-images {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Disable interaction with the images */
+}
+
+.hero-img {
+    position: absolute;
+    pointer-events: none;
+}
+
+.move-scroll {
+    max-height: 310px; /* Adjust the height as needed */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
