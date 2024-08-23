@@ -1,6 +1,13 @@
 $primary: #2a75bb;
-$secondary:#ffcb05;
+$secondary: #ffcb05;
 $red: #ef5350;
+$body-emphasis-color: $primary;
+
 $focus-ring-width: 0.05rem;
+
+$navbar-light-color: rgba($body-emphasis-color, 1);
+$navbar-light-hover-color: rgba($body-emphasis-color, 0.65);
+
+$nav-link-font-size: 1.5rem;
 
 @import '../node_modules/bootstrap/scss/bootstrap.scss';
