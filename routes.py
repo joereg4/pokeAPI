@@ -1,7 +1,7 @@
 import logging
 
 import markdown
-from flask import Blueprint, render_template, request, json, current_app, url_for
+from flask import Blueprint, render_template, request, json, current_app, url_for, abort
 from markupsafe import Markup
 from pokemontcgsdk import Card
 
@@ -10,6 +10,9 @@ import requests
 import pokedex
 import sys
 import pandas as pd
+import hmac
+import hashlib
+import subprocess
 import os
 
 pokemon_bp = Blueprint(
@@ -1145,3 +1148,31 @@ def get_endpoint_data(api_endpoint, id_or_name):
             raise ValueError(f"No such endpoint: {api_endpoint}")
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/webhook/", methods=["POST"])
+def webhook():
+    # Verify the request is from GitHub
+    secret = os.getenv('WEBHOOK_SECRET')
+    if secret is None:
+        abort(500, 'Webhook secret is not configured')
+
+    signature = request.headers.get('X-Hub-Signature-256')
+    if signature is None:
+        abort(403, 'No signature provided')
+
+    sha_name, signature = signature.split('=')
+    if sha_name != 'sha256':
+        abort(501, 'Signature not supported')
+
+    mac = hmac.new(bytes(secret, 'utf-8'), msg=request.data, digestmod=hashlib.sha256)
+    if not hmac.compare_digest(str(mac.hexdigest()), str(signature)):
+        abort(403, 'Invalid signature')
+
+    # Pull the latest changes from GitHub
+    try:
+        subprocess.run(["git", "-C", "/var/www/pokeAPI", "pull"], check=True)
+    except subprocess.CalledProcessError as e:
+        abort(500, f'Git pull failed: {str(e)}')
+
+    return 'Success', 200
