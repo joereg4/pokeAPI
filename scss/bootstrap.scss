@@ -1,9 +1,16 @@
+// Required
+@import "../node_modules/bootstrap/scss/functions";
+
 $primary: #2a75bb;
 $secondary: #ffcb05;
 $red: #ef5350;
 $body-emphasis-color: $primary;
 
-$focus-ring-width: 0.05rem;
+$focus-ring-width:      0.25rem;
+$focus-ring-opacity:    1.0;
+$focus-ring-color:      rgba($primary, $focus-ring-opacity);
+$focus-ring-blur:       0;
+$focus-ring-box-shadow: 0 0 $focus-ring-blur $focus-ring-width $focus-ring-color;
 
 $navbar-light-color: rgba($body-emphasis-color, 1);
 $navbar-light-hover-color: rgba($body-emphasis-color, 0.65);

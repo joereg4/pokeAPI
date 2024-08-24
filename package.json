@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "sass:build": "sass --no-source-map --watch scss:static/css"
+    "sass:build": "sass --no-source-map scss:static/css"
   },
   "author": "Joe Regenstein",
   "license": "MIT",
