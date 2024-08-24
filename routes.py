@@ -1175,4 +1175,10 @@ def webhook():
     except subprocess.CalledProcessError as e:
         abort(500, f'Git pull failed: {str(e)}')
 
+    # Restart Gunicorn
+    try:
+        subprocess.run(['sudo', 'systemctl', 'restart', 'gunicorn'])
+    except subprocess.CalledProcessError as e:
+        abort(500, f'Gunicorn restart failed: {str(e)}')
+
     return 'Success', 200
