@@ -15,6 +15,7 @@ import hashlib
 import subprocess
 import os
 
+print(os.getenv('WEBHOOK_SECRET'))
 pokemon_bp = Blueprint(
     "pokemon", __name__, template_folder="templates", static_folder="static"
 )
