@@ -15,7 +15,6 @@ import hashlib
 import subprocess
 import os
 
-print(os.getenv('WEBHOOK_SECRET'))
 pokemon_bp = Blueprint(
     "pokemon", __name__, template_folder="templates", static_folder="static"
 )
@@ -1177,8 +1176,3 @@ def webhook():
         abort(500, f'Git pull failed: {str(e)}')
 
     return 'Success', 200
-
-
-@pokemon_bp.route("/env")
-def env():
-    return str(os.environ)
