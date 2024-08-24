@@ -1177,3 +1177,8 @@ def webhook():
         abort(500, f'Git pull failed: {str(e)}')
 
     return 'Success', 200
+
+
+@pokemon_bp.route("/env")
+def env():
+    return str(os.environ)
