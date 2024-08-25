@@ -1,4 +1,4 @@
-from flask import Flask, current_app
+from flask import Flask, render_template
 from cache import cache
 from routes import pokemon_bp
 import pokedex
@@ -27,6 +27,14 @@ def create_app(test_config=None):
             app.config["DEBUG_PRINT_ROUTES"] = False
 
     app.register_blueprint(pokemon_bp)
+
+    @app.errorhandler(403)
+    def forbidden(e):
+        return render_template("403.html"), 403
+
+    @app.errorhandler(404)
+    def not_found(e):
+        return render_template("404.html"), 404
 
     if app.config["DEBUG_PRINT_ROUTES"]:
         for key, value in app.config.items():
