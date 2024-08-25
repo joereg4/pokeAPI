@@ -1150,35 +1150,41 @@ def get_endpoint_data(api_endpoint, id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/webhook/", methods=["POST"])
+@pokemon_bp.route("/webhook/", methods=["POST", "GET"])
 def webhook():
-    # Verify the request is from GitHub
     secret = os.getenv('WEBHOOK_SECRET')
-    if secret is None:
-        abort(500, 'Webhook secret is not configured')
 
-    signature = request.headers.get('X-Hub-Signature-256')
-    if signature is None:
-        abort(403, 'No signature provided')
+    if request.method == "POST":
+        # Verify the request is from GitHub
+        if secret is None:
+            abort(500, 'Webhook secret is not configured')
 
-    sha_name, signature = signature.split('=')
-    if sha_name != 'sha256':
-        abort(501, 'Signature not supported')
+        signature = request.headers.get('X-Hub-Signature-256')
+        if signature is None:
+            abort(403, 'No signature provided')
 
-    mac = hmac.new(bytes(secret, 'utf-8'), msg=request.data, digestmod=hashlib.sha256)
-    if not hmac.compare_digest(str(mac.hexdigest()), str(signature)):
-        abort(403, 'Invalid signature')
+        sha_name, signature = signature.split('=')
+        if sha_name != 'sha256':
+            abort(501, 'Signature not supported')
 
-    # Pull the latest changes from GitHub
-    try:
-        subprocess.run(["git", "-C", "/var/www/pokeAPI", "pull"], check=True)
-    except subprocess.CalledProcessError as e:
-        abort(500, f'Git pull failed: {str(e)}')
+        mac = hmac.new(bytes(secret, 'utf-8'), msg=request.data, digestmod=hashlib.sha256)
+        if not hmac.compare_digest(str(mac.hexdigest()), str(signature)):
+            abort(403, 'Invalid signature')
 
-    # Restart Gunicorn
-    try:
-        subprocess.run(['sudo', 'systemctl', 'restart', 'gunicorn'])
-    except subprocess.CalledProcessError as e:
-        abort(500, f'Gunicorn restart failed: {str(e)}')
+        # Pull the latest changes from GitHub
+        try:
+            subprocess.run(["git", "-C", "/var/www/pokeAPI", "pull"], check=True)
+        except subprocess.CalledProcessError as e:
+            abort(500, f'Git pull failed: {str(e)}')
 
-    return 'Success', 200
+        # Restart Gunicorn
+        try:
+            subprocess.run(['sudo', 'systemctl', 'restart', 'gunicorn'])
+        except subprocess.CalledProcessError as e:
+            abort(500, f'Gunicorn restart failed: {str(e)}')
+
+        return 'Success', 200
+
+    elif request.method == "GET":
+        # Handle GET requests by showing a custom "Oops" page or message
+        return render_template('403.html'), 403
