@@ -1008,7 +1008,8 @@ def get_pokemon_shape(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("pokemon-shape", id_or_name)
-        return render_template("generic.html", data=data)
+        pokemon_list = create_pokemon_list(data)
+        return render_template("shape_detail.html", data=data, pokemon_list=pokemon_list)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 

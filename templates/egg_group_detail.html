@@ -3,9 +3,11 @@
 {% block title %}{{ data.name | title }} - Pokémon Habitat{% endblock %}
 
 {% block content %}
-<div class="egg_group-detail-section">
-    <h1>{{ data.name | title }} Egg Group</h1>
-    <h2>Pokémon Species in this Egg Group</h2>
-    {% include '_pokemon_list.html' %}
-</div>
+    <div class="container pt-5">
+        <h1>{{ data.name | title }} Egg Group</h1>
+    </div>
+    <div class="container pt-5">
+        <h2>{{ data.name | title }} Egg Group Pokémon</h2>
+        {% include '_pokemon_list.html' %}
+    </div>
 {% endblock %}
