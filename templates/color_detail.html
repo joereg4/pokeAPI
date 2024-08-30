@@ -3,9 +3,11 @@
 {% block title %}{{ data.name | title }} - Pokémon Color{% endblock %}
 
 {% block content %}
-<div class="color-detail-section">
-    <h1>{{ data.name | title }} Color</h1>
-    <h2>Pokémon Species with this Color</h2>
-    {% include '_pokemon_list.html' %}
-</div>
+    <div class="container pt-5">
+        <h1>{{ data.name | title }} Color</h1>
+    </div>
+    <div class="container pt-5">
+        <h2>Pokémon Species with this Color</h2>
+        {% include '_pokemon_list.html' %}
+    </div>
 {% endblock %}
