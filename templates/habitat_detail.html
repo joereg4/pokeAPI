@@ -3,9 +3,11 @@
 {% block title %}{{ data.name | title }} - Pokémon Habitat{% endblock %}
 
 {% block content %}
-<div class="habitat-detail-section">
-    <h1>{{ data.name | title }} Habitat</h1>
-    <h2>Pokémon Species in this Habitat</h2>
-    {% include '_pokemon_list.html' %}
-</div>
+    <div class="container pt-5">
+        <h1>{{ data.name | title }} Habitat</h1>
+    </div>
+    <div class="container pt-5">
+        <h2>Pokémon Species in this Habitat</h2>
+        {% include '_pokemon_list.html' %}
+    </div>
 {% endblock %}

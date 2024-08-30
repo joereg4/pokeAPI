@@ -7,7 +7,8 @@
     <section>
         <div class="container pt-5">
             <h2>Type Effectiveness</h2>
-            <img class="my-2" src="{{ url_for('pokemon.static', filename='img/type/nameplate/' + type_effectiveness.name | lower + '_np.png') }}"
+            <img class="my-2"
+                 src="{{ url_for('pokemon.static', filename='img/type/nameplate/' + type_effectiveness.name | lower + '_np.png') }}"
                  style="height: 40px">
             {% for type_name, relations in type_effectiveness.items() %}
                 <!-- Type Name Row -->
@@ -37,6 +38,12 @@
                     {% endif %}
                 {% endfor %}
             {% endfor %}
+        </div>
+    </section>
+    <section>
+        <div class="container pt-5">
+            <h2>{{ type_effectiveness.name | title }} Pokémon</h2>
+            {% include '_pokemon_list.html' %}
         </div>
     </section>
 {% endblock %}
