@@ -19,9 +19,9 @@
         </div>
     </section>
     <section>
-        <div class="container-lg text-center">
+        <div class="container-lg text-center pt-1">
             <h2>Featured Pokémon</h2>
-            <div class="row" id="feature-section">
+            <div class="row pt-1" id="feature-section">
                 <div class="col">
                     <div class="card" style="width: 1fr;">
                         <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"
@@ -65,9 +65,9 @@
         </div>
     </section>
     <section>
-        <div class="container-lg text-center p-5">
+        <div class="container-lg text-center pt-5">
             <h2>Pokémon Statistics</h2>
-            <div class="row">
+            <div class="row pt-1">
                 <div class="col">
                     <div class="card" style="width: 1fr;">
                         <div class="card-body">
@@ -115,6 +115,16 @@
                             <p class="card-text">Habitats</p>
                             <a href="{{ url_for('pokemon.get_pokemon_habitat') }}"
                                class="btn btn-primary">View All Habitats</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card" style="width: 1fr;">
+                        <div class="card-body">
+                            <h3 class="card-title">{{ shape_count }}</h3>
+                            <p class="card-text">Shapes</p>
+                            <a href="{{ url_for('pokemon.get_pokemon_shape') }}"
+                               class="btn btn-primary">View All Shapes</a>
                         </div>
                     </div>
                 </div>

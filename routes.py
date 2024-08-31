@@ -222,6 +222,11 @@ def index():
     # Fetch total habitat count
     habitat_count_response = requests.get("https://pokeapi.co/api/v2/pokemon-habitat?limit=1")
     habitat_count = habitat_count_response.json()["count"]
+
+    # Fetch total habitat count
+    shape_count_response = requests.get("https://pokeapi.co/api/v2/pokemon-shape?limit=1")
+    shape_count = shape_count_response.json()["count"]
+
     return render_template(
         "index.html",
         pokemon_count=pokemon_count,
@@ -229,6 +234,7 @@ def index():
         abilities_count=abilities_count,
         color_count=color_count,
         habitat_count=habitat_count,
+        shape_count=shape_count,
     )
 
 
