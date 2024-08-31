@@ -307,7 +307,7 @@ def get_berry_firmness(id_or_name):
 
 @pokemon_bp.route("/berry_flavor/", defaults={"id_or_name": None})
 @pokemon_bp.route("/berry_flavor/<id_or_name>")
-# @cache.cached(timeout=300)
+@cache.cached(timeout=300)
 def get_berry_flavor(id_or_name):
     if id_or_name is None:
         # Fetch and display a list of all berry flavors
@@ -387,7 +387,7 @@ def get_contest_type(id_or_name):
 
 @pokemon_bp.route("/egg_group/", defaults={"id_or_name": None})
 @pokemon_bp.route("/egg_group/<id_or_name>")
-# @cache.cached(timeout=300)
+@cache.cached(timeout=300)
 def get_egg_group(id_or_name):
     if id_or_name is None:
         # Fetch and render the list of all egg groups
@@ -807,7 +807,7 @@ def get_move_damage_class(id_or_name):
 
 @pokemon_bp.route("/move_learn_method/", defaults={"id_or_name": None})
 @pokemon_bp.route("/move_learn_method/<id_or_name>")
-# @cache.cached(timeout=300)
+@cache.cached(timeout=300)
 def get_move_learn_method(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the move learn method list
