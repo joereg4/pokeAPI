@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Contest Effects{% endblock %}
+
+{% block content %}
+    <div class="container pt-5">
+        <h1>Contest Effects</h1>
+        <ul>
+            {% for effect in data %}
+                <li>
+                    <a href="{{ url_for('pokemon.get_contest_effect', id_=effect['id']) }}">Contest Effect #{{ effect['id'] }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

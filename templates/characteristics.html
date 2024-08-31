@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Pokémon Characteristics{% endblock %}
+
+{% block content %}
+    <div class="container pt-5">
+        <h1>Pokémon Characteristics</h1>
+    </div>
+    <div class="container pt-5">
+        <ul>
+            {% for characteristic in data %}
+                <li>
+                    <a href="{{ url_for('pokemon.get_characteristic', id_=characteristic.id) }}">Characteristic #{{ characteristic.id }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
