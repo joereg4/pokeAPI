@@ -5,7 +5,7 @@
 {% block content %}
     <h1>Move Category List</h1>
     <ul>
-        {% for category in category_list %}
+        {% for category in data %}
             <li><a href="{{ url_for('pokemon.get_move_category', id_or_name=category.name) }}">{{ category.name }}</a></li>
         {% endfor %}
     </ul>

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Pokémon Locations{% endblock %}
+
+{% block content %}
+    <div class="container pt-5">
+        <h1>Pokémon Locations</h1>
+    </div>
+    <div class="container pt-5">
+        <ul>
+            {% for location in data %}
+                <li>
+                    <a href="{{ url_for('pokemon.get_location', id_or_name=location.name) }}">{{ location.name | capitalize }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

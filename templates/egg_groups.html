@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Pokémon Types{% endblock %}
+{% block title %}Pokémon Egg Groups{% endblock %}
 
 {% block content %}
     <div class="container pt-5">
@@ -8,7 +8,7 @@
     </div>
     <div class="container pt-5">
         <ul>
-            {% for type in types %}
+            {% for type in data %}
                 <li><a href="{{ url_for('pokemon.get_egg_group', id_or_name=type.name) }}">{{ type.name | title }}</a></li>
             {% endfor %}
         </ul>
