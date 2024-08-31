@@ -1347,55 +1347,57 @@ def get_endpoint_data(api_endpoint, id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
+import hmac
+import hashlib
+import os
+import logging
+
 @pokemon_bp.route("/webhook/", methods=["POST", "GET"])
 def webhook():
     secret = os.getenv('WEBHOOK_SECRET')
-    logging.info("Webhook called")
 
     if request.method == "POST":
+        logging.info("Webhook called")
         logging.info("Received POST request")
 
         # Verify the request is from GitHub
         if secret is None:
-            logging.error("Webhook secret is not configured")
             abort(500, 'Webhook secret is not configured')
 
         signature = request.headers.get('X-Hub-Signature-256')
         if signature is None:
-            logging.error("No signature provided")
             abort(403, 'No signature provided')
 
-        sha_name, signature = signature.split('=')
+        logging.info(f"Signature from GitHub: {signature}")
+
+        sha_name, signature_from_github = signature.split('=')
         if sha_name != 'sha256':
-            logging.error("Signature not supported")
             abort(501, 'Signature not supported')
 
+        # Calculate the signature using the payload and your secret
         mac = hmac.new(bytes(secret, 'utf-8'), msg=request.data, digestmod=hashlib.sha256)
-        if not hmac.compare_digest(str(mac.hexdigest()), str(signature)):
+        generated_signature = mac.hexdigest()
+        logging.info(f"Generated signature: sha256={generated_signature}")
+
+        # Compare the two signatures
+        if not hmac.compare_digest(generated_signature, signature_from_github):
             logging.error("Invalid signature")
             abort(403, 'Invalid signature')
 
-        # Log before pulling changes
-        logging.info("Signature verified, pulling latest changes")
+        # Proceed with your logic (e.g., pulling the latest changes)
         try:
             subprocess.run(["git", "-C", "/var/www/pokeAPI", "pull"], check=True)
-            logging.info("Git pull successful")
         except subprocess.CalledProcessError as e:
-            logging.error(f"Git pull failed: {str(e)}")
             abort(500, f'Git pull failed: {str(e)}')
 
-        # Log before restarting Gunicorn
-        logging.info("Restarting Gunicorn")
         try:
             subprocess.run(['sudo', 'systemctl', 'restart', 'gunicorn'])
-            logging.info("Gunicorn restarted successfully")
         except subprocess.CalledProcessError as e:
-            logging.error(f"Gunicorn restart failed: {str(e)}")
             abort(500, f'Gunicorn restart failed: {str(e)}')
 
         return 'Success', 200
 
     elif request.method == "GET":
-        logging.info("Received GET request, returning 403")
         return render_template('403.html'), 403
+
 
