@@ -58,8 +58,8 @@ type_colors = {
 }
 
 
-def get_csv_file_path():
-    csv_url = url_for('static', filename='resources.csv')
+def get_path(filename):
+    csv_url = url_for('static', filename=filename)
 
     csv_path = os.path.join(current_app.root_path, csv_url.lstrip('/'))
 
@@ -68,6 +68,15 @@ def get_csv_file_path():
 
 def get_pokemon_summary(pokemon_name, df):
     row = df[(df['resource'] == 'pokemon-species') & (df['name'].str.lower() == pokemon_name.lower())]
+
+    if not row.empty:
+        return row.iloc[0]['summary']
+    else:
+        return None
+
+
+def get_egg_summary(name, df):
+    row = df[(df['name'].str.lower() == name.lower())]
 
     if not row.empty:
         return row.iloc[0]['summary']
@@ -232,6 +241,7 @@ def get_abilities_list():
 
 
 @pokemon_bp.route("/ability/<id_or_name>")
+@cache.cached(timeout=300)
 def get_ability(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -247,6 +257,7 @@ def get_ability(id_or_name):
 
 
 @pokemon_bp.route("/berry/<id_or_name>")
+@cache.cached(timeout=300)
 def get_berry(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -261,6 +272,7 @@ def get_berry(id_or_name):
 
 
 @pokemon_bp.route("/berry_firmness/<id_or_name>")
+@cache.cached(timeout=300)
 def get_berry_firmness(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -275,6 +287,7 @@ def get_berry_firmness(id_or_name):
 
 
 @pokemon_bp.route("/berry_flavor/<id_or_name>")
+@cache.cached(timeout=300)
 def get_berry_flavor(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -289,6 +302,7 @@ def get_berry_flavor(id_or_name):
 
 
 @pokemon_bp.route("/characteristic/<int:id_>")
+@cache.cached(timeout=300)
 def get_characteristic(id_):
     try:
         data = pokedex.APIResource.fetch_data("characteristic", id_)
@@ -306,6 +320,7 @@ def get_colors_list():
 
 
 @pokemon_bp.route("/contest_effect/<int:id_>")
+@cache.cached(timeout=300)
 def get_contest_effect(id_):
     try:
         data = pokedex.APIResource.fetch_data("contest-effect", id_)
@@ -315,6 +330,7 @@ def get_contest_effect(id_):
 
 
 @pokemon_bp.route("/contest_type/<id_or_name>")
+@cache.cached(timeout=300)
 def get_contest_type(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -328,8 +344,20 @@ def get_contest_type(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
+@pokemon_bp.route("/egg_groups")
+@cache.cached(timeout=300)
+def get_egg_groups_list():
+    url = "https://pokeapi.co/api/v2/egg-group"
+    types = fetch_all_results(url)
+    return render_template("egg_groups.html", types=types)
+
+
 @pokemon_bp.route("/egg_group/<id_or_name>")
+@cache.cached(timeout=300)
 def get_egg_group(id_or_name):
+    csv_file_path = get_path('egg_group.csv')
+    df = pd.read_csv(csv_file_path)
+
     # Check if id_or_name can be converted to an integer
     try:
         id_or_name = int(id_or_name)
@@ -344,12 +372,21 @@ def get_egg_group(id_or_name):
         # Use the create_pokemon_list function with the correct key
         pokemon_list = create_pokemon_list(data)
 
-        return render_template("egg_group_detail.html", data=data, pokemon_list=pokemon_list)
+        # Retrieve the summary for the Pokémon
+        summary = get_egg_summary(data['name'], df)
+
+        # Convert the markdown summary to HTML
+        if summary:
+            summary_html = Markup(markdown.markdown(summary))
+        else:
+            summary_html = None
+        return render_template("egg_group_detail.html", data=data, pokemon_list=pokemon_list, summary_html=summary_html)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
 @pokemon_bp.route("/encounter_condition/<id_or_name>")
+@cache.cached(timeout=300)
 def get_encounter_condition(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -364,6 +401,7 @@ def get_encounter_condition(id_or_name):
 
 
 @pokemon_bp.route("/encounter_condition_value/<id_or_name>")
+@cache.cached(timeout=300)
 def get_encounter_condition_value(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -378,6 +416,7 @@ def get_encounter_condition_value(id_or_name):
 
 
 @pokemon_bp.route("/encounter_method/<id_or_name>")
+@cache.cached(timeout=300)
 def get_encounter_method(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -392,6 +431,7 @@ def get_encounter_method(id_or_name):
 
 
 @pokemon_bp.route("/evolution_chain/<int:id_>")
+@cache.cached(timeout=300)
 def get_evolution_chain(id_):
     try:
         data = pokedex.APIResource.fetch_data("evolution-chain", id_)
@@ -401,6 +441,7 @@ def get_evolution_chain(id_):
 
 
 @pokemon_bp.route("/evolution_trigger/<id_or_name>")
+@cache.cached(timeout=300)
 def get_evolution_trigger(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -415,6 +456,7 @@ def get_evolution_trigger(id_or_name):
 
 
 @pokemon_bp.route("/gender/<id_or_name>")
+@cache.cached(timeout=300)
 def get_gender(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -429,6 +471,7 @@ def get_gender(id_or_name):
 
 
 @pokemon_bp.route("/generation/<id_or_name>")
+@cache.cached(timeout=300)
 def get_generation(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -447,6 +490,7 @@ def get_generation(id_or_name):
 
 
 @pokemon_bp.route("/growth_rate/<id_or_name>")
+@cache.cached(timeout=300)
 def get_growth_rate(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -484,6 +528,7 @@ def get_item(id_or_name):
 
 
 @pokemon_bp.route("/item_attribute/<id_or_name>")
+@cache.cached(timeout=300)
 def get_item_attribute(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -498,6 +543,7 @@ def get_item_attribute(id_or_name):
 
 
 @pokemon_bp.route("/item_category/<id_or_name>")
+@cache.cached(timeout=300)
 def get_item_category(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -512,6 +558,7 @@ def get_item_category(id_or_name):
 
 
 @pokemon_bp.route("/item_fling_effect/<id_or_name>")
+@cache.cached(timeout=300)
 def get_item_fling_effect(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -526,6 +573,7 @@ def get_item_fling_effect(id_or_name):
 
 
 @pokemon_bp.route("/item_pocket/<id_or_name>")
+@cache.cached(timeout=300)
 def get_item_pocket(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -540,6 +588,7 @@ def get_item_pocket(id_or_name):
 
 
 @pokemon_bp.route("/language/<id_or_name>")
+@cache.cached(timeout=300)
 def get_language(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -554,6 +603,7 @@ def get_language(id_or_name):
 
 
 @pokemon_bp.route("/location/<id_or_name>")
+@cache.cached(timeout=300)
 def get_location(id_or_name):
     try:
         id_or_name = int(id_or_name)
@@ -567,6 +617,7 @@ def get_location(id_or_name):
 
 
 @pokemon_bp.route("/location_area/<id_or_name>")
+@cache.cached(timeout=300)
 def get_location_area(id_or_name):
     try:
         id_or_name = int(id_or_name)
@@ -582,6 +633,7 @@ def get_location_area(id_or_name):
 
 
 @pokemon_bp.route("/machine/<int:id_>")
+@cache.cached(timeout=300)
 def get_machine(id_):
     try:
         data = pokedex.APIResource.fetch_data("machine", id_)
@@ -610,6 +662,7 @@ def get_move(id_or_name):
 
 
 @pokemon_bp.route("/move_ailment/<id_or_name>")
+@cache.cached(timeout=300)
 def get_move_ailment(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -624,6 +677,7 @@ def get_move_ailment(id_or_name):
 
 
 @pokemon_bp.route("/move_battle_style/<id_or_name>")
+@cache.cached(timeout=300)
 def get_move_battle_style(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -671,6 +725,7 @@ def get_move_category_list():
 
 
 @pokemon_bp.route("/move_damage_class/<id_or_name>")
+@cache.cached(timeout=300)
 def get_move_damage_class(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -685,6 +740,7 @@ def get_move_damage_class(id_or_name):
 
 
 @pokemon_bp.route("/move_learn_method/<id_or_name>")
+@cache.cached(timeout=300)
 def get_move_learn_method(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -699,6 +755,7 @@ def get_move_learn_method(id_or_name):
 
 
 @pokemon_bp.route("/move_target/<id_or_name>")
+@cache.cached(timeout=300)
 def get_move_target(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -713,6 +770,7 @@ def get_move_target(id_or_name):
 
 
 @pokemon_bp.route("/nature/<id_or_name>")
+@cache.cached(timeout=300)
 def get_nature(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -727,6 +785,7 @@ def get_nature(id_or_name):
 
 
 @pokemon_bp.route("/pal_park_area/<id_or_name>")
+@cache.cached(timeout=300)
 def get_pal_park_area(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -741,6 +800,7 @@ def get_pal_park_area(id_or_name):
 
 
 @pokemon_bp.route("/pokeathlon_stat/<id_or_name>")
+@cache.cached(timeout=300)
 def get_pokeathlon_stat(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -792,9 +852,9 @@ def get_pokemon_list():
 
 
 @pokemon_bp.route("/pokemon/<id_or_name>")
-##@cache.cached(timeout=300)
+@cache.cached(timeout=300)
 def get_pokemon(id_or_name):
-    csv_file_path = get_csv_file_path()
+    csv_file_path = get_path('resources.csv')
     df = pd.read_csv(csv_file_path)
 
     try:
@@ -928,7 +988,7 @@ def get_pokemon(id_or_name):
         print(f"Card data {cards}")
 
         return render_template(
-            "detail.html",
+            "pokemon_detail.html",
             data=data,
             species_data=species_data,
             sorted_sprites=sorted_sprites,
