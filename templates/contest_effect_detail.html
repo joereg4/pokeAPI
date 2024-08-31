@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Contest Effect #{{ data.id }}{% endblock %}
+
+{% block content %}
+    <div class="container pt-5">
+        <h1>Contest Effect #{{ data.id }}</h1>
+
+        <!-- Effect Details -->
+        <section>
+            <h2>Effect Details</h2>
+            <p><strong>Appeal:</strong> {{ data.appeal }}</p>
+            <p><strong>Jam:</strong> {{ data.jam }}</p>
+
+            <h3>Description</h3>
+            <ul>
+                {% for entry in data.effect_entries %}
+                    <li>{{ entry.effect }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <!-- Flavor Text -->
+        <section class="pt-4">
+            <h2>Flavor Text</h2>
+            <ul>
+                {% for entry in data.flavor_text_entries %}
+                    <li>{{ entry.flavor_text }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+    </div>
+{% endblock %}

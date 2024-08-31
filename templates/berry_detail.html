@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ data.name | capitalize }} Berry - Pokémon Berry Detail{% endblock %}
+
+{% block content %}
+    <div class="container pt-5">
+        <h1>{{ data.name | capitalize }} Berry</h1>
+    </div>
+
+    <div class="container pt-5">
+        <!-- Berry Attributes -->
+        <div class="row">
+            <!-- Firmness and Growth -->
+            <div class="col-md-4">
+                <h2>Attributes</h2>
+                <ul>
+                    <li><strong>Firmness:</strong> <a href="{{ url_for('pokemon.get_berry_firmness', id_or_name=data.firmness.name) }}">{{ data.firmness.name | capitalize }}</a></li>
+                    <li><strong>Growth Time:</strong> {{ data.growth_time }} hours</li>
+                    <li><strong>Max Harvest:</strong> {{ data.max_harvest }} berries</li>
+                    <li><strong>Size:</strong> {{ data.size }} mm</li>
+                    <li><strong>Smoothness:</strong> {{ data.smoothness }}</li>
+                    <li><strong>Soil Dryness:</strong> {{ data.soil_dryness }}</li>
+                </ul>
+            </div>
+
+            <!-- Flavors -->
+            <div class="col-md-4">
+                <h2>Flavors</h2>
+                <ul>
+                    {% for flavor in data.flavors %}
+                        <li><strong>{{ flavor.flavor.name | capitalize }}:</strong> Potency {{ flavor.potency }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Natural Gift -->
+            <div class="col-md-4">
+                <h2>Natural Gift</h2>
+                <ul>
+                    <li><strong>Power:</strong> {{ data.natural_gift_power }}</li>
+                    <li><strong>Type:</strong> <a href="{{ url_for('pokemon.get_type', id_or_name=data.natural_gift_type.name) }}">{{ data.natural_gift_type.name | capitalize }}</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Related Item -->
+        <div class="row pt-5">
+            <div class="col">
+                <h2>Related Item</h2>
+                <a href="{{ url_for('pokemon.get_item', id_or_name=data.item.name) }}">{{ data.item.name | replace('-', ' ') | title }}</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

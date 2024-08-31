@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Characteristic #{{ data.id }}{% endblock %}
+
+{% block content %}
+    <div class="container pt-5">
+        <h1>Characteristic #{{ data.id }}</h1>
+    </div>
+
+    <!-- Description Section -->
+    <section>
+        <div class="container pt-3">
+            <h2>Descriptions</h2>
+            <ul>
+                {% for description in data.descriptions %}
+                    <li>
+                        <strong>{{ description.language.name | capitalize }}:</strong>
+                        {{ description.description }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+
+    <!-- Highest Stat Section -->
+    <section>
+        <div class="container pt-3">
+            <h2>Highest Stat</h2>
+            <p>
+                <a href="{{ url_for('pokemon.get_stat', id_or_name=data.highest_stat.name) }}">
+                    {{ data.highest_stat.name | capitalize }}
+                </a>
+            </p>
+        </div>
+    </section>
+
+    <!-- Possible Values Section -->
+    <section>
+        <div class="container pt-3">
+            <h2>Possible Values</h2>
+            <p>{{ data.possible_values | join(", ") }}</p>
+        </div>
+    </section>
+{% endblock %}

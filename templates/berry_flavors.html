@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Berry Flavors{% endblock %}
+
+{% block content %}
+    <div class="container pt-5">
+        <h1>Berry Flavors</h1>
+    </div>
+    <div class="container pt-5">
+        <ul>
+            {% for flavor in data %}
+                <li>
+                    <a href="{{ url_for('pokemon.get_berry_flavor', id_or_name=flavor.name) }}">{{ flavor.name | capitalize }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

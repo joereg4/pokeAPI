@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Berry Firmness{% endblock %}
+
+{% block content %}
+    <div class="container pt-5">
+        <h1>Berry Firmness Categories</h1>
+    </div>
+    <div class="container pt-5">
+        <ul>
+            {% for firmness in data %}
+                <li>
+                    <a href="{{ url_for('pokemon.get_berry_firmness', id_or_name=firmness.name) }}">{{ firmness.name | capitalize }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
