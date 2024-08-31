@@ -1352,9 +1352,12 @@ import hashlib
 import os
 import logging
 
+
 @pokemon_bp.route("/webhook/", methods=["POST", "GET"])
 def webhook():
     secret = os.getenv('WEBHOOK_SECRET')
+
+    logging.info(f"WEBHOOK_SECRET on server: {secret}")
 
     if request.method == "POST":
         logging.info("Webhook called")
@@ -1399,5 +1402,3 @@ def webhook():
 
     elif request.method == "GET":
         return render_template('403.html'), 403
-
-
