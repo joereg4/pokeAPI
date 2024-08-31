@@ -7,7 +7,7 @@
         <h1>Pokémon Types</h1>
     </div>
     <div class="container pt-5">
-        <ul class="types-list">
+        <ul>
             {% for type in types %}
                 <li><a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a></li>
             {% endfor %}

@@ -1059,6 +1059,14 @@ def get_pokemon_habitat(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
+@pokemon_bp.route("/shapes")
+@cache.cached(timeout=300)
+def get_shapes_list():
+    url = "https://pokeapi.co/api/v2/pokemon-shape"
+    types = fetch_all_results(url)
+    return render_template("shapes.html", types=types)
+
+
 @pokemon_bp.route("/pokemon_shape/<id_or_name>")
 def get_pokemon_shape(id_or_name):
     # Check if id_or_name can be converted to an integer
