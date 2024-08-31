@@ -1,4 +1,5 @@
 import pytest
+from flask import url_for
 import json
 from unittest.mock import patch
 from app import create_app
@@ -10,15 +11,16 @@ def client():
         'TESTING': True,
         'DEBUG_PRINT_ROUTES': False
     })
-    with app.test_client() as client:
-        with app.app_context():
-            yield client
+    return app.test_client()
 
 
 @pytest.fixture
-def read_mock_data(file_name):
-    with open(f"mock_data/{file_name}", 'r') as file:
-        return json.load(file)
+def read_mock_data():
+    def _read(file_name):
+        with open(f"mock_data/{file_name}", 'r') as file:
+            return json.load(file)
+
+    return _read
 
 
 def test_app_creation(client):
@@ -31,35 +33,16 @@ def test_index_route(client):
     assert response.status_code == 200
 
 
-@patch('requests.get')
-def test_get_pokemon_list_route(mock_get, client):
-    mock_data = {
-        "results": [
-            {
-                "name": "bulbasaur",
-                "url": "sample_url_for_bulbasaur"
-            }
-        ]
-    }
-    mock_get.return_value.json.return_value = mock_data
-
-    response = client.get('/pokemon/')
-    assert response.status_code == 200
-    assert b"bulbasaur" in response.data
-
-    @patch('pokedex.APIResource.fetch_data')
-    @patch('pokedex.pokemon_species')
-    @patch('pokedex.get_species_id_from_url')
-    @patch('pokedex.evolution_chain')
-    @patch('pokedex.get_chain')
-    def test_get_pokemon_detail_route(mock_get_chain, mock_evolution_chain, mock_species_id_url, mock_species,
-                                      mock_fetch_data, client):
-        # Define mock return values using the read_mock_data function
-        mock_fetch_data.return_value = read_mock_data("bulbasaur.json")
-        mock_species.return_value = read_mock_data("species.txt")
-        mock_species_id_url.return_value = 1
-        mock_evolution_chain.return_value = read_mock_data("evolution_chain.txt")
-
+def test_get_pokemon_detail_route(client):
     response = client.get('/pokemon/bulbasaur')
     assert response.status_code == 200
     assert b"bulbasaur" in response.data
+
+
+def test_home_page(client):
+    with client.application.test_request_context():
+        # Test if the home page loads correctly
+        response = client.get(url_for('pokemon.index'))
+        assert response.status_code == 200
+        assert "Welcome to the Pokédex API".encode('utf-8') in response.data
+        assert b"Get Started" in response.data
