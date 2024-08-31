@@ -6,11 +6,11 @@
     <h1 class="detail-page">{{ data.name }}</h1>
     <img src="{{ data.sprites.default }}" alt="{{ data.name }} Sprite" class="item-sprite">
 
-    <div class="item-details">
+    <div>
         <h2>Attribute</h2>
         <ul>
             {% for entry in data.attributes %}
-                <a href="{{ url_for('pokemon.get_endpoint_data', api_endpoint=entry.url.split('/')[-3], id_or_name=entry.url.split('/')[-2]) }}">
+                <a href="{{ url_for('pokemon.get_item_attribute', id_or_name=entry.name) }}">
                     {{ entry.name }}</a>
                 {% if not loop.last %}, {% endif %}
             {% endfor %}
