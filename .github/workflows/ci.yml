@@ -32,9 +32,9 @@ jobs:
 
       - name: Send webhook payload
         if: success()  # This ensures that the webhook is called only if tests pass
-        run: |
-          curl -X POST -H "Content-Type: application/json" \
-          -H "X-Hub-Signature-256: sha256=$(echo -n ${{ secrets.WEBHOOK_SECRET }} | openssl dgst -sha256 -hmac ${{ secrets.WEBHOOK_SECRET }} | sed 's/^.* //')" \
-          -d '{}' \
-          https://pokedexapi.com/webhook/
-
+        run: |  
+          payload='{}'  
+          signature=$(echo -n "$payload" | openssl dgst -sha256 -hmac "${{ secrets.WEBHOOK_SECRET }}" | sed 's/^.* //')  
+          curl -X POST -H "Content-Type: application/json" \       
+            -H "X-Hub-Signature-256: sha256=$signature" \       
+            -d "$payload" \       https://pokedexapi.com/webhook/
