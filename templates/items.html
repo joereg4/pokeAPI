@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Pokémon Items{% endblock %}
+
+{% block content %}
+    <div class="container pt-5">
+        <h1>Pokémon Items</h1>
+    </div>
+    <div class="container pt-5">
+        <ul>
+            {% for item in data %}
+                <li>
+                    <a href="{{ url_for('pokemon.get_item', id_or_name=item.name) }}">{{ item.name | capitalize }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Pokémon Moves{% endblock %}
+
+{% block content %}
+    <div class="container pt-5">
+        <h1>Pokémon Moves</h1>
+    </div>
+    <div class="container pt-5">
+        <ul>
+            {% for move in data %}
+                <li>
+                    <a href="{{ url_for('pokemon.get_move', id_or_name=move.name) }}">{{ move.name | capitalize }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

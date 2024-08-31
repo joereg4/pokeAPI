@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Pokémon Generations{% endblock %}
+
+{% block content %}
+    <div class="container pt-5">
+        <h1>Pokémon Generations</h1>
+    </div>
+    <div class="container pt-5">
+        <ul>
+            {% for generation in data %}
+                <li>
+                    <a href="{{ url_for('pokemon.get_generation', id_or_name=generation.name) }}">{{ generation.name | capitalize }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

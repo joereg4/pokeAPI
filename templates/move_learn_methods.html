@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Pokémon Move Learn Methods{% endblock %}
+
+{% block content %}
+    <div class="container pt-5">
+        <h1>Pokémon Move Learn Methods</h1>
+    </div>
+    <div class="container pt-5">
+        <ul>
+            {% for method in data %}
+                <li>
+                    <a href="{{ url_for('pokemon.get_move_learn_method', id_or_name=method.name) }}">{{ method.name | capitalize }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

@@ -25,10 +25,11 @@
             <div class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <a class="nav-link" href="/">Home</a>
                 <a class="nav-link" href="{{ url_for('pokemon.get_pokemon_list',page=1) }}">Pokémon</a>
-                <a class="nav-link" href="{{ url_for('pokemon.get_abilities_list') }}">Abilities</a>
-                <a class="nav-link" href="{{ url_for('pokemon.get_types_list') }}">Types</a>
-                <a class="nav-link" href="{{ url_for('pokemon.get_colors_list') }}">Colors</a>
-                <a class="nav-link" href="{{ url_for('pokemon.get_habitats_list') }}">Habitats</a>
+                <a class="nav-link" href="{{ url_for('pokemon.get_ability') }}">Abilities</a>
+                <a class="nav-link" href="{{ url_for('pokemon.get_type') }}">Types</a>
+                <a class="nav-link" href="{{ url_for('pokemon.get_pokemon_color') }}">Colors</a>
+                <a class="nav-link" href="{{ url_for('pokemon.get_pokemon_habitat') }}">Habitats</a>
+                <a class="nav-link" href="{{ url_for('pokemon.get_pokemon_shape') }}">Shapes</a>
             </div>
             {% include 'search.html' %}
     </div>

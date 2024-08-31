@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Pokédex List{% endblock %}
+
+{% block content %}
+    <div class="container pt-5">
+        <h1>Pokédex List</h1>
+        <ul>
+            {% for pokedex in data %}
+                <li>
+                    <a href="{{ url_for('pokemon.get_pokedex', id_or_name=pokedex.name) }}">{{ pokedex.name | capitalize }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
