@@ -1357,8 +1357,6 @@ import logging
 def webhook():
     secret = os.getenv('WEBHOOK_SECRET')
 
-    logging.info(f"WEBHOOK_SECRET on server: {secret}")
-
     if request.method == "POST":
         logging.info("Webhook called")
         logging.info("Received POST request")
@@ -1371,8 +1369,6 @@ def webhook():
         if signature is None:
             abort(403, 'No signature provided')
 
-        logging.info(f"Signature from GitHub: {signature}")
-
         sha_name, signature_from_github = signature.split('=')
         if sha_name != 'sha256':
             abort(501, 'Signature not supported')
@@ -1380,7 +1376,6 @@ def webhook():
         # Calculate the signature using the payload and your secret
         mac = hmac.new(bytes(secret, 'utf-8'), msg=request.data, digestmod=hashlib.sha256)
         generated_signature = mac.hexdigest()
-        logging.info(f"Generated signature: sha256={generated_signature}")
 
         # Compare the two signatures
         if not hmac.compare_digest(generated_signature, signature_from_github):
