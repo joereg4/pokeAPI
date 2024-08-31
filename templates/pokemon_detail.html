@@ -42,7 +42,7 @@
                             <li class="detail-card__list">Is Baby: {{ species_data.is_baby }}</li>
                             <li class="detail-card__list">Is Legendary: {{ species_data.is_legendary }}</li>
                             <li class="detail-card__list">Is Mythical: {{ species_data.is_mythical }}</li>
-                            <li class="detail-card__list">Shape: {{ species_data.shape.name | title }}</li>
+                            <li class="detail-card__list">Shape: <a href="{{ url_for('pokemon.get_pokemon_shape', id_or_name=species_data.shape.name) }}"> {{ species_data.shape.name | title }}</a></li>
                         {% endif %}
                     </ul>
                 </div>
