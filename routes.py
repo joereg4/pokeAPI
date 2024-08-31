@@ -584,9 +584,11 @@ def get_item_attribute(id_or_name):
         id_or_name = int(id_or_name)
     except ValueError:
         pass  # if the conversion fails, it remains a string
+
     try:
         data = pokedex.APIResource.fetch_data("item-attribute", id_or_name)
-        return render_template("generic.html", data=data)
+        items_list = data.pop("items", [])  # Extract items to a separate variable
+        return render_template("item_attribute_detail.html", data=data, items_list=items_list)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
