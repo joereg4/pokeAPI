@@ -1482,6 +1482,7 @@ def webhook():
 
     if request.method == "POST":
         logging.info("Webhook called - Received POST request")
+        logging.info(f"Received payload: {request.data}")
 
         # Verify the webhook secret is set
         if secret is None:
