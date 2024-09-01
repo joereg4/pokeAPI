@@ -3,10 +3,21 @@
 {% block title %}Item Detail{% endblock %}
 
 {% block content %}
-    <h1 class="detail-page">{{ data.name }}</h1>
-    <img src="{{ data.sprites.default }}" alt="{{ data.name }} Sprite" class="item-sprite">
+    <h1 class="detail-page">{{ data.name | title }} <img src="{{ data.sprites.default }}" alt="{{ data.name }} Sprite"
+                                                         class="item-sprite"></h1>
 
-    <div>
+    <!-- Ai Summary -->
+    <div class="container pt-1">
+        <h2>Summary</h2>
+        <div class="row">
+            <div class="col">
+                {% if summary_html %}
+                    <p>{{ summary_html | safe }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="container pt-1">
         <h2>Attribute</h2>
         <ul>
             {% for entry in data.attributes %}
@@ -15,38 +26,43 @@
                 {% if not loop.last %}, {% endif %}
             {% endfor %}
         </ul>
-
+    </div>
+    <div class="container pt-1">
         <h2>Category:</h2>
         <a href="{{ url_for('pokemon.get_item_category', id_or_name=data.category.url.split('/')[-2]) }}">
             {{ data.category.name }}</a>
-
+    </div>
+    <div class="container pt-1">
         <h2>Cost:</h2>
         <p>{{ data.cost }}</p>
-
+    </div>
+    <div class="container pt-1">
         <h2>Effect:</h2>
         <ul>
             {% for entry in data.effect_entries %}
                 <li>{{ entry.effect }}</li>
             {% endfor %}
         </ul>
-
+    </div>
+    <div class="container pt-1">
         <h2>Flavor Texts:</h2>
         <ul>
             {% for entry in data.flavor_text_entries %}
                 <li><strong>{{ entry['version_group']['name'] }}:</strong> {{ entry['text'] }}</li>
             {% endfor %}
         </ul>
-
-        <!-- New content begins here -->
-
+    </div>
+    <div class="container pt-1">
         <h2>Fling Effect</h2>
         <p>
             <a href="{{ data.fling_effect.url }}">{{ data.fling_effect.name }}</a>
         </p>
-
+    </div>
+    <div class="container pt-1">
         <h2>Fling Power</h2>
         <p>{{ data.fling_power }}</p>
-
+    </div>
+    <div class="container pt-1">
         <h2>Game Indices</h2>
         <ul>
             {% for game in data.game_indices %}
@@ -56,23 +72,11 @@
                 </li>
             {% endfor %}
         </ul>
-
-        <h2>Held By Pokemon</h2>
-        <ul>
-            {% for holder in data.held_by_pokemon %}
-                <li>
-                    <a href="{{ holder.pokemon.url }}">{{ holder.pokemon.name }}</a> holds this item in:
-                    <ul>
-                        {% for version_detail in holder.version_details %}
-                            <li>
-                                Version: <a
-                                    href="{{ version_detail.version.url }}">{{ version_detail.version.name }}</a>,
-                                Rarity: {{ version_detail.rarity }}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </li>
-            {% endfor %}
-        </ul>
     </div>
+    <section>
+        <div class="container pt-5">
+            <h2 class="pb-1">{{ data.name | title }} Pokémon</h2>
+            {% include '_pokemon_list.html' %}
+        </div>
+    </section>
 {% endblock %}

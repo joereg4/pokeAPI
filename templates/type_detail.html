@@ -40,6 +40,19 @@
             {% endfor %}
         </div>
     </section>
+    <!-- Ai Summary -->
+    <section>
+        <div class="container pt-5">
+            <h2>Summary</h2>
+            <div class="row">
+                <div class="col">
+                    {% if summary_html %}
+                        <p>{{ summary_html | safe }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
     <section>
         <div class="container pt-5">
             <h2>{{ type_effectiveness.name | title }} Pokémon</h2>

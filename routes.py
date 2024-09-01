@@ -84,6 +84,15 @@ def get_egg_summary(name, df):
         return None
 
 
+def get_summary(name, df):
+    row = df[(df['name'].str.lower() == name.lower())]
+
+    if not row.empty:
+        return row.iloc[0]['summary']
+    else:
+        return None
+
+
 def get_pokemon_cards(pokemon_name):
     try:
         data = Card.where(q='name:{}'.format(pokemon_name))
@@ -113,7 +122,7 @@ def create_pokemon_list(data):
             pokemon_entries = data
         else:
             # Possible keys that might contain the Pokémon species list
-            possible_keys = ["pokemon", "pokemon_species", "pokemon_entries", "pokemon_encounters"]
+            possible_keys = ["pokemon", "pokemon_species", "pokemon_entries", "pokemon_encounters", "held_by_pokemon", "learned_by_pokemon"]
 
             # Identify the correct key by checking which one exists in the data
             key = next((k for k in possible_keys if k in data), None)
@@ -262,14 +271,28 @@ def get_ability(id_or_name):
             # Use the create_pokemon_list function to get Pokémon with this ability
             pokemon_list = create_pokemon_list(data)
 
-            return render_template("ability_detail.html", data=data, pokemon_list=pokemon_list)
+            # Fetch Summary
+            csv_file_path = get_path('ability.csv')
+            df = pd.read_csv(csv_file_path)
+
+            # Retrieve the summary
+            summary = get_summary(data['name'], df)
+
+            # Convert the markdown summary to HTML
+            if summary:
+                summary_html = Markup(markdown.markdown(summary))
+            else:
+                summary_html = None
+
+            return render_template("ability_detail.html", data=data, pokemon_list=pokemon_list,
+                                   summary_html=summary_html)
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
 @pokemon_bp.route("/berry/", defaults={"id_or_name": None})
 @pokemon_bp.route("/berry/<id_or_name>")
-@cache.cached(timeout=300)
+#@cache.cached(timeout=300)
 def get_berry(id_or_name):
     if id_or_name is None:
         # Fetch and display a list of all berries
@@ -281,7 +304,21 @@ def get_berry(id_or_name):
         # Fetch and display details for a specific berry
         try:
             data = pokedex.APIResource.fetch_data("berry", id_or_name)
-            return render_template("berry_detail.html", data=data)
+
+            # Fetch Summary
+            csv_file_path = get_path('berry.csv')
+            df = pd.read_csv(csv_file_path)
+
+            # Retrieve the summary
+            summary = get_summary(data['name'], df)
+
+            # Convert the markdown summary to HTML
+            if summary:
+                summary_html = Markup(markdown.markdown(summary))
+            else:
+                summary_html = None
+
+            return render_template("berry_detail.html", data=data, summary_html=summary_html)
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
@@ -395,10 +432,6 @@ def get_egg_group(id_or_name):
         data = fetch_all_results(url)
         return render_template("egg_groups.html", data=data)
     else:
-        # If id_or_name is provided, fetch the details for the specific egg group
-        csv_file_path = get_path('egg_group.csv')
-        df = pd.read_csv(csv_file_path)
-
         try:
             # Check if id_or_name can be converted to an integer
             id_or_name = int(id_or_name)
@@ -413,8 +446,12 @@ def get_egg_group(id_or_name):
             # Use the create_pokemon_list function with the correct key
             pokemon_list = create_pokemon_list(data)
 
-            # Retrieve the summary for the Pokémon
-            summary = get_egg_summary(data['name'], df)
+            # Fetch Summary
+            csv_file_path = get_path('egg-group.csv')
+            df = pd.read_csv(csv_file_path)
+
+            # Retrieve the summary
+            summary = get_summary(data['name'], df)
 
             # Convert the markdown summary to HTML
             if summary:
@@ -577,7 +614,24 @@ def get_item(id_or_name):
 
         try:
             data = pokedex.APIResource.fetch_data("item", id_or_name)
-            return render_template("item_detail.html", data=data)
+            print(data)
+            # Use the create_pokemon_list function with the correct key
+            pokemon_list = create_pokemon_list(data)
+
+            # Fetch Summary
+            csv_file_path = get_path('item.csv')
+            df = pd.read_csv(csv_file_path)
+
+            # Retrieve the summary
+            summary = get_summary(data['name'], df)
+
+            # Convert the markdown summary to HTML
+            if summary:
+                summary_html = Markup(markdown.markdown(summary))
+            else:
+                summary_html = None
+
+            return render_template("item_detail.html", data=data, pokemon_list=pokemon_list, summary_html=summary_html)
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
@@ -727,10 +781,26 @@ def get_move(id_or_name):
         try:
             data = pokedex.APIResource.fetch_data("move", id_or_name)
 
+            pokemon_list = create_pokemon_list(data)
+
             # Fetch additional details for the move category
             category = pokedex.APIResource.fetch_data("move-category", data["meta"]["category"]["name"])
 
-            return render_template("move_detail.html", data=data, category=category)
+            # Fetch Summary
+            csv_file_path = get_path('move.csv')
+            df = pd.read_csv(csv_file_path)
+
+            # Retrieve the summary
+            summary = get_summary(data['name'], df)
+
+            # Convert the markdown summary to HTML
+            if summary:
+                summary_html = Markup(markdown.markdown(summary))
+            else:
+                summary_html = None
+
+            return render_template("move_detail.html", data=data, category=category, pokemon_list=pokemon_list,
+                                   summary_html=summary_html)
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
@@ -936,7 +1006,7 @@ def get_pokemon_list():
 @pokemon_bp.route("/pokemon/<id_or_name>")
 @cache.cached(timeout=300)
 def get_pokemon(id_or_name):
-    csv_file_path = get_path('resources.csv')
+    csv_file_path = get_path('pokemon-species.csv')
     df = pd.read_csv(csv_file_path)
 
     try:
@@ -1056,7 +1126,7 @@ def get_pokemon(id_or_name):
             evolution_chain = pokedex.get_chain(evolution_chain_data, pokemon_name)
 
         # Retrieve the summary for the Pokémon
-        summary = get_pokemon_summary(data['name'], df)
+        summary = get_summary(data['name'], df)
 
         # Convert the markdown summary to HTML
         if summary:
@@ -1226,7 +1296,21 @@ def get_region(id_or_name):
 
         try:
             data = pokedex.APIResource.fetch_data("region", id_or_name)
-            return render_template("region_detail.html", data=data)
+
+            # Fetch Summary
+            csv_file_path = get_path('region.csv')
+            df = pd.read_csv(csv_file_path)
+
+            # Retrieve the summary
+            summary = get_summary(data['name'], df)
+
+            # Convert the markdown summary to HTML
+            if summary:
+                summary_html = Markup(markdown.markdown(summary))
+            else:
+                summary_html = None
+
+            return render_template("region_detail.html", data=data, summary_html=summary_html)
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
@@ -1274,11 +1358,25 @@ def get_type(id_or_name):
             data = pokedex.APIResource.fetch_data("type", id_or_name)
             pokemon_list = create_pokemon_list(data)
 
+            # Fetch Summary
+            csv_file_path = get_path('type.csv')
+            df = pd.read_csv(csv_file_path)
+
+            # Retrieve the summary
+            summary = get_summary(data['name'], df)
+
+            # Convert the markdown summary to HTML
+            if summary:
+                summary_html = Markup(markdown.markdown(summary))
+            else:
+                summary_html = None
+
             return render_template(
                 "type_detail.html",
                 type_effectiveness=data,
                 pokemon_list=pokemon_list,
-                type_colors=type_colors
+                type_colors=type_colors,
+                summary_html=summary_html,
             )
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -1302,7 +1400,21 @@ def get_version(id_or_name):
 
         try:
             data = pokedex.APIResource.fetch_data("version", id_or_name)
-            return render_template("version_detail.html", data=data)
+
+            # Fetch Summary
+            csv_file_path = get_path('version.csv')
+            df = pd.read_csv(csv_file_path)
+
+            # Retrieve the summary
+            summary = get_summary(data['name'], df)
+
+            # Convert the markdown summary to HTML
+            if summary:
+                summary_html = Markup(markdown.markdown(summary))
+            else:
+                summary_html = None
+
+            return render_template("version_detail.html", data=data, summary_html=summary_html)
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
@@ -1325,7 +1437,21 @@ def get_version_group(id_or_name):
 
         try:
             data = pokedex.APIResource.fetch_data("version-group", id_or_name)
-            return render_template("version_group_detail.html", data=data)
+
+            # Fetch Summary
+            csv_file_path = get_path('version-group.csv')
+            df = pd.read_csv(csv_file_path)
+
+            # Retrieve the summary
+            summary = get_summary(data['name'], df)
+
+            # Convert the markdown summary to HTML
+            if summary:
+                summary_html = Markup(markdown.markdown(summary))
+            else:
+                summary_html = None
+
+            return render_template("version_group_detail.html", data=data, summary_html=summary_html)
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
 

@@ -6,7 +6,17 @@
     <div class="container pt-5">
         <h1>{{ data.name | capitalize }} Berry</h1>
     </div>
-
+        <!-- Ai Summary -->
+    <div class="container pt-1">
+        <h2>Summary</h2>
+        <div class="row">
+            <div class="col">
+                {% if summary_html %}
+                    <p>{{ summary_html | safe }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
     <div class="container pt-5">
         <!-- Berry Attributes -->
         <div class="row">
