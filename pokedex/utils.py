@@ -7,7 +7,7 @@ resources_dict = []
 
 def get_csv_file_path():
     root_path = current_app.root_path
-    csv_file_path = os.path.join(root_path, 'static', 'resources.csv')
+    csv_file_path = os.path.join(root_path, 'static', 'ability.csv')
     return csv_file_path
 
 
