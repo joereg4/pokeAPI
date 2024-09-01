@@ -1531,7 +1531,7 @@ def webhook():
         # Restart Gunicorn to apply the changes
         try:
             result = subprocess.run(
-                ['systemctl', 'restart', 'gunicorn'],
+                ['sudo', 'systemctl', 'restart', 'gunicorn'],
                 check=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
