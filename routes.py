@@ -1481,8 +1481,6 @@ def webhook():
     secret = os.getenv('WEBHOOK_SECRET')
 
     if request.method == "POST":
-        logging.info("Webhook called - Received POST request")
-        logging.info(f"Received payload: {request.data}")
 
         # Verify the webhook secret is set
         if secret is None:
@@ -1504,11 +1502,6 @@ def webhook():
         mac = hmac.new(bytes(secret, 'utf-8'), msg=request.data, digestmod=hashlib.sha256)
         generated_signature = mac.hexdigest()
 
-        # Log both the generated and received signatures for debugging
-        logging.info(f"WEBHOOK_SECRET: {secret}")
-        logging.info(f"Generated signature: {generated_signature}")
-        logging.info(f"Signature from GitHub: {signature_from_github}")
-
         # Compare the generated signature with the one from GitHub
         if not hmac.compare_digest(generated_signature, signature_from_github):
             logging.error("Invalid signature - Signatures do not match")
@@ -1528,7 +1521,10 @@ def webhook():
             logging.error(f"Git pull failed: {e.stderr}")
             abort(500, f'Git pull failed: {str(e)}')
 
-        # Restart Gunicorn to apply the changes
+        # Log the command being run
+        logging.info("Attempting to restart Gunicorn with sudo")
+
+        # Restart Gunicorn using sudo
         try:
             result = subprocess.run(
                 ['sudo', 'systemctl', 'restart', 'gunicorn'],
@@ -1547,3 +1543,4 @@ def webhook():
     elif request.method == "GET":
         logging.info("GET request received - Returning 403 Forbidden")
         return render_template('403.html'), 403
+
