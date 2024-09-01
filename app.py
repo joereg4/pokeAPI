@@ -4,7 +4,7 @@ from routes import pokemon_bp
 import pokedex
 import logging
 
-logging.basicConfig(level=logging.WARNING)
+logging.basicConfig(level=logging.INFO)
 
 # Load environment variables
 pokedex.env.load_environment()
