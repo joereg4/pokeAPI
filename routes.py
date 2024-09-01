@@ -1504,6 +1504,7 @@ def webhook():
         generated_signature = mac.hexdigest()
 
         # Log both the generated and received signatures for debugging
+        logging.info(f"WEBHOOK_SECRET: {secret}")
         logging.info(f"Generated signature: {generated_signature}")
         logging.info(f"Signature from GitHub: {signature_from_github}")
 
