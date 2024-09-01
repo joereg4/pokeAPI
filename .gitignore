@@ -156,4 +156,4 @@ cython_debug/
 # PyCharm Files
 .idea/
 
-nohub.out
+nohup.out

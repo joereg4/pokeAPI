@@ -1516,16 +1516,33 @@ def webhook():
 
         # Proceed with your logic (e.g., pulling the latest changes)
         try:
-            subprocess.run(["git", "-C", "/var/www/pokeAPI", "pull"], check=True)
+            result = subprocess.run(
+                ["git", "-C", "/var/www/pokeAPI", "pull"],
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True
+            )
+            logging.info("Git pull output: " + result.stdout)
         except subprocess.CalledProcessError as e:
+            logging.error("Git pull failed: " + e.stderr)
             abort(500, f'Git pull failed: {str(e)}')
 
         try:
-            subprocess.run(['sudo', 'systemctl', 'restart', 'gunicorn'])
+            result = subprocess.run(
+                ['sudo', 'systemctl', 'restart', 'gunicorn'],
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True
+            )
+            logging.info("Gunicorn restart output: " + result.stdout)
         except subprocess.CalledProcessError as e:
+            logging.error("Gunicorn restart failed: " + e.stderr)
             abort(500, f'Gunicorn restart failed: {str(e)}')
 
         return 'Success', 200
 
     elif request.method == "GET":
         return render_template('403.html'), 403
+
