@@ -1476,12 +1476,6 @@ def get_endpoint_data(api_endpoint, id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-import hmac
-import hashlib
-import os
-import logging
-
-
 @pokemon_bp.route("/webhook/", methods=["POST", "GET"])
 def webhook():
     secret = os.getenv('WEBHOOK_SECRET')
@@ -1535,7 +1529,7 @@ def webhook():
         # Restart Gunicorn to apply the changes
         try:
             result = subprocess.run(
-                ['sudo', 'systemctl', 'restart', 'gunicorn'],
+                ['systemctl', 'restart', 'gunicorn'],
                 check=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
