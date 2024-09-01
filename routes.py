@@ -122,7 +122,8 @@ def create_pokemon_list(data):
             pokemon_entries = data
         else:
             # Possible keys that might contain the Pokémon species list
-            possible_keys = ["pokemon", "pokemon_species", "pokemon_entries", "pokemon_encounters", "held_by_pokemon", "learned_by_pokemon"]
+            possible_keys = ["pokemon", "pokemon_species", "pokemon_entries", "pokemon_encounters", "held_by_pokemon",
+                             "learned_by_pokemon"]
 
             # Identify the correct key by checking which one exists in the data
             key = next((k for k in possible_keys if k in data), None)
@@ -292,7 +293,7 @@ def get_ability(id_or_name):
 
 @pokemon_bp.route("/berry/", defaults={"id_or_name": None})
 @pokemon_bp.route("/berry/<id_or_name>")
-#@cache.cached(timeout=300)
+# @cache.cached(timeout=300)
 def get_berry(id_or_name):
     if id_or_name is None:
         # Fetch and display a list of all berries
@@ -614,7 +615,6 @@ def get_item(id_or_name):
 
         try:
             data = pokedex.APIResource.fetch_data("item", id_or_name)
-            print(data)
             # Use the create_pokemon_list function with the correct key
             pokemon_list = create_pokemon_list(data)
 
@@ -1136,9 +1136,6 @@ def get_pokemon(id_or_name):
 
         cards = get_pokemon_cards(data['name'])
 
-        print(f"Pokemon {data['name']} has {len(cards)} cards")
-        print(f"Card data {cards}")
-
         return render_template(
             "pokemon_detail.html",
             data=data,
@@ -1490,31 +1487,38 @@ def webhook():
     secret = os.getenv('WEBHOOK_SECRET')
 
     if request.method == "POST":
-        logging.info("Webhook called")
-        logging.info("Received POST request")
+        logging.info("Webhook called - Received POST request")
 
-        # Verify the request is from GitHub
+        # Verify the webhook secret is set
         if secret is None:
+            logging.error("Webhook secret is not configured")
             abort(500, 'Webhook secret is not configured')
 
+        # Verify the signature from GitHub
         signature = request.headers.get('X-Hub-Signature-256')
         if signature is None:
+            logging.error("No signature provided")
             abort(403, 'No signature provided')
 
         sha_name, signature_from_github = signature.split('=')
         if sha_name != 'sha256':
-            abort(501, 'Signature not supported')
+            logging.error(f"Signature type '{sha_name}' is not supported")
+            abort(501, 'Signature type not supported')
 
-        # Calculate the signature using the payload and your secret
+        # Calculate the expected signature
         mac = hmac.new(bytes(secret, 'utf-8'), msg=request.data, digestmod=hashlib.sha256)
         generated_signature = mac.hexdigest()
 
-        # Compare the two signatures
+        # Log both the generated and received signatures for debugging
+        logging.info(f"Generated signature: {generated_signature}")
+        logging.info(f"Signature from GitHub: {signature_from_github}")
+
+        # Compare the generated signature with the one from GitHub
         if not hmac.compare_digest(generated_signature, signature_from_github):
-            logging.error("Invalid signature")
+            logging.error("Invalid signature - Signatures do not match")
             abort(403, 'Invalid signature')
 
-        # Proceed with your logic (e.g., pulling the latest changes)
+        # Pull the latest changes from the repository
         try:
             result = subprocess.run(
                 ["git", "-C", "/var/www/pokeAPI", "pull"],
@@ -1525,9 +1529,10 @@ def webhook():
             )
             logging.info("Git pull output: " + result.stdout)
         except subprocess.CalledProcessError as e:
-            logging.error("Git pull failed: " + e.stderr)
+            logging.error(f"Git pull failed: {e.stderr}")
             abort(500, f'Git pull failed: {str(e)}')
 
+        # Restart Gunicorn to apply the changes
         try:
             result = subprocess.run(
                 ['sudo', 'systemctl', 'restart', 'gunicorn'],
@@ -1538,11 +1543,11 @@ def webhook():
             )
             logging.info("Gunicorn restart output: " + result.stdout)
         except subprocess.CalledProcessError as e:
-            logging.error("Gunicorn restart failed: " + e.stderr)
+            logging.error(f"Gunicorn restart failed: {e.stderr}")
             abort(500, f'Gunicorn restart failed: {str(e)}')
 
         return 'Success', 200
 
     elif request.method == "GET":
+        logging.info("GET request received - Returning 403 Forbidden")
         return render_template('403.html'), 403
-
