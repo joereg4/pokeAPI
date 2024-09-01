@@ -1,25 +1,31 @@
 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-    {% for pokemon in pokemon_list %}
+    {% if pokemon_list|length == 0 %}
         <div class="col">
-            <div class="card h-100">
-                <a href="{{ url_for('pokemon.get_pokemon', id_or_name=pokemon.name) }}">
-                    {% if pokemon.sprites and pokemon.sprites['other']['official-artwork']['front_default'] %}
-                        <img src="{{ pokemon.sprites['other']['official-artwork']['front_default'] }}"
-                             class="card-img-top" alt="{{ pokemon.name }}">
-                    {% else %}
-                        <img src="{{ url_for('static', filename='img/default_pokemon.png') }}"
-                             class="card-img-top" alt="No image available">
-                    {% endif %}
-                </a>
-                <div class="card-body">
-                    <h5 class="card-title">{{ pokemon.name | title }}</h5>
-                    {% set type_names = [] %}
-                    {% for type_entry in pokemon.types %}
-                        {% set _ = type_names.append(type_entry.type.name) %}
-                    {% endfor %}
-                    <p class="card-text">{{ pokemon.id }} - {{ type_names|join(', ') | title }}</p>
+            None
+        </div>
+    {% else %}
+        {% for pokemon in pokemon_list %}
+            <div class="col">
+                <div class="card h-100">
+                    <a href="{{ url_for('pokemon.get_pokemon', id_or_name=pokemon.name) }}">
+                        {% if pokemon.sprites and pokemon.sprites['other']['official-artwork']['front_default'] %}
+                            <img src="{{ pokemon.sprites['other']['official-artwork']['front_default'] }}"
+                                 class="card-img-top" alt="{{ pokemon.name }}">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='img/default_pokemon.png') }}"
+                                 class="card-img-top" alt="No image available">
+                        {% endif %}
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ pokemon.name | title }}</h5>
+                        {% set type_names = [] %}
+                        {% for type_entry in pokemon.types %}
+                            {% set _ = type_names.append(type_entry.type.name) %}
+                        {% endfor %}
+                        <p class="card-text">{{ pokemon.id }} - {{ type_names|join(', ') | title }}</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    {% endif %}
 </div>
