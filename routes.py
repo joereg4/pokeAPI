@@ -7,6 +7,7 @@ from pokemontcgsdk import Card
 
 from cache import cache
 import requests
+from requests.exceptions import HTTPError
 import pokedex
 import sys
 import pandas as pd
@@ -269,8 +270,9 @@ def get_ability(id_or_name):
 
         try:
             data = pokedex.APIResource.fetch_data("ability", id_or_name)
-            if not data:
-                return "No data found", 404  # Handle case where no data is returned
+
+            if "name" not in data:
+                abort(404, description=f"Ability '{id_or_name}' not found")
 
             # Use the create_pokemon_list function to get Pokémon with this ability
             pokemon_list = create_pokemon_list(data)
@@ -309,6 +311,9 @@ def get_berry(id_or_name):
         try:
             data = pokedex.APIResource.fetch_data("berry", id_or_name)
 
+            if "name" not in data:
+                abort(404, description=f"Berry '{id_or_name}' not found")
+
             # Fetch Summary
             csv_file_path = get_path('berry.csv')
             df = pd.read_csv(csv_file_path)
@@ -341,6 +346,10 @@ def get_berry_firmness(id_or_name):
         # Fetch and display details for a specific berry firmness
         try:
             data = pokedex.APIResource.fetch_data("berry-firmness", id_or_name)
+
+            if "name" not in data:
+                abort(404, description=f"Berry Firmness '{id_or_name}' not found")
+
             return render_template("berry_firmness_detail.html", data=data)
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -360,6 +369,10 @@ def get_berry_flavor(id_or_name):
         # Fetch and display details for a specific berry flavor
         try:
             data = pokedex.APIResource.fetch_data("berry-flavor", id_or_name)
+
+            if "name" not in data:
+                abort(404, description=f"Berry Flavor '{id_or_name}' not found")
+
             return render_template("berry_flavor_detail.html", data=data)
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -383,9 +396,21 @@ def get_characteristic(id_):
         # Fetch and display details for a specific characteristic
         try:
             data = pokedex.APIResource.fetch_data("characteristic", id_)
+
+            if "id" not in data:
+                abort(404, description=f"Characteristic '{id_}' not found")
+
             return render_template("characteristic_detail.html", data=data)
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
+        except HTTPError as e:
+            # If the HTTP error is 404, raise a 404 Not Found
+            if e.response.status_code == 404:
+                abort(404, description=f"Characteristic '{id_}' not found")
+            else:
+                # For other HTTP errors, you might want to log them or handle differently
+                print(f"HTTP error occurred: {e}")
+                return str(e), e.response.status_code
 
 
 @pokemon_bp.route("/contest_effect/", defaults={"id_": None})
@@ -406,6 +431,10 @@ def get_contest_effect(id_):
         # Fetch and display details for a specific contest effect
         try:
             data = pokedex.APIResource.fetch_data("contest-effect", id_)
+
+            if "id" not in data:
+                abort(404, description=f"Contest '{id_}' not found")
+
             return render_template("contest_effect_detail.html", data=data)
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -421,6 +450,10 @@ def get_contest_type(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("contest-type", id_or_name)
+
+        if "name" not in data:
+            abort(404, description=f"Contest Type '{id_or_name}' not found")
+
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -444,8 +477,9 @@ def get_egg_group(id_or_name):
 
         try:
             data = pokedex.APIResource.fetch_data("egg-group", id_or_name)
-            if not data:
-                return "No data found", 404  # Handle case where no data is returned
+
+            if "name" not in data:
+                abort(404, description=f"Egg Group '{id_or_name}' not found")
 
             # Use the create_pokemon_list function with the correct key
             pokemon_list = create_pokemon_list(data)
@@ -483,6 +517,10 @@ def get_encounter_condition(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("encounter-condition", id_or_name)
+
+        if "name" not in data:
+            abort(404, description=f"Encounter Condition '{id_or_name}' not found")
+
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -498,6 +536,10 @@ def get_encounter_condition_value(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("encounter-condition-value", id_or_name)
+
+        if "name" not in data:
+            abort(404, description=f"Encounter Condition Value '{id_or_name}' not found")
+
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -513,6 +555,10 @@ def get_encounter_method(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("encounter-method", id_or_name)
+
+        if "name" not in data:
+            abort(404, description=f"Encounter Method '{id_or_name}' not found")
+
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -523,9 +569,21 @@ def get_encounter_method(id_or_name):
 def get_evolution_chain(id_):
     try:
         data = pokedex.APIResource.fetch_data("evolution-chain", id_)
+
+        if "id" not in data:
+            abort(404, description=f"Evolution Chain '{id_}' not found")
+
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
+    except HTTPError as e:
+        # If the HTTP error is 404, raise a 404 Not Found
+        if e.response.status_code == 404:
+            abort(404, description=f"Evolution Chain '{id_}' not found")
+        else:
+            # For other HTTP errors, you might want to log them or handle differently
+            print(f"HTTP error occurred: {e}")
+            return str(e), e.response.status_code
 
 
 @pokemon_bp.route("/evolution_trigger/<id_or_name>")
@@ -538,6 +596,10 @@ def get_evolution_trigger(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("evolution-trigger", id_or_name)
+
+        if "name" not in data:
+            abort(404, description=f"Evolution Trigger '{id_or_name}' not found")
+
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -553,6 +615,10 @@ def get_gender(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("gender", id_or_name)
+
+        if "name" not in data:
+            abort(404, description=f"Gender '{id_or_name}' not found")
+
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -577,6 +643,9 @@ def get_generation(id_or_name):
         try:
             data = pokedex.APIResource.fetch_data("generation", id_or_name)
 
+            if "name" not in data:
+                abort(404, description=f"Generation '{id_or_name}' not found")
+
             # Use the create_pokemon_list function with the correct key
             pokemon_list = create_pokemon_list(data)
 
@@ -595,6 +664,10 @@ def get_growth_rate(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("growth-rate", id_or_name)
+
+        if "name" not in data:
+            abort(404, description=f"Growth Rate '{id_or_name}' not found")
+
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -618,6 +691,10 @@ def get_item(id_or_name):
 
         try:
             data = pokedex.APIResource.fetch_data("item", id_or_name)
+
+            if "name" not in data:
+                abort(404, description=f"Item '{id_or_name}' not found")
+
             # Use the create_pokemon_list function with the correct key
             pokemon_list = create_pokemon_list(data)
 
@@ -650,6 +727,10 @@ def get_item_attribute(id_or_name):
 
     try:
         data = pokedex.APIResource.fetch_data("item-attribute", id_or_name)
+
+        if "name" not in data:
+            abort(404, description=f"Item Attribute '{id_or_name}' not found")
+
         items_list = data.pop("items", [])  # Extract items to a separate variable
         return render_template("item_attribute_detail.html", data=data, items_list=items_list)
     except ValueError as e:
@@ -666,6 +747,10 @@ def get_item_category(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("item-category", id_or_name)
+
+        if "name" not in data:
+            abort(404, description=f"Item Category '{id_or_name}' not found")
+
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -681,6 +766,10 @@ def get_item_fling_effect(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("item-fling-effect", id_or_name)
+
+        if "name" not in data:
+            abort(404, description=f"Item Fling '{id_or_name}' not found")
+
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -696,6 +785,10 @@ def get_item_pocket(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("item-pocket", id_or_name)
+
+        if "name" not in data:
+            abort(404, description=f"Item Pocket '{id_or_name}' not found")
+
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -711,6 +804,10 @@ def get_language(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("language", id_or_name)
+
+        if "name" not in data:
+            abort(404, description=f"Language '{id_or_name}' not found")
+
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -734,6 +831,10 @@ def get_location(id_or_name):
 
         try:
             data = pokedex.APIResource.fetch_data("location", id_or_name)
+
+            if "name" not in data:
+                abort(404, description=f"Location '{id_or_name}' not found")
+
             return render_template("location_detail.html", data=data)
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -748,6 +849,10 @@ def get_location_area(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("location-area", id_or_name)
+
+        if "name" not in data:
+            abort(404, description=f"Location Area '{id_or_name}' not found")
+
         pokemon_list = create_pokemon_list(data)
 
         return render_template("location_area_detail.html", data=data, pokemon_list=pokemon_list)
@@ -755,14 +860,48 @@ def get_location_area(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
+import re
+
+import re
+
+
+@pokemon_bp.route("/machine/", defaults={"id_": None})
 @pokemon_bp.route("/machine/<int:id_>")
 @cache.cached(timeout=300)
 def get_machine(id_):
-    try:
-        data = pokedex.APIResource.fetch_data("machine", id_)
-        return render_template("generic.html", data=data)
-    except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
+    if not id_:
+        url = "https://pokeapi.co/api/v2/machine"
+        data = fetch_all_results(url)
+
+        # If `data` is a list, iterate over it directly
+        if isinstance(data, dict) and "results" in data:
+            machines = data['results']
+        else:
+            machines = data
+
+        # Extract the id from the URL and add it to each machine dictionary
+        for machine in machines:
+            machine['id'] = int(re.search(r'/(\d+)/$', machine['url']).group(1))
+
+        return render_template("machine.html", data=machines)
+    else:
+        try:
+            data = pokedex.APIResource.fetch_data("machine", id_)
+
+            if "id" not in data:
+                abort(404, description=f"Machine '{id_}' not found")
+
+            return render_template("generic.html", data=data)
+        except ValueError as e:
+            return str(e), 400  # Return the error message with a 400 Bad Request status
+        except HTTPError as e:
+            # If the HTTP error is 404, raise a 404 Not Found
+            if e.response.status_code == 404:
+                abort(404, description=f"Machine '{id_}' not found")
+            else:
+                # For other HTTP errors, you might want to log them or handle differently
+                print(f"HTTP error occurred: {e}")
+                return str(e), e.response.status_code
 
 
 @pokemon_bp.route("/move/", defaults={"id_or_name": None})
@@ -783,6 +922,9 @@ def get_move(id_or_name):
 
         try:
             data = pokedex.APIResource.fetch_data("move", id_or_name)
+
+            if "name" not in data:
+                abort(404, description=f"Pokemon Move '{id_or_name}' not found")
 
             pokemon_list = create_pokemon_list(data)
 
@@ -820,6 +962,10 @@ def get_move_ailment(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("move-ailment", id_or_name)
+
+        if "name" not in data:
+            abort(404, description=f"Move Ailment '{id_or_name}' not found")
+
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -835,6 +981,10 @@ def get_move_battle_style(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("move-battle-style", id_or_name)
+
+        if "name" not in data:
+            abort(404, description=f"Move Battle Style '{id_or_name}' not found")
+
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -853,6 +1003,10 @@ def get_move_category(id_or_name):
         else:
             # Fetch details for a specific move category
             category = pokedex.APIResource.fetch_data("move-category", id_or_name)
+
+            if "name" not in category:
+                abort(404, description=f"Move Category '{id_or_name}' not found")
+
             moves = []
             for move in category["moves"]:
                 move_detail = pokedex.APIResource.fetch_data("move", move["name"])
@@ -875,6 +1029,10 @@ def get_move_damage_class(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("move-damage-class", id_or_name)
+
+        if "name" not in data:
+            abort(404, description=f"Move Damage Class '{id_or_name}' not found")
+
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -898,6 +1056,10 @@ def get_move_learn_method(id_or_name):
 
         try:
             data = pokedex.APIResource.fetch_data("move-learn-method", id_or_name)
+
+            if "name" not in data:
+                abort(404, description=f"Move Learn Method '{id_or_name}' not found")
+
             return render_template("move_learn_method_detail.html", data=data)
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -913,6 +1075,10 @@ def get_move_target(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("move-target", id_or_name)
+
+        if "name" not in data:
+            abort(404, description=f"Move Target '{id_or_name}' not found")
+
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -928,6 +1094,10 @@ def get_nature(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("nature", id_or_name)
+
+        if "name" not in data:
+            abort(404, description=f"Nature '{id_or_name}' not found")
+
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -943,6 +1113,10 @@ def get_pal_park_area(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("pal-park-area", id_or_name)
+
+        if "name" not in data:
+            abort(404, description=f"Pal Park Area '{id_or_name}' not found")
+
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -958,6 +1132,10 @@ def get_pokeathlon_stat(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("pokeathlon-stat", id_or_name)
+
+        if "name" not in data:
+            abort(404, description=f"Pokeathlon '{id_or_name}' not found")
+
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -981,6 +1159,10 @@ def get_pokedex(id_or_name):
 
         try:
             data = pokedex.APIResource.fetch_data("pokedex", id_or_name)
+
+            if "name" not in data:
+                abort(404, description=f"Pokedex '{id_or_name}' not found")
+
             pokemon_list = create_pokemon_list(data)
             return render_template("pokedex_detail.html", data=data, pokemon_list=pokemon_list)
         except ValueError as e:
@@ -1167,8 +1349,9 @@ def get_pokemon_color(id_or_name):
 
         try:
             data = pokedex.APIResource.fetch_data("pokemon-color", id_or_name)
-            if not data:
-                return "No data found", 404  # Handle case where no data is returned
+
+            if "name" not in data:
+                abort(404, description=f"Pokemon color '{id_or_name}' not found")
 
             # Use the create_pokemon_list function with the correct key
             pokemon_list = create_pokemon_list(data)
@@ -1187,6 +1370,10 @@ def get_pokemon_form(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("pokemon-form", id_or_name)
+
+        if "name" not in data:
+            abort(404, description=f"Pokemon form '{id_or_name}' not found")
+
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -1210,8 +1397,9 @@ def get_pokemon_habitat(id_or_name):
 
         try:
             data = pokedex.APIResource.fetch_data("pokemon-habitat", id_or_name)
-            if not data:
-                return "No data found", 404  # Handle case where no data is returned
+
+            if "name" not in data:
+                abort(404, description=f"Pokemon habitat '{id_or_name}' not found")
 
             # Use the create_pokemon_list function with the correct key
             pokemon_list = create_pokemon_list(data)
@@ -1238,6 +1426,10 @@ def get_pokemon_shape(id_or_name):
             pass  # if the conversion fails, it remains a string
         try:
             data = pokedex.APIResource.fetch_data("pokemon-shape", id_or_name)
+
+            if "name" not in data:
+                abort(404, description=f"Pokemon shape '{id_or_name}' not found")
+
             pokemon_list = create_pokemon_list(data)
             return render_template("shape_detail.html", data=data, pokemon_list=pokemon_list)
         except ValueError as e:
@@ -1268,6 +1460,10 @@ def get_pokemon_species(id_or_name):
 
             data = pokedex.APIResource.fetch_data("pokemon-species", id_or_name,
                                                   custom={"evolution_chain": get_evolution_chain})
+
+            if "name" not in data:
+                abort(404, description=f"Pokemon species '{id_or_name}' not found")
+
             return render_template("pokemon_species_detail.html", data=data)
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -1291,6 +1487,9 @@ def get_region(id_or_name):
 
         try:
             data = pokedex.APIResource.fetch_data("region", id_or_name)
+
+            if "name" not in data:
+                abort(404, description=f"Region '{id_or_name}' not found")
 
             # Fetch Summary
             csv_file_path = get_path('region.csv')
@@ -1319,6 +1518,10 @@ def get_stat(id_or_name):
         pass  # if the conversion fails, it remains a string
     try:
         data = pokedex.APIResource.fetch_data("stat", id_or_name)
+
+        if "name" not in data:
+            abort(404, description=f"Stat '{id_or_name}' not found")
+
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
@@ -1328,9 +1531,21 @@ def get_stat(id_or_name):
 def get_super_contest_effect(id_):
     try:
         data = pokedex.APIResource.fetch_data("super-contest-effect", id_)
+
+        if "id" not in data:
+            abort(404, description=f"Super Contest Effect '{id_}' not found")
+
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
+    except HTTPError as e:
+        # If the HTTP error is 404, raise a 404 Not Found
+        if e.response.status_code == 404:
+            abort(404, description=f"Super Contest Effect '{id_}' not found")
+        else:
+            # For other HTTP errors, you might want to log them or handle differently
+            print(f"HTTP error occurred: {e}")
+            return str(e), e.response.status_code
 
 
 @pokemon_bp.route("/type/", defaults={"id_or_name": None})
@@ -1351,6 +1566,10 @@ def get_type(id_or_name):
 
         try:
             data = pokedex.APIResource.fetch_data("type", id_or_name)
+
+            if "name" not in data:
+                abort(404, description=f"Pokemon type '{id_or_name}' not found")
+
             pokemon_list = create_pokemon_list(data)
 
             # Fetch Summary
@@ -1396,6 +1615,9 @@ def get_version(id_or_name):
         try:
             data = pokedex.APIResource.fetch_data("version", id_or_name)
 
+            if "name" not in data:
+                abort(404, description=f"Version '{id_or_name}' not found")
+
             # Fetch Summary
             csv_file_path = get_path('version.csv')
             df = pd.read_csv(csv_file_path)
@@ -1432,6 +1654,8 @@ def get_version_group(id_or_name):
 
         try:
             data = pokedex.APIResource.fetch_data("version-group", id_or_name)
+            if "name" not in data:
+                abort(404, description=f"Version Group '{id_or_name}' not found")
 
             # Fetch Summary
             csv_file_path = get_path('version-group.csv')

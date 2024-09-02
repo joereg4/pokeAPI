@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Machiness{% endblock %}
+
+{% block content %}
+    <div class="container pt-5">
+        <h1>Machines</h1>
+    </div>
+    <div class="container pt-5">
+        {% for machine in data %}
+            <a href="{{ url_for('pokemon.get_machine', id_=machine.id) }}">{{ machine.id }}</a>
+        {% endfor %}
+
+    </div>
+{% endblock %}
