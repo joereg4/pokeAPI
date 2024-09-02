@@ -34,7 +34,8 @@ def create_app(test_config=None):
 
     @app.errorhandler(404)
     def not_found(e):
-        return render_template("404.html"), 404
+        message = e.description if hasattr(e, 'description') else "Page not found"
+        return render_template("404.html", message=message), 404
 
     if app.config["DEBUG_PRINT_ROUTES"]:
         for key, value in app.config.items():

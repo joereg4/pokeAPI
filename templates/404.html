@@ -6,7 +6,11 @@
 <section class="container text-center">
     <div class="px-3 py-4 px-sm-4 py-sm-5">
         <h1 class="text-warning display-2 bg-text-primary">404</h1>
+        {% if message %}
+        <p class="lead bg-text-primary">{{ message }}</p>
+        {% else %}
         <p class="lead bg-text-primary">Uh-oh! The page you're looking for doesn't exist.</p>
+        {% endif %}
         <a href="{{ url_for('pokemon.get_pokemon_list', page=1) }}" class="btn btn-primary">Go to Home</a>
     </div>
 </section>

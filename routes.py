@@ -1024,7 +1024,7 @@ def get_pokemon(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
     if not data or "name" not in data:
-        abort(404)
+        abort(404, description=f"Pokemon '{id_or_name}' not found")
 
     data = {
         "name": data['name'].title(),
