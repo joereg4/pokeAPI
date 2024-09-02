@@ -39,11 +39,6 @@ $(document).ready(function () {
     });
 
     function generateUrl(resource, name) {
-        const routes = {
-            'pokemon': `/pokemon/${name}`,
-            'berry': `/berry/${name}`,
-            // ... (other routes as defined in your original function)
-        };
-        return routes[resource] || '#';
+        return `/${resource}/${name}`;
     }
 });
