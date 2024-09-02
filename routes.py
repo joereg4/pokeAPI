@@ -1524,23 +1524,26 @@ def webhook():
         # Log the command being run
         logging.info("Attempting to restart Gunicorn with sudo")
 
-        # Restart Gunicorn using sudo
+        # Restart Gunicorn using sudo with timeout
         try:
             result = subprocess.run(
                 ['sudo', 'systemctl', 'restart', 'gunicorn'],
                 check=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                text=True
+                text=True,
+                timeout=30  # Timeout after 30 seconds
             )
-            logging.info("Gunicorn restart output: " + result.stdout)
+            logging.info(f"Gunicorn restart output: {result.stdout}")
         except subprocess.CalledProcessError as e:
-            logging.error(f"Gunicorn restart failed: {e.stderr}")
+            logging.error(f"Gunicorn restart failed with return code {e.returncode}: {e.stderr}")
             abort(500, f'Gunicorn restart failed: {str(e)}')
+        except subprocess.TimeoutExpired as e:
+            logging.error(f"Gunicorn restart timed out: {e}")
+            abort(500, 'Gunicorn restart timed out.')
 
         return 'Success', 200
 
     elif request.method == "GET":
         logging.info("GET request received - Returning 403 Forbidden")
         return render_template('403.html'), 403
-
