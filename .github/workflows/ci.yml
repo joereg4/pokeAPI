@@ -35,7 +35,6 @@ jobs:
         run: |  
           payload='{}'
           signature=$(echo -n "$payload" | openssl dgst -sha256 -hmac "${{ secrets.WEBHOOK_SECRET }}" | sed 's/^.* //')
-          echo "Generated signature: $signature"
           curl -X POST -H "Content-Type: application/json" \
             -H "X-Hub-Signature-256: sha256=$signature" \
             -d "$payload" \
