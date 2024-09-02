@@ -15,6 +15,7 @@ import hmac
 import hashlib
 import subprocess
 import os
+import re
 
 pokemon_bp = Blueprint(
     "pokemon", __name__, template_folder="templates", static_folder="static"
@@ -851,48 +852,84 @@ def get_location_area(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-import re
-
-import re
-
-
-@pokemon_bp.route("/machine/", defaults={"id_": None})
 @pokemon_bp.route("/machine/<int:id_>")
-@cache.cached(timeout=300)
 def get_machine(id_):
-    if not id_:
-        url = "https://pokeapi.co/api/v2/machine"
-        data = fetch_all_results(url)
+    try:
+        # Fetch machine data
+        machine_data = pokedex.APIResource.fetch_data("machine", id_)
 
-        # If `data` is a list, iterate over it directly
-        if isinstance(data, dict) and "results" in data:
-            machines = data['results']
+        # Fetch related data: item, move, and version group
+        item_data = pokedex.APIResource.fetch_data("item", machine_data['item']['name'])
+        move_data = pokedex.APIResource.fetch_data("move", machine_data['move']['name'])
+        version_group_data = pokedex.APIResource.fetch_data("version-group", machine_data['version_group']['name'])
+
+        # Handle cases where any of the data is missing or invalid
+        if not all([item_data, move_data, version_group_data]):
+            abort(404, description=f"Machine '{id_}' not found or incomplete data.")
+
+        return render_template(
+            "machine_detail.html",
+            machine_data=machine_data,
+            item_data=item_data,
+            move_data=move_data,
+            version_group_data=version_group_data
+        )
+    except (ValueError, HTTPError) as e:
+        # Handle HTTP errors or other exceptions
+        if isinstance(e, HTTPError) and e.response.status_code == 404:
+            abort(404, description=f"Machine '{id_}' not found")
         else:
-            machines = data
+            print(f"Error occurred: {e}")
+            return str(e), 500  # Internal Server Error for other issues
 
-        # Extract the id from the URL and add it to each machine dictionary
-        for machine in machines:
-            machine['id'] = int(re.search(r'/(\d+)/$', machine['url']).group(1))
 
-        return render_template("machine.html", data=machines)
-    else:
-        try:
-            data = pokedex.APIResource.fetch_data("machine", id_)
+@pokemon_bp.route("/machine/page/<int:page>")
+@pokemon_bp.route("/machine/", defaults={"page": 1})
+def get_machines(page=1):
+    try:
+        per_page = 20  # Number of machines to display per page
+        offset = (page - 1) * per_page
+        url = f"https://pokeapi.co/api/v2/machine?offset={offset}&limit={per_page}"
 
-            if "id" not in data:
-                abort(404, description=f"Machine '{id_}' not found")
+        response = requests.get(url)
+        if response.status_code != 200:
+            abort(500, description="Failed to fetch machine data from the API")
 
-            return render_template("generic.html", data=data)
-        except ValueError as e:
-            return str(e), 400  # Return the error message with a 400 Bad Request status
-        except HTTPError as e:
-            # If the HTTP error is 404, raise a 404 Not Found
-            if e.response.status_code == 404:
-                abort(404, description=f"Machine '{id_}' not found")
-            else:
-                # For other HTTP errors, you might want to log them or handle differently
-                print(f"HTTP error occurred: {e}")
-                return str(e), e.response.status_code
+        data = response.json()
+
+        complete_machines = []
+
+        # Process the results and extract the ID for each machine
+        for machine in data['results']:
+            machine_id = int(re.search(r'/(\d+)/$', machine['url']).group(1))
+            machine_data = pokedex.APIResource.fetch_data("machine", machine_id)
+
+            # Fetch related data: item, move, and version group
+            item_data = pokedex.APIResource.fetch_data("item", machine_data['item']['name'])
+            move_data = pokedex.APIResource.fetch_data("move", machine_data['move']['name'])
+            version_group_data = pokedex.APIResource.fetch_data("version-group", machine_data['version_group']['name'])
+
+            # Combine details into a single dictionary
+            machine_detail = {
+                'id': machine_id,
+                'item': item_data,
+                'move': move_data,
+                'version_group': version_group_data
+            }
+
+            complete_machines.append(machine_detail)
+
+        total_count = data['count']
+        total_pages = (total_count + per_page - 1) // per_page
+
+        return render_template("machine.html", data=complete_machines, page=page, total_pages=total_pages)
+    except (ValueError, HTTPError) as e:
+        # Handle HTTP errors or other exceptions
+        if isinstance(e, HTTPError) and e.response.status_code == 404:
+            abort(404, description=f"Machine '{id_}' not found")
+        else:
+            print(f"Error occurred: {e}")
+            return str(e), 500  # Internal Server Error for other issues
 
 
 @pokemon_bp.route("/move/", defaults={"id_or_name": None})

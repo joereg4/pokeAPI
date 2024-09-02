@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1>Machine Details (ID: {{ machine_data.id }})</h1>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2>Item: <a href="{{ url_for('pokemon.get_item', id_or_name=item_data.name) }}">{{ item_data.name.title() }}</a></h2>
+            </div>
+            <div class="card-body">
+                {% if item_data.effect_entries and item_data.effect_entries|length > 0 %}
+                    <p><strong>Description:</strong> {{ item_data.effect_entries[0].short_effect }}</p>
+                {% else %}
+                    <p><strong>Description:</strong> No description available.</p>
+                {% endif %}
+                <p><strong>Category:</strong> {{ item_data.category.name.title() }}</p>
+                <p><strong>Cost:</strong> {{ item_data.cost }} PokéDollars</p>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2>Move: <a href="{{ url_for('pokemon.get_move', id_or_name=move_data.name) }}">{{ move_data.name.title() }}</a></h2>
+            </div>
+            <div class="card-body">
+                <p><strong>Type:</strong> {{ move_data.type.name.title() }}</p>
+                <p><strong>Power:</strong> {{ move_data.power }}</p>
+                <p><strong>Accuracy:</strong> {{ move_data.accuracy }}%</p>
+                <p><strong>PP:</strong> {{ move_data.pp }}</p>
+                {% if move_data.effect_entries and move_data.effect_entries|length > 0 %}
+                    <p><strong>Description:</strong> {{ move_data.effect_entries[0].short_effect }}</p>
+                {% else %}
+                    <p><strong>Description:</strong> No description available.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2>Version Group: <a href="{{ url_for('pokemon.get_version_group', id_or_name=version_group_data.name) }}">{{ version_group_data.name.title() }}</a></h2>
+            </div>
+            <div class="card-body">
+                <p><strong>Introduced in Generation:</strong> {{ version_group_data.generation.name.title() }}</p>
+                <p><strong>Versions:</strong>
+                    {% for version in version_group_data.versions %}
+                        <span>{{ version.name.title() }}{% if not loop.last %}, {% endif %}</span>
+                    {% endfor %}
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
