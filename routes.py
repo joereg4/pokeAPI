@@ -786,8 +786,13 @@ def get_move(id_or_name):
 
             pokemon_list = create_pokemon_list(data)
 
-            # Fetch additional details for the move category
-            category = pokedex.APIResource.fetch_data("move-category", data["meta"]["category"]["name"])
+            # Check if the category data exists and is not None
+            category = None
+            if data.get("meta") and data["meta"].get("category"):
+                category_name = data["meta"]["category"]["name"]
+                category = pokedex.APIResource.fetch_data("move-category", category_name)
+            else:
+                print(f"Warning: No category found for move {data['name']}")
 
             # Fetch Summary
             csv_file_path = get_path('move.csv')
@@ -797,10 +802,7 @@ def get_move(id_or_name):
             summary = get_summary(data['name'], df)
 
             # Convert the markdown summary to HTML
-            if summary:
-                summary_html = Markup(markdown.markdown(summary))
-            else:
-                summary_html = None
+            summary_html = Markup(markdown.markdown(summary)) if summary else None
 
             return render_template("move_detail.html", data=data, category=category, pokemon_list=pokemon_list,
                                    summary_html=summary_html)
@@ -1017,145 +1019,134 @@ def get_pokemon(id_or_name):
         pass  # if the conversion fails, it remains a string
 
     try:
-        def get_location_area_encounters(val):
-            params = val.split("/")[-3:]
-            params[1] = int(params[1])
-            print(f"Encounters Parms: {params}")
-            return params
-
-        data = pokedex.APIResource.fetch_data("pokemon", id_or_name, )
-
+        data = pokedex.APIResource.fetch_data("pokemon", id_or_name)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
-    if data is not None:
-        data = {
-            "name": data['name'].title(),
-            "id": data["id"],
-            "sprites": data["sprites"],
-            "species": data["species"],
-            "base_experience": data["base_experience"],
-            "height": data["height"],
-            "weight": data["weight"],
-            "is_default": data["is_default"],
-            "order": data["order"],
-            "abilities": data.get("abilities", []),
-            "moves": data.get("moves", []),
-            "held_items": data.get("held_items", []),
-            "types": data.get("types", []),
-            "stats": data.get("stats", []),
+    if not data or "name" not in data:
+        abort(404)
+
+    data = {
+        "name": data['name'].title(),
+        "id": data["id"],
+        "sprites": data["sprites"],
+        "species": data["species"],
+        "base_experience": data["base_experience"],
+        "height": data["height"],
+        "weight": data["weight"],
+        "is_default": data["is_default"],
+        "order": data["order"],
+        "abilities": data.get("abilities", []),
+        "moves": data.get("moves", []),
+        "held_items": data.get("held_items", []),
+        "types": data.get("types", []),
+        "stats": data.get("stats", []),
+    }
+
+    # Categorize moves by how they're learned
+    move_categories = {
+        "level_up": [],
+        "tm_hm": [],
+        "breeding": [],
+        "tutor": [],
+        "other": [],
+    }
+
+    for move_detail in data.get("moves", []):
+        move_learned_method = move_detail["version_group_details"][0]["move_learn_method"]["name"]
+        move_data = {
+            "name": move_detail["move"]["name"].replace("-", " ").title(),
+            "url": url_for("pokemon.get_move", id_or_name=move_detail["move"]["name"]),
+            "level_learned_at": move_detail["version_group_details"][0]["level_learned_at"]
         }
 
-        # Categorize moves by how they're learned
-        move_categories = {
-            "level_up": [],
-            "tm_hm": [],
-            "breeding": [],
-            "tutor": [],
-            "other": [],
-        }
-
-        for move_detail in data.get("moves", []):
-            move_learned_method = move_detail["version_group_details"][0]["move_learn_method"]["name"]
-            move_data = {
-                "name": move_detail["move"]["name"].replace("-", " ").title(),
-                "url": url_for("pokemon.get_move", id_or_name=move_detail["move"]["name"]),
-                "level_learned_at": move_detail["version_group_details"][0]["level_learned_at"]
-            }
-
-            if move_learned_method == "level-up":
-                move_categories["level_up"].append(move_data)
-            elif move_learned_method == "machine":
-                move_categories["tm_hm"].append(move_data)
-            elif move_learned_method == "egg":
-                move_categories["breeding"].append(move_data)
-            elif move_learned_method == "tutor":
-                move_categories["tutor"].append(move_data)
-            else:
-                move_categories["other"].append(move_data)
-
-        # Fetch and process type effectiveness
-        type_effectiveness = {}
-        for type_info in data["types"]:
-            type_name = type_info["type"]["name"]
-            type_data = pokedex.APIResource.fetch_data("type", type_name)
-            damage_relations = type_data.get("damage_relations", {})
-            type_effectiveness[type_name] = {
-                "color": type_colors.get(type_name, "#FFFFFF"),  # Add color for the type
-                "double_damage_to": [{"name": rel["name"], "color": type_colors.get(rel["name"], "#FFFFFF")} for rel in
-                                     damage_relations.get("double_damage_to", [])],
-                "half_damage_to": [{"name": rel["name"], "color": type_colors.get(rel["name"], "#FFFFFF")} for rel in
-                                   damage_relations.get("half_damage_to", [])],
-                "no_damage_to": [{"name": rel["name"], "color": type_colors.get(rel["name"], "#FFFFFF")} for rel in
-                                 damage_relations.get("no_damage_to", [])],
-                "double_damage_from": [{"name": rel["name"], "color": type_colors.get(rel["name"], "#FFFFFF")} for rel
-                                       in damage_relations.get("double_damage_from", [])],
-                "half_damage_from": [{"name": rel["name"], "color": type_colors.get(rel["name"], "#FFFFFF")} for rel in
-                                     damage_relations.get("half_damage_from", [])],
-                "no_damage_from": [{"name": rel["name"], "color": type_colors.get(rel["name"], "#FFFFFF")} for rel in
-                                   damage_relations.get("no_damage_from", [])],
-            }
-
-        # Try to fetch species data, but continue without it if it fails
-        species_data = None
-        try:
-            species_data = pokedex.pokemon_species(data["id"])
-        except requests.exceptions.HTTPError:
-            print(f"Warning: No species data found for Pokémon {data['name']}")
-
-        # Get the sprite data and filter out null values and unwanted sprites
-        sprites = {
-            key: value
-            for key, value in data["sprites"].items()
-            if value is not None and key in valid_sprites
-        }
-
-        # Sort the sprites based on the desired order
-        sorted_sprites = {key: sprites[key] for key in valid_sprites if key in sprites}
-
-        # Initialize evolution_chain to None
-        evolution_chain = None
-
-        if species_data:
-            # Build Evolution Chain only if species data is available
-            evolution_id = pokedex.get_species_id_from_url(species_data['evolution_chain']['url'])
-
-            # Using evolution_id get the chain
-            evolution_chain_data = pokedex.evolution_chain(evolution_id)
-            pokemon_name = evolution_chain_data["chain"]["species"]["name"]
-
-            # logging.info(f"name being fed to chain: {pokemon_name}")
-            evolution_chain = pokedex.get_chain(evolution_chain_data, pokemon_name)
-
-        # Retrieve the summary for the Pokémon
-        summary = get_summary(data['name'], df)
-
-        # Convert the markdown summary to HTML
-        if summary:
-            summary_html = Markup(markdown.markdown(summary))
+        if move_learned_method == "level-up":
+            move_categories["level_up"].append(move_data)
+        elif move_learned_method == "machine":
+            move_categories["tm_hm"].append(move_data)
+        elif move_learned_method == "egg":
+            move_categories["breeding"].append(move_data)
+        elif move_learned_method == "tutor":
+            move_categories["tutor"].append(move_data)
         else:
-            summary_html = None
+            move_categories["other"].append(move_data)
 
-        try:
-            cards = get_pokemon_cards(data['name'])
-        except Exception as e:
-            # Log the exception and proceed with an empty list
-            print(f"Error fetching cards for {data['name']}: {e}")
-            cards = []
+    # Fetch and process type effectiveness
+    type_effectiveness = {}
+    for type_info in data["types"]:
+        type_name = type_info["type"]["name"]
+        type_data = pokedex.APIResource.fetch_data("type", type_name)
+        damage_relations = type_data.get("damage_relations", {})
+        type_effectiveness[type_name] = {
+            "color": type_colors.get(type_name, "#FFFFFF"),  # Add color for the type
+            "double_damage_to": [{"name": rel["name"], "color": type_colors.get(rel["name"], "#FFFFFF")} for rel in
+                                 damage_relations.get("double_damage_to", [])],
+            "half_damage_to": [{"name": rel["name"], "color": type_colors.get(rel["name"], "#FFFFFF")} for rel in
+                               damage_relations.get("half_damage_to", [])],
+            "no_damage_to": [{"name": rel["name"], "color": type_colors.get(rel["name"], "#FFFFFF")} for rel in
+                             damage_relations.get("no_damage_to", [])],
+            "double_damage_from": [{"name": rel["name"], "color": type_colors.get(rel["name"], "#FFFFFF")} for rel
+                                   in damage_relations.get("double_damage_from", [])],
+            "half_damage_from": [{"name": rel["name"], "color": type_colors.get(rel["name"], "#FFFFFF")} for rel in
+                                 damage_relations.get("half_damage_from", [])],
+            "no_damage_from": [{"name": rel["name"], "color": type_colors.get(rel["name"], "#FFFFFF")} for rel in
+                               damage_relations.get("no_damage_from", [])],
+        }
 
-        return render_template(
-            "pokemon_detail.html",
-            data=data,
-            species_data=species_data,
-            sorted_sprites=sorted_sprites,
-            evolution_chain=evolution_chain,
-            type_effectiveness=type_effectiveness,
-            move_categories=move_categories,
-            summary_html=summary_html,
-            cards=cards,
-        )
-    else:
-        return "Pokemon not found", 404
+    # Try to fetch species data, but continue without it if it fails
+    species_data = None
+    try:
+        species_data = pokedex.pokemon_species(data["id"])
+    except requests.exceptions.HTTPError:
+        print(f"Warning: No species data found for Pokémon {data['name']}")
+
+    # Get the sprite data and filter out null values and unwanted sprites
+    sprites = {
+        key: value
+        for key, value in data["sprites"].items()
+        if value is not None and key in valid_sprites
+    }
+
+    # Sort the sprites based on the desired order
+    sorted_sprites = {key: sprites[key] for key in valid_sprites if key in sprites}
+
+    # Initialize evolution_chain to None
+    evolution_chain = None
+
+    if species_data:
+        # Build Evolution Chain only if species data is available
+        evolution_id = pokedex.get_species_id_from_url(species_data['evolution_chain']['url'])
+
+        # Using evolution_id get the chain
+        evolution_chain_data = pokedex.evolution_chain(evolution_id)
+        pokemon_name = evolution_chain_data["chain"]["species"]["name"]
+
+        evolution_chain = pokedex.get_chain(evolution_chain_data, pokemon_name)
+
+    # Retrieve the summary for the Pokémon
+    summary = get_summary(data['name'], df)
+
+    # Convert the markdown summary to HTML
+    summary_html = Markup(markdown.markdown(summary)) if summary else None
+
+    try:
+        cards = get_pokemon_cards(data['name'])
+    except Exception as e:
+        # Log the exception and proceed with an empty list
+        print(f"Error fetching cards for {data['name']}: {e}")
+        cards = []
+
+    return render_template(
+        "pokemon_detail.html",
+        data=data,
+        species_data=species_data,
+        sorted_sprites=sorted_sprites,
+        evolution_chain=evolution_chain,
+        type_effectiveness=type_effectiveness,
+        move_categories=move_categories,
+        summary_html=summary_html,
+        cards=cards,
+    )
 
 
 @pokemon_bp.route("/pokemon_color/", defaults={"id_or_name": None})
