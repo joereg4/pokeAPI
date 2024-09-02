@@ -1,5 +1,6 @@
 import csv
 import os
+import glob
 from flask import current_app
 
 resources_dict = []
@@ -7,7 +8,7 @@ resources_dict = []
 
 def get_csv_file_path():
     root_path = current_app.root_path
-    csv_file_path = os.path.join(root_path, 'static', 'ability.csv')
+    csv_file_path = os.path.join(root_path, 'static', 'resources.csv')
     return csv_file_path
 
 
