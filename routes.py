@@ -145,11 +145,11 @@ def create_pokemon_list(data):
                 pokemon_name = pokemon_entry["name"] if "name" in pokemon_entry else pokemon_entry.get("pokemon",
                                                                                                        {}).get("name")
             else:
-                print(f"Warning: Invalid Pokémon entry structure: {pokemon_entry}")
+                print(f"Warning: Invalid Pokémon entry structure under key '{key}': {pokemon_entry}")
                 continue
 
             if not pokemon_name:
-                print(f"Warning: Could not find Pokémon name in entry: {pokemon_entry}")
+                print(f"Warning: Could not find Pokémon name in entry under key '{key}': {pokemon_entry}")
                 continue
 
             # Fetch the Pokémon data
@@ -174,13 +174,13 @@ def create_pokemon_list(data):
             if "sprites" in pokemon:
                 pokemon_list.append(pokemon)
             else:
-                print(f"Warning: No sprites found for Pokémon {pokemon_name}")
+                print(f"Warning: No sprites found for Pokémon '{pokemon_name}' under key '{key}'")
 
         pokemon_list.sort(key=lambda x: x.get("id", float("inf")))
 
         return pokemon_list
     except ValueError as e:
-        print(f"Error fetching Pokémon data: {e}")
+        print(f"Error fetching Pokémon data under key '{key}': {e}")
         return []
 
 
