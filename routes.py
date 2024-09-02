@@ -60,20 +60,11 @@ type_colors = {
 
 
 def get_path(filename):
-    csv_url = url_for('static', filename=filename)
+    csv_url = url_for('static', filename=f'resources/{filename}')
 
     csv_path = os.path.join(current_app.root_path, csv_url.lstrip('/'))
 
     return csv_path
-
-
-def get_pokemon_summary(pokemon_name, df):
-    row = df[(df['resource'] == 'pokemon-species') & (df['name'].str.lower() == pokemon_name.lower())]
-
-    if not row.empty:
-        return row.iloc[0]['summary']
-    else:
-        return None
 
 
 def get_egg_summary(name, df):
@@ -1192,7 +1183,7 @@ def get_pokemon_list():
 @pokemon_bp.route("/pokemon/<id_or_name>")
 @cache.cached(timeout=300)
 def get_pokemon(id_or_name):
-    csv_file_path = get_path('pokemon-species.csv')
+    csv_file_path = get_path('pokemon.csv')
     df = pd.read_csv(csv_file_path)
 
     try:
