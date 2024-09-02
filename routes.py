@@ -95,6 +95,7 @@ def get_summary(name, df):
 
 def get_pokemon_cards(pokemon_name):
     try:
+        # Attempt to fetch the cards using the API
         data = Card.where(q='name:{}'.format(pokemon_name))
 
         card_list = []
@@ -110,8 +111,10 @@ def get_pokemon_cards(pokemon_name):
 
         return card_list
 
-    except ValueError as e:
-        print(f"Error fetching Pokémon cards: {e}")
+    except Exception as e:
+        # Log the exception for debugging purposes
+        print(f"Error fetching Pokémon cards for {pokemon_name}: {e}")
+        # Return an empty list to indicate no cards were found due to the error
         return []
 
 
@@ -1000,7 +1003,6 @@ def get_pokemon_list():
         pokemon_list.append(pokemon)
 
     return render_template('pokemon_list.html', pokemon_list=pokemon_list, current_page=page)
-    cache.set(cache_key, rendered_template, timeout=300)
 
 
 @pokemon_bp.route("/pokemon/<id_or_name>")
@@ -1134,7 +1136,12 @@ def get_pokemon(id_or_name):
         else:
             summary_html = None
 
-        cards = get_pokemon_cards(data['name'])
+        try:
+            cards = get_pokemon_cards(data['name'])
+        except Exception as e:
+            # Log the exception and proceed with an empty list
+            print(f"Error fetching cards for {data['name']}: {e}")
+            cards = []
 
         return render_template(
             "pokemon_detail.html",
