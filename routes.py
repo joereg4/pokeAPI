@@ -106,7 +106,7 @@ def get_pokemon_cards(pokemon_name):
 
     except Exception as e:
         # Log the exception for debugging purposes
-        print(f"Error fetching Pokémon cards for {pokemon_name}: {e}")
+        logging.info(f"Error fetching Pokémon cards for {pokemon_name}: {e}")
         # Return an empty list to indicate no cards were found due to the error
         return []
 
@@ -141,11 +141,11 @@ def create_pokemon_list(data):
                 pokemon_name = pokemon_entry["name"] if "name" in pokemon_entry else pokemon_entry.get("pokemon",
                                                                                                        {}).get("name")
             else:
-                print(f"Warning: Invalid Pokémon entry structure under key '{key}': {pokemon_entry}")
+                logging.info(f"Warning: Invalid Pokémon entry structure under key '{key}': {pokemon_entry}")
                 continue
 
             if not pokemon_name:
-                print(f"Warning: Could not find Pokémon name in entry under key '{key}': {pokemon_entry}")
+                logging.info(f"Warning: Could not find Pokémon name in entry under key '{key}': {pokemon_entry}")
                 continue
 
             # Fetch the Pokémon data
@@ -170,13 +170,13 @@ def create_pokemon_list(data):
             if "sprites" in pokemon:
                 pokemon_list.append(pokemon)
             else:
-                print(f"Warning: No sprites found for Pokémon '{pokemon_name}' under key '{key}'")
+                logging.info(f"Warning: No sprites found for Pokémon '{pokemon_name}' under key '{key}'")
 
         pokemon_list.sort(key=lambda x: x.get("id", float("inf")))
 
         return pokemon_list
     except ValueError as e:
-        print(f"Error fetching Pokémon data under key '{key}': {e}")
+        logging.info(f"Error fetching Pokémon data under key '{key}': {e}")
         return []
 
 
@@ -401,7 +401,7 @@ def get_characteristic(id_):
                 abort(404, description=f"Characteristic '{id_}' not found")
             else:
                 # For other HTTP errors, you might want to log them or handle differently
-                print(f"HTTP error occurred: {e}")
+                logging.warning(f"HTTP error occurred: {e}")
                 return str(e), e.response.status_code
 
 
@@ -574,7 +574,7 @@ def get_evolution_chain(id_):
             abort(404, description=f"Evolution Chain '{id_}' not found")
         else:
             # For other HTTP errors, you might want to log them or handle differently
-            print(f"HTTP error occurred: {e}")
+            logging.warning(f"HTTP error occurred: {e}")
             return str(e), e.response.status_code
 
 
@@ -885,7 +885,7 @@ def get_machine(id_):
         if isinstance(e, HTTPError) and e.response.status_code == 404:
             abort(404, description=f"Machine '{id_}' not found")
         else:
-            print(f"Error occurred: {e}")
+            logging.warning(f"Error occurred: {e}")
             return str(e), 500  # Internal Server Error for other issues
 
 
@@ -934,7 +934,7 @@ def get_machines(page=1):
         if isinstance(e, HTTPError) and e.response.status_code == 404:
             abort(404, description=f"Machine '{id_}' not found")
         else:
-            print(f"Error occurred: {e}")
+            logging.warning(f"Error occurred: {e}")
             return str(e), 500  # Internal Server Error for other issues
 
 
@@ -968,7 +968,7 @@ def get_move(id_or_name):
                 category_name = data["meta"]["category"]["name"]
                 category = pokedex.APIResource.fetch_data("move-category", category_name)
             else:
-                print(f"Warning: No category found for move {data['name']}")
+                logging.info(f"Warning: No category found for move {data['name']}")
 
             # Fetch Summary
             csv_file_path = get_path('move.csv')
@@ -1314,7 +1314,7 @@ def get_pokemon(id_or_name):
     try:
         species_data = pokedex.pokemon_species(data["id"])
     except requests.exceptions.HTTPError:
-        print(f"Warning: No species data found for Pokémon {data['name']}")
+        logging.info(f"No species data found for Pokémon {data['name']}")
 
     # Get the sprite data and filter out null values and unwanted sprites
     sprites = {
@@ -1349,7 +1349,7 @@ def get_pokemon(id_or_name):
         cards = get_pokemon_cards(data['name'])
     except Exception as e:
         # Log the exception and proceed with an empty list
-        print(f"Error fetching cards for {data['name']}: {e}")
+        logging.warning(f"Error fetching cards for {data['name']}: {e}")
         cards = []
 
     return render_template(
@@ -1578,7 +1578,7 @@ def get_super_contest_effect(id_):
             abort(404, description=f"Super Contest Effect '{id_}' not found")
         else:
             # For other HTTP errors, you might want to log them or handle differently
-            print(f"HTTP error occurred: {e}")
+            logging.warning(f"HTTP error occurred: {e}")
             return str(e), e.response.status_code
 
 
