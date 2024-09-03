@@ -1,44 +1,62 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ data.names[0].name }} - Pokémon Location{% endblock %}
+{% block title %}
+    {% if data.names and data.names|length > 0 %}
+        {{ data.names[0].name }} - Pokémon Location
+    {% else %}
+        Pokémon Location Details
+    {% endif %}
+{% endblock %}
 
 {% block content %}
     <div class="detail-section">
-        <h1 class="detail-card__title">{{ data.names[0].name }}</h1>
+        <h1 class="detail-card__title">
+            {% if data.names and data.names|length > 0 %}
+                {{ data.names[0].name }}
+            {% else %}
+                Location Details
+            {% endif %}
+        </h1>
         <div class="detail-grid">
 
             <!-- Region Section -->
-            <div class="detail-card__info-section">
-                <h2 class="detail-card__title">Region</h2>
-                <p>
-                    <a href="{{ url_for('pokemon.get_region', id_or_name=data.region.name) }}">{{ data.region.name | title }}</a>
-                </p>
-            </div>
+            {% if data.region %}
+                <div class="detail-card__info-section">
+                    <h2 class="detail-card__title">Region</h2>
+                    <p>
+                        <a href="{{ url_for('pokemon.get_region', id_or_name=data.region.name) }}">{{ data.region.name | title }}</a>
+                    </p>
+                </div>
+            {% endif %}
 
             <!-- Game Indices Section -->
-            <div class="detail-card__info-section">
-                <h2 class="detail-card__title">Game Indices</h2>
-                <ul class="detail-card__list">
-                    {% for game_index in data.game_indices %}
-                        <li>
-                            Generation: <a href="{{ url_for('pokemon.get_generation', id_or_name=game_index.generation.name) }}">{{ game_index.generation.name | title }}</a> 
-                            - Index: {{ game_index.game_index }}
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
+            {% if data.game_indices and data.game_indices|length > 0 %}
+                <div class="detail-card__info-section">
+                    <h2 class="detail-card__title">Game Indices</h2>
+                    <ul class="detail-card__list">
+                        {% for game_index in data.game_indices %}
+                            <li>
+                                Generation: <a href="{{ url_for('pokemon.get_generation', id_or_name=game_index.generation.name) }}">{{ game_index.generation.name | title }}</a>
+                                - Index: {{ game_index.game_index }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
 
             <!-- Areas Section -->
-            <div class="detail-card__info-section">
-                <h2 class="detail-card__title">Areas</h2>
-                <ul class="detail-card__list">
-                    {% for area in data.areas %}
-                        <li>
-                            <a href="{{ url_for('pokemon.get_location_area', id_or_name=area.name) }}">{{ area.name | replace("-", " ") | title }}</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
+            {% if data.areas and data.areas|length > 0 %}
+                <div class="detail-card__info-section">
+                    <h2 class="detail-card__title">Areas</h2>
+                    <ul class="detail-card__list">
+                        {% for area in data.areas %}
+                            <li>
+                                <a href="{{ url_for('pokemon.get_location_area', id_or_name=area.name) }}">{{ area.name | replace("-", " ") | title }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
