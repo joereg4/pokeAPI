@@ -824,12 +824,18 @@ def get_location(id_or_name):
         try:
             data = pokedex.APIResource.fetch_data("location", id_or_name)
 
-            if "name" not in data:
+            if not data or "name" not in data:
                 abort(404, description=f"Location '{id_or_name}' not found")
 
             return render_template("location_detail.html", data=data)
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
+        except HTTPError as e:
+            if e.response.status_code == 404:
+                abort(404, description=f"Location '{id_or_name}' not found")
+            else:
+                return str(e), 500  # Internal Server Error for other issues
+
 
 
 @pokemon_bp.route("/location_area/<id_or_name>")
