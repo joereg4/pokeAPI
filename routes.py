@@ -119,7 +119,7 @@ def create_pokemon_list(data):
         else:
             # Possible keys that might contain the Pokémon species list
             possible_keys = ["pokemon", "pokemon_species", "pokemon_entries", "pokemon_encounters", "held_by_pokemon",
-                             "learned_by_pokemon"]
+                             "learned_by_pokemon", "varieties"]
 
             # Identify the correct key by checking which one exists in the data
             key = next((k for k in possible_keys if k in data), None)
@@ -170,7 +170,7 @@ def create_pokemon_list(data):
             if "sprites" in pokemon:
                 pokemon_list.append(pokemon)
             else:
-                logging.info(f"Warning: No sprites found for Pokémon '{pokemon_name}' under key '{key}'")
+                logging.info(f"No sprites found for Pokémon '{pokemon_name}' under key '{key}'")
 
         pokemon_list.sort(key=lambda x: x.get("id", float("inf")))
 
@@ -837,7 +837,6 @@ def get_location(id_or_name):
                 return str(e), 500  # Internal Server Error for other issues
 
 
-
 @pokemon_bp.route("/location_area/<id_or_name>")
 @cache.cached(timeout=300)
 def get_location_area(id_or_name):
@@ -932,7 +931,7 @@ def get_machines(page=1):
     except (ValueError, HTTPError) as e:
         # Handle HTTP errors or other exceptions
         if isinstance(e, HTTPError) and e.response.status_code == 404:
-            abort(404, description=f"Machine '{id_}' not found")
+            abort(404, description=f"Machine endpoint failed")
         else:
             logging.warning(f"Error occurred: {e}")
             return str(e), 500  # Internal Server Error for other issues
@@ -968,7 +967,7 @@ def get_move(id_or_name):
                 category_name = data["meta"]["category"]["name"]
                 category = pokedex.APIResource.fetch_data("move-category", category_name)
             else:
-                logging.info(f"Warning: No category found for move {data['name']}")
+                logging.info(f"No category found for move {data['name']}")
 
             # Fetch Summary
             csv_file_path = get_path('move.csv')
@@ -1495,10 +1494,13 @@ def get_pokemon_species(id_or_name):
             data = pokedex.APIResource.fetch_data("pokemon-species", id_or_name,
                                                   custom={"evolution_chain": get_evolution_chain})
 
+            # Use the create_pokemon_list function with the correct key
+            pokemon_list = create_pokemon_list(data)
+
             if "name" not in data:
                 abort(404, description=f"Pokemon species '{id_or_name}' not found")
 
-            return render_template("pokemon_species_detail.html", data=data)
+            return render_template("pokemon_species_detail.html", data=data, pokemon_list=pokemon_list)
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
 

@@ -1,5 +1,5 @@
-name,summary
-monster,"The **Monster Egg Group** is one of the diverse classifications in the Pokémon world, comprising species known for their large, imposing, and often reptilian or dinosaur-like physiques. This Egg Group stands out for its versatility and the powerful, high-stat Pokémon it contains, making it a central focus in competitive battling and breeding.
+resource,name,summary
+egg-group,monster,"The **Monster Egg Group** is one of the diverse classifications in the Pokémon world, comprising species known for their large, imposing, and often reptilian or dinosaur-like physiques. This Egg Group stands out for its versatility and the powerful, high-stat Pokémon it contains, making it a central focus in competitive battling and breeding.
 
 **General Description:**  
 The Monster Egg Group encompasses Pokémon that are generally large and have fearsome, monster-like appearances. These creatures are reminiscent of mythical beings or prehistoric animals, exuding a sense of raw power and strength. Pokémon in this group typically exhibit high base stats in areas such as Attack and Defense, which contributes to their dominance in battles. This group is notably extensive, featuring numerous species that breeders and trainers seek out for their formidable attributes and abilities.
@@ -41,7 +41,7 @@ The Monster Egg Group can transfer several critical Egg Moves that contribute si
 The Monster Egg Group includes several pseudo-legendary Pokémon, distinguished by their exceptionally high base stats and significant roles in battles. Many species in this group are inspired by dinosaurs or ancient mythical creatures, enhancing their “monster” appearance. The variety seen across the Monster Egg Group spans multiple generations and regions, highlighting its extensive diversity and enduring relevance in the Pokémon franchise.
 
 In summary, the Monster Egg Group represents strength, versatility, and strategic value in Pokémon breeding and competitive play. Its members are not only visually impressive but also bring substantial power and utility to any team, making them invaluable assets for trainers and breeders alike."
-water1,"The **Water 1 Egg Group** is one of the three Water-type Egg Groups in the Pokémon world, known for its diverse array of aquatic and amphibious species. This Egg Group contains some of the most popular and versatile Pokémon, making it a crucial element in both casual gameplay and competitive breeding.
+egg-group,water1,"The **Water 1 Egg Group** is one of the three Water-type Egg Groups in the Pokémon world, known for its diverse array of aquatic and amphibious species. This Egg Group contains some of the most popular and versatile Pokémon, making it a crucial element in both casual gameplay and competitive breeding.
 
 **General Description:**  
 The Water 1 Egg Group consists of Pokémon that are primarily water-dwellers, which include a variety of fish, amphibians, and other marine life. These Pokémon are often characterized by their aquatic adaptations such as fins, gills, and streamlined bodies. Many of them have moderate to high base stats and can play diverse roles in battle, from physical or special attackers to supporters. Their abilities and movepools are often centered around Water-type moves.
@@ -79,7 +79,7 @@ The Water 1 Egg Group is known for including Pokémon with “pseudo-legendary�
 This Egg Group often features in breeding projects aimed at optimizing water-based teams, particularly in Rain Dance strategies.
 
 With its broad range of species, wide compatibility for breeding, and significant roles in competitive play, the Water 1 Egg Group is a cornerstone of the Pokémon breeding community. It offers versatility and efficiency in creating powerful and balanced teams."
-bug,"The **Bug Egg Group** is one of the various Egg Groups found within the Pokémon world. This group is characterized by Pokémon that are insect-like in appearance and biology. Although often perceived as weaker compared to other groups, Bug-type Pokémon exhibit unique attributes and strategies that make them valuable in certain battle scenarios and thematic team compositions. 
+egg-group,bug,"The **Bug Egg Group** is one of the various Egg Groups found within the Pokémon world. This group is characterized by Pokémon that are insect-like in appearance and biology. Although often perceived as weaker compared to other groups, Bug-type Pokémon exhibit unique attributes and strategies that make them valuable in certain battle scenarios and thematic team compositions.
 
 **General Description:**   Pokémon in the Bug Egg Group resemble real-world insects in their design and behavior. These creatures range from small, swarming bugs to larger, more formidable insectoid beasts. Bug-type Pokémon tend to have diversified evolutionary lines, often featuring multiple stages (such as larva, pupa, and adult forms) that showcase significant changes in their statistics and capabilities. Bug Pokémon are typically known for their high Speed and quick evolution rates.
 
@@ -110,7 +110,7 @@ bug,"The **Bug Egg Group** is one of the various Egg Groups found within the Pok
 **Quiver Dance:**   This move is a signature of several Bug-types in this group and is highly valuable in competitive play due to its ability to boost Special Attack, Special Defense, and Speed simultaneously.
 
 The Bug Egg Group, while niche compared to other more versatile groups, offers distinctive characteristics and strategies in Pokémon breeding and battling. Understanding the unique attributes and potential of Bug-type Pokémon can provide a significant edge in crafting specialized and innovative battle tactics."
-flying,"The **Flying Egg Group** is one of the many Egg Groups in the Pokémon world, characterized by Pokémon that are avian or have a connection to flight. This Egg Group is notable for its diverse array of species, many of which are popular for their Speed and versatile move sets.
+egg-group,flying,"The **Flying Egg Group** is one of the many Egg Groups in the Pokémon world, characterized by Pokémon that are avian or have a connection to flight. This Egg Group is notable for its diverse array of species, many of which are popular for their Speed and versatile move sets.
 
 **General Description:**  
 The Flying Egg Group comprises Pokémon that are typically associated with flight. These Pokémon are often avian in nature, though not exclusively birds. They share a common theme of agility and grace, often sporting wings or a streamlined body ideal for aerodynamic movement. In battle, these Pokémon are usually valued for their Speed and ability to cover wide ranges of terrains, adding a strategic layer in both offensive and defensive roles.
@@ -145,7 +145,7 @@ Flying-types often benefit from moves that take advantage of their mobility, all
 The Flying Egg Group spans multiple generations, showcasing the evolution of design and types across the Pokémon series.
 
 In summary, the Flying Egg Group is a versatile and dynamic category of Pokémon characterized by their affiliation with flight, diverse move pools, and role in competitive breeding. They are strategically important in battles due to their Speed, variety of Egg Moves, and compatibility with other groups, making them invaluable for both casual trainers and competitive players."
-ground,"The **Ground Egg Group** in the Pokémon world encompasses species that share certain characteristics typically associated with earth and terrain. This Egg Group includes various Pokémon that are often portrayed as having a robust connection to the ground, whether they are terrestrial dwellers or have abilities tied to the earth.
+egg-group,ground,"The **Ground Egg Group** in the Pokémon world encompasses species that share certain characteristics typically associated with earth and terrain. This Egg Group includes various Pokémon that are often portrayed as having a robust connection to the ground, whether they are terrestrial dwellers or have abilities tied to the earth.
 
 **General Description:**   The Ground Egg Group is characterized by Pokémon that exhibit a strong affinity with ground-related elements. They often possess traits such as powerful physical builds, earthen colors, and abilities or moves that reflect this connection. These Pokémon are versatile in both battling and breeding, with many possessing impressive stats in Attack and Defense. Ground Egg Group Pokémon can range from burrowing creatures to large, formidable beasts.
 
@@ -178,7 +178,7 @@ The Egg Moves passed down within this group often include some of the most poten
 The compatibility with other Egg Groups like Monster and Field allows for vast breeding possibilities, enabling trainers to fine-tune their Pokémon with desired moves and traits.
 
 Overall, the Ground Egg Group's combination of strong physical attributes, valuable Egg Moves, and broad breeding compatibility makes it a cornerstone in the Pokémon breeding community, especially for trainers aiming to develop robust and competitively capable Pokémon."
-fairy,"The **Fairy Egg Group** is one of the Egg Groups in the Pokémon world, known for its inclusion of Pokémon that are typically small, cute, and often possess mystical or magical qualities. This Egg Group includes a variety of species that are highly regarded for their unique abilities, diverse typings, and role in both casual and competitive play.
+egg-group,fairy,"The **Fairy Egg Group** is one of the Egg Groups in the Pokémon world, known for its inclusion of Pokémon that are typically small, cute, and often possess mystical or magical qualities. This Egg Group includes a variety of species that are highly regarded for their unique abilities, diverse typings, and role in both casual and competitive play.
 
 **General Description:**   Pokémon in the Fairy Egg Group usually exhibit an enchanting appearance, often exuding a whimsical or magical aura. They are generally characterized by their small size, delicate features, and often benevolent nature. These Pokémon often have access to Fairy-type moves, which are super effective against Dragon-type Pokémon, making them strategically valuable in battles.
 
@@ -208,7 +208,7 @@ Some of the most notable Pokémon in the Fairy Egg Group include:
 The Fairy Egg Group contains Pokémon that are often associated with myths and folklore, emphasizing their magical and whimsical nature. Many Pokémon in this Egg Group come from various generations, reflecting the evolving fairy-tale themes within the Pokémon series. Additionally, the introduction of the Fairy-type in Generation VI greatly broadened the strategic options within this Egg Group, making Fairy-type Pokémon crucial contenders in countering Dragon-types and adding more depth to competitive play.
 
 The Fairy Egg Group stands out for its blend of charm and strategic potential, offering a diverse array of Pokémon that can fit into numerous roles in both casual and competitive settings. Its members are beloved for their enchanting appearances and unique capabilities, making them enduring favorites in the Pokémon world."
-plant,"The **Plant Egg Group** is one of the many Egg Groups in the Pokémon world, comprising Pokémon that primarily exhibit characteristics of flora and plant life. This Egg Group is particularly distinctive due to its members’ close association with nature, ranging from simple plants to more complex, anthropomorphic embodiments of vegetation.
+egg-group,plant,"The **Plant Egg Group** is one of the many Egg Groups in the Pokémon world, comprising Pokémon that primarily exhibit characteristics of flora and plant life. This Egg Group is particularly distinctive due to its members’ close association with nature, ranging from simple plants to more complex, anthropomorphic embodiments of vegetation.
 
 **General Description:**  
 The Plant Egg Group is characterized by Pokémon that resemble plants, fungi, and other botanical entities. These Pokémon often have abilities and moves associated with growth, photosynthesis, and natural regeneration, making them unique in battle and support roles. They typically feature designs inspired by various types of plants, including flowers, trees, grasses, and vines. In terms of gameplay, many Plant Egg Group Pokémon are valued for their utility and status-inflicting moves, though they may not always have the highest base stats compared to other competitive Pokémon.
@@ -246,7 +246,7 @@ The Plant Egg Group can pass down several valuable Egg Moves, including:
 **Cultural Resonance**: Several Pokémon in this group have designs that reflect cultural symbols or myths associated with particular plants, adding a layer of depth to their in-game lore.
 
 Overall, the Plant Egg Group offers a unique combination of aesthetic appeal and strategic depth, making its members a vital part of the Pokémon universe both in casual play and competitive breeding."
-humanshape,"The **Humanshape Egg Group** (also known as the Human-Like Egg Group) is one of the many Egg Groups in the Pokémon world, distinguished by Pokémon that possess humanoid characteristics and traits. This group includes a variety of Pokémon that are often bipedal and exhibit a resemblance to humans in their physical appearance and behavior.
+egg-group,humanshape,"The **Humanshape Egg Group** (also known as the Human-Like Egg Group) is one of the many Egg Groups in the Pokémon world, distinguished by Pokémon that possess humanoid characteristics and traits. This group includes a variety of Pokémon that are often bipedal and exhibit a resemblance to humans in their physical appearance and behavior.
 
 **General Description:**   Pokémon in the Humanshape Egg Group typically have a humanoid shape or mimic human behaviors. They are often bipedal and can have features such as hands, expressive faces, and upright postures. These Pokémon are diverse in terms of types and abilities, making them versatile in both casual and competitive play. Many of them are known for their strong special and physical attacks, as well as their utility moves.
 
@@ -276,7 +276,7 @@ The group’s diversity in types and abilities makes it a rich source for breedi
 Some Pokémon in the Humanshape Egg Group have signature moves or abilities that make them unique in battle, such as Medicham's Pure Power or Machamp's No Guard.
 
 Overall, the Humanshape Egg Group is a versatile and strategic group that offers a wide range of breeding possibilities and competitive advantages, making it a favorite among Pokémon breeders and competitive players."
-water3,"The **Water 3 Egg Group** is a specialized category of aquatic Pokémon in the Pokémon world, with members that are generally inspired by various aquatic invertebrates such as shellfish and sea slugs. This Egg Group features Pokémon with unique biological traits and abilities that make them distinctive and often intriguing for both casual players and competitive breeders.
+egg-group,water3,"The **Water 3 Egg Group** is a specialized category of aquatic Pokémon in the Pokémon world, with members that are generally inspired by various aquatic invertebrates such as shellfish and sea slugs. This Egg Group features Pokémon with unique biological traits and abilities that make them distinctive and often intriguing for both casual players and competitive breeders.
 
 **General Description:**  
 The Water 3 Egg Group consists of aquatic Pokémon, often portraying invertebrate features, including mollusks, crustaceans, and other sea-dwelling creatures. These Pokémon are adapted to life in the water and exhibit characteristics such as shells, tentacles, or exoskeletons. They are typically found in aquatic environments and are known for their unique designs and specialized abilities.
@@ -312,7 +312,7 @@ Members of this Egg Group tend to have access to Shell Smash, one of the most po
 Many Pokémon in this group are designed with real-life marine biology in mind, adding an educational layer to their conception.
 
 In conclusion, the Water 3 Egg Group is a diverse and intriguing category within the Pokémon universe, featuring unique aquatic Pokémon that play crucial roles in both casual and competitive play. Their special moves, abilities, and intriguing designs ensure they remain favorites in breeding and battling communities."
-mineral,"The **Mineral Egg Group** is a unique and specialized category within the Pokémon world, comprising Pokémon that have a connection to minerals, rocks, metals, or more inorganic elements. This Egg Group is distinct for its physically defensive traits and often includes Pokémon with significant bulk and specialized abilities.
+egg-group,mineral,"The **Mineral Egg Group** is a unique and specialized category within the Pokémon world, comprising Pokémon that have a connection to minerals, rocks, metals, or more inorganic elements. This Egg Group is distinct for its physically defensive traits and often includes Pokémon with significant bulk and specialized abilities.
 
 **General Description:**   Pokémon in the Mineral Egg Group typically have characteristics that connect them to minerals or inorganic substances. They often exhibit physical toughness, high Defense stats, and durability, making them well-suited for defensive roles in battles. These Pokémon generally have rocky, metallic, or crystalline appearances and are often based on geological or mineral themes.
 
@@ -339,7 +339,7 @@ Some of the most notable Pokémon in the Mineral Egg Group include:
 **Interesting Facts:**   The Mineral Egg Group is home to some of the sturdiest Pokémon, many of which serve significant roles in competitive battling thanks to their impressive defensive capabilities. Interestingly, many Mineral Egg Group Pokémon also have unique abilities that can alter the battlefield, such as Magnet Pull or Sturdy. It includes species from a variety of generations, showcasing a broad spectrum of designs inspired by various geological and mineralogical concepts, from common rocks to precious gemstones and metals.
 
 Overall, the Mineral Egg Group is essential for players focusing on defensive and utility roles in their teams, providing a gateway to durable and strategically advantageous Pokémon."
-indeterminate,"The **Indeterminate Egg Group**, also known as the Amorphous Egg Group, is one of the more enigmatic and unique Egg Groups in the Pokémon world. This group features Pokémon that are often characterized by their amorphous, ghostly, or gelatinous forms, making them stand out from other more visually defined Egg Groups.
+egg-group,indeterminate,"The **Indeterminate Egg Group**, also known as the Amorphous Egg Group, is one of the more enigmatic and unique Egg Groups in the Pokémon world. This group features Pokémon that are often characterized by their amorphous, ghostly, or gelatinous forms, making them stand out from other more visually defined Egg Groups.
 
 **General Description:**   The Indeterminate Egg Group includes Pokémon that usually have an ethereal, mystical, or amorphous appearance. These Pokémon often exhibit characteristics that make them look ghost-like, fluid, or otherwise less structured than other Pokémon. They typically have interesting and varied move pools, making them versatile in both casual and competitive settings.
 
@@ -368,7 +368,7 @@ Some of the most notable Pokémon in the Indeterminate Egg Group include:
 The Indeterminate Egg Group is also known for having a number of Pokémon that can evolve through unique or less common methods, such as trade evolutions or using specific items, adding an extra layer of intrigue to their breeding and training.
 
 In summary, the Indeterminate Egg Group is a fascinating collection of mystical, amorphous Pokémon that offer a rich variety of potential moves and abilities for breeders and competitive players alike. Their unique characteristics and compatibility with other Egg Groups make them an essential component of the Pokémon breeding ecosystem."
-water2,"The **Water 2 Egg Group** is one of the several Egg Groups in the Pokémon world and includes Pokémon that are often based on various real-world aquatic life forms, particularly fish and other marine creatures. This Egg Group features a diverse array of Pokémon, many of which are known for their unique abilities and versatility in battle.
+egg-group,water2,"The **Water 2 Egg Group** is one of the several Egg Groups in the Pokémon world and includes Pokémon that are often based on various real-world aquatic life forms, particularly fish and other marine creatures. This Egg Group features a diverse array of Pokémon, many of which are known for their unique abilities and versatility in battle.
 
 **General Description:**  
 The Water 2 Egg Group consists primarily of Pokémon that share similarities with aquatic animals, particularly fish and other creatures that thrive underwater. These Pokémon are typically characterized by their streamlined bodies and aquatic features, allowing them to move efficiently in water. The diversity within the group means they come in a variety of shapes, sizes, and types, but all share a commonality in their adaptation to aquatic environments.
@@ -405,7 +405,7 @@ The Water 2 Egg Group can pass down several valuable Egg Moves that are highly s
 **Diverse Movesets:**   With access to a wide range of moves including Water, Flying, Ice, and Dark-type moves, Water 2 Pokémon can fulfill various roles in competitive battles, making them unpredictable and versatile allies or adversaries.  
 
 The Water 2 Egg Group remains a crucial part of the Pokémon ecosystem, offering trainers robust options for breeding, battling, and experiencing the diverse beauty and power of aquatic life forms."
-ditto,"The **Ditto Egg Group**, also known as the **No Eggs Discovered** Egg Group, is unique and noteworthy within the Pokémon series. Unlike other Egg Groups, it includes only one Pokémon: Ditto. Ditto’s abilities and characteristics make it an essential part of Pokémon breeding mechanics, particularly for competitive breeding enthusiasts.
+egg-group,ditto,"The **Ditto Egg Group**, also known as the **No Eggs Discovered** Egg Group, is unique and noteworthy within the Pokémon series. Unlike other Egg Groups, it includes only one Pokémon: Ditto. Ditto’s abilities and characteristics make it an essential part of Pokémon breeding mechanics, particularly for competitive breeding enthusiasts.
 
 **General Description:**  
 The Ditto Egg Group comprises solely of Ditto, a Pokémon known for its shapeshifting abilities. Ditto has the unique capability to breed with almost any Pokémon, with a few exceptions like Legendary and Mythical Pokémon that cannot breed. This Egg Group is essential for Pokémon breeders because of Ditto's ability to transform and copy the genetic makeup of other Pokémon.
@@ -437,7 +437,7 @@ Ditto does not contribute any Egg Moves directly. However, its versatility allow
 **Ditto and Legendary Pokémon**: Ditto is unable to breed with most Legendary Pokémon. However, it is crucial in breeding Pokémon like Manaphy (resulting in Phione) and Event Pokémon like Zeraora when it comes to breeding game-specific abilities or moves.  
 
 In summary, the Ditto Egg Group, represented solely by Ditto, is fundamental in Pokémon breeding. Its unique ability to breed with a wide array of Pokémon, regardless of their Egg Group or gender, makes it an indispensable tool for trainers aiming for perfect stats, optimal natures, and effective movesets in competitive play."
-dragon,"The **Dragon Egg Group** is one of the specific Egg Groups in the Pokémon world, primarily made up of dragon-like creatures known for their high stats and considerable prowess in battle. This Egg Group is regarded for its rarity and the powerful Pokémon that inhabit it, making it a favorite among trainers and breeders.
+egg-group,dragon,"The **Dragon Egg Group** is one of the specific Egg Groups in the Pokémon world, primarily made up of dragon-like creatures known for their high stats and considerable prowess in battle. This Egg Group is regarded for its rarity and the powerful Pokémon that inhabit it, making it a favorite among trainers and breeders.
 
 **General Description:**  
 The Dragon Egg Group consists of Pokémon that are either dragons themselves or have draconic traits. These Pokémon are typically characterized by their majestic and often formidable appearances, drawing inspiration from mythological dragons. They are generally found later in the game and require substantial effort to train and evolve, but their high base stats and versatile move pools make them worth the investment.
@@ -475,7 +475,7 @@ Pokémon from the Dragon Egg Group are often inspired by various cultural depict
 Due to their high evolutionary requirements and late-game availability, obtaining fully evolved Dragon Egg Group Pokémon is often seen as a significant milestone for trainers.
 
 The Dragon Egg Group, with its formidable roster and extensive compatibility for move inheritance, remains one of the cornerstones of Pokémon breeding and competitive battling. Its members are revered not only for their power but also for their legendary status within the Pokémon universe."
-no-eggs,"The **No-Eggs Egg Group**, also known as the **""No Eggs Discovered"" Group**, is a unique classification within the Pokémon world. Unlike other Egg Groups, Pokémon within this group cannot breed, meaning they cannot produce offspring regardless of the conditions they're subjected to. This group includes some of the most singular and often powerful Pokémon species.
+egg-group,no-eggs,"The **No-Eggs Egg Group**, also known as the **""No Eggs Discovered"" Group**, is a unique classification within the Pokémon world. Unlike other Egg Groups, Pokémon within this group cannot breed, meaning they cannot produce offspring regardless of the conditions they're subjected to. This group includes some of the most singular and often powerful Pokémon species.
 
 **General Description:**  
 The No-Eggs Egg Group encompasses various Pokémon that, due to their mythical, technological, or legendary status, cannot produce eggs in the Pokémon Day Care or Nursery. These Pokémon often hold special significance within the Pokémon lore, and many are one-of-a-kind individuals or artificially created entities. They are distinguished not by appearance or type, but by their unique inability to engage in breeding activities.

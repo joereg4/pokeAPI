@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ data.name | title }} - Pokémon Species Detail{% endblock %}
+
+{% block content %}
+    <h1>{{ data.name | title }} Species</h1>
+    <!-- Attributes Section -->
+    <section>
+        <div class="container pt-5">
+            <div class="row">
+                <div class="col">
+                    <h2>Attributes</h2>
+                    <ul>
+                        <li>Base Happiness: {{ data.base_happiness }}</li>
+                        <li>Capture Rate: {{ data.capture_rate }}</li>
+                        <li>Color: <a
+                                href="{{ url_for('pokemon.get_pokemon_color', id_or_name=data.color.name) }}">{{ data.color.name | title }}</a>
+                        </li>
+                        <li>Egg Groups:
+                            {% for egg_group in data.egg_groups %}
+                                <a href="{{ url_for('pokemon.get_egg_group', id_or_name=egg_group.name) }}">{{ egg_group.name | title }}</a>
+                                {% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        </li>
+                        <li>Gender Rate: {{ data.gender_rate }}</li>
+                        <li>Hatch Counter: {{ data.hatch_counter }}</li>
+                        <li>Has Gender Differences: {{ data.has_gender_differences | title }}</li>
+                        <li>Is Baby: {{ data.is_baby }}</li>
+                        <li>Is Legendary: {{ data.is_legendary }}</li>
+                        <li>Is Mythical: {{ data.is_mythical }}</li>
+                        <li>Shape: <a
+                                href="{{ url_for('pokemon.get_pokemon_shape', id_or_name=data.shape.name) }}">{{ data.shape.name | title }}</a>
+                        </li>
+                        <li>Generation: <a
+                                href="{{ url_for('pokemon.get_generation', id_or_name=data.generation.name) }}">{{ data.generation.name | title }}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <h2>Pokédex Entries</h2>
+                    <ul>
+                        {% for entry in data.pokedex_numbers %}
+                            <li><a href="{{ url_for('pokemon.get_endpoint_data', api_endpoint=entry.pokedex.url.split('/')[-3], id_or_name=entry.pokedex.url.split('/')[-2]) }}">{{ entry.entry_number }} {{ entry.pokedex.name | title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <!-- Flavor Text Section -->
+                <div class="col">
+                    <h2>Flavor Text Entries</h2>
+                    <ul>
+                        {% for entry in data.flavor_text_entries %}
+                            {% if entry.language.name == 'en' %}
+                                <li>
+                                    <strong>{{ entry.version.name | title }}:</strong> {{ entry.flavor_text | replace('\n', ' ') }}
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+        <!-- Variety Cards Section -->
+    <section>
+        <div class="container pt-5">
+            <h2>{{ data.name | title }} Varieties</h2>
+            {% include '_pokemon_list.html' %}
+        </div>
+    </section>
+{% endblock %}

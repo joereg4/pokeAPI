@@ -23,27 +23,30 @@
         <li>Damage Class: {{ data['damage_class']['name'] | title }}</li>
         <li>Generation: {{ data['generation']['name'] | title }}</li>
     </ul>
-
+    {% if data['effect_entries'] %}
     <h2>Effect</h2>
     <ul>
         {% for entry in data['effect_entries'] %}
             <li>{{ entry['effect'] }}</li>
         {% endfor %}
     </ul>
-
+    {% endif %}
+    {% if category['name'] %}
     <h2>Category</h2>
     <p>
         <a href="{{ url_for('pokemon.get_move_category', id_or_name=category['name']) }}">
             {{ category['name'] | title }}
         </a>
     </p>
-
+    {% endif %}
+    {% if data['flavor_text_entries'] %}
     <h2>Flavor Texts</h2>
     <ul>
         {% for entry in data['flavor_text_entries'] %}
             <li><strong>{{ entry['version_group']['name'] }}:</strong> {{ entry['flavor_text'] }}</li>
         {% endfor %}
     </ul>
+    {% endif %}
         <section>
         <div class="container pt-5">
             <h2 class="pb-1">{{ data.name | title }} Pokémon</h2>

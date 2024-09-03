@@ -1,0 +1,332 @@
+resource,name,summary
+pokemon-species,deoxys,"**Deoxys** is a Psychic-type Mythical Pokémon known for its extraterrestrial origins and ability to change forms. Deoxys was first introduced in Pokémon Ruby and Sapphire and has since become a standout Pokémon due to its unique design and versatile battle capabilities.
+
+**Type:** Psychic
+
+**Forms and Abilities:**
+Deoxys is notable for having four distinct forms, each with different stats and abilities tailored for various battle strategies. 
+1. **Normal Forme:** Balanced stats and a well-rounded move set.
+    - **Ability:** Pressure - Doubles the opposing Pokémon's usage of PP (Power Points) for moves targeting Deoxys.
+2. **Attack Forme:** Emphasizes high attack stats at the expense of its defenses.
+    - **Ability:** Pressure
+3. **Defense Forme:** Prioritizes high defense and special defense while sacrificing attack stats.
+    - **Ability:** Pressure
+4. **Speed Forme:** Specializes in exceptionally high speed stats,"
+pokemon-species,wormadam,"**Wormadam** is a unique Bug-type Pokémon that can have different secondary types depending on the cloak it is in. It evolves from a female Burmy starting at level 20. The specific form Wormadam takes after evolving is determined by the environment where Burmy last battled and changes according to the type of cloak it has.
+
+**Types:**
+- **Plant Cloak Wormadam:** Bug/Grass
+- **Sandy Cloak Wormadam:** Bug/Ground
+- **Trash Cloak Wormadam:** Bug/Steel
+
+**Abilities:**
+- **Anticipation:** This ability allows Wormadam to shiver upon sensing the opponent's dangerous moves, providing an early warning in battle.
+- **Hidden Ability (Overcoat):** This ability protects Wormadam from damage caused by weather effects and powder moves like Spore and Sleep Powder.
+
+**Interesting Facts:**
+- Wormadam's appearance and type are determined by its cloak, which is influenced by the last battle location of Burmy"
+pokemon-species,giratina,"**Giratina** is a Legendary Ghost/Dragon-type Pokémon known for its connection to the Distortion World, an alternate dimension in the Pokémon universe. Recognized for its formidable appearance and unique lore, Giratina plays a central role in Pokémon mythology, particularly in the fourth generation of games.
+
+**Type:** Ghost/Dragon
+
+**Forms:**
+- **Altered Forme:** This is the standard form of Giratina. In this form, Giratina is depicted with six short legs and a dragon-like appearance.
+- **Origin Forme:** Exclusive to the Distortion World or when holding the Griseous Orb, Giratina transforms into this form, gaining a more serpentine appearance with six long, ribbon-like extensions.
+
+**Abilities:**
+- **Altered Forme (Levitate):** This ability grants Giratina immunity to Ground-type moves, making it unaffected by moves such as Earthquake.
+- **Origin Forme (Levitate):** Similarly, this ability provides Giratina with"
+pokemon-species,shaymin,"**Shaymin** is a unique Pokémon known for its ability to change forms and its vibrant connection to nature. Introduced in Generation IV, Shaymin is a mythical Pokémon that is highly revered within the Pokémon universe.
+
+**Type:**
+- **Land Forme:** Grass
+- **Sky Forme:** Grass/Flying
+
+**Forms and Transformation:**
+- **Land Forme:** Shaymin's original form, resembling a small hedgehog with green grass-like fur on its back.
+- **Sky Forme:** Shaymin transforms into this form when exposed to the Gracidea Flower during the daytime, except at night or when frozen. In its Sky Forme, Shaymin resembles a small, flying deer with a sleek, aerodynamic body and flaps on the sides of its head that look like wings.
+
+**Abilities:**
+- **Land Forme:** 
+  - **Natural Cure:** This ability allows Shaymin to heal from any status conditions upon switching out of battle.
+- **"
+pokemon-species,basculin,"**Basculin** is a Water-type Pokémon known for its aggressive temperament and ferocious nature. It is a fish Pokémon characterized by its differences in form, known as the Red-Striped and Blue-Striped forms, which have variations in their appearance and may differ based on the region they're found in the Pokémon universe.
+
+**Type:** Water
+
+**Abilities:**
+- **Reckless:** This ability boosts the power of moves that have recoil damage by 20%, making Basculin's already high offensive potential even more formidable.
+- **Adaptability:** Adaptability increases the STAB (Same Type Attack Bonus) from the usual 50% to 100%, enhancing the power of Basculin's Water-type moves.
+- **Hidden Ability (Mold Breaker):** This ability allows Basculin to use its moves without being affected by the target's abilities that could potentially alter the move's effects.
+
+**Interesting Facts:**
+- **Form Variations:** Basculin"
+pokemon-species,darmanitan,"**Darmanitan** is a Fire-type Pokémon known for its immense strength and unique forms. It evolves from Darumaka starting at level 35. Darmanitan is distinguished by its large size, red and white fur, and a fierce demeanor that embodies its fiery nature. In addition to its standard form, Darmanitan has an alternate Zen Mode and a Galarian Form that changes its type and abilities.
+
+**Type:**
+- Galarian Form: Ice
+- Standard Form: Fire
+- Zen Mode (Standard Form): Fire/Psychic
+- Zen Mode (Galarian Form): Ice/Fire
+
+**Abilities:**
+- **Standard Form:**
+  - **Sheer Force:** This ability increases the power of Darmanitan's moves by 30% but removes any additional effects those moves might have.
+  - **Hidden Ability (Zen Mode):** When Darmanitan's HP drops below 50%, it changes into Zen Mode, altering its appearance and"
+pokemon-species,tornadus,"**Tornadus** is a Legendary Pokémon introduced in Generation V, belonging to the Forces of Nature trio alongside Thundurus and Landorus. Tornadus is uniquely a pure Flying-type Pokémon and is known for its distinctive appearances in both its Incarnate Forme and Therian Forme.
+
+**Type:** Flying
+
+**Abilities:**
+- **Incarnate Forme:**
+  - **Prankster:** This ability gives Tornadus' status moves priority, allowing them to go first regardless of its Speed stat.
+  - **Hidden Ability (Defiant):** When any of Tornadus' stats are lowered by an opponent, its Attack stat increases by two stages.
+
+- **Therian Forme:**
+  - **Regenerator:** This ability heals Tornadus for a third of its maximum HP when it switches out of battle.
+
+**Interesting Facts:**
+- **Incarnate Forme Appearance:** In its Incarnate Forme, Tornadus resembles"
+pokemon-species,thundurus,"**Thundurus** is a dual Electric/Flying-type Legendary Pokémon introduced in Generation V. It is a member of the Forces of Nature trio along with Tornadus and Landorus. Thundurus is known for its immense power and its association with thunderstorms and lightning.
+
+**Type:** Electric/Flying
+
+**Forms:**
+- **Incarnate Forme:** This is Thundurus' default form, characterized by its blue, muscular human-like body with cloud-like formations at its back and a tail that resembles a lightning bolt.
+- **Therian Forme:** Introduced in Pokémon Black 2 and White 2, Thundurus' Therian Forme resembles a large, fierce dragon or bird-like creature, with substantial changes to its stats and abilities.
+
+**Abilities:**
+- **Incarnate Forme:**
+  - **Prankster:** This ability allows Thundurus to give priority to its status moves, making it a potent user of moves like Thunder Wave and"
+pokemon-species,landorus,"**Landorus** is a Ground/Flying-type Legendary Pokémon introduced in Generation V. Known as the ""Abundance Pokémon,"" Landorus is part of the Forces of Nature trio along with Tornadus and Thundurus. It is revered in the Pokémon lore for its ability to bring fertility to the lands and improve the soil's richness.
+
+**Type:** Ground/Flying
+
+**Formes:** 
+- **Incarnate Forme:** This is the default form of Landorus, characterized by its humanoid figure, orange and white coloration, and a genie-like appearance. It stands on a cloud and has a long tail covered in rocky protrusions.
+- **Therian Forme:** This form is obtained by using the Reveal Glass item. In this form, Landorus resembles a large, muscular feline creature with a tail that has spiked rocks. Therian Forme enhances its physical attributes.
+
+**Abilities:**
+
+- **Incarnate Forme:**
+  - **Sand Force:** This"
+pokemon-species,keldeo,"**Keldeo** is a unique and powerful Water/Fighting-type Pokémon, known for its distinct appearance and noble background in the Pokémon series. It is a member of the Swords of Justice, a group of Legendary Pokémon that also includes Cobalion, Terrakion, and Virizion. Keldeo is particularly notable for its significance in various Pokémon media, including games and movies.
+
+**Type:** Water/Fighting
+
+**Abilities:**
+- **Justified:** This ability raises Keldeo's Attack stat by one stage for each Dark-type move it is hit by. Despite being a special attacker, this ability can still be useful in various situations, allowing Keldeo to potentially gain a tactical advantage.
+
+**Forms:**
+- **Ordinary Form:** The default form Keldeo is typically encountered in.
+- **Resolute Form:** Keldeo can change into its Resolute Form when it learns the move Secret Sword. This form visually transforms Keldeo by giving it a"
+pokemon-species,meloetta,"**Meloetta** is a dual-type Mythical Pokémon known for its musical themes and graceful appearance. It has two Formes: Aria Forme and Pirouette Forme, which change its typing, stats, and abilities.
+
+**Type:**
+- **Aria Forme:** Normal/Psychic
+- **Pirouette Forme:** Normal/Fighting
+
+**Abilities:** 
+- **Serene Grace:** This ability increases the chances of Meloetta's moves' secondary effects occurring. For example, moves that may cause flinching or stat changes will have an enhanced chance to do so with Serene Grace.
+
+**Forms and Transformation:**
+- Meloetta has a unique move called **Relic Song**. When it uses Relic Song in battle, it changes between its two forms:
+  - **Aria Forme:** This is Meloetta’s default form when it is first encountered. It has a melodic, elegant design symbolizing its Normal/Psychic typing."
+pokemon-species,meowstic,"**Meowstic** is a Psychic-type Pokémon introduced in Generation VI. It is known for its dual-gender forms (male and female), each of which has a distinct appearance and slightly different sets of stats and abilities. The design and behavior of Meowstic emphasize its psychic powers and feline-like characteristics.
+
+**Type:** Psychic
+
+**Forms:**
+- **Male Meowstic:** Blue-and-white coloration, generally more offensive in its stats.
+- **Female Meowstic:** White-and-blue coloration, generally more defensive in its stats.
+
+**Abilities:**
+- **Infiltrator:** This ability allows Meowstic to bypass the opponent’s Light Screen, Reflect, Safeguard, Substitute, and Aurora Veil, affecting them as if these barriers were not in place.
+- **Keen Eye:** This ability prevents Meowstic from having its accuracy lowered, and it also ignores any opponent's evasion boosts.
+- **Hidden Ability (Prank"
+pokemon-species,aegislash,"**Aegislash** is a unique Steel/Ghost-type Pokémon known for its dual forms and regal appearance. It is the final evolution in its line, evolving from Doublade when exposed to a Dusk Stone, which itself evolves from Honedge starting at level 35.
+
+**Type:** Steel/Ghost
+
+**Abilities:**
+- **Stance Change:** This is Aegislash's unique and signature ability. It allows Aegislash to switch between two forms: Shield Forme and Blade Forme. In Shield Forme, Aegislash has high defenses, while in Blade Forme, it has high offensive stats. The change occurs when Aegislash uses specific moves like King's Shield (to shift to Shield Forme) or an attacking move (to shift to Blade Forme).
+
+**Interesting Facts:**
+- **Dual Forms:** Aegislash's defining characteristic is its ability to shift between Shield Forme and Blade Forme. When in Shield Forme"
+pokemon-species,pumpkaboo,"**Pumpkaboo** is a uniquely designed Pokémon inspired by Halloween and pumpkins. It is a dual-type Ghost/Grass Pokémon introduced in Generation VI. Its appearance resembles a jack-o'-lantern with a ghostly upper body, featuring glowing yellow eyes and a small mouth. Its lower body is pumpkin-shaped with orange and brown hues. Pumpkaboo comes in four different sizes: Small, Average, Large, and Super, with each size having slight variations in stats and appearance.
+
+**Type:** Ghost/Grass
+
+**Abilities:**
+- **Pickup:** This ability allows Pumpkaboo to potentially collect a held item after battle when it’s not holding one.
+- **Frisk:** When Pumpkaboo enters battle, it reveals the opponent’s held item.
+- **Hidden Ability (Insomnia):** This ability prevents Pumpkaboo from falling asleep, granting immunity to sleep-inducing moves and effects.
+
+**Interesting Facts:**
+- **Unique Size Forms:** Pumpkaboo is notable for having four"
+pokemon-species,gourgeist,"**Gourgeist** is a dual-type Ghost/Grass Pokémon known for its association with Halloween due to its pumpkin-like appearance and ghostly attributes. Gourgeist evolves from Pumpkaboo when traded.
+
+**Type:** Ghost/Grass
+
+**Abilities:**
+1. **Pickup:** This ability allows Gourgeist to pick up an item after a battle if it’s not already holding one. During battles, it can also pick up items that other Pokémon use or drop.
+2. **Frisk:** With this ability, Gourgeist can reveal the opponent's held item when it enters the battle.
+3. **Hidden Ability (Insomnia):** This ability prevents Gourgeist from falling asleep, rendering moves and abilities that induce sleep ineffective.
+
+**Size Variants:**
+Gourgeist is unique in that it comes in different size variants, each with its own stats:
+- **Small Size Gourgeist:** Has higher Speed but lower HP.
+- **Average Size Gourgeist:** Balanced stats overall.
+- **Large"
+pokemon-species,zygarde,"**Zygarde** is a complex Pokémon known for its unique cellular structure and role as the guardian of the ecosystem. It is a Dragon/Ground-type Legendary Pokémon, first introduced in the sixth generation of Pokémon games (Pokémon X and Pokémon Y). Zygarde is not just a singular entity but can exist in several different forms, each representing a different percentage of its total power.
+
+**Forms and Cells:**
+- **Zygarde Core:** The Core is the brain of Zygarde and appears as a small, green amoeba-like creature. It is the central command and monitors the ecosystem.
+- **Zygarde Cell:** Scattered throughout the region, these cells are inactive on their own and are essential for forming the other Zygarde forms.
+- **Zygarde 10% Forme:** This form takes on a dog-like appearance and constitutes 10% of Zygarde’s total power. It possesses notable speed and agility.
+- **Zygarde 50"
+pokemon-species,oricorio,"**Oricorio** is a unique and versatile Pokémon introduced in the Generation VII games, Pokémon Sun and Moon. It is known for its distinctive appearance and its ability to change both its type and form based on the Nectar it consumes.
+
+**Basic Information:**
+- **Species:** Dancing Pokémon
+- **Pokédex Number:** #741
+
+**Types:**
+Oricorio has four different forms, each corresponding to a different type. The form it takes depends on the type of Nectar it drinks:
+1. **Baile Style:** Fire/Flying
+2. **Pom-Pom Style:** Electric/Flying
+3. **Pa'u Style:** Psychic/Flying
+4. **Sensu Style:** Ghost/Flying
+
+**Abilities:**
+- **Dancer:** This is Oricorio's signature ability. When another Pokémon uses a dance move, Oricorio gets to immediately use the same move.
+
+**Form-Specific Nectars:**
+- **Red Nectar:** Transforms Oricorio"
+pokemon-species,lycanroc,"**Lycanroc** is a Rock-type Pokémon introduced in the seventh generation of Pokémon games, appearing prominently in ""Pokémon Sun and Moon"" and their subsequent versions. Lycanroc is notable for having three distinct forms that depend on the time of day and the version of the game it evolves in. These forms are Midday Form, Midnight Form, and Dusk Form. Lycanroc evolves from Rockruff starting at level 25, with each form requiring specific conditions to be met.
+
+**Type:** Rock
+
+**Forms and Evolution Conditions:**
+1. **Midday Form:** Evolves from Rockruff during the day in Pokémon Sun or when leveled up during the day in other games.
+   - **Appearance:** Resembles a quadrupedal, wolf-like creature with white and tan fur, giving it a sleek and agile look.
+   - **Abilities:**
+     - **Keen Eye:** Prevents Lycanroc from having its accuracy lowered.
+     - **Sand Rush"
+pokemon-species,wishiwashi,"**Wishiwashi** is a unique Water-type Pokémon introduced in Generation VII. Known for its contrasting forms, Wishiwashi can change its appearance based on its health, switching between its Solo and School forms, which dramatically affect its stats and performance in battle.
+
+**Type:** Water
+
+**Abilities:**
+- **Schooling:** This signature ability enables Wishiwashi to change from its Solo Form into its School Form when it reaches level 20 and has more than 25% of its maximum HP remaining. When its HP drops below 25%, it reverts to its Solo Form. The School Form boasts significantly higher stats across the board, making it much more formidable in battles.
+
+**Interesting Facts:**
+- **Forms and Appearance:** In its Solo Form, Wishiwashi is a small, somewhat pitiful-looking fish Pokémon with watery eyes and a trembling fin. However, when it transitions into its School Form, it becomes an intimidating, massive fish composed of many smaller Wishiwashi, forming"
+pokemon-species,minior,"**Minior** is a unique dual-type Rock/Flying Pokémon introduced in Generation VII. It is known for its dual forms: its Meteor Form and Core Form, which differ in both appearance and function.
+
+**Type:** Rock/Flying
+
+**Abilities:**
+- **Shields Down:** Minior's signature ability is Shields Down. In its Meteor Form, this ability provides protection, reducing damage from attacks and making Minior immune to status conditions. When its HP drops below 50%, Minior's shell breaks, transforming it into its Core Form, which has higher offensive stats but lower defenses, and losing the status immunity.
+
+**Meteor Form:**
+- **Appearance:** In this form, Minior appears as a rocky, asteroid-like creature with a rugged outer shell.
+- **Function:** This form emphasizes defense and survivability. It has high Defense and Special Defense stats but lower Attack and Special Attack.
+
+**Core Form:**
+- **Appearance:** After Shields Down activates, Minior sheds its"
+pokemon-species,mimikyu,"**Mimikyu** is a unique and enigmatic Pokémon, introduced in Generation VII and known for its eerie appearance and mysterious nature. It is classified as a Ghost/Fairy-type Pokémon, making it one of the few Pokémon with this dual typing.
+
+**Type:** Ghost/Fairy
+
+**Abilities:**
+- **Disguise:** This ability allows Mimikyu to avoid damage from an opponent's attack once per battle, revealing its true form when the disguise is broken. This gives Mimikyu a tactical advantage, allowing it to survive a crucial hit that could have otherwise KO'd it.
+
+**Design and Backstory:**
+- Mimikyu's appearance is shrouded beneath a rag that it has fashioned to look like Pikachu, the beloved Pokémon mascot. The reason behind this disguise is tied to Mimikyu's desire for companionship and acceptance, as it believes that mimicking Pikachu's appearance will endear it to humans and other Pokémon.
+- The rag costume has a crude, hand-made"
+pokemon-species,toxtricity,"**Toxtricity** is a dual-type Electric/Poison Pokémon introduced in Generation VIII (Pokémon Sword and Shield). It has a distinctive punk rock-inspired appearance, embodying both the charming and rebellious spirit of its design ethos. Toxtricity has two forms, Amped Form and Low Key Form, which vary in coloration and posture. The form Toxel, its pre-evolution, evolves into depends on its nature.
+
+**Type:** Electric/Poison
+
+**Abilities:** 
+- **Punk Rock:** This ability boosts the power of sound-based moves by 30% and provides resistance to them.
+- **Plus/Minus:** In Double Battles, these abilities respectively increase the Special Attack of Toxtricity when partnered with a Pokémon that has the “Plus” or “Minus” ability.
+- **Hidden Ability (Technician):** This ability increases the power of Toxtricity's moves with a base power of 60 or less by 50%.
+
+### **"
+pokemon-species,eiscue,"**Eiscue** is a unique and intriguing Pokémon introduced in the eighth generation of Pokémon games. It is known for its distinctive appearance, largely characterized by its ice-covered head, which resembles a block of ice with a face drawn on it. This Pokémon hails from the Galar region and has become a favorite for many players due to its quirky design and interesting battle mechanics.
+
+**Type:** Ice
+
+**Abilities:** 
+- **Ice Face:** This unique ability is exclusive to Eiscue and plays a pivotal role in its battle strategy.
+  - When Eiscue is in its Ice Face form, it can completely negate the first physical attack it takes, smashing the ice on its head and changing into its Noice Face form. In Noice Face form, Eiscue’s speed increases significantly, but it becomes more vulnerable to damage.
+  - Eiscue can regain its Ice Face form if it is hailing, thus restoring its defensive capabilities.
+
+**Interesting Facts:**
+- **"
+pokemon-species,indeedee,"**Indeedee** is a dual-type Psychic/Normal Pokémon introduced in Generation VIII. Indeedee has two forms based on its gender: Male Indeedee and Female Indeedee. While they share many characteristics, there are slight differences in their appearances, stats, and even their moveset tendencies.
+
+**Type:** Psychic/Normal
+
+**Abilities:**
+- **Inner Focus:** Prevents Indeedee from flinching.
+- **Synchronize:** If Indeedee is afflicted with a status condition, the attacker will also receive the same condition.
+- **Hidden Ability (Psychic Surge):** Upon entering the battlefield, this ability creates Psychic Terrain, which boosts the power of Psychic-type moves for five turns and prevents priority moves from being used.
+
+### Physical Appearance:
+- **Male Indeedee:** Has upturned horn-like features on its head and a dignified demeanor, often depicted with its hands positioned in a poised manner. Its colors are predominantly black with white.
+- **Female Indeedee:** Sports downturned"
+pokemon-species,morpeko,"**Morpeko** is a Dual-type Electric/Dark Pokémon, introduced in Generation VIII of the Pokémon series. Known for its unique and fluctuating form, Morpeko has gained popularity among players and fans alike due to its distinctive gimmick and charming design.
+
+**Type:** Electric/Dark
+
+**Form Change Ability:**
+
+**Hunger Switch:** Morpeko’s signature ability, Hunger Switch, causes it to alternate between two forms at the end of each turn: the Full Belly Mode and the Hangry Mode. This ability not only changes Morpeko's appearance but also affects its signature move, Aura Wheel.
+
+**Forms:**
+1. **Full Belly Mode:** In this mode, Morpeko maintains a cheerful expression and a predominantly yellow coloration with pink cheeks. 
+2. **Hangry Mode:** In this form, Morpeko's fur becomes dark purple/black and its demeanor becomes more aggressive, with its cheeks turning dark purple.
+
+**Signature Move:**
+
+**Aura Wheel"
+pokemon-species,urshifu,"**Urshifu** is a Legendary Pokémon introduced in Generation VIII. It is known for its unique martial arts-inspired design and two distinct fighting styles that it can adopt: Single Strike Style and Rapid Strike Style. Depending on the style, Urshifu has different typings, moves, and abilities.
+
+**Type:**
+- **Single Strike Style:** Fighting/Dark
+- **Rapid Strike Style:** Fighting/Water
+
+**Abilities:**
+- **Unseen Fist (Standard Ability):** This ability allows Urshifu to bypass the effects of protection moves like Protect when it attacks.
+
+**Forms:**
+- **Single Strike Style:** Emphasizes powerful, single, decisive blows. It represents a more direct and aggressive approach to battle.
+- **Rapid Strike Style:** Focuses on a series of continuous strikes, showcasing fluidity and relentless assault in combat.
+
+**Interesting Facts:**
+
+### Evolution:
+- Urshifu evolves from **Kubfu** after completing one of the two branching paths at the"
+pokemon-species,basculegion,"**Basculegion** is a Water/Ghost-type Pokémon introduced in Pokémon Legends: Arceus, marking its debut in the Hisui region (known as ancient Sinnoh). It evolves from Basculin, specifically the White-Striped form, when it takes recoil damage from moves such as Wave Crash or Double-Edge without fainting. Basculegion is traditionally associated with the spirits of Basculin that could not survive the perilous journey upstream.
+
+**Type:** Water/Ghost
+
+**Abilities:** 
+- **Rattled:** This ability boosts Basculegion's Speed stat if it's hit by a Dark, Bug, or Ghost-type move.
+- **Adaptability (Hidden Ability):** This ability increases the power of Basculegion's same-type attack bonus (STAB) moves from 1.5x to 2x.
+
+**Interesting Facts:**
+- **Design and Inspiration:** Basculegion's design is inspired"
+pokemon-species,enamorus,"**Enamorus** is a unique Pokémon introduced in Pokémon Legends: Arceus. It belongs to the Legendary Forces of Nature quartet, which also includes Tornadus, Thundurus, and Landorus. Enamorus is known for its distinct fairy-like and serpentine appearance. Its design draws inspiration from various mythological and natural elements.
+
+**Type:** Fairy/Flying
+
+**Abilities:**
+- **Cute Charm:** This ability causes opponents to become infatuated (as long as they are of the opposite gender) when they make contact with Enamorus, potentially preventing them from attacking.
+- **Hidden Ability (Contrary):** This ability inverts the effects of stat changes, meaning any move that would lower Enamorus's stats will instead increase them, and vice versa. This can be especially strategic in battle when combined with moves that typically have a downside.
+
+**Interesting Facts:**
+- **Design and Inspiration:** Enamorus's design is inspired by myths and natural elements"
