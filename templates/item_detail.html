@@ -66,7 +66,7 @@
         <ul>
             {% for game in data.game_indices %}
                 <li>
-                    <a href="{{ game.generation.url }}">{{ game.generation.name }}</a> (Game
+                    <a href="{{ url_for('pokemon.get_generation', id_or_name=game.generation.name) }}">{{ game.generation.name }}</a> (Game
                     Index: {{ game.game_index }})
                 </li>
             {% endfor %}
