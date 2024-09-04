@@ -324,8 +324,8 @@ def get_berry(id_or_name):
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/berry_firmness/", defaults={"id_or_name": None})
-@pokemon_bp.route("/berry_firmness/<id_or_name>")
+@pokemon_bp.route("/berry-firmness/", defaults={"id_or_name": None})
+@pokemon_bp.route("/berry-firmness/<id_or_name>")
 # @cache.cached(timeout=300)
 def get_berry_firmness(id_or_name):
     if id_or_name is None:
@@ -347,8 +347,8 @@ def get_berry_firmness(id_or_name):
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/berry_flavor/", defaults={"id_or_name": None})
-@pokemon_bp.route("/berry_flavor/<id_or_name>")
+@pokemon_bp.route("/berry-flavor/", defaults={"id_or_name": None})
+@pokemon_bp.route("/berry-flavor/<id_or_name>")
 @cache.cached(timeout=300)
 def get_berry_flavor(id_or_name):
     if id_or_name is None:
@@ -405,8 +405,8 @@ def get_characteristic(id_):
                 return str(e), e.response.status_code
 
 
-@pokemon_bp.route("/contest_effect/", defaults={"id_": None})
-@pokemon_bp.route("/contest_effect/<int:id_>")
+@pokemon_bp.route("/contest-effect/", defaults={"id_": None})
+@pokemon_bp.route("/contest-effect/<int:id_>")
 @cache.cached(timeout=300)
 def get_contest_effect(id_):
     if id_ is None:
@@ -432,7 +432,7 @@ def get_contest_effect(id_):
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/contest_type/<id_or_name>")
+@pokemon_bp.route("/contest-type/<id_or_name>")
 @cache.cached(timeout=300)
 def get_contest_type(id_or_name):
     # Check if id_or_name can be converted to an integer
@@ -451,8 +451,8 @@ def get_contest_type(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/egg_group/", defaults={"id_or_name": None})
-@pokemon_bp.route("/egg_group/<id_or_name>")
+@pokemon_bp.route("/egg-group/", defaults={"id_or_name": None})
+@pokemon_bp.route("/egg-group/<id_or_name>")
 @cache.cached(timeout=300)
 def get_egg_group(id_or_name):
     if id_or_name is None:
@@ -499,7 +499,7 @@ def get_egg_group(id_or_name):
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/encounter_condition/<id_or_name>")
+@pokemon_bp.route("/encounter-condition/<id_or_name>")
 @cache.cached(timeout=300)
 def get_encounter_condition(id_or_name):
     # Check if id_or_name can be converted to an integer
@@ -518,7 +518,7 @@ def get_encounter_condition(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/encounter_condition_value/<id_or_name>")
+@pokemon_bp.route("/encounter-condition_value/<id_or_name>")
 @cache.cached(timeout=300)
 def get_encounter_condition_value(id_or_name):
     # Check if id_or_name can be converted to an integer
@@ -537,7 +537,7 @@ def get_encounter_condition_value(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/encounter_method/<id_or_name>")
+@pokemon_bp.route("/encounter-method/<id_or_name>")
 @cache.cached(timeout=300)
 def get_encounter_method(id_or_name):
     # Check if id_or_name can be converted to an integer
@@ -556,7 +556,7 @@ def get_encounter_method(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/evolution_chain/<int:id_>")
+@pokemon_bp.route("/evolution-chain/<int:id_>")
 @cache.cached(timeout=300)
 def get_evolution_chain(id_):
     try:
@@ -578,7 +578,7 @@ def get_evolution_chain(id_):
             return str(e), e.response.status_code
 
 
-@pokemon_bp.route("/evolution_trigger/<id_or_name>")
+@pokemon_bp.route("/evolution-trigger/<id_or_name>")
 @cache.cached(timeout=300)
 def get_evolution_trigger(id_or_name):
     # Check if id_or_name can be converted to an integer
@@ -646,7 +646,7 @@ def get_generation(id_or_name):
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/growth_rate/<id_or_name>")
+@pokemon_bp.route("/growth-rate/<id_or_name>")
 @cache.cached(timeout=300)
 def get_growth_rate(id_or_name):
     # Check if id_or_name can be converted to an integer
@@ -667,7 +667,7 @@ def get_growth_rate(id_or_name):
 
 @pokemon_bp.route("/item/", defaults={"id_or_name": None})
 @pokemon_bp.route("/item/<id_or_name>")
-@cache.cached(timeout=300)
+#@cache.cached(timeout=300)
 def get_item(id_or_name):
     if id_or_name is None:
         # Fetch all items
@@ -708,7 +708,7 @@ def get_item(id_or_name):
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/item_attribute/<id_or_name>")
+@pokemon_bp.route("/item-attribute/<id_or_name>")
 @cache.cached(timeout=300)
 def get_item_attribute(id_or_name):
     # Check if id_or_name can be converted to an integer
@@ -729,7 +729,7 @@ def get_item_attribute(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/item_category/<id_or_name>")
+@pokemon_bp.route("/item-category/<id_or_name>")
 @cache.cached(timeout=300)
 def get_item_category(id_or_name):
     # Check if id_or_name can be converted to an integer
@@ -748,7 +748,7 @@ def get_item_category(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/item_fling_effect/<id_or_name>")
+@pokemon_bp.route("/item-fling_effect/<id_or_name>")
 @cache.cached(timeout=300)
 def get_item_fling_effect(id_or_name):
     # Check if id_or_name can be converted to an integer
@@ -767,7 +767,7 @@ def get_item_fling_effect(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/item_pocket/<id_or_name>")
+@pokemon_bp.route("/item-pocket/<id_or_name>")
 @cache.cached(timeout=300)
 def get_item_pocket(id_or_name):
     # Check if id_or_name can be converted to an integer
@@ -837,7 +837,7 @@ def get_location(id_or_name):
                 return str(e), 500  # Internal Server Error for other issues
 
 
-@pokemon_bp.route("/location_area/<id_or_name>")
+@pokemon_bp.route("/location-area/<id_or_name>")
 @cache.cached(timeout=300)
 def get_location_area(id_or_name):
     try:
@@ -985,7 +985,7 @@ def get_move(id_or_name):
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/move_ailment/<id_or_name>")
+@pokemon_bp.route("/move-ailment/<id_or_name>")
 @cache.cached(timeout=300)
 def get_move_ailment(id_or_name):
     # Check if id_or_name can be converted to an integer
@@ -1004,7 +1004,7 @@ def get_move_ailment(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/move_battle_style/<id_or_name>")
+@pokemon_bp.route("/move-battle_style/<id_or_name>")
 @cache.cached(timeout=300)
 def get_move_battle_style(id_or_name):
     # Check if id_or_name can be converted to an integer
@@ -1023,8 +1023,8 @@ def get_move_battle_style(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/move_category/", defaults={"id_or_name": None})
-@pokemon_bp.route("/move_category/<id_or_name>")
+@pokemon_bp.route("/move-category/", defaults={"id_or_name": None})
+@pokemon_bp.route("/move-category/<id_or_name>")
 @cache.cached(timeout=300)
 def get_move_category(id_or_name):
     try:
@@ -1052,7 +1052,7 @@ def get_move_category(id_or_name):
         return str(e), 404
 
 
-@pokemon_bp.route("/move_damage_class/<id_or_name>")
+@pokemon_bp.route("/move-damage-class/<id_or_name>")
 @cache.cached(timeout=300)
 def get_move_damage_class(id_or_name):
     # Check if id_or_name can be converted to an integer
@@ -1071,8 +1071,8 @@ def get_move_damage_class(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/move_learn_method/", defaults={"id_or_name": None})
-@pokemon_bp.route("/move_learn_method/<id_or_name>")
+@pokemon_bp.route("/move-learn-method/", defaults={"id_or_name": None})
+@pokemon_bp.route("/move-learn-method/<id_or_name>")
 @cache.cached(timeout=300)
 def get_move_learn_method(id_or_name):
     if id_or_name is None:
@@ -1098,7 +1098,7 @@ def get_move_learn_method(id_or_name):
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/move_target/<id_or_name>")
+@pokemon_bp.route("/move-target/<id_or_name>")
 @cache.cached(timeout=300)
 def get_move_target(id_or_name):
     # Check if id_or_name can be converted to an integer
@@ -1136,7 +1136,7 @@ def get_nature(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/pal_park_area/<id_or_name>")
+@pokemon_bp.route("/pal-park-area/<id_or_name>")
 @cache.cached(timeout=300)
 def get_pal_park_area(id_or_name):
     # Check if id_or_name can be converted to an integer
@@ -1155,7 +1155,7 @@ def get_pal_park_area(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/pokeathlon_stat/<id_or_name>")
+@pokemon_bp.route("/pokeathlon-stat/<id_or_name>")
 @cache.cached(timeout=300)
 def get_pokeathlon_stat(id_or_name):
     # Check if id_or_name can be converted to an integer
@@ -1364,8 +1364,8 @@ def get_pokemon(id_or_name):
     )
 
 
-@pokemon_bp.route("/pokemon_color/", defaults={"id_or_name": None})
-@pokemon_bp.route("/pokemon_color/<id_or_name>")
+@pokemon_bp.route("/pokemon-color/", defaults={"id_or_name": None})
+@pokemon_bp.route("/pokemon-color/<id_or_name>")
 @cache.cached(timeout=300)
 def get_pokemon_color(id_or_name):
     if id_or_name is None:
@@ -1394,7 +1394,7 @@ def get_pokemon_color(id_or_name):
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/pokemon_form/<id_or_name>")
+@pokemon_bp.route("/pokemon-form/<id_or_name>")
 def get_pokemon_form(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -1412,8 +1412,8 @@ def get_pokemon_form(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/pokemon_habitat/", defaults={"id_or_name": None})
-@pokemon_bp.route("/pokemon_habitat/<id_or_name>")
+@pokemon_bp.route("/pokemon-habitat/", defaults={"id_or_name": None})
+@pokemon_bp.route("/pokemon-habitat/<id_or_name>")
 @cache.cached(timeout=300)
 def get_pokemon_habitat(id_or_name):
     if id_or_name is None:
@@ -1442,8 +1442,8 @@ def get_pokemon_habitat(id_or_name):
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/pokemon_shape/", defaults={"id_or_name": None})
-@pokemon_bp.route("/pokemon_shape/<id_or_name>")
+@pokemon_bp.route("/pokemon-shape/", defaults={"id_or_name": None})
+@pokemon_bp.route("/pokemon-shape/<id_or_name>")
 @cache.cached(timeout=300)
 def get_pokemon_shape(id_or_name):
     if id_or_name is None:
@@ -1469,8 +1469,8 @@ def get_pokemon_shape(id_or_name):
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/pokemon_species/", defaults={"id_or_name": None})
-@pokemon_bp.route("/pokemon_species/<id_or_name>")
+@pokemon_bp.route("/pokemon-species/", defaults={"id_or_name": None})
+@pokemon_bp.route("/pokemon-species/<id_or_name>")
 @cache.cached(timeout=300)
 def get_pokemon_species(id_or_name):
     if id_or_name is None:
@@ -1563,7 +1563,7 @@ def get_stat(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/super_contest_effect/<int:id_>")
+@pokemon_bp.route("/super-contest-effect/<int:id_>")
 def get_super_contest_effect(id_):
     try:
         data = pokedex.APIResource.fetch_data("super-contest-effect", id_)
@@ -1672,8 +1672,8 @@ def get_version(id_or_name):
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@pokemon_bp.route("/version_group/", defaults={"id_or_name": None})
-@pokemon_bp.route("/version_group/<id_or_name>")
+@pokemon_bp.route("/version-group/", defaults={"id_or_name": None})
+@pokemon_bp.route("/version-group/<id_or_name>")
 @cache.cached(timeout=300)
 def get_version_group(id_or_name):
     if id_or_name is None:
@@ -1713,25 +1713,32 @@ def get_version_group(id_or_name):
 
 @pokemon_bp.route("/<api_endpoint>/<id_or_name>")
 def get_endpoint_data(api_endpoint, id_or_name):
+    # Try to convert id_or_name to an integer, but keep it as a string if it fails
     try:
-        # Convert the endpoint from hyphenated form to underscore form
-        endpoint_pythonic = api_endpoint.replace('-', '_')
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # If conversion fails, id_or_name remains a string
 
-        # Check if id_or_name can be converted to an integer
-        try:
-            id_or_name = int(id_or_name)
-        except ValueError:
-            pass  # if the conversion fails, it remains a string
-
-        # Check if the function exists in the __all__ list
-        if endpoint_pythonic in pokedex.__all__:
-            func = getattr(sys.modules[__name__], endpoint_pythonic)  # get the function from current module by its name
+    try:
+        # Check if the api_endpoint exists in pokedex.__all__
+        if api_endpoint in pokedex.__all__:
+            # Dynamically fetch the function from the current module
+            func = getattr(sys.modules[__name__], api_endpoint)
             data = func(id_or_name)
             return render_template("generic.html", data=data)
         else:
+            # If the endpoint is not found, raise an appropriate error
             raise ValueError(f"No such endpoint: {api_endpoint}")
     except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
+        # Handle ValueError and return a 400 Bad Request status with the error message
+        return str(e), 400
+    except AttributeError:
+        # Handle AttributeError in case the function is not found in the current module
+        return f"Function for endpoint '{api_endpoint}' not found.", 404
+    except Exception as e:
+        # Handle any other exceptions and return a 500 Internal Server Error
+        return f"An error occurred: {str(e)}", 500
+
 
 
 @pokemon_bp.route("/webhook/", methods=["POST", "GET"])

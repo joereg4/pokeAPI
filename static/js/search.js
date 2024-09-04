@@ -39,8 +39,6 @@ $(document).ready(function () {
     });
 
     function generateUrl(resource, name) {
-        // Replace any hyphen in the resource with an underscore
-        const updatedResource = resource.replace(/-/g, '_');
-        return `/${updatedResource}/${name}`;
+        return `/${resource}/${name}`;
     }
 });
