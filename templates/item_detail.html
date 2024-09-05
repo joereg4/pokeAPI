@@ -78,4 +78,29 @@
             {% include '_pokemon_list.html' %}
         </div>
     </section>
+    <section>
+        <div class="container pt-5">
+            <h2>Cards</h2>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+                {% if cards %}
+                    {% for card in cards %}
+                        <div class="col">
+                            <div class="card h-100">
+                                <div class="card-header text-center">{{ card.name }}</div>
+                                <img src="{{ card.large_image }}" class="card-img-top" alt="card.name">
+                                <div class="card-body">
+                                    <p class="card-text"> Created by <strong>{{ card.artist | title }}</strong> for the
+                                        <strong>{{ card.set_name }}</strong> set.</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col">
+                        No Data Available
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
 {% endblock %}

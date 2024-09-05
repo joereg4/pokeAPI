@@ -86,10 +86,11 @@ def get_summary(name, df):
         return None
 
 
-def get_pokemon_cards(pokemon_name):
+def get_pokemon_cards(name):
     try:
+        print(name)
         # Attempt to fetch the cards using the API
-        data = Card.where(q='name:{}'.format(pokemon_name))
+        data = Card.where(q='name:{}'.format(name))
 
         card_list = []
 
@@ -101,12 +102,12 @@ def get_pokemon_cards(pokemon_name):
                 'large_image': card.images.large,
                 'set_name': card.set.name
             })
-
+        print(card_list)
         return card_list
 
     except Exception as e:
         # Log the exception for debugging purposes
-        logging.info(f"Error fetching Pokémon cards for {pokemon_name}: {e}")
+        logging.info(f"Error fetching Pokémon cards for {name}: {e}")
         # Return an empty list to indicate no cards were found due to the error
         return []
 
@@ -667,7 +668,7 @@ def get_growth_rate(id_or_name):
 
 @pokemon_bp.route("/item/", defaults={"id_or_name": None})
 @pokemon_bp.route("/item/<id_or_name>")
-#@cache.cached(timeout=300)
+@cache.cached(timeout=300)
 def get_item(id_or_name):
     if id_or_name is None:
         # Fetch all items
@@ -703,7 +704,22 @@ def get_item(id_or_name):
             else:
                 summary_html = None
 
-            return render_template("item_detail.html", data=data, pokemon_list=pokemon_list, summary_html=summary_html)
+            try:
+                name = '"{}"'.format(data['name'])
+                # Replace '-' with ' ' before calling get_pokemon_cards
+                cards = get_pokemon_cards(name.replace('-', ' '))
+            except Exception as e:
+                # Log the exception and proceed with an empty list
+                logging.warning(f"Error fetching cards for {data['name'].replace('-', '+')}: {e}")
+                cards = []
+
+            print(cards)
+
+            return render_template("item_detail.html",
+                                   data=data,
+                                   pokemon_list=pokemon_list,
+                                   summary_html=summary_html,
+                                   cards=cards)
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
