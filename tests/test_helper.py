@@ -1,11 +1,14 @@
 import json
+import os
 from unittest.mock import patch
 
 from app import create_app
 from cache import cache
 
 
-def load_mock_data(file_path):
+def load_mock_data(file_name):
+    """Load mock data from a JSON file located in the mock_data directory."""
+    file_path = os.path.join(os.path.dirname(__file__), '..', 'mock_data', file_name)
     with open(file_path, 'r') as file:
         return json.load(file)
 
