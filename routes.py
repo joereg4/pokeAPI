@@ -1272,6 +1272,7 @@ def get_pokemon(id_or_name):
         "stats": data.get("stats", []),
     }
 
+    print(data)
     # Categorize moves by how they're learned
     move_categories = {
         "level_up": [],
@@ -1325,7 +1326,7 @@ def get_pokemon(id_or_name):
     # Try to fetch species data, but continue without it if it fails
     species_data = None
     try:
-        species_data = pokedex.APIResource.fetch_data("pokemon-species", id_or_name)
+        species_data = pokedex.APIResource.fetch_data("pokemon-species", data["species"]["name"])
     except requests.exceptions.HTTPError:
         logging.info(f"No species data found for Pokémon {data['name']}")
 
@@ -1343,14 +1344,18 @@ def get_pokemon(id_or_name):
     evolution_chain = None
 
     if species_data:
-        # Build Evolution Chain only if species data is available
-        evolution_id = pokedex.get_species_id_from_url(species_data['evolution_chain']['url'])
+        # Check if the evolution_chain key exists before attempting to access it
+        if 'evolution_chain' in species_data and 'url' in species_data['evolution_chain']:
+            evolution_id = pokedex.get_species_id_from_url(species_data['evolution_chain']['url'])
 
-        # Using evolution_id get the chain
-        evolution_chain_data = pokedex.APIResource.fetch_data("evolution-chain", evolution_id)
-        pokemon_name = evolution_chain_data["chain"]["species"]["name"]
+            # Using evolution_id get the chain
+            evolution_chain_data = pokedex.APIResource.fetch_data("evolution-chain", evolution_id)
+            pokemon_name = evolution_chain_data["chain"]["species"]["name"]
 
-        evolution_chain = pokedex.get_chain(evolution_chain_data, pokemon_name)
+            evolution_chain = pokedex.get_chain(evolution_chain_data, pokemon_name)
+        else:
+            logging.warning(f"No evolution chain found for Pokémon with ID {id_or_name}")
+            evolution_chain = None
 
     # Retrieve the summary for the Pokémon
     summary = get_summary(data['name'], df)
