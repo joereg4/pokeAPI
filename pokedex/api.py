@@ -1,4 +1,5 @@
 import requests
+
 from .cache import get_sprite_path, load, load_sprite, save, save_sprite
 from .common import api_url_build, sprite_url_build
 

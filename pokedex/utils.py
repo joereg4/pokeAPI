@@ -1,6 +1,7 @@
 import csv
-import os
 import glob
+import os
+
 from flask import current_app
 
 resources_dict = []

@@ -1,8 +1,10 @@
+import logging
+
 from flask import Flask, render_template
+
+import pokedex
 from cache import cache
 from routes import pokemon_bp
-import pokedex
-import logging
 
 logging.basicConfig(level=logging.INFO)
 
@@ -14,7 +16,7 @@ def create_app(test_config=None):
     app = Flask(__name__)
 
     # Configure the cache
-    cache.init_app(app, config={'CACHE_TYPE': 'simple'})
+    cache.init_app(app, config={'CACHE_TYPE': 'SimpleCache'})
 
     # If there's a test config, override the default configurations
     if test_config:
