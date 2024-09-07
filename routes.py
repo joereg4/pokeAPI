@@ -88,7 +88,6 @@ def get_summary(name, df):
 
 def get_pokemon_cards(name):
     try:
-        print(name)
         # Attempt to fetch the cards using the API
         data = Card.where(q='name:{}'.format(name))
 
@@ -102,7 +101,6 @@ def get_pokemon_cards(name):
                 'large_image': card.images.large,
                 'set_name': card.set.name
             })
-        print(card_list)
         return card_list
 
     except Exception as e:
@@ -286,7 +284,7 @@ def get_ability(id_or_name):
             return render_template("ability_detail.html", data=data, pokemon_list=pokemon_list,
                                    summary_html=summary_html)
         except ValueError as e:
-            return str(e), 400  # Return the error message with a 400 Bad Request status
+            abort(404, description=str(e))
 
 
 @pokemon_bp.route("/berry/", defaults={"id_or_name": None})
@@ -1239,7 +1237,7 @@ def get_pokemon_list():
 
 
 @pokemon_bp.route("/pokemon/<id_or_name>")
-@cache.cached(timeout=300)
+#@cache.cached(timeout=300)
 def get_pokemon(id_or_name):
     csv_file_path = get_path('pokemon.csv')
     df = pd.read_csv(csv_file_path)
@@ -1327,7 +1325,7 @@ def get_pokemon(id_or_name):
     # Try to fetch species data, but continue without it if it fails
     species_data = None
     try:
-        species_data = pokedex.pokemon_species(data["id"])
+        species_data = pokedex.APIResource.fetch_data("pokemon-species", id_or_name)
     except requests.exceptions.HTTPError:
         logging.info(f"No species data found for Pokémon {data['name']}")
 
@@ -1349,7 +1347,7 @@ def get_pokemon(id_or_name):
         evolution_id = pokedex.get_species_id_from_url(species_data['evolution_chain']['url'])
 
         # Using evolution_id get the chain
-        evolution_chain_data = pokedex.evolution_chain(evolution_id)
+        evolution_chain_data = pokedex.APIResource.fetch_data("evolution-chain",evolution_id)
         pokemon_name = evolution_chain_data["chain"]["species"]["name"]
 
         evolution_chain = pokedex.get_chain(evolution_chain_data, pokemon_name)

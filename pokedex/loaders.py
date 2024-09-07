@@ -1,6 +1,6 @@
 # loaders.py
 # -*- coding: utf-8 -*-
-
+from . import SpriteResource
 from .interface import APIResource, SpriteResource
 
 
@@ -615,4 +615,7 @@ def language(id_or_name, **kwargs):
 
 
 def sprite(sprite_type, sprite_id, **kwargs):
-    return SpriteResource.fetch_sprite_data(sprite_type, sprite_id, **kwargs)
+    # Create an instance of SpriteResource
+    sprite_resource: SpriteResource = SpriteResource(sprite_type, sprite_id, **kwargs)
+    # Return the sprite resource instance after it loads data
+    return sprite_resource
