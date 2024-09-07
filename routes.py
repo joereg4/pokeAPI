@@ -711,8 +711,6 @@ def get_item(id_or_name):
                 logging.warning(f"Error fetching cards for {data['name'].replace('-', '+')}: {e}")
                 cards = []
 
-            print(cards)
-
             return render_template("item_detail.html",
                                    data=data,
                                    pokemon_list=pokemon_list,
@@ -1272,7 +1270,6 @@ def get_pokemon(id_or_name):
         "stats": data.get("stats", []),
     }
 
-    print(data)
     # Categorize moves by how they're learned
     move_categories = {
         "level_up": [],
@@ -1837,4 +1834,3 @@ def webhook():
     elif request.method == "GET":
         logging.info("GET request received - Returning 403 Forbidden")
         return render_template('403.html'), 403
-
