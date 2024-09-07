@@ -5,6 +5,7 @@ import os
 import re
 import subprocess
 import sys
+import time
 
 import markdown
 import pandas as pd
@@ -1237,7 +1238,7 @@ def get_pokemon_list():
 
 
 @pokemon_bp.route("/pokemon/<id_or_name>")
-#@cache.cached(timeout=300)
+# @cache.cached(timeout=300)
 def get_pokemon(id_or_name):
     csv_file_path = get_path('pokemon.csv')
     df = pd.read_csv(csv_file_path)
@@ -1347,7 +1348,7 @@ def get_pokemon(id_or_name):
         evolution_id = pokedex.get_species_id_from_url(species_data['evolution_chain']['url'])
 
         # Using evolution_id get the chain
-        evolution_chain_data = pokedex.APIResource.fetch_data("evolution-chain",evolution_id)
+        evolution_chain_data = pokedex.APIResource.fetch_data("evolution-chain", evolution_id)
         pokemon_name = evolution_chain_data["chain"]["species"]["name"]
 
         evolution_chain = pokedex.get_chain(evolution_chain_data, pokemon_name)
@@ -1754,7 +1755,6 @@ def get_endpoint_data(api_endpoint, id_or_name):
         return f"An error occurred: {str(e)}", 500
 
 
-
 @pokemon_bp.route("/webhook/", methods=["POST", "GET"])
 def webhook():
     secret = os.getenv('WEBHOOK_SECRET')
@@ -1796,6 +1796,7 @@ def webhook():
                 text=True
             )
             logging.info("Git pull output: " + result.stdout)
+            time.sleep(5)
         except subprocess.CalledProcessError as e:
             logging.error(f"Git pull failed: {e.stderr}")
             abort(500, f'Git pull failed: {str(e)}')
@@ -1814,6 +1815,7 @@ def webhook():
                 timeout=30  # Timeout after 30 seconds
             )
             logging.info(f"Gunicorn restart output: {result.stdout}")
+            time.sleep(5)
         except subprocess.CalledProcessError as e:
             logging.error(f"Gunicorn restart failed with return code {e.returncode}: {e.stderr}")
             abort(500, f'Gunicorn restart failed: {str(e)}')
