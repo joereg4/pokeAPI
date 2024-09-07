@@ -13,12 +13,8 @@
                     {% if data.sprites['other']['official-artwork']['front_default'] %}
                         <img src="{{ data.sprites['other']['official-artwork']['front_default'] }}"
                              alt="{{ data.name }}">
-                    {% elif data.sprites['other']['home']['front_default'] %}
-                        <img src="{{ data.sprites['other']['home']['front_default'] }}" alt="{{ data.name }}">
-                    {% elif data.sprites['front_default'] %}
-                        <img src="{{ data.sprites['front_default'] }}" alt="{{ data.name }}">
                     {% else %}
-                        <img src="/static/images/default_artwork.png" alt="{{ data.name }}">
+                        <img src="{{ url_for('pokemon.static', filename='img/default_pokemon.png') }}" class="card-img-top" alt="No Image">
                     {% endif %}
                 </div>
                 <!-- Attributes Section -->

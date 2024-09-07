@@ -7,17 +7,13 @@
         {% for pokemon in pokemon_list %}
             <div class="col">
                 <div class="card h-100">
-                    <a href="{{ url_for('pokemon.get_pokemon', id_or_name=pokemon.name) }}">
+                    <a class="text-decoration-none" href="{{ url_for('pokemon.get_pokemon', id_or_name=pokemon.name) }}">
 
                         {% if pokemon.sprites['other']['official-artwork']['front_default'] %}
                             <img src="{{ pokemon.sprites['other']['official-artwork']['front_default'] }}"
                                 class="card-img-top" alt="{{ pokemon.name }}">
-                        {% elif pokemon.sprites['other']['home']['front_default'] %}
-                            <img src="{{ pokemon.sprites['other']['home']['front_default'] }}" class="card-img-top" alt="{{ pokemon.name }}">
-                        {% elif data.sprites['front_default'] %}
-                            <img src="{{ pokemon.sprites['front_default'] }}" class="card-img-top" alt="{{ pokemon.name }}">
                         {% else %}
-                            <img src="/static/images/default_artwork.png" class="card-img-top" alt="No Image">
+                            <img src="{{ url_for('pokemon.static', filename='img/default_pokemon.png') }}" class="card-img-top" alt="No Image">
                         {% endif %}
                     </a>
                     <div class="card-body">
