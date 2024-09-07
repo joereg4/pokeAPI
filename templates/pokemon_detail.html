@@ -14,7 +14,7 @@
                 </div>
                 <!-- Attributes Section -->
                 <div class="col">
-                    <h2 class="detail-card__title">Attributes</h2>
+                    <h2>Attributes</h2>
                     <ul>
                         <li>Base Experience: {{ data.base_experience }}</li>
                         <li>Height: {{ data.height }}</li>
@@ -24,8 +24,14 @@
                         {% if species_data %}
                             <li>Base Happiness: {{ species_data.base_happiness }}</li>
                             <li>Capture Rate: {{ species_data.capture_rate }}</li>
-                            <li>Color: <a
-                                    href="{{ url_for('pokemon.get_pokemon_color', id_or_name=species_data.color.name) }}">{{ species_data.color.name | title }}</a>
+                            <li>Color:
+                                {% if species_data.color %}
+                                    <a href="{{ url_for('pokemon.get_pokemon_color', id_or_name=species_data.color.name) }}">
+                                        {{ species_data.color.name | title }}
+                                    </a>
+                                {% else %}
+                                    <p>No color information available.</p>
+                                {% endif %}
                             </li>
                             <li>Egg Groups:
                                 {% for egg_group in species_data.egg_groups %}
@@ -42,7 +48,9 @@
                             <li>Is Baby: {{ species_data.is_baby }}</li>
                             <li>Is Legendary: {{ species_data.is_legendary }}</li>
                             <li>Is Mythical: {{ species_data.is_mythical }}</li>
-                            <li>Shape: <a href="{{ url_for('pokemon.get_pokemon_shape', id_or_name=species_data.shape.name) }}"> {{ species_data.shape.name | title }}</a></li>
+                            <li>Shape: <a
+                                    href="{{ url_for('pokemon.get_pokemon_shape', id_or_name=species_data.shape.name) }}"> {{ species_data.shape.name | title }}</a>
+                            </li>
                         {% endif %}
                     </ul>
                 </div>
@@ -95,7 +103,7 @@
 
                 <!-- Abilities and Held Items Section -->
                 <div class="col">
-                    <h2 class="detail-card__title">Abilities</h2>
+                    <h2>Abilities</h2>
                     <ul>
                         {% for ability in data.abilities %}
                             <li>
@@ -104,7 +112,7 @@
                             </li>
                         {% endfor %}
                     </ul>
-                    <h2 class="detail-card__title">Held items</h2>
+                    <h2>Held items</h2>
                     <ul>
                         {% if data.held_items %}
                             {% for held_item in data.held_items %}
