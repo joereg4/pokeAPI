@@ -115,6 +115,7 @@ def create_pokemon_list(data):
         # If data is a list, assume it contains the Pokémon entries directly
         if isinstance(data, list):
             pokemon_entries = data
+            key = "list"  # To avoid issues if a key is needed later
         else:
             # Possible keys that might contain the Pokémon species list
             possible_keys = ["pokemon", "pokemon_species", "pokemon_entries", "pokemon_encounters", "held_by_pokemon",
@@ -135,10 +136,19 @@ def create_pokemon_list(data):
         # Build the Pokémon list based on the identified key
         pokemon_list = []
         for pokemon_entry in pokemon_entries:
+            # If we have species data, we need to fetch Pokémon from the species
+            if key == "pokemon_species" and "name" in pokemon_entry:
+                species_name = pokemon_entry["name"]
+                species_data = pokedex.APIResource.fetch_data("pokemon-species", species_name)
+
+                # Recursive call to handle all Pokémon in the species
+                species_pokemon_list = create_pokemon_list(species_data["varieties"])
+                pokemon_list.extend(species_pokemon_list)
+                continue
+
             # The key structure is different depending on the data source
             if isinstance(pokemon_entry, dict):
-                pokemon_name = pokemon_entry["name"] if "name" in pokemon_entry else pokemon_entry.get("pokemon",
-                                                                                                       {}).get("name")
+                pokemon_name = pokemon_entry["name"] if "name" in pokemon_entry else pokemon_entry.get("pokemon", {}).get("name")
             else:
                 logging.info(f"Warning: Invalid Pokémon entry structure under key '{key}': {pokemon_entry}")
                 continue
@@ -177,6 +187,8 @@ def create_pokemon_list(data):
     except ValueError as e:
         logging.info(f"Error fetching Pokémon data under key '{key}': {e}")
         return []
+
+
 
 
 def fetch_all_results(url):
@@ -289,7 +301,7 @@ def get_ability(id_or_name):
 
 @pokemon_bp.route("/berry/", defaults={"id_or_name": None})
 @pokemon_bp.route("/berry/<id_or_name>")
-# @cache.cached(timeout=300)
+@cache.cached(timeout=300)
 def get_berry(id_or_name):
     if id_or_name is None:
         # Fetch and display a list of all berries
@@ -325,7 +337,7 @@ def get_berry(id_or_name):
 
 @pokemon_bp.route("/berry-firmness/", defaults={"id_or_name": None})
 @pokemon_bp.route("/berry-firmness/<id_or_name>")
-# @cache.cached(timeout=300)
+@cache.cached(timeout=300)
 def get_berry_firmness(id_or_name):
     if id_or_name is None:
         # Fetch and display a list of all berry firmness categories
@@ -1235,7 +1247,7 @@ def get_pokemon_list():
 
 
 @pokemon_bp.route("/pokemon/<id_or_name>")
-# @cache.cached(timeout=300)
+@cache.cached(timeout=300)
 def get_pokemon(id_or_name):
     csv_file_path = get_path('pokemon.csv')
     df = pd.read_csv(csv_file_path)

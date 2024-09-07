@@ -10,12 +10,22 @@
             <div class="row">
                 <!-- Official Image -->
                 <div class="col">
-                    <img src="{{ data.sprites['other']['official-artwork']['front_default'] }}" alt="{{ data.name }}">
+                    {% if data.sprites['other']['official-artwork']['front_default'] %}
+                        <img src="{{ data.sprites['other']['official-artwork']['front_default'] }}"
+                             alt="{{ data.name }}">
+                    {% elif data.sprites['other']['home']['front_default'] %}
+                        <img src="{{ data.sprites['other']['home']['front_default'] }}" alt="{{ data.name }}">
+                    {% elif data.sprites['front_default'] %}
+                        <img src="{{ data.sprites['front_default'] }}" alt="{{ data.name }}">
+                    {% else %}
+                        <img src="/static/images/default_artwork.png" alt="{{ data.name }}">
+                    {% endif %}
                 </div>
                 <!-- Attributes Section -->
                 <div class="col">
                     <h2>Attributes</h2>
                     <ul>
+                        <li>Species: <a href="{{ url_for('pokemon.get_pokemon_species', id_or_name=data.species.name) }}">{{ data.species.name | title }}</a></li>
                         <li>Base Experience: {{ data.base_experience }}</li>
                         <li>Height: {{ data.height }}</li>
                         <li>Weight: {{ data.weight }}</li>
@@ -39,9 +49,14 @@
                                     {% if not loop.last %}, {% endif %}
                                 {% endfor %}
                             <li>Gender Rate: {{ species_data.gender_rate }}</li>
+                            <li>
+                                {% if species_data.has_gender_differences %}
+                                Has Gender Differences
+                                {% else %}
+                                Has No Gender Differences
+                                {% endif %}
+                            </li>
                             <li>Hatch Counter: {{ species_data.hatch_counter }}</li>
-                            <li>Has Gender
-                                Differences: {{ species_data.has_gender_differences | title }}</li>
                             <li>Habitat: <a
                                     href="{{ url_for('pokemon.get_pokemon_habitat', id_or_name=species_data.habitat.name) }}">{{ species_data.habitat.name | title }}</a>
                             </li>
