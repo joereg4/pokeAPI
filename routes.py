@@ -5,7 +5,6 @@ import os
 import re
 import subprocess
 import sys
-import time
 
 import markdown
 import pandas as pd
@@ -1796,13 +1795,9 @@ def webhook():
                 text=True
             )
             logging.info("Git pull output: " + result.stdout)
-            time.sleep(5)
         except subprocess.CalledProcessError as e:
             logging.error(f"Git pull failed: {e.stderr}")
             abort(500, f'Git pull failed: {str(e)}')
-
-        # Log the command being run
-        logging.info("Attempting to restart Gunicorn with sudo")
 
         # Restart Gunicorn using sudo with timeout
         try:
@@ -1814,11 +1809,20 @@ def webhook():
                 text=True,
                 timeout=30  # Timeout after 30 seconds
             )
-            logging.info(f"Gunicorn restart output: {result.stdout}")
-            time.sleep(5)
+
+            # Check if the return code is -15 (SIGTERM)
+            if result.returncode == -15:
+                logging.warning("Gunicorn restart returned SIGTERM (-15), but continuing as restart succeeded.")
+            else:
+                logging.info(f"Gunicorn restart output: {result.stdout}")
+
         except subprocess.CalledProcessError as e:
-            logging.error(f"Gunicorn restart failed with return code {e.returncode}: {e.stderr}")
-            abort(500, f'Gunicorn restart failed: {str(e)}')
+            # Ignore if the return code is -15 (SIGTERM) since Gunicorn restarts successfully
+            if e.returncode == -15:
+                logging.warning(f"Gunicorn restart received SIGTERM (-15), but this is expected. Continuing.")
+            else:
+                logging.error(f"Gunicorn restart failed with return code {e.returncode}: {e.stderr}")
+                abort(500, f'Gunicorn restart failed: {str(e)}')
         except subprocess.TimeoutExpired as e:
             logging.error(f"Gunicorn restart timed out: {e}")
             abort(500, 'Gunicorn restart timed out.')
@@ -1828,3 +1832,4 @@ def webhook():
     elif request.method == "GET":
         logging.info("GET request received - Returning 403 Forbidden")
         return render_template('403.html'), 403
+
