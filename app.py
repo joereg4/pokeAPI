@@ -22,7 +22,8 @@ def create_app(test_config=None):
 
     # Set up logging based on environment
     if env == "development":
-        logging.basicConfig(level=logging.DEBUG)
+        logging.basicConfig(level=logging.INFO)
+        logging.getLogger("urllib3").setLevel(logging.WARNING)
         app.logger.setLevel(logging.DEBUG)
     else:
         logging.basicConfig(level=logging.WARNING)

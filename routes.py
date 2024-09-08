@@ -68,6 +68,12 @@ def get_path(filename):
     return csv_path
 
 
+def get_evolution_chain(val):
+    params = val["url"].split("/")[-3:-1]
+    params[1] = int(params[1])
+    return params
+
+
 def get_egg_summary(name, df):
     row = df[(df['name'].str.lower() == name.lower())]
 
@@ -1537,7 +1543,6 @@ def get_pokemon_shape(id_or_name):
 
 @pokemon_bp.route("/pokemon-species/", defaults={"id_or_name": None})
 @pokemon_bp.route("/pokemon-species/<id_or_name>")
-@cache.cached(timeout=300)
 def get_pokemon_species(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the Pokémon species list
@@ -1545,35 +1550,26 @@ def get_pokemon_species(id_or_name):
         data = fetch_all_results(url)
         return render_template("pokemon_species.html", data=data)
     else:
-        # id_or_name is provided, render the species detail
         try:
             id_or_name = int(id_or_name)
         except ValueError:
             pass  # if the conversion fails, it remains a string
 
         try:
-            # Custom evolution chain handling
-            def get_evolution_chain(val):
-                params = val["url"].split("/")[-3:-1]
-                params[1] = int(params[1])
-                return params
+            data = pokedex.pokemon_species(id_or_name)
+            data = data._load()
 
-            data = pokedex.APIResource.fetch_data("pokemon-species", id_or_name,
-                                                  custom={"evolution_chain": get_evolution_chain})
             # Extract only the relevant data for the Pokémon list
             simplified_data = {
                 "pokemon_species": [
                     {
-                        "name": data.get("name"),
+                        "name": data.get("name")
                     }
                 ]
             }
 
             # Process the list of Pokémon
             pokemon_list = pokedex.PokemonList(simplified_data).create_pokemon_list()
-
-            if "name" not in data:
-                abort(404, description=f"Pokemon species '{id_or_name}' not found")
 
             return render_template("pokemon_species_detail.html", data=data, pokemon_list=pokemon_list)
         except ValueError as e:
