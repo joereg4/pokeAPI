@@ -1451,8 +1451,9 @@ def get_pokemon_color(id_or_name):
 
             if "name" not in data:
                 abort(404, description=f"Pokemon color '{id_or_name}' not found")
-            # Use the create_pokemon_list function with the correct key
-            pokemon_list = create_pokemon_list(data)
+
+            # Process the list of Pokémon
+            pokemon_list = pokedex.PokemonList(data).create_pokemon_list()
 
             return render_template("color_detail.html", data=data, pokemon_list=pokemon_list)
         except ValueError as e:
@@ -1536,7 +1537,7 @@ def get_pokemon_shape(id_or_name):
 
 @pokemon_bp.route("/pokemon-species/", defaults={"id_or_name": None})
 @pokemon_bp.route("/pokemon-species/<id_or_name>")
-# @cache.cached(timeout=300)
+@cache.cached(timeout=300)
 def get_pokemon_species(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the Pokémon species list
@@ -1568,8 +1569,8 @@ def get_pokemon_species(id_or_name):
                 ]
             }
 
-            # Pass the simplified data to create_pokemon_list
-            pokemon_list = create_pokemon_list(simplified_data)
+            # Process the list of Pokémon
+            pokemon_list = pokedex.PokemonList(simplified_data).create_pokemon_list()
 
             if "name" not in data:
                 abort(404, description=f"Pokemon species '{id_or_name}' not found")
