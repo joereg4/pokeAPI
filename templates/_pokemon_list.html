@@ -12,7 +12,7 @@
 
                         {% if pokemon.official_artwork %}
                             <img src="{{ pokemon.official_artwork }}"
-                                 class="card-img-top" alt="{{ pokemon.name }}">
+                                  class="card-img-top" alt="{{ pokemon.name }}">
                         {% elif pokemon.sprites and pokemon.sprites['other']['official-artwork']['front_default'] %}
                             <img src="{{ pokemon.sprites['other']['official-artwork']['front_default'] }}" class="card-img-top" alt="{{ pokemon.name }}">
                         {% else %}
