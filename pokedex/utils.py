@@ -1,6 +1,7 @@
 import csv
 import glob
 import os
+import logging
 
 from flask import current_app
 
@@ -34,9 +35,9 @@ def load_resources():
                     resources_dict.append({"name": row[1], "type": row[0]})
 
         except FileNotFoundError:
-            print(f"File not found: {csv_file_path}")
+            logging.error(f"File not found: {csv_file_path}")
         except Exception as e:
-            print(f"An error occurred while processing {csv_file_path}: {e}")
+            logging.error(f"An error occurred while processing {csv_file_path}: {e}")
 
     if not resources_dict:
         resources_dict = []

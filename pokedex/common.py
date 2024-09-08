@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import os
+import logging
+import requests
 
 BASE_URL = "https://pokeapi.co/api/v2"
 SPRITE_URL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites"
@@ -124,7 +126,6 @@ def validate(endpoint, resource_id=None):
 
 
 def api_url_build(endpoint, resource_id=None, subresource=None):
-
     validate(endpoint, resource_id)
     if resource_id is not None:
         if subresource is not None:
@@ -201,5 +202,31 @@ def parse_sprite_options(sprite_type, **kwargs):
     return options
 
 
+def get_fallback_image(pokedex):
+    try:
+        if pokedex:
+            url = f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokedex}.png'
+
+            # Perform a quick request to check if the image URL exists (status code 200)
+            response = requests.get(url)
+            if response.status_code == 200:
+                return url
+            else:
+                logging.warning(f"Image not found at {url}. Status code: {response.status_code}")
+                return "default_image.png"  # Return default image if the request fails
+        else:
+            raise ValueError("Invalid Pokédex number.")
+    except Exception as e:
+        logging.error(f"Error generating fallback image URL: {e}")
+        return "default_image.png"
 
 
+def get_official_artwork(name, official_artwork, entry_number):
+    # If official artwork is missing, call fallback function
+    if official_artwork is None:
+        logging.debug(f"Official artwork missing for {name}. Generating fallback image.")
+        official_artwork = get_fallback_image(entry_number)
+    else:
+        official_artwork
+
+    return official_artwork

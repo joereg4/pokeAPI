@@ -10,8 +10,8 @@
             <div class="row">
                 <!-- Official Image -->
                 <div class="col">
-                    {% if data.sprites['other']['official-artwork']['front_default'] %}
-                        <img src="{{ data.sprites['other']['official-artwork']['front_default'] }}"
+                    {% if official_artwork %}
+                        <img src="{{ official_artwork }}"
                              alt="{{ data.name }}">
                     {% else %}
                         <img src="{{ url_for('pokemon.static', filename='img/default_pokemon.png') }}" class="card-img-top" alt="No Image">

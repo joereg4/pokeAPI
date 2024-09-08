@@ -105,7 +105,7 @@ def get_pokemon_cards(name):
 
     except Exception as e:
         # Log the exception for debugging purposes
-        logging.info(f"Error fetching Pokémon cards for {name}: {e}")
+        logging.error(f"Error fetching Pokémon cards for {name}: {e}")
         # Return an empty list to indicate no cards were found due to the error
         return []
 
@@ -136,7 +136,8 @@ def create_pokemon_list(data):
         # Build the Pokémon list based on the identified key
         pokemon_list = []
         for pokemon_entry in pokemon_entries:
-            # If we have species data, we need to fetch Pokémon from the species
+
+            # If we have species data, fetch Pokémon from the species
             if key == "pokemon_species" and "name" in pokemon_entry:
                 species_name = pokemon_entry["name"]
                 species_data = pokedex.APIResource.fetch_data("pokemon-species", species_name)
@@ -144,17 +145,29 @@ def create_pokemon_list(data):
                 # Recursive call to handle all Pokémon in the species
                 species_pokemon_list = create_pokemon_list(species_data["varieties"])
                 pokemon_list.extend(species_pokemon_list)
+
+                # Now handle the species-specific entry number and artwork
+                entry_number = species_data.get('pokedex_numbers', [{}])[0].get('entry_number', None)
+                for pokemon in species_pokemon_list:
+                    # Append the entry number and official artwork to each Pokémon in the species
+                    pokemon['entry_number'] = entry_number
+                    pokemon['official_artwork'] = pokedex.get_official_artwork(
+                        pokemon['name'],
+                        pokemon['sprites'].get('other', {}).get('official-artwork', {}).get('front_default'),
+                        entry_number
+                    )
                 continue
 
             # The key structure is different depending on the data source
             if isinstance(pokemon_entry, dict):
-                pokemon_name = pokemon_entry["name"] if "name" in pokemon_entry else pokemon_entry.get("pokemon", {}).get("name")
+                pokemon_name = pokemon_entry["name"] if "name" in pokemon_entry else pokemon_entry.get("pokemon",
+                                                                                                       {}).get("name")
             else:
-                logging.info(f"Warning: Invalid Pokémon entry structure under key '{key}': {pokemon_entry}")
+                logging.warning(f"Warning: Invalid Pokémon entry structure under key '{key}': {pokemon_entry}")
                 continue
 
             if not pokemon_name:
-                logging.info(f"Warning: Could not find Pokémon name in entry under key '{key}': {pokemon_entry}")
+                logging.warning(f"Warning: Could not find Pokémon name in entry under key '{key}': {pokemon_entry}")
                 continue
 
             # Fetch the Pokémon data
@@ -177,18 +190,33 @@ def create_pokemon_list(data):
 
             # Check if the 'sprites' key exists in the Pokémon data
             if "sprites" in pokemon:
-                pokemon_list.append(pokemon)
+                # Get the official artwork or use a fallback if not available
+                official_artwork = pokemon['sprites'].get('other', {}).get('official-artwork', {}).get('front_default')
+                entry_number = pokemon.get('entry_number')  # We ensure entry_number is required
+                if entry_number is None:
+                    official_artwork = official_artwork
+                else:
+                    official_artwork = pokedex.get_official_artwork(pokemon_name, official_artwork, entry_number)
+                # Add the official artwork to the Pokémon data
+                pokemon['official_artwork'] = official_artwork
+                # Add Pokémon to the list
+                # Append the Pokémon with only required data
+                pokemon_list.append({
+                    "name": pokemon_name,
+                    "official_artwork": official_artwork,
+                    "id": pokemon.get("id"),
+                    "types": pokemon.get("types", []),
+                    "sprites": pokemon.get("sprites", {}),
+                })
             else:
-                logging.info(f"No sprites found for Pokémon '{pokemon_name}' under key '{key}'")
+                logging.warning(f"No sprites found for Pokémon '{pokemon_name}' under key '{key}'")
 
         pokemon_list.sort(key=lambda x: x.get("id", float("inf")))
 
         return pokemon_list
     except ValueError as e:
-        logging.info(f"Error fetching Pokémon data under key '{key}': {e}")
+        logging.error(f"Error fetching Pokémon data under key '{key}': {e}")
         return []
-
-
 
 
 def fetch_all_results(url):
@@ -991,7 +1019,7 @@ def get_move(id_or_name):
                 category_name = data["meta"]["category"]["name"]
                 category = pokedex.APIResource.fetch_data("move-category", category_name)
             else:
-                logging.info(f"No category found for move {data['name']}")
+                logging.warning(f"No category found for move {data['name']}")
 
             # Fetch Summary
             csv_file_path = get_path('move.csv')
@@ -1247,7 +1275,7 @@ def get_pokemon_list():
 
 
 @pokemon_bp.route("/pokemon/<id_or_name>")
-@cache.cached(timeout=300)
+# @cache.cached(timeout=300)
 def get_pokemon(id_or_name):
     csv_file_path = get_path('pokemon.csv')
     df = pd.read_csv(csv_file_path)
@@ -1337,7 +1365,7 @@ def get_pokemon(id_or_name):
     try:
         species_data = pokedex.APIResource.fetch_data("pokemon-species", data["species"]["name"])
     except requests.exceptions.HTTPError:
-        logging.info(f"No species data found for Pokémon {data['name']}")
+        logging.warning(f"No species data found for Pokémon {data['name']}")
 
     # Get the sprite data and filter out null values and unwanted sprites
     sprites = {
@@ -1379,6 +1407,15 @@ def get_pokemon(id_or_name):
         logging.warning(f"Error fetching cards for {data['name']}: {e}")
         cards = []
 
+    # Check for Official Artwork
+    try:
+        entry_number = species_data.get('pokedex_numbers', [{}])[0].get('entry_number', None)
+        official_artwork = data.get('sprites', {}).get('other', {}).get('official-artwork', {}).get('front_default')
+        official_artwork = pokedex.get_official_artwork(data['name'], official_artwork, entry_number)
+    except Exception as e:
+        logging.warning(f"Error identifying entry number and official artwork for {data['name']}: {e}")
+        official_artwork = None
+
     return render_template(
         "pokemon_detail.html",
         data=data,
@@ -1389,6 +1426,7 @@ def get_pokemon(id_or_name):
         move_categories=move_categories,
         summary_html=summary_html,
         cards=cards,
+        official_artwork=official_artwork,
     )
 
 
@@ -1413,7 +1451,6 @@ def get_pokemon_color(id_or_name):
 
             if "name" not in data:
                 abort(404, description=f"Pokemon color '{id_or_name}' not found")
-
             # Use the create_pokemon_list function with the correct key
             pokemon_list = create_pokemon_list(data)
 
@@ -1499,7 +1536,7 @@ def get_pokemon_shape(id_or_name):
 
 @pokemon_bp.route("/pokemon-species/", defaults={"id_or_name": None})
 @pokemon_bp.route("/pokemon-species/<id_or_name>")
-@cache.cached(timeout=300)
+# @cache.cached(timeout=300)
 def get_pokemon_species(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the Pokémon species list
@@ -1514,6 +1551,7 @@ def get_pokemon_species(id_or_name):
             pass  # if the conversion fails, it remains a string
 
         try:
+            # Custom evolution chain handling
             def get_evolution_chain(val):
                 params = val["url"].split("/")[-3:-1]
                 params[1] = int(params[1])
@@ -1521,16 +1559,28 @@ def get_pokemon_species(id_or_name):
 
             data = pokedex.APIResource.fetch_data("pokemon-species", id_or_name,
                                                   custom={"evolution_chain": get_evolution_chain})
+            # Extract only the relevant data for the Pokémon list
+            simplified_data = {
+                "pokemon_species": [
+                    {
+                        "name": data.get("name"),
+                    }
+                ]
+            }
 
-            # Use the create_pokemon_list function with the correct key
-            pokemon_list = create_pokemon_list(data)
+            # Pass the simplified data to create_pokemon_list
+            pokemon_list = create_pokemon_list(simplified_data)
 
             if "name" not in data:
                 abort(404, description=f"Pokemon species '{id_or_name}' not found")
 
             return render_template("pokemon_species_detail.html", data=data, pokemon_list=pokemon_list)
         except ValueError as e:
+            logging.error(f"ValueError in fetching species {id_or_name}: {e}")
             return str(e), 400  # Return the error message with a 400 Bad Request status
+        except Exception as e:
+            logging.error(f"Unexpected error occurred: {e}")
+            return str(e), 500  # Return a generic server error
 
 
 @pokemon_bp.route("/region/", defaults={"id_or_name": None})
