@@ -76,7 +76,7 @@ class PokemonList:
         if "sprites" in pokemon:
             official_artwork = pokemon['sprites'].get('other', {}).get('official-artwork', {}).get('front_default')
             entry_number = pokemon.get('entry_number')
-            if entry_number is not None:
+            if official_artwork is None and entry_number is not None:
                 official_artwork = get_official_artwork(pokemon_name, official_artwork, entry_number)
 
             self.pokemon_list.append({
@@ -86,7 +86,7 @@ class PokemonList:
                 "types": pokemon.get("types", []),
                 "sprites": pokemon.get("sprites", {}),
             })
-            logging.info(f'Added {pokemon_name} to the Pokémon list')
+            logging.debug(f'Added {pokemon_name} to the Pokémon list')
         else:
             logging.warning(f"No sprites found for Pokémon '{pokemon_name}'")
 
@@ -125,7 +125,7 @@ class PokemonList:
                 return
             if pokemon_name:
                 pokemon = APIResource.fetch_data("pokemon", pokemon_name)
-                logging.info(f"Fetched Pokémon data for: {pokemon_name}")
+                logging.debug(f"Fetched Pokémon data for: {pokemon_name}")
                 self.add_pokemon_to_list(pokemon_name, pokemon)
 
     def create_pokemon_list(self):

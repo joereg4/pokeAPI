@@ -493,6 +493,7 @@ def pokemon(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
+    return APIResource("pokemon", id_or_name, **kwargs)
 
     def get_location_area_encounters(val):
         params = val.split("/")[-3:]
@@ -564,19 +565,7 @@ def pokemon_species(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-
-    def get_evolution_chain(val):
-        params = val["url"].split("/")[-3:-1]
-        params[1] = int(params[1])
-        return params
-
-    return APIResource.fetch_data(
-        "pokemon-species",
-        id_or_name,
-        custom={"evolution_chain": get_evolution_chain},
-        **kwargs
-    )
-
+    return APIResource("pokemon-species", id_or_name, **kwargs)
 
 def stat(id_or_name, **kwargs):
     """Quick stat lookup.

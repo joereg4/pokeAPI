@@ -1,42 +1,41 @@
 # interface.py
 # -*- coding: utf-8 -*-
+import logging
 
 from .api import get_data, get_sprite
 from .common import api_url_build, sprite_url_build
 
+# Define the list of fields that should be converted into objects
+CONVERT_FIELDS = []
 
-def _make_obj(obj):
-    """Takes an object and returns a corresponding API class.
 
-    The names and values of the data will match exactly with those found
-    in the online docs at https://pokeapi.co/docsv2/ . In some cases, the data
-    may be of a standard type, such as an integer or string. For those cases,
-    the input value is simply returned, unchanged.
+def _make_obj(obj, key=None):
+    """Takes an object and returns a corresponding API class if the key is in CONVERT_FIELDS."""
+    # Only convert fields that are in the CONVERT_FIELDS list
+    if key not in CONVERT_FIELDS:
+        return obj  # Return the raw data as is (dictionary or list)
 
-    :param obj: the object to be converted
-    :return either the same value, if it does not need to be converted, or a
-    APIResource or APIMetadata instance, depending on the data inputted.
-    """
-
-    def change_sprite_key(d):
-        new_dict = {}
-        for k, v in d.items():
-            if isinstance(v, dict):
-                v = change_sprite_key(v)
-            new_dict[k.replace('-', '_')] = v
-        return new_dict
-
+    # Now handle the object conversion only for fields in CONVERT_FIELDS
     if isinstance(obj, dict):
-        if "url" in obj.keys():
+        # If the dict contains a "url" key, treat it as a reference to another resource.
+        if "url" in obj:
             url = obj["url"]
-            id_ = int(url.split("/")[-2])  # ID of the data.
-            endpoint = url.split("/")[-3]  # Where the data is located.
+            id_ = int(url.split("/")[-2])  # Extract the ID from the URL
+            endpoint = url.split("/")[-3]  # Extract the endpoint from the URL
             return APIResource(endpoint, id_, lazy_load=True)
-        if all(k in obj for k in ("other", "back_default")):
-            obj = change_sprite_key(obj)  # Change hyphens in sprite keys to underscores
 
-        return APIMetadata(obj)
+        # If it's a sprite or another special field, customize its structure
+        if "other" in obj and "back_default" in obj:
+            return APIMetadata(obj)  # Turn this dictionary into an APIMetadata object
 
+        # Otherwise, process the dictionary recursively
+        return {k: _make_obj(v, key=k) for k, v in obj.items()}
+
+    elif isinstance(obj, list):
+        # Recursively process each item in the list
+        return [_make_obj(item) for item in obj]
+
+    # If it's a primitive type (str, int, etc.), return it as is
     return obj
 
 
@@ -112,7 +111,7 @@ class APIResource(object):
     def fetch_data(cls, endpoint: object, name_or_id: object, force_lookup: object = False,
                    custom: object = None) -> object:
         """Class method to fetch data directly."""
-        instance = cls(endpoint, name_or_id, lazy_load=True, force_lookup=force_lookup, custom=custom)
+        instance = cls(endpoint, name_or_id, lazy_load=False, force_lookup=force_lookup, custom=custom)
         return instance._load()
 
     def __getattr__(self, attr):
@@ -126,18 +125,15 @@ class APIResource(object):
         if not self.__loaded:
             self._load()
             self.__loaded = True
-            print(f"Get Attr: {self.__getattribute__(attr)}")
             return self.__getattribute__(attr)
 
         else:
             raise AttributeError(f"{type(self)} object has no attribute {attr}")
 
     def __str__(self):
-        print("__self__")
         return str(self.name)
 
     def __repr__(self):
-        print("__repr__")
         return f"<{self.endpoint}-{self.name}>"
 
     def _load(self):
@@ -152,7 +148,6 @@ class APIResource(object):
 
         data = get_data(self.endpoint, self.id_, force_lookup=self.__force_lookup)
 
-        '''
         # Make our custom objects from the data.
         for key, val in data.items():
             if key in self._custom:
@@ -163,10 +158,7 @@ class APIResource(object):
 
             elif isinstance(val, list):
                 data[key] = [_make_obj(i) for i in val]
-        print(type(data))
-        print(f"APIResource last item: {data}")
         self.__dict__.update(data)
-        '''
 
         return data
 
