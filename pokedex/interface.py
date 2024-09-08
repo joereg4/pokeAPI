@@ -6,7 +6,7 @@ from .api import get_data, get_sprite
 from .common import api_url_build, sprite_url_build
 
 # Define the list of fields that should be converted into objects
-CONVERT_FIELDS = ["past_types","game_indices","cries","language"]
+CONVERT_FIELDS = ["past_types", "game_indices", "cries", "language"]
 
 
 def _make_obj(obj, key=None):
@@ -181,7 +181,6 @@ class APIResourceList(object):
 
         :param name: the name of the resource to get (ex. 'berry' or 'move')
         """
-
         response = get_data(endpoint, force_lookup=force_lookup)
 
         self.name = endpoint

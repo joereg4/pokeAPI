@@ -1438,7 +1438,7 @@ def get_pokemon(id_or_name):
 
 @pokemon_bp.route("/pokemon-color/", defaults={"id_or_name": None})
 @pokemon_bp.route("/pokemon-color/<id_or_name>")
-@cache.cached(timeout=300)
+#@cache.cached(timeout=300)
 def get_pokemon_color(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the colors list
@@ -1454,9 +1454,6 @@ def get_pokemon_color(id_or_name):
 
         try:
             data = pokedex.APIResource.fetch_data("pokemon-color", id_or_name)
-
-            if "name" not in data:
-                abort(404, description=f"Pokemon color '{id_or_name}' not found")
 
             # Process the list of Pokémon
             pokemon_list = pokedex.PokemonList(data).create_pokemon_list()
@@ -1556,8 +1553,7 @@ def get_pokemon_species(id_or_name):
             pass  # if the conversion fails, it remains a string
 
         try:
-            data = pokedex.pokemon_species(id_or_name)
-            data = data._load()
+            data = pokedex.APIResource.fetch_data("pokemon-species", id_or_name)
 
             # Extract only the relevant data for the Pokémon list
             simplified_data = {
