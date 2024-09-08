@@ -1438,7 +1438,7 @@ def get_pokemon(id_or_name):
 
 @pokemon_bp.route("/pokemon-color/", defaults={"id_or_name": None})
 @pokemon_bp.route("/pokemon-color/<id_or_name>")
-#@cache.cached(timeout=300)
+@cache.cached(timeout=300)
 def get_pokemon_color(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the colors list
