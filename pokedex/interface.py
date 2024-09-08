@@ -60,7 +60,6 @@ def _convert_id_to_name(endpoint, id_):
 
     for resource in resource_data:
         if resource["url"].split("/")[-2] == str(id_):
-
             # Return the matching name, or id_ if it doesn't exsist.
             return resource.get("name", str(id_))
 
@@ -110,7 +109,8 @@ class APIResource(object):
             self._load()
 
     @classmethod
-    def fetch_data(cls, endpoint: object, name_or_id: object, force_lookup: object = False, custom: object = None) -> object:
+    def fetch_data(cls, endpoint: object, name_or_id: object, force_lookup: object = False,
+                   custom: object = None) -> object:
         """Class method to fetch data directly."""
         instance = cls(endpoint, name_or_id, lazy_load=True, force_lookup=force_lookup, custom=custom)
         return instance._load()

@@ -1,6 +1,6 @@
 # loaders.py
 # -*- coding: utf-8 -*-
-from . import SpriteResource
+
 from .interface import APIResource, SpriteResource
 
 
