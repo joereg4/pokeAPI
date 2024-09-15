@@ -5,14 +5,24 @@
 {% block content %}
     <div class="container pt-5">
         <h1>Pokémon Moves</h1>
-    </div>
-    <div class="container pt-5">
         <ul>
-            {% for move in data %}
+            {% for move in moves_list['results'] %}
                 <li>
-                    <a href="{{ url_for('pokemon.get_move', id_or_name=move.name) }}">{{ move.name | capitalize }}</a>
+                    <a href="{{ url_for('pokemon.get_move', id_or_name=move.name) }}">{{ move.name | replace('-', ' ') | capitalize }}</a>
                 </li>
             {% endfor %}
         </ul>
+
+        <!-- Pagination -->
+        <nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        <li class="page-item {% if current_page == 1 %}disabled{% endif %} ">
+            <a class="page-link" href="{{ url_for('pokemon.get_moves_list', page=current_page-1) }}">Previous</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('pokemon.get_moves_list', page=current_page+1) }}">Next</a>
+        </li>
+    </ul>
+</nav>
     </div>
 {% endblock %}
