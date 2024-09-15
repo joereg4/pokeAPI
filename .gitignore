@@ -157,3 +157,4 @@ cython_debug/
 .idea/
 
 nohup.out
+newrelic.ini
