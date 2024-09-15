@@ -8,7 +8,7 @@
         <ul>
             {% for move in moves_list['results'] %}
                 <li>
-                    <a href="{{ url_for('pokemon.get_move', id_or_name=move.name) }}">{{ move.name | replace('-', ' ') | capitalize }}</a>
+                    <a href="{{ url_for('pokemon.get_move', id_or_name=move.name) }}">{{ move.name | replace('-', ' ') | title }}</a>
                 </li>
             {% endfor %}
         </ul>
