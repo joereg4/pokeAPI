@@ -24,6 +24,7 @@ pokemon_bp = Blueprint(
 BASE_URL = "https://pokeapi.co/api/v2"
 SPRITE_URL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites"
 POKEMON_PER_PAGE = 60
+ITEMS_PER_PAGE = 50
 
 # Define the valid sprite names to filter
 valid_sprites = [
@@ -995,7 +996,19 @@ def get_machines(page=1):
             return str(e), 500  # Internal Server Error for other issues
 
 
-@pokemon_bp.route("/move/", defaults={"id_or_name": None})
+@pokemon_bp.route("/move/")
+def get_moves_list():
+    page = request.args.get('page', 1, type=int)
+    per_page = ITEMS_PER_PAGE
+    offset = (page - 1) * per_page
+    endpoint = f"{BASE_URL}/move/?limit={per_page}&offset={offset}"
+
+    response = requests.get(endpoint)
+    moves_list = response.json()
+
+    return render_template('moves.html', moves_list=moves_list, current_page=page)
+
+
 @pokemon_bp.route("/move/<id_or_name>")
 @cache.cached(timeout=300)
 def get_move(id_or_name):
@@ -1281,7 +1294,7 @@ def get_pokemon_list():
 
 
 @pokemon_bp.route("/pokemon/<id_or_name>")
-# @cache.cached(timeout=300)
+@cache.cached(timeout=300)
 def get_pokemon(id_or_name):
     csv_file_path = get_path('pokemon.csv')
     df = pd.read_csv(csv_file_path)
