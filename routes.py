@@ -170,11 +170,11 @@ def create_pokemon_list(data):
                 pokemon_name = pokemon_entry["name"] if "name" in pokemon_entry else pokemon_entry.get("pokemon",
                                                                                                        {}).get("name")
             else:
-                logging.warning(f"Warning: Invalid Pokémon entry structure under key '{key}': {pokemon_entry}")
+                logging.debug(f"Warning: Invalid Pokémon entry structure under key '{key}': {pokemon_entry}")
                 continue
 
             if not pokemon_name:
-                logging.warning(f"Warning: Could not find Pokémon name in entry under key '{key}': {pokemon_entry}")
+                logging.debug(f"Warning: Could not find Pokémon name in entry under key '{key}': {pokemon_entry}")
                 continue
 
             # Fetch the Pokémon data
@@ -216,7 +216,7 @@ def create_pokemon_list(data):
                     "sprites": pokemon.get("sprites", {}),
                 })
             else:
-                logging.warning(f"No sprites found for Pokémon '{pokemon_name}' under key '{key}'")
+                logging.debug(f"No sprites found for Pokémon '{pokemon_name}' under key '{key}'")
 
         pokemon_list.sort(key=lambda x: x.get("id", float("inf")))
 
@@ -447,7 +447,7 @@ def get_characteristic(id_):
                 abort(404, description=f"Characteristic '{id_}' not found")
             else:
                 # For other HTTP errors, you might want to log them or handle differently
-                logging.warning(f"HTTP error occurred: {e}")
+                logging.debug(f"HTTP error occurred: {e}")
                 return str(e), e.response.status_code
 
 
@@ -620,7 +620,7 @@ def get_evolution_chain(id_):
             abort(404, description=f"Evolution Chain '{id_}' not found")
         else:
             # For other HTTP errors, you might want to log them or handle differently
-            logging.warning(f"HTTP error occurred: {e}")
+            logging.debug(f"HTTP error occurred: {e}")
             return str(e), e.response.status_code
 
 
@@ -755,7 +755,7 @@ def get_item(id_or_name):
                 cards = get_pokemon_cards(name.replace('-', ' '))
             except Exception as e:
                 # Log the exception and proceed with an empty list
-                logging.warning(f"Error fetching cards for {data['name'].replace('-', '+')}: {e}")
+                logging.debug(f"Error fetching cards for {data['name'].replace('-', '+')}: {e}")
                 cards = []
 
             return render_template("item_detail.html",
@@ -943,7 +943,7 @@ def get_machine(id_):
         if isinstance(e, HTTPError) and e.response.status_code == 404:
             abort(404, description=f"Machine '{id_}' not found")
         else:
-            logging.warning(f"Error occurred: {e}")
+            logging.debug(f"Error occurred: {e}")
             return str(e), 500  # Internal Server Error for other issues
 
 
@@ -992,7 +992,7 @@ def get_machines(page=1):
         if isinstance(e, HTTPError) and e.response.status_code == 404:
             abort(404, description=f"Machine endpoint failed")
         else:
-            logging.warning(f"Error occurred: {e}")
+            logging.debug(f"Error occurred: {e}")
             return str(e), 500  # Internal Server Error for other issues
 
 
@@ -1038,7 +1038,7 @@ def get_move(id_or_name):
                 category_name = data["meta"]["category"]["name"]
                 category = pokedex.APIResource.fetch_data("move-category", category_name)
             else:
-                logging.warning(f"No category found for move {data['name']}")
+                logging.debug(f"No category found for move {data['name']}")
 
             # Fetch Summary
             csv_file_path = get_path('move.csv')
@@ -1384,7 +1384,7 @@ def get_pokemon(id_or_name):
     try:
         species_data = pokedex.APIResource.fetch_data("pokemon-species", data["species"]["name"])
     except requests.exceptions.HTTPError:
-        logging.warning(f"No species data found for Pokémon {data['name']}")
+        logging.debug(f"No species data found for Pokémon {data['name']}")
 
     # Get the sprite data and filter out null values and unwanted sprites
     sprites = {
@@ -1410,7 +1410,7 @@ def get_pokemon(id_or_name):
 
             evolution_chain = pokedex.get_chain(evolution_chain_data, pokemon_name)
         else:
-            logging.warning(f"No evolution chain found for Pokémon with ID {id_or_name}")
+            logging.debug(f"No evolution chain found for Pokémon with ID {id_or_name}")
             evolution_chain = None
 
     # Retrieve the summary for the Pokémon
@@ -1423,7 +1423,7 @@ def get_pokemon(id_or_name):
         cards = get_pokemon_cards(data['name'])
     except Exception as e:
         # Log the exception and proceed with an empty list
-        logging.warning(f"Error fetching cards for {data['name']}: {e}")
+        logging.debug(f"Error fetching cards for {data['name']}: {e}")
         cards = []
 
     # Check for Official Artwork
@@ -1432,7 +1432,7 @@ def get_pokemon(id_or_name):
         official_artwork = data.get('sprites', {}).get('other', {}).get('official-artwork', {}).get('front_default')
         official_artwork = pokedex.get_official_artwork(data['name'], official_artwork, entry_number)
     except Exception as e:
-        logging.warning(f"Error identifying entry number and official artwork for {data['name']}: {e}")
+        logging.debug(f"Error identifying entry number and official artwork for {data['name']}: {e}")
         official_artwork = None
 
     return render_template(
@@ -1664,7 +1664,7 @@ def get_super_contest_effect(id_):
             abort(404, description=f"Super Contest Effect '{id_}' not found")
         else:
             # For other HTTP errors, you might want to log them or handle differently
-            logging.warning(f"HTTP error occurred: {e}")
+            logging.debug(f"HTTP error occurred: {e}")
             return str(e), e.response.status_code
 
 
@@ -1882,14 +1882,14 @@ def webhook():
 
             # Check if the return code is -15 (SIGTERM)
             if result.returncode == -15:
-                logging.warning("Gunicorn restart returned SIGTERM (-15), but continuing as restart succeeded.")
+                logging.debug("Gunicorn restart returned SIGTERM (-15), but continuing as restart succeeded.")
             else:
                 logging.info(f"Gunicorn restart output: {result.stdout}")
 
         except subprocess.CalledProcessError as e:
             # Ignore if the return code is -15 (SIGTERM) since Gunicorn restarts successfully
             if e.returncode == -15:
-                logging.warning(f"Gunicorn restart received SIGTERM (-15), but this is expected. Continuing.")
+                logging.debug(f"Gunicorn restart received SIGTERM (-15), but this is expected. Continuing.")
             else:
                 logging.error(f"Gunicorn restart failed with return code {e.returncode}: {e.stderr}")
                 abort(500, f'Gunicorn restart failed: {str(e)}')
