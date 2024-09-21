@@ -9,6 +9,19 @@
     <link rel="stylesheet" href="{{ url_for('pokemon.static', filename='css/styles.css') }}">
     <!-- Include jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GBDW5BKLK3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'G-GBDW5BKLK3');
+    </script>
 </head>
 <body>
 <header>
@@ -18,21 +31,22 @@
                 <img src="{{ url_for('pokemon.static', filename='img/pokedexlogo.png') }}" alt="Pokémon"
                      class="img-fluid" style="max-height: 40px;">
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarToggler">
-            <div class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <a class="nav-link" href="/">Home</a>
-                <a class="nav-link" href="{{ url_for('pokemon.get_pokemon_list',page=1) }}">Pokémon</a>
-                <a class="nav-link" href="{{ url_for('pokemon.get_ability') }}">Abilities</a>
-                <a class="nav-link" href="{{ url_for('pokemon.get_type') }}">Types</a>
-                <a class="nav-link" href="{{ url_for('pokemon.get_pokemon_color') }}">Colors</a>
-                <a class="nav-link" href="{{ url_for('pokemon.get_pokemon_habitat') }}">Habitats</a>
-                <a class="nav-link" href="{{ url_for('pokemon.get_pokemon_shape') }}">Shapes</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler"
+                    aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarToggler">
+                <div class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <a class="nav-link" href="/">Home</a>
+                    <a class="nav-link" href="{{ url_for('pokemon.get_pokemon_list',page=1) }}">Pokémon</a>
+                    <a class="nav-link" href="{{ url_for('pokemon.get_ability') }}">Abilities</a>
+                    <a class="nav-link" href="{{ url_for('pokemon.get_type') }}">Types</a>
+                    <a class="nav-link" href="{{ url_for('pokemon.get_pokemon_color') }}">Colors</a>
+                    <a class="nav-link" href="{{ url_for('pokemon.get_pokemon_habitat') }}">Habitats</a>
+                    <a class="nav-link" href="{{ url_for('pokemon.get_pokemon_shape') }}">Shapes</a>
+                </div>
+                {% include 'search.html' %}
             </div>
-            {% include 'search.html' %}
-    </div>
         </div>
     </nav>
 </header>
