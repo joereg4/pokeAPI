@@ -29,21 +29,30 @@
     });
     gtag("set", "ads_data_redaction", true);
     gtag("set", "url_passthrough", false);</script>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GBDW5BKLK3"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-
-        gtag('js', new Date());
-
-        gtag('config', 'G-GBDW5BKLK3');
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start':
+                new Date().getTime(), event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-NCGRBTHQ');</script>
+    <!-- End Google Tag Manager -->
     </script>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NCGRBTHQ"
+            height="0" width="0" style="display:none;visibility:hidden"></iframe>
+</noscript>
+<!-- End Google Tag Manager (noscript) -->
 <header>
     <nav class="navbar navbar-expand-lg  bg-secondary">
         <div class="container-fluid">
@@ -79,12 +88,13 @@
         <p>Created by <a href="https://github.com/joereg4">Joe Regenstein</a>, thank you PokéAPI. Pokémon and Pokémon
             character names are trademarks of Nintendo.</p>
     </div>
-<script>
-    const resources = {{ resources_json | safe }};
-    console.log(resources);  // Check if the data is loaded
-    console.log(Array.isArray(resources));  // This should log `true` if `resources` is an array
-</script>
-<script id="CookieDeclaration" src="https://consent.cookiebot.com/7eef77a5-922f-418b-a7ab-2a9ff676d49f/cd.js" type="text/javascript" async></script>
-<script src="{{ url_for('static', filename='js/bootstrap.bundle.js') }}"></script>
+    <script>
+        const resources = {{ resources_json | safe }};
+        console.log(resources);  // Check if the data is loaded
+        console.log(Array.isArray(resources));  // This should log `true` if `resources` is an array
+    </script>
+    <script id="CookieDeclaration" src="https://consent.cookiebot.com/7eef77a5-922f-418b-a7ab-2a9ff676d49f/cd.js"
+            type="text/javascript" async></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.js') }}"></script>
 </body>
 </html>
