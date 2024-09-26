@@ -126,7 +126,7 @@ def create_pokemon_list(data):
         else:
             # Possible keys that might contain the Pokémon species list
             possible_keys = ["pokemon", "pokemon_species", "pokemon_entries", "pokemon_encounters", "held_by_pokemon",
-                             "learned_by_pokemon", "varieties"]
+                             "learned_by_pokemon", "varieties", "detective"]
 
             # Identify the correct key by checking which one exists in the data
             key = next((k for k in possible_keys if k in data), None)
@@ -218,12 +218,15 @@ def create_pokemon_list(data):
             else:
                 logging.debug(f"No sprites found for Pokémon '{pokemon_name}' under key '{key}'")
 
-        pokemon_list.sort(key=lambda x: x.get("id", float("inf")))
+        # Sort the Pokémon list only if the key is not "detective"
+        if key != "detective":
+            pokemon_list.sort(key=lambda x: x.get("id", float("inf")))
 
         return pokemon_list
     except ValueError as e:
         logging.error(f"Error fetching Pokémon data under key '{key}': {e}")
         return []
+
 
 
 def fetch_all_results(url):
@@ -495,6 +498,32 @@ def get_contest_type(id_or_name):
         return render_template("generic.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
+
+
+@pokemon_bp.route("/detective-pikachu")
+@cache.cached(timeout=300)
+def get_detective_pikachu_pokemon():
+    # List of Pokémon featured in the Detective Pikachu movie
+    detective_pikachu_pokemon = [
+        "pikachu", "psyduck", "charizard", "greninja", "mr-mime", "mewtwo", "ludicolo",
+        "bulbasaur", "jigglypuff", "ditto", "eevee", "flareon", "snubbull", "torterra",
+        "aipom", "cubone", "pancham", "gengar", "machamp", "lickitung", "growlithe",
+        "slaking", "morelull", "rufflet", "pidgeot", "pidgey", "emolga", "dodrio",
+        "gyarados", "treecko", "rattata", "kingler", "squirtle", "charmander", "magikarp",
+        "loudred", "comfey", "blastoise", "arcanine", "sneasel", "venusaur", "purrloin",
+        "braviary"
+    ]
+
+    # Transform the list into the expected format
+    data = {
+        "detective": [{"pokemon": {"name": name}} for name in detective_pikachu_pokemon]
+    }
+
+    # Create the Pokémon list from the predefined list of Pokémon names
+    pokemon_list = create_pokemon_list(data)
+
+    # Render a template for the Detective Pikachu Pokémon
+    return render_template("detective_pikachu.html", pokemon_list=pokemon_list)
 
 
 @pokemon_bp.route("/egg-group/", defaults={"id_or_name": None})
