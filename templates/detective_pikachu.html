@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Detective Pikachu Pokémon - Featured in the Movie
+{% endblock %}
+
+{% block content %}
+    <!-- Page Header Section -->
+    <section>
+        <div class="container text-center py-5">
+            <h1 class="display-4 text-primary">Pokémon from Detective Pikachu</h1>
+            <p class="lead">
+                Discover the Pokémon featured in the live-action movie <em>Pokémon Detective Pikachu</em>. Explore the
+                characters that accompanied Tim Goodman and Detective Pikachu on their adventurous journey in Ryme City.
+            </p>
+        </div>
+    </section>
+
+    <!-- Movie Image and Summary Section -->
+    <section>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-4 text-center">
+                    <img src="https://image.tmdb.org/t/p/original/l1fZUbfY7GTNVYsYwrwsSmNHTeJ.jpg"
+                         alt="Detective Pikachu Movie"
+                         class="img-fluid rounded shadow" style="max-width: 80%;">
+                </div>
+                <div class="col-md-6">
+                    <h2>Movie Summary</h2>
+                    <p>
+                        <em>Pokémon Detective Pikachu</em> is a 2019 urban fantasy mystery film. The story follows Tim
+                        Goodman,
+                        a former Pokémon Trainer who partners with Detective Pikachu to uncover the mysterious
+                        disappearance
+                        of his father, Harry Goodman. Set in the vibrant Ryme City, where humans and Pokémon coexist,
+                        the movie
+                        brings many beloved Pokémon to life with stunning visual effects.
+                    </p>
+                    <p>
+                        From the witty and charming Pikachu to the fierce Charizard, the movie features an array of
+                        Pokémon
+                        that adds excitement and depth to the storyline. Whether you're a fan of the original games or
+                        new
+                        to the world of Pokémon, <em>Detective Pikachu</em> is a delightful experience for all ages.
+                    </p>
+                    <p>
+                        Detective Pikachu is not just a movie; it's a celebration of the Pokémon universe. Whether it's
+                        the
+                        interactions between humans and Pokémon, the vivid portrayal of Ryme City, or the mystery that
+                        unfolds,
+                        the film brings to life a unique blend of action, humor, and emotional depth.
+                    </p>
+                    <p>
+                        If you're curious about any of the Pokémon featured in the movie, click on them to see their
+                        stats,
+                        abilities, and more. Delve into the world of Detective Pikachu and rediscover the magic of
+                        Pokémon!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Pokémon List Section -->
+    <section>
+        <div class="container my-5">
+            <h2 class="text-secondary">Featured Pokémon in the Movie</h2>
+            <p>
+                Below are the Pokémon that played significant roles in the movie. Click on any Pokémon to view its
+                detailed information.
+            </p>
+
+        </div>
+
+    </section>
+
+    {% include '_pokemon_list.html' %}
+{% endblock %}
