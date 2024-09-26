@@ -228,7 +228,6 @@ def create_pokemon_list(data):
         return []
 
 
-
 def fetch_all_results(url):
     results = []
     while url:
@@ -505,11 +504,11 @@ def get_contest_type(id_or_name):
 def get_detective_pikachu_pokemon():
     # List of Pokémon featured in the Detective Pikachu movie
     detective_pikachu_pokemon = [
-        "pikachu", "psyduck", "charizard", "greninja", "mr-mime", "mewtwo", "ludicolo",
+        "pikachu", "psyduck", "mewtwo", "charmander", "charizard", "greninja", "mr-mime",
         "bulbasaur", "jigglypuff", "ditto", "eevee", "flareon", "snubbull", "torterra",
-        "aipom", "cubone", "pancham", "gengar", "machamp", "lickitung", "growlithe",
+        "aipom", "cubone", "pancham", "pangoro", "gengar", "machamp", "lickitung", "growlithe",
         "slaking", "morelull", "rufflet", "pidgeot", "pidgey", "emolga", "dodrio",
-        "gyarados", "treecko", "rattata", "kingler", "squirtle", "charmander", "magikarp",
+        "magikarp", "gyarados", "treecko", "rattata", "kingler", "squirtle", "ludicolo",
         "loudred", "comfey", "blastoise", "arcanine", "sneasel", "venusaur", "purrloin",
         "braviary"
     ]
