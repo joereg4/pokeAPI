@@ -12,7 +12,7 @@
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-lg  bg-secondary">
+    <nav class="navbar navbar-expand-xl  bg-danger">
         <div class="container-fluid">
             <a class="navbar-brand" href="/" title="Pokémon API">
                 <img src="{{ url_for('pokemon.static', filename='img/pokedexlogo.png') }}" alt="Pokémon"
@@ -23,15 +23,22 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarToggler">
-                <div class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <a class="nav-link" href="/">Home</a>
-                    <a class="nav-link" href="{{ url_for('pokemon.get_pokemon_list',page=1) }}">Pokémon</a>
-                    <a class="nav-link" href="{{ url_for('pokemon.get_ability') }}">Abilities</a>
-                    <a class="nav-link" href="{{ url_for('pokemon.get_type') }}">Types</a>
-                    <a class="nav-link" href="{{ url_for('pokemon.get_pokemon_color') }}">Colors</a>
-                    <a class="nav-link" href="{{ url_for('pokemon.get_pokemon_habitat') }}">Habitats</a>
-                    <a class="nav-link" href="{{ url_for('pokemon.get_pokemon_shape') }}">Shapes</a>
-                    <a class="nav-link" href="{{ url_for('pokemon.get_detective_pikachu_pokemon') }}">Pokémon Detective Pikachu</a>
+                <div class="navbar-nav ms-auto mb-2 mb-lg-0 gap-lg-3">
+                    <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">Home</a>
+                    <a class="nav-link {% if request.path.startswith('/pokemon/') %}active{% endif %}"
+                       href="{{ url_for('pokemon.get_pokemon_list',page=1) }}">Pokémon</a>
+                    <a class="nav-link {% if request.path == url_for('pokemon.get_ability') %}active{% endif %}"
+                       href="{{ url_for('pokemon.get_ability') }}">Abilities</a>
+                    <a class="nav-link {% if request.path == url_for('pokemon.get_type') %}active{% endif %}"
+                       href="{{ url_for('pokemon.get_type') }}">Types</a>
+                    <a class="nav-link {% if request.path == url_for('pokemon.get_pokemon_color') %}active{% endif %}"
+                       href="{{ url_for('pokemon.get_pokemon_color') }}">Colors</a>
+                    <a class="nav-link {% if request.path == url_for('pokemon.get_pokemon_habitat') %}active{% endif %}"
+                       href="{{ url_for('pokemon.get_pokemon_habitat') }}">Habitats</a>
+                    <a class="nav-link {% if request.path == url_for('pokemon.get_pokemon_shape') %}active{% endif %}"
+                       href="{{ url_for('pokemon.get_pokemon_shape') }}">Shapes</a>
+                    <a class="nav-link {% if request.path == url_for('pokemon.get_detective_pikachu_pokemon') %}active{% endif %}"
+                       href="{{ url_for('pokemon.get_detective_pikachu_pokemon') }}">Detective Pikachu</a>
                 </div>
                 {% include 'search.html' %}
             </div>
