@@ -34,22 +34,36 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function createImageElement(src, size, name) {
+        // Create the image element
         const img = document.createElement('img');
         img.src = src;
         img.alt = name;
         img.classList.add('hero-img');
         img.style.width = `${size}px`;
         img.style.height = `${size}px`;
-        img.setAttribute('data-name', name); // Add data-name attribute for hover tooltip
-        return img;
+        img.setAttribute('data-name', name); // Add data-name attribute for possible tooltip
+        img.title = name; // Set the title attribute for native browser tooltip
+
+        return img; // Return the image element
     }
 
-    function createCellElement(pokemonName) {
+    function createCellElementWithAnchor(pokemonName) {
+        // Create a new anchor element
+        const anchor = document.createElement('a');
+        anchor.href = `/pokemon/${pokemonName.toLowerCase()}`; // Set the href attribute with lowercase Pokémon name
+        anchor.target = "_self"; // Ensure the link opens in the same tab
+
+        // Create the cell element
         const cell = document.createElement('div');
         cell.classList.add('cell');
         cell.setAttribute('data-name', pokemonName); // Set the data-name attribute with the Pokémon name
         cell.style.pointerEvents = 'auto'; // Allow mouse events on cells
-        return cell;
+        cell.style.position = 'relative'; // Position relative for proper tooltip placement
+
+        // Append the cell element to the anchor
+        anchor.appendChild(cell);
+
+        return anchor; // Return the anchor element with the cell inside
     }
 
     function positionImages(images, row, numCells, topOffsetPercentage, zIndex) {
@@ -65,16 +79,18 @@ document.addEventListener("DOMContentLoaded", function () {
             img.style.position = 'absolute';
             img.style.zIndex = zIndex - 1; // Set z-index based on row
 
-            // Create and style cell with the correct Pokémon name
-            const cell = createCellElement(img.getAttribute('data-name')); // Pass the Pokémon name to the cell
-            cell.style.width = `${cellWidth}px`;
-            cell.style.height = `${rowHeight}px`;
-            cell.style.left = `${index * cellWidth}px`;
-            cell.style.bottom = `${rowTop}px`;
-            cell.style.position = 'absolute';
-            cell.style.zIndex = zIndex; // Set z-index for cell
+            // Create and style cell with the correct Pokémon name and anchor
+            const anchor = createCellElementWithAnchor(img.getAttribute('data-name')); // Create anchor with cell
+            anchor.style.width = `${cellWidth}px`;
+            anchor.style.height = `${rowHeight}px`;
+            anchor.style.left = `${index * cellWidth}px`;
+            anchor.style.bottom = `${rowTop}px`;
+            anchor.style.position = 'absolute';
+            anchor.style.zIndex = zIndex; // Set z-index for anchor
 
-            heroImages.appendChild(cell);
+            // Append the cell and anchor (with the image inside) to the heroImages container
+            heroImages.appendChild(anchor);
+            heroImages.appendChild(img);
         });
     }
 
@@ -96,8 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 .then(response => response.json())
                 .then(data => {
                     const imgElement = createImageElement(imgUrl, size, toTitleCase(data.name)); // Convert name to title case
-                    heroImages.appendChild(imgElement);
-                    images.push(imgElement);
+                    images.push(imgElement); // Push the image to the images array
                 });
 
             imagePromises.push(imagePromise); // Add the promise to the array
@@ -106,52 +121,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Once all images are fetched and created, position them
         Promise.all(imagePromises).then(() => {
             positionImages(images, row, numImages, topOffsetPercentage, zIndex);
-            addHoverEvents(); // Set up hover events AFTER images are appended
+            // No need to add hover events as title attribute will show tooltip natively
         });
     });
-
-    function addHoverEvents() {
-        let tooltip; // Declare a variable to hold the tooltip element
-
-        heroImages.addEventListener('mouseover', function(e) {
-            // Check if the hovered element has the class 'cell' and a valid data-name attribute
-            if (e.target.classList.contains('cell') && e.target.getAttribute('data-name')) {
-                // Create the tooltip element
-                tooltip = document.createElement('div');
-                tooltip.classList.add('tooltip');
-                tooltip.innerText = e.target.getAttribute('data-name'); // Set the tooltip text to Pokémon name
-
-                // Basic styling for the tooltip
-                tooltip.style.position = 'absolute';
-                tooltip.style.backgroundColor = '#333';
-                tooltip.style.color = '#fff';
-                tooltip.style.padding = '5px 10px';
-                tooltip.style.borderRadius = '4px';
-                tooltip.style.fontSize = '14px';
-                tooltip.style.pointerEvents = 'none';
-                tooltip.style.opacity = '0.8';
-                tooltip.style.zIndex = '1000'; // Ensure tooltip appears above other elements
-
-                // Append tooltip to the body
-                document.body.appendChild(tooltip);
-
-                // Get the position and dimensions of the hero-images container
-                const heroRect = heroImages.getBoundingClientRect();
-                const tooltipWidth = tooltip.clientWidth;
-                const tooltipHeight = tooltip.clientHeight;
-
-                // Position the tooltip at the top middle of the hero-images div
-                tooltip.style.left = `${heroRect.left + (heroRect.width / 2) - (tooltipWidth / 2)}px`;
-                tooltip.style.top = `${heroRect.top - tooltipHeight + 50}px`; // Adjust to position above hero-images div
-            }
-        });
-
-        // Remove tooltip on mouseout
-        heroImages.addEventListener('mouseout', function(e) {
-            if (tooltip) {
-                tooltip.remove(); // Remove the tooltip from the DOM
-                tooltip = null; // Reset the tooltip variable
-            }
-        });
-    }
 });
