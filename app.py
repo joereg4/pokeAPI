@@ -1,4 +1,5 @@
 import logging
+import os
 from flask import Flask, render_template
 import pokedex
 from cache import cache
@@ -25,6 +26,8 @@ def create_app(test_config=None):
         logging.basicConfig(level=logging.INFO)
         logging.getLogger("urllib3").setLevel(logging.WARNING)
         app.logger.setLevel(logging.DEBUG)
+        cache_timeout = int(os.getenv("CACHE_TIMEOUT", 300))
+        app.logger.info(f"CACHE_TIMEOUT is set to: {cache_timeout}")
     else:
         logging.basicConfig(level=logging.WARNING)
         app.logger.setLevel(logging.WARNING)
