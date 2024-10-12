@@ -8,6 +8,7 @@ from requests.exceptions import HTTPError
 import pokedex
 from cache import cache
 from pokedex.helper import fetch_all_results, create_pokemon_list, get_path, get_summary, type_colors
+from pokedex.utils import Config
 
 characteristics_stats_bp = Blueprint("characteristics_stats", __name__, template_folder="templates",
                                      static_folder="static")
@@ -15,7 +16,7 @@ characteristics_stats_bp = Blueprint("characteristics_stats", __name__, template
 
 @characteristics_stats_bp.route("/characteristic/", defaults={"id_": None})
 @characteristics_stats_bp.route("/characteristic/<int:id_>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_characteristic(id_):
     if id_ is None:
         # Fetch and display a list of all characteristics
@@ -49,7 +50,7 @@ def get_characteristic(id_):
 
 
 @characteristics_stats_bp.route("/pokeathlon-stat/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_pokeathlon_stat(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -68,7 +69,7 @@ def get_pokeathlon_stat(id_or_name):
 
 
 @characteristics_stats_bp.route("/stat/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_stat(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -88,7 +89,7 @@ def get_stat(id_or_name):
 
 @characteristics_stats_bp.route("/type/", defaults={"id_or_name": None})
 @characteristics_stats_bp.route("/type/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_type(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the types list

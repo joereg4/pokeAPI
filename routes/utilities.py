@@ -9,7 +9,7 @@ from markupsafe import Markup
 import pokedex
 from cache import cache
 from pokedex import fetch_all_results, get_path, get_summary
-from pokedex.utils import resources_dict
+from pokedex.utils import Config, resources_dict
 
 utilities_bp = Blueprint("utilities", __name__, template_folder="templates")
 
@@ -57,7 +57,7 @@ def get_endpoint_data(api_endpoint, id_or_name):
 
 
 @utilities_bp.route("/encounter-condition/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_encounter_condition(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -76,7 +76,7 @@ def get_encounter_condition(id_or_name):
 
 
 @utilities_bp.route("/encounter-condition_value/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_encounter_condition_value(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -95,7 +95,7 @@ def get_encounter_condition_value(id_or_name):
 
 
 @utilities_bp.route("/encounter-method/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_encounter_method(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -114,7 +114,7 @@ def get_encounter_method(id_or_name):
 
 
 @utilities_bp.route("/language/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_language(id_or_name):
     try:
         id_or_name = int(id_or_name)
@@ -132,7 +132,7 @@ def get_language(id_or_name):
 
 
 @utilities_bp.route("/version/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_version(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the versions list
@@ -171,7 +171,7 @@ def get_version(id_or_name):
 
 
 @utilities_bp.route("/version-group/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_version_group(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the version groups list

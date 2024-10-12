@@ -8,13 +8,14 @@ from requests.exceptions import HTTPError
 import pokedex
 from cache import cache
 from pokedex.helper import fetch_all_results, get_summary, get_path, create_pokemon_list
+from pokedex.utils import Config
 
 locations_regions_bp = Blueprint("locations_regions", __name__, template_folder="templates", static_folder="static")
 
 
 @locations_regions_bp.route("/location/", defaults={"id_or_name": None})
 @locations_regions_bp.route("/location/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_location(id_or_name):
     if id_or_name is None:
         # Fetch all locations
@@ -45,7 +46,7 @@ def get_location(id_or_name):
 
 
 @locations_regions_bp.route("/location-area/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_location_area(id_or_name):
     try:
         id_or_name = int(id_or_name)
@@ -65,7 +66,7 @@ def get_location_area(id_or_name):
 
 
 @locations_regions_bp.route("/nature/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_nature(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -84,7 +85,7 @@ def get_nature(id_or_name):
 
 
 @locations_regions_bp.route("/pal-park-area/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_pal_park_area(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -104,7 +105,7 @@ def get_pal_park_area(id_or_name):
 
 @locations_regions_bp.route("/region/", defaults={"id_or_name": None})
 @locations_regions_bp.route("/region/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_region(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the regions list

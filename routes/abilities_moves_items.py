@@ -20,7 +20,7 @@ ITEMS_PER_PAGE = Config.ITEMS_PER_PAGE
 
 @abilities_moves_items_bp.route("/ability/", defaults={"id_or_name": None})
 @abilities_moves_items_bp.route("/ability/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_ability(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the abilities list
@@ -64,7 +64,7 @@ def get_ability(id_or_name):
 
 @abilities_moves_items_bp.route("/item/", defaults={"id_or_name": None})
 @abilities_moves_items_bp.route("/item/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_item(id_or_name):
     if id_or_name is None:
         # Fetch all items
@@ -119,7 +119,7 @@ def get_item(id_or_name):
 
 
 @abilities_moves_items_bp.route("/item-attribute/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_item_attribute(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -140,7 +140,7 @@ def get_item_attribute(id_or_name):
 
 
 @abilities_moves_items_bp.route("/item-category/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_item_category(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -159,7 +159,7 @@ def get_item_category(id_or_name):
 
 
 @abilities_moves_items_bp.route("/item-fling_effect/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_item_fling_effect(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -178,7 +178,7 @@ def get_item_fling_effect(id_or_name):
 
 
 @abilities_moves_items_bp.route("/item-pocket/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_item_pocket(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -290,7 +290,7 @@ def get_moves_list():
 
 
 @abilities_moves_items_bp.route("/move/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_move(id_or_name):
     if id_or_name is None:
         # Fetch all moves
@@ -337,7 +337,7 @@ def get_move(id_or_name):
 
 
 @abilities_moves_items_bp.route("/move-ailment/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_move_ailment(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -356,7 +356,7 @@ def get_move_ailment(id_or_name):
 
 
 @abilities_moves_items_bp.route("/move-battle_style/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_move_battle_style(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -376,7 +376,7 @@ def get_move_battle_style(id_or_name):
 
 @abilities_moves_items_bp.route("/move-category/", defaults={"id_or_name": None})
 @abilities_moves_items_bp.route("/move-category/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_move_category(id_or_name):
     try:
         if id_or_name is None:
@@ -404,7 +404,7 @@ def get_move_category(id_or_name):
 
 
 @abilities_moves_items_bp.route("/move-damage-class/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_move_damage_class(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -424,7 +424,7 @@ def get_move_damage_class(id_or_name):
 
 @abilities_moves_items_bp.route("/move-learn-method/", defaults={"id_or_name": None})
 @abilities_moves_items_bp.route("/move-learn-method/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_move_learn_method(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the move learn method list
@@ -450,7 +450,7 @@ def get_move_learn_method(id_or_name):
 
 
 @abilities_moves_items_bp.route("/move-target/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_move_target(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:

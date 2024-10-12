@@ -9,13 +9,14 @@ from requests.exceptions import HTTPError
 import pokedex
 from cache import cache
 from pokedex.helper import fetch_all_results, create_pokemon_list, get_summary, get_path
+from pokedex.utils import Config
 
 breeding_bp = Blueprint("breeding", __name__, template_folder="templates", static_folder="static")
 
 
 @breeding_bp.route("/egg-group/", defaults={"id_or_name": None})
 @breeding_bp.route("/egg-group/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_egg_group(id_or_name):
     if id_or_name is None:
         # Fetch and render the list of all egg groups
@@ -62,7 +63,7 @@ def get_egg_group(id_or_name):
 
 
 @breeding_bp.route("/gender/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_gender(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:

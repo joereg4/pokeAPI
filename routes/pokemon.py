@@ -37,7 +37,7 @@ def index():
 
 
 @pokemon_bp.route("/detective-pikachu")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_detective_pikachu_pokemon():
     # List of Pokémon featured in the Detective Pikachu movie
     detective_pikachu_pokemon = [
@@ -64,7 +64,7 @@ def get_detective_pikachu_pokemon():
 
 @pokemon_bp.route("/pokedex/", defaults={"id_or_name": None})
 @pokemon_bp.route("/pokedex/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_pokedex(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the list of Pokédexes
@@ -111,7 +111,7 @@ def get_pokemon_list():
 
 
 @pokemon_bp.route("/pokemon/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_pokemon(id_or_name):
     csv_file_path = get_path('pokemon.csv')
     df = pd.read_csv(csv_file_path)
@@ -268,7 +268,7 @@ def get_pokemon(id_or_name):
 
 @pokemon_bp.route("/pokemon-color/", defaults={"id_or_name": None})
 @pokemon_bp.route("/pokemon-color/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_pokemon_color(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the colors list
@@ -313,7 +313,7 @@ def get_pokemon_form(id_or_name):
 
 @pokemon_bp.route("/pokemon-habitat/", defaults={"id_or_name": None})
 @pokemon_bp.route("/pokemon-habitat/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_pokemon_habitat(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the habitats list
@@ -343,7 +343,7 @@ def get_pokemon_habitat(id_or_name):
 
 @pokemon_bp.route("/pokemon-shape/", defaults={"id_or_name": None})
 @pokemon_bp.route("/pokemon-shape/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_pokemon_shape(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the shapes list
@@ -408,7 +408,7 @@ def get_pokemon_species(id_or_name):
 
 @pokemon_bp.route("/type/", defaults={"id_or_name": None})
 @pokemon_bp.route("/type/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_type(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the types list
