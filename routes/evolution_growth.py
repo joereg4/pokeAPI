@@ -6,12 +6,13 @@ from requests.exceptions import HTTPError
 import pokedex
 from cache import cache
 from pokedex.helper import fetch_all_results, create_pokemon_list
+from pokedex.utils import Config
 
 evolution_growth_bp = Blueprint("evolution_growth", __name__, template_folder="templates", static_folder="static")
 
 
 @evolution_growth_bp.route("/evolution-chain/<int:id_>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_evolution_chain(id_):
     try:
         data = pokedex.APIResource.fetch_data("evolution-chain", id_)
@@ -33,7 +34,7 @@ def get_evolution_chain(id_):
 
 
 @evolution_growth_bp.route("/evolution-trigger/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_evolution_trigger(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
@@ -53,7 +54,7 @@ def get_evolution_trigger(id_or_name):
 
 @evolution_growth_bp.route("/generation/", defaults={"id_or_name": None})
 @evolution_growth_bp.route("/generation/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_generation(id_or_name):
     if id_or_name is None:
         # Fetch all generations
@@ -82,7 +83,7 @@ def get_generation(id_or_name):
 
 
 @evolution_growth_bp.route("/growth-rate/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_growth_rate(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:

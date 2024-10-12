@@ -9,13 +9,14 @@ from requests.exceptions import HTTPError
 import pokedex
 from cache import cache
 from pokedex.helper import fetch_all_results, get_summary, get_path
+from pokedex.utils import Config
 
 berries_contests_bp = Blueprint("berries_contests", __name__, template_folder="templates", static_folder="static")
 
 
 @berries_contests_bp.route("/berry/", defaults={"id_or_name": None})
 @berries_contests_bp.route("/berry/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_berry(id_or_name):
     if id_or_name is None:
         # Fetch and display a list of all berries
@@ -51,7 +52,7 @@ def get_berry(id_or_name):
 
 @berries_contests_bp.route("/berry-firmness/", defaults={"id_or_name": None})
 @berries_contests_bp.route("/berry-firmness/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_berry_firmness(id_or_name):
     if id_or_name is None:
         # Fetch and display a list of all berry firmness categories
@@ -74,7 +75,7 @@ def get_berry_firmness(id_or_name):
 
 @berries_contests_bp.route("/berry-flavor/", defaults={"id_or_name": None})
 @berries_contests_bp.route("/berry-flavor/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_berry_flavor(id_or_name):
     if id_or_name is None:
         # Fetch and display a list of all berry flavors
@@ -97,7 +98,7 @@ def get_berry_flavor(id_or_name):
 
 @berries_contests_bp.route("/contest-effect/", defaults={"id_": None})
 @berries_contests_bp.route("/contest-effect/<int:id_>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_contest_effect(id_):
     if id_ is None:
         # Fetch and display a list of all contest effects
@@ -123,7 +124,7 @@ def get_contest_effect(id_):
 
 
 @berries_contests_bp.route("/contest-type/<id_or_name>")
-@cache.cached(timeout=300)
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_contest_type(id_or_name):
     # Check if id_or_name can be converted to an integer
     try:
