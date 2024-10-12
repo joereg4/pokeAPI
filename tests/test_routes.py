@@ -27,7 +27,7 @@ def test_ability_list(client):
     ability_data = load_mock_data('ability.json')
 
     # Patch the function that fetches data from the API in the route
-    with patch('routes.fetch_all_results') as mock_fetch_all_results:
+    with patch('pokedex.helper.fetch_all_results') as mock_fetch_all_results:
         mock_fetch_all_results.return_value = ability_data['results']  # Use the results from the mock data
 
         # Make the request to the ability list route

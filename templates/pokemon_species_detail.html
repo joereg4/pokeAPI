@@ -18,7 +18,7 @@
                         </li>
                         <li>Egg Groups:
                             {% for egg_group in data.egg_groups %}
-                                <a href="{{ url_for('pokemon.get_egg_group', id_or_name=egg_group.name) }}">{{ egg_group.name | title }}</a>
+                                <a href="{{ url_for('breeding.get_egg_group', id_or_name=egg_group.name) }}">{{ egg_group.name | title }}</a>
                                 {% if not loop.last %}, {% endif %}
                             {% endfor %}
                         </li>
@@ -32,7 +32,7 @@
                                 href="{{ url_for('pokemon.get_pokemon_shape', id_or_name=data.shape.name) }}">{{ data.shape.name | title }}</a>
                         </li>
                         <li>Generation: <a
-                                href="{{ url_for('pokemon.get_generation', id_or_name=data.generation.name) }}">{{ data.generation.name | title }}</a>
+                                href="{{ url_for('evolution_growth.get_generation', id_or_name=data.generation.name) }}">{{ data.generation.name | title }}</a>
                         </li>
                     </ul>
                 </div>
@@ -41,7 +41,7 @@
                     <ul>
                         {% for entry in data.pokedex_numbers %}
                             <li>
-                                <a href="{{ url_for('pokemon.get_endpoint_data', api_endpoint=entry.pokedex.url.split('/')[-3], id_or_name=entry.pokedex.url.split('/')[-2]) }}">{{ entry.entry_number }} {{ entry.pokedex.name | title }}</a>
+                                <a href="{{ url_for('utilities.get_endpoint_data', api_endpoint=entry.pokedex.url.split('/')[-3], id_or_name=entry.pokedex.url.split('/')[-2]) }}">{{ entry.entry_number }} {{ entry.pokedex.name | title }}</a>
                             </li>
                         {% endfor %}
                     </ul>

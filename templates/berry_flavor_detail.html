@@ -11,7 +11,7 @@
         <h2>{{ data.name | capitalize }} Flavor Details</h2>
         <ul>
             <li><strong>Associated Contest Type:</strong>
-                <a href="{{ url_for('pokemon.get_contest_type', id_or_name=data.contest_type.name) }}">{{ data.contest_type.name | capitalize }}</a>
+                <a href="{{ url_for('berries_contests.get_contest_type', id_or_name=data.contest_type.name) }}">{{ data.contest_type.name | capitalize }}</a>
             </li>
         </ul>
     </div>
@@ -21,7 +21,7 @@
         <ul>
             {% for berry in data.berries %}
                 <li>
-                    <a href="{{ url_for('pokemon.get_berry', id_or_name=berry.berry.name) }}">{{ berry.berry.name | capitalize }}</a>
+                    <a href="{{ url_for('berries_contests.get_berry', id_or_name=berry.berry.name) }}">{{ berry.berry.name | capitalize }}</a>
                     - Potency: {{ berry.potency }}
                 </li>
             {% endfor %}

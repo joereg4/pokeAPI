@@ -35,10 +35,10 @@
                     <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">Home</a>
                     <a class="nav-link {% if request.path.startswith('/pokemon/') %}active{% endif %}"
                        href="{{ url_for('pokemon.get_pokemon_list',page=1) }}">Pokémon</a>
-                    <a class="nav-link {% if request.path == url_for('pokemon.get_ability') %}active{% endif %}"
-                       href="{{ url_for('pokemon.get_ability') }}">Abilities</a>
-                    <a class="nav-link {% if request.path == url_for('pokemon.get_type') %}active{% endif %}"
-                       href="{{ url_for('pokemon.get_type') }}">Types</a>
+                    <a class="nav-link {% if request.path == url_for('abilities_moves_items.get_ability') %}active{% endif %}"
+                       href="{{ url_for('abilities_moves_items.get_ability') }}">Abilities</a>
+                    <a class="nav-link {% if request.path == url_for('characteristics_stats.get_type') %}active{% endif %}"
+                       href="{{ url_for('characteristics_stats.get_type') }}">Types</a>
                     <a class="nav-link {% if request.path == url_for('pokemon.get_pokemon_color') %}active{% endif %}"
                        href="{{ url_for('pokemon.get_pokemon_color') }}">Colors</a>
                     <a class="nav-link {% if request.path == url_for('pokemon.get_pokemon_habitat') %}active{% endif %}"

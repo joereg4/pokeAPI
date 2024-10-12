@@ -8,7 +8,7 @@
         <ul>
             {% for move in moves_list['results'] %}
                 <li>
-                    <a href="{{ url_for('pokemon.get_move', id_or_name=move.name) }}">{{ move.name | replace('-', ' ') | title }}</a>
+                    <a href="{{ url_for('abilities_moves_items.get_move', id_or_name=move.name) }}">{{ move.name | replace('-', ' ') | title }}</a>
                 </li>
             {% endfor %}
         </ul>

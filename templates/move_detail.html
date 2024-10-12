@@ -34,7 +34,7 @@
     {% if category['name'] %}
     <h2>Category</h2>
     <p>
-        <a href="{{ url_for('pokemon.get_move_category', id_or_name=category['name']) }}">
+        <a href="{{ url_for('abilities_moves_items.get_move_category', id_or_name=category['name']) }}">
             {{ category['name'] | title }}
         </a>
     </p>

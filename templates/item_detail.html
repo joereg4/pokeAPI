@@ -20,7 +20,7 @@
         <h2>Attribute</h2>
         <ul>
             {% for entry in data.attributes %}
-                <a href="{{ url_for('pokemon.get_item_attribute', id_or_name=entry.name) }}">
+                <a href="{{ url_for('abilities_moves_items.get_item_attribute', id_or_name=entry.name) }}">
                     {{ entry.name }}</a>
                 {% if not loop.last %}, {% endif %}
             {% endfor %}
@@ -28,7 +28,7 @@
     </div>
     <div class="container pt-1">
         <h2>Category:</h2>
-        <a href="{{ url_for('pokemon.get_item_category', id_or_name=data.category.url.split('/')[-2]) }}">
+        <a href="{{ url_for('abilities_moves_items.get_item_category', id_or_name=data.category.url.split('/')[-2]) }}">
             {{ data.category.name }}</a>
     </div>
     <div class="container pt-1">
@@ -66,7 +66,7 @@
         <ul>
             {% for game in data.game_indices %}
                 <li>
-                    <a href="{{ url_for('pokemon.get_generation', id_or_name=game.generation.name) }}">{{ game.generation.name }}</a> (Game
+                    <a href="{{ url_for('evolution_growth.get_generation', id_or_name=game.generation.name) }}">{{ game.generation.name }}</a> (Game
                     Index: {{ game.game_index }})
                 </li>
             {% endfor %}

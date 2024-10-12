@@ -10,7 +10,7 @@
         <ul>
             {% for characteristic in data %}
                 <li>
-                    <a href="{{ url_for('pokemon.get_characteristic', id_=characteristic.id) }}">Characteristic #{{ characteristic.id }}</a>
+                    <a href="{{ url_for('characteristics_stats.get_characteristic', id_=characteristic.id) }}">Characteristic #{{ characteristic.id }}</a>
                 </li>
             {% endfor %}
         </ul>

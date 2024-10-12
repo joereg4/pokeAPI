@@ -8,7 +8,7 @@
         <ul>
             {% for effect in data %}
                 <li>
-                    <a href="{{ url_for('pokemon.get_contest_effect', id_=effect['id']) }}">Contest Effect #{{ effect['id'] }}</a>
+                    <a href="{{ url_for('berries_contests.get_contest_effect', id_=effect['id']) }}">Contest Effect #{{ effect['id'] }}</a>
                 </li>
             {% endfor %}
         </ul>

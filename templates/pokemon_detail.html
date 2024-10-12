@@ -41,7 +41,7 @@
                             </li>
                             <li>Egg Groups:
                                 {% for egg_group in species_data.egg_groups %}
-                                    <a href="{{ url_for('pokemon.get_egg_group', id_or_name=egg_group.url.split('/')[-2]) }}">{{ egg_group.name | title }}</a>
+                                    <a href="{{ url_for('breeding.get_egg_group', id_or_name=egg_group.url.split('/')[-2]) }}">{{ egg_group.name | title }}</a>
                                     {% if not loop.last %}, {% endif %}
                                 {% endfor %}
                             <li>Gender Rate: {{ species_data.gender_rate }}</li>
@@ -119,7 +119,7 @@
                         {% for ability in data.abilities %}
                             <li>
                                 Slot {{ ability.slot }}: <a
-                                    href="{{ url_for('pokemon.get_ability', id_or_name=ability.ability['url'].split('/')[-2]) }}"> {{ ability.ability['name'] | title }} </a>
+                                    href="{{ url_for('abilities_moves_items.get_ability', id_or_name=ability.ability['url'].split('/')[-2]) }}"> {{ ability.ability['name'] | title }} </a>
                             </li>
                         {% endfor %}
                     </ul>
@@ -128,7 +128,7 @@
                         {% if data.held_items %}
                             {% for held_item in data.held_items %}
                                 <li class="item-section__list">
-                                    <a href="{{ url_for('pokemon.get_item', id_or_name=held_item.item.url.split('/')[-2]) }}"> {{ held_item.item.name | title }} </a>
+                                    <a href="{{ url_for('abilities_moves_items.get_item', id_or_name=held_item.item.url.split('/')[-2]) }}"> {{ held_item.item.name | title }} </a>
                                 </li>
                             {% endfor %}
                         {% else %}
@@ -160,7 +160,7 @@
             {% for type_name, relations in type_effectiveness.items() %}
                 <!-- Type Name Row -->
                 <div class="row p-2">
-                    <a href="{{ url_for('pokemon.get_type', id_or_name=type_name) }}">
+                    <a href="{{ url_for('characteristics_stats.get_type', id_or_name=type_name) }}">
                         <img src="{{ url_for('pokemon.static', filename='img/type/nameplate/' + type_name | lower + '_np.png') }}">
                     </a>
                 </div>
@@ -181,7 +181,7 @@
                                 <div class="col-10 d-flex flex-wrap  align-self-center">
                                     {% for type in relation.relation %}
                                         <div class="me-2">
-                                            <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">
+                                            <a href="{{ url_for('characteristics_stats.get_type', id_or_name=type.name) }}">
                                                 <img src="{{ url_for('pokemon.static', filename='img/type/nameplate/' + type.name | lower + '_np.png') }}"
                                                      style="height: 25px">
                                             </a>
@@ -356,7 +356,7 @@
                     {% if species_data %}
                         {% for entry in species_data.pokedex_numbers %}
                             <li>
-                                <a href="{{ url_for('pokemon.get_endpoint_data', api_endpoint=entry.pokedex.url.split('/')[-3], id_or_name=entry.pokedex.url.split('/')[-2]) }}">{{ entry.entry_number }} {{ entry.pokedex.name | title }}</a>
+                                <a href="{{ url_for('utilities.get_endpoint_data', api_endpoint=entry.pokedex.url.split('/')[-3], id_or_name=entry.pokedex.url.split('/')[-2]) }}">{{ entry.entry_number }} {{ entry.pokedex.name | title }}</a>
                             </li>
                         {% endfor %}
                     {% else %}

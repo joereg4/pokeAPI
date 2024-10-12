@@ -6,7 +6,7 @@
     <h1>Move Category List</h1>
     <ul>
         {% for category in data %}
-            <li><a href="{{ url_for('pokemon.get_move_category', id_or_name=category.name) }}">{{ category.name }}</a></li>
+            <li><a href="{{ url_for('abilities_moves_items.get_move_category', id_or_name=category.name) }}">{{ category.name }}</a></li>
         {% endfor %}
     </ul>
 {% endblock %}

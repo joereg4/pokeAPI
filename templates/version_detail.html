@@ -19,6 +19,6 @@
     <!-- Version Group Section -->
     <div>
         <h2>Version Group</h2>
-        <a href="{{ url_for('pokemon.get_version_group', id_or_name=data.version_group.name) }}">{{ data.version_group.name | replace("-", " ") | title }}</a>
+        <a href="{{ url_for('utilities.get_version_group', id_or_name=data.version_group.name) }}">{{ data.version_group.name | replace("-", " ") | title }}</a>
     </div>
 {% endblock %}

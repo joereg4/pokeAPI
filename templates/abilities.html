@@ -7,7 +7,7 @@
     <h1>Pokémon Abilities</h1>
     <ul class="abilities-list">
         {% for ability in abilities %}
-            <li><a href="{{ url_for('pokemon.get_ability', id_or_name=ability.name) }}">{{ ability.name }}</a></li>
+            <li><a href="{{ url_for('abilities_moves_items.get_ability', id_or_name=ability.name) }}">{{ ability.name }}</a></li>
         {% endfor %}
     </ul>
 </div>

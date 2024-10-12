@@ -27,7 +27,7 @@
                             <div class="col-10 d-flex flex-wrap">
                                 {% for type in relation.relation %}
                                     <div class="me-2">
-                                        <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">
+                                        <a href="{{ url_for('characteristics_stats.get_type', id_or_name=type.name) }}">
                                             <img src="{{ url_for('pokemon.static', filename='img/type/nameplate/' + type.name | lower + '_np.png') }}"
                                                  style="height: 25px">
                                         </a>

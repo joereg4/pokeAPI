@@ -27,7 +27,7 @@
         <div class="container pt-3">
             <h2>Highest Stat</h2>
             <p>
-                <a href="{{ url_for('pokemon.get_stat', id_or_name=data.highest_stat.name) }}">
+                <a href="{{ url_for('characteristics_stats.get_stat', id_or_name=data.highest_stat.name) }}">
                     {{ data.highest_stat.name | capitalize }}
                 </a>
             </p>

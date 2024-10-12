@@ -6,7 +6,7 @@
 
         <div class="card mb-4">
             <div class="card-header">
-                <h2>Item: <a href="{{ url_for('pokemon.get_item', id_or_name=item_data.name) }}">{{ item_data.name.title() }}</a></h2>
+                <h2>Item: <a href="{{ url_for('abilities_moves_items.get_item', id_or_name=item_data.name) }}">{{ item_data.name.title() }}</a></h2>
             </div>
             <div class="card-body">
                 {% if item_data.effect_entries and item_data.effect_entries|length > 0 %}
@@ -21,7 +21,7 @@
 
         <div class="card mb-4">
             <div class="card-header">
-                <h2>Move: <a href="{{ url_for('pokemon.get_move', id_or_name=move_data.name) }}">{{ move_data.name.title() }}</a></h2>
+                <h2>Move: <a href="{{ url_for('abilities_moves_items.get_move', id_or_name=move_data.name) }}">{{ move_data.name.title() }}</a></h2>
             </div>
             <div class="card-body">
                 <p><strong>Type:</strong> {{ move_data.type.name.title() }}</p>
@@ -38,7 +38,7 @@
 
         <div class="card mb-4">
             <div class="card-header">
-                <h2>Version Group: <a href="{{ url_for('pokemon.get_version_group', id_or_name=version_group_data.name) }}">{{ version_group_data.name.title() }}</a></h2>
+                <h2>Version Group: <a href="{{ url_for('utilities.get_version_group', id_or_name=version_group_data.name) }}">{{ version_group_data.name.title() }}</a></h2>
             </div>
             <div class="card-body">
                 <p><strong>Introduced in Generation:</strong> {{ version_group_data.generation.name.title() }}</p>
