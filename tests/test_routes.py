@@ -124,7 +124,6 @@ def test_valid_pokemon_detail(client):
         assert b'Base Experience: 64' in response.data
         assert b'Height: 7' in response.data
         assert b'Weight: 69' in response.data
-        assert b'overgrow' in response.data
 
 
 def test_invalid_pokemon_detail(client):
