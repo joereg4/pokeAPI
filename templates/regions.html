@@ -10,7 +10,7 @@
         <ul>
             {% for region in data %}
                 <li>
-                    <a href="{{ url_for('pokemon.get_region', id_or_name=region.name) }}">{{ region.name | capitalize }}</a>
+                    <a href="{{ url_for('locations_regions.get_region', id_or_name=region.name) }}">{{ region.name | capitalize }}</a>
                 </li>
             {% endfor %}
         </ul>

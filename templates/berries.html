@@ -10,7 +10,7 @@
         <ul>
             {% for berry in data %}
                 <li>
-                    <a href="{{ url_for('pokemon.get_berry', id_or_name=berry.name) }}">{{ berry.name | capitalize }}</a>
+                    <a href="{{ url_for('berries_contests.get_berry', id_or_name=berry.name) }}">{{ berry.name | capitalize }}</a>
                 </li>
             {% endfor %}
         </ul>

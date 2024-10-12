@@ -2,7 +2,7 @@ import logging
 from flask import Flask, render_template
 import pokedex
 from cache import cache
-from routes import pokemon_bp
+from routes import blueprints
 
 # Load environment variables
 pokedex.env.load_environment()
@@ -33,7 +33,8 @@ def create_app(test_config=None):
     if test_config:
         app.config.update(test_config)
 
-    app.register_blueprint(pokemon_bp)
+    for blueprint in blueprints:
+        app.register_blueprint(blueprint)
 
     @app.errorhandler(403)
     def forbidden(e):

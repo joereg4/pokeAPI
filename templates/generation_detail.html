@@ -14,7 +14,7 @@
                 <h2 class="detail-card__title">Main Region</h2>
                 <ul class="{% if data.main_region.name|length > 25 %}long-list{% endif %}">
                     <li class="detail-card__list">
-                        <a href="{{ url_for('pokemon.get_region', id_or_name=data.main_region.name) }}">{{ data.main_region.name | title }}</a>
+                        <a href="{{ url_for('locations_regions.get_region', id_or_name=data.main_region.name) }}">{{ data.main_region.name | title }}</a>
                     </li>
                 </ul>
             </div>
@@ -25,7 +25,7 @@
                 <ul class="{% if data.abilities|length > 25 %}long-list{% endif %}">
                     {% for ability in data.abilities %}
                         <li class="detail-card__list">
-                            <a href="{{ url_for('pokemon.get_ability', id_or_name=ability.name) }}">{{ ability.name | title }}</a>
+                            <a href="{{ url_for('abilities_moves_items.get_ability', id_or_name=ability.name) }}">{{ ability.name | title }}</a>
                         </li>
                     {% endfor %}
                 </ul>
@@ -37,7 +37,7 @@
                 <ul class="{% if data.moves|length > 25 %}long-list{% endif %}">
                     {% for move in data.moves %}
                         <li class="detail-card__list">
-                            <a href="{{ url_for('pokemon.get_move', id_or_name=move.name) }}">{{ move.name | title }}</a>
+                            <a href="{{ url_for('abilities_moves_items.get_move', id_or_name=move.name) }}">{{ move.name | title }}</a>
                         </li>
                     {% endfor %}
                 </ul>
@@ -49,7 +49,7 @@
                 <ul class="{% if data.types|length > 25 %}long-list{% endif %}">
                     {% for type in data.types %}
                         <li class="detail-card__list">
-                            <a href="{{ url_for('pokemon.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
+                            <a href="{{ url_for('characteristics_stats.get_type', id_or_name=type.name) }}">{{ type.name | title }}</a>
                         </li>
                     {% endfor %}
                 </ul>
@@ -61,7 +61,7 @@
                 <ul class="{% if data.version_groups|length > 25 %}long-list{% endif %}">
                     {% for version_group in data.version_groups %}
                         <li class="detail-card__list">
-                            <a href="{{ url_for('pokemon.get_version_group', id_or_name=version_group.name) }}">{{ version_group.name | title }}</a>
+                            <a href="{{ url_for('utilities.get_version_group', id_or_name=version_group.name) }}">{{ version_group.name | title }}</a>
                         </li>
                     {% endfor %}
                 </ul>

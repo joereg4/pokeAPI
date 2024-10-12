@@ -17,7 +17,7 @@
         <div class="detail-card__info-section">
             <h2 class="detail-card__title">Region</h2>
             <p>
-                <a href="{{ url_for('pokemon.get_region', id_or_name=data.region.name)}}">{{ data.region.name | title }}</a>
+                <a href="{{ url_for('locations_regions.get_region', id_or_name=data.region.name)}}">{{ data.region.name | title }}</a>
             </p>
         </div>
         <!-- Version Groups Section -->
@@ -26,7 +26,7 @@
             <ul class="detail-card__item">
                 {% for version_group in data.version_groups %}
                     <li class="detail-card__list">
-                        <a href="{{ url_for('pokemon.get_version_group', id_or_name=version_group.name) }}">{{ version_group.name | title }}</a>
+                        <a href="{{ url_for('utilities.get_version_group', id_or_name=version_group.name) }}">{{ version_group.name | title }}</a>
                     </li>
                 {% endfor %}
             </ul>

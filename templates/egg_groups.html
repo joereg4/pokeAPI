@@ -9,7 +9,7 @@
     <div class="container pt-5">
         <ul>
             {% for type in data %}
-                <li><a href="{{ url_for('pokemon.get_egg_group', id_or_name=type.name) }}">{{ type.name | title }}</a></li>
+                <li><a href="{{ url_for('breeding.get_egg_group', id_or_name=type.name) }}">{{ type.name | title }}</a></li>
             {% endfor %}
         </ul>
     </div>

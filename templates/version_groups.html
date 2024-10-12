@@ -10,7 +10,7 @@
         <ul>
             {% for data in data %}
                 <li>
-                    <a href="{{ url_for('pokemon.get_version_group', id_or_name=data.name) }}">{{ data.name | capitalize }}</a>
+                    <a href="{{ url_for('utilities.get_version_group', id_or_name=data.name) }}">{{ data.name | capitalize }}</a>
                 </li>
             {% endfor %}
         </ul>

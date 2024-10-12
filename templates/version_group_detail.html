@@ -20,7 +20,7 @@
             <div>
                 <h2>Generation</h2>
                 <p>
-                    <a href="{{ url_for('pokemon.get_generation', id_or_name=data.generation.name) }}">{{ data.generation.name | title }}</a>
+                    <a href="{{ url_for('evolution_growth.get_generation', id_or_name=data.generation.name) }}">{{ data.generation.name | title }}</a>
                 </p>
             </div>
 
@@ -30,7 +30,7 @@
                 <ul>
                     {% for region in data.regions %}
                         <li>
-                            <a href="{{ url_for('pokemon.get_region', id_or_name=region.name) }}">{{ region.name | title }}</a>
+                            <a href="{{ url_for('locations_regions.get_region', id_or_name=region.name) }}">{{ region.name | title }}</a>
                         </li>
                     {% endfor %}
                 </ul>
@@ -54,7 +54,7 @@
                 <ul>
                     {% for version in data.versions %}
                         <li>
-                            <a href="{{ url_for('pokemon.get_version', id_or_name=version.name) }}">{{ version.name | title }}</a>
+                            <a href="{{ url_for('utilities.get_version', id_or_name=version.name) }}">{{ version.name | title }}</a>
                         </li>
                     {% endfor %}
                 </ul>

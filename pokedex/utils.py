@@ -1,11 +1,23 @@
-import csv
-import glob
 import os
 import logging
-
+import csv
+import glob
 from flask import current_app
+from pokedex.env import load_environment, get_env_variable
 
 resources_dict = []
+
+# Load environment variables using env.py
+load_environment()
+
+
+class Config:
+    BASE_URL = get_env_variable('BASE_URL', 'https://pokeapi.co/api/v2')
+    SPRITE_URL = get_env_variable('SPRITE_URL', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites')
+    POKEMON_PER_PAGE = int(get_env_variable('POKEMON_PER_PAGE', 60))
+    ITEMS_PER_PAGE = int(get_env_variable('ITEMS_PER_PAGE', 50))
+    WEBHOOK_SECRET = get_env_variable('WEBHOOK_SECRET')
+    CACHE_TIMEOUT = int(get_env_variable('CACHE_TIMEOUT', 300))
 
 
 def get_csv_file_paths():

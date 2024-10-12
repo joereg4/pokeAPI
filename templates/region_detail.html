@@ -22,7 +22,7 @@
                 <h2>Main Generation</h2>
                 <ul class="{% if data.pokedexes|length > 25 %}long-list{% endif %}">
                     <li>
-                        <a href="{{ url_for('pokemon.get_generation', id_or_name=data.main_generation.name) }}">
+                        <a href="{{ url_for('evolution_growth.get_generation', id_or_name=data.main_generation.name) }}">
                             {{ data.main_generation.name | replace("-", " ") | title }}
                         </a>
                     </li>
@@ -49,7 +49,7 @@
                 <ul class="{% if data.version_groups|length > 25 %}long-list{% endif %}">
                     {% for version_group in data.version_groups %}
                         <li>
-                            <a href="{{ url_for('pokemon.get_version_group', id_or_name=version_group.name) }}">
+                            <a href="{{ url_for('utilities.get_version_group', id_or_name=version_group.name) }}">
                                 {{ version_group.name | replace("-", " ") | title }}
                             </a>
                         </li>
@@ -63,7 +63,7 @@
                 <ul class="{% if data.locations|length > 25 %}long-list{% endif %}">
                     {% for location in data.locations %}
                         <li>
-                            <a href="{{ url_for('pokemon.get_location', id_or_name=location.name) }}">
+                            <a href="{{ url_for('locations_regions.get_location', id_or_name=location.name) }}">
                                 {{ location.name | replace("-", " ") | title }}
                             </a>
                         </li>
