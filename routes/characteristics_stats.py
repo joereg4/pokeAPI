@@ -11,6 +11,7 @@ from cache import cache
 from pokedex.helper import fetch_all_results, create_pokemon_list, get_path, get_summary
 from pokedex.utils import Config
 
+BASE_URL = Config.BASE_URL
 TYPE_COLORS = Config.TYPE_COLORS
 
 characteristics_stats_bp = Blueprint("characteristics_stats", __name__, template_folder="templates",
@@ -23,7 +24,7 @@ characteristics_stats_bp = Blueprint("characteristics_stats", __name__, template
 def get_characteristic(id_):
     if id_ is None:
         # Fetch and display a list of all characteristics
-        url = "https://pokeapi.co/api/v2/characteristic"
+        url = f"{BASE_URL}/characteristic"
         data = fetch_all_results(url)
 
         # Extract the ID from the URL for each characteristic
@@ -96,7 +97,7 @@ def get_stat(id_or_name):
 def get_type(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the types list
-        url = "https://pokeapi.co/api/v2/type"
+        url = f"{BASE_URL}/type"
         types = fetch_all_results(url)
         return render_template("types.html", types=types)
     else:
