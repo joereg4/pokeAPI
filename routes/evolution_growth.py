@@ -8,6 +8,8 @@ from cache import cache
 from pokedex.helper import fetch_all_results, create_pokemon_list
 from pokedex.utils import Config
 
+BASE_URL = Config.BASE_URL
+
 evolution_growth_bp = Blueprint("evolution_growth", __name__, template_folder="templates", static_folder="static")
 
 
@@ -58,7 +60,7 @@ def get_evolution_trigger(id_or_name):
 def get_generation(id_or_name):
     if id_or_name is None:
         # Fetch all generations
-        url = "https://pokeapi.co/api/v2/generation"
+        url = f"{BASE_URL}/generation"
         data = fetch_all_results(url)
         return render_template("generations.html", data=data)
     else:

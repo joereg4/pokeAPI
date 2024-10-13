@@ -11,6 +11,8 @@ from cache import cache
 from pokedex.helper import fetch_all_results, get_summary, get_path
 from pokedex.utils import Config
 
+BASE_URL = Config.BASE_URL
+
 berries_contests_bp = Blueprint("berries_contests", __name__, template_folder="templates", static_folder="static")
 
 
@@ -20,7 +22,7 @@ berries_contests_bp = Blueprint("berries_contests", __name__, template_folder="t
 def get_berry(id_or_name):
     if id_or_name is None:
         # Fetch and display a list of all berries
-        url = "https://pokeapi.co/api/v2/berry"
+        url = f"{BASE_URL}/berry"
         data = fetch_all_results(url)
 
         return render_template("berries.html", data=data)
@@ -56,7 +58,7 @@ def get_berry(id_or_name):
 def get_berry_firmness(id_or_name):
     if id_or_name is None:
         # Fetch and display a list of all berry firmness categories
-        url = "https://pokeapi.co/api/v2/berry-firmness"
+        url = f"{BASE_URL}/berry-firmness"
         data = fetch_all_results(url)
 
         return render_template("berry_firmness.html", data=data)
@@ -79,7 +81,7 @@ def get_berry_firmness(id_or_name):
 def get_berry_flavor(id_or_name):
     if id_or_name is None:
         # Fetch and display a list of all berry flavors
-        url = "https://pokeapi.co/api/v2/berry-flavor"
+        url = f"{BASE_URL}/berry-flavor"
         data = fetch_all_results(url)
 
         return render_template("berry_flavors.html", data=data)
@@ -102,7 +104,7 @@ def get_berry_flavor(id_or_name):
 def get_contest_effect(id_):
     if id_ is None:
         # Fetch and display a list of all contest effects
-        url = "https://pokeapi.co/api/v2/contest-effect"
+        url = f"{BASE_URL}/contest-effect"
         data = fetch_all_results(url)
 
         # Extract the ID from the URL for each contest effect

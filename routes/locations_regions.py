@@ -10,6 +10,8 @@ from cache import cache
 from pokedex.helper import fetch_all_results, get_summary, get_path, create_pokemon_list
 from pokedex.utils import Config
 
+BASE_URL = Config.BASE_URL
+
 locations_regions_bp = Blueprint("locations_regions", __name__, template_folder="templates", static_folder="static")
 
 
@@ -19,7 +21,7 @@ locations_regions_bp = Blueprint("locations_regions", __name__, template_folder=
 def get_location(id_or_name):
     if id_or_name is None:
         # Fetch all locations
-        url = "https://pokeapi.co/api/v2/location"
+        url = f"{BASE_URL}/location"
         data = fetch_all_results(url)
         return render_template("locations.html", data=data)
     else:
@@ -109,7 +111,7 @@ def get_pal_park_area(id_or_name):
 def get_region(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the regions list
-        url = "https://pokeapi.co/api/v2/region"
+        url = f"{BASE_URL}/region"
         regions = fetch_all_results(url)
         return render_template("regions.html", regions=regions)
     else:

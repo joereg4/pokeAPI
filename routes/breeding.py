@@ -11,6 +11,8 @@ from cache import cache
 from pokedex.helper import fetch_all_results, create_pokemon_list, get_summary, get_path
 from pokedex.utils import Config
 
+BASE_URL = Config.BASE_URL
+
 breeding_bp = Blueprint("breeding", __name__, template_folder="templates", static_folder="static")
 
 
@@ -20,7 +22,7 @@ breeding_bp = Blueprint("breeding", __name__, template_folder="templates", stati
 def get_egg_group(id_or_name):
     if id_or_name is None:
         # Fetch and render the list of all egg groups
-        url = "https://pokeapi.co/api/v2/egg-group"
+        url = f"{BASE_URL}/egg-group"
         data = fetch_all_results(url)
         return render_template("egg_groups.html", data=data)
     else:
