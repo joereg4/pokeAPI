@@ -2,64 +2,19 @@
 # -*- coding: utf-8 -*-
 
 import os
+import logging  # Add this import
 
-BASE_URL = "https://pokeapi.co/api/v2"
-SPRITE_URL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites"
-ENDPOINTS = [
-    "ability",
-    "berry",
-    "berry-firmness",
-    "berry-flavor",
-    "characteristic",
-    "contest-effect",
-    "contest-type",
-    "egg-group",
-    "encounter-condition",
-    "encounter-condition-value",
-    "encounter-method",
-    "evolution-chain",
-    "evolution-trigger",
-    "gender",
-    "generation",
-    "growth-rate",
-    "item",
-    "item-attribute",
-    "item-category",
-    "item-fling-effect",
-    "item-pocket",
-    "language",
-    "location",
-    "location-area",
-    "machine",
-    "move",
-    "move-ailment",
-    "move-battle-style",
-    "move-category",
-    "move-damage-class",
-    "move-learn-method",
-    "move-target",
-    "nature",
-    "pal-park-area",
-    "pokeathlon-stat",
-    "pokedex",
-    "pokemon",
-    "pokemon-color",
-    "pokemon-form",
-    "pokemon-habitat",
-    "pokemon-shape",
-    "pokemon-species",
-    "region",
-    "stat",
-    "super-contest-effect",
-    "type",
-    "version",
-    "version-group",
-]
-SPRITE_EXT = "png"
+from .utils import Config
+
+
+BASE_URL = Config.BASE_URL
+SPRITE_URL = Config.SPRITE_URL
+ENDPOINTS = Config.ENDPOINTS
+SPRITE_EXT = Config.SPRITE_EXT
 
 
 def get_chain(data, name):
-    # logging.info(f"base_species: {base_species}")
+    logging.debug(f"base_species: {name}")
 
     # Recursive function to find and return the full evolution chain with details
     def traverse_chain(chain):
@@ -74,21 +29,35 @@ def get_chain(data, name):
         if chain["evolution_details"]:
             details = chain["evolution_details"][0]
             attributes_to_grab = [
-                "gender", "held_item", "known_move", "known_move_type",
-                "location", "min_level", "min_happiness", "min_beauty",
-                "min_affection", "needs_overworld_rain", "party_species",
-                "party_type", "relative_physical_stats", "time_of_day",
-                "trade_species", "turn_upside_down", "trigger"
+                "gender",
+                "held_item",
+                "known_move",
+                "known_move_type",
+                "location",
+                "min_level",
+                "min_happiness",
+                "min_beauty",
+                "min_affection",
+                "needs_overworld_rain",
+                "party_species",
+                "party_type",
+                "relative_physical_stats",
+                "time_of_day",
+                "trade_species",
+                "turn_upside_down",
+                "trigger",
             ]
             evolution_details = {attr: details[attr] for attr in attributes_to_grab}
 
-        sprite_data = sprite_url_build("pokemon", species_id, other=True, official_artwork=True)
+        sprite_data = sprite_url_build(
+            "pokemon", species_id, other=True, official_artwork=True
+        )
 
         current_pokemon_info = {
             "name": current_species,
             "species_id": species_id,
             "sprite": sprite_data,
-            **evolution_details
+            **evolution_details,
         }
 
         evolutions = []
@@ -110,7 +79,7 @@ def get_chain(data, name):
 
 
 def get_species_id_from_url(url):
-    return int(url.rstrip('/').split('/')[-1])
+    return int(url.rstrip("/").split("/")[-1])
 
 
 def validate(endpoint, resource_id=None):

@@ -7,8 +7,10 @@ from requests.exceptions import HTTPError
 
 import pokedex
 from cache import cache
-from pokedex.helper import fetch_all_results, create_pokemon_list, get_path, get_summary, type_colors
+from pokedex.helper import fetch_all_results, create_pokemon_list, get_path, get_summary
 from pokedex.utils import Config
+
+TYPE_COLORS = Config.TYPE_COLORS
 
 characteristics_stats_bp = Blueprint("characteristics_stats", __name__, template_folder="templates",
                                      static_folder="static")
@@ -128,7 +130,7 @@ def get_type(id_or_name):
                 "type_detail.html",
                 type_effectiveness=data,
                 pokemon_list=pokemon_list,
-                type_colors=type_colors,
+                type_colors=TYPE_COLORS,
                 summary_html=summary_html,
             )
         except ValueError as e:

@@ -8,7 +8,7 @@ from markupsafe import Markup
 
 import pokedex
 from cache import cache
-from pokedex.helper import fetch_all_results, create_pokemon_list, get_summary, get_path, valid_sprites, type_colors, get_pokemon_cards
+from pokedex.helper import fetch_all_results, create_pokemon_list, get_summary, get_path, get_pokemon_cards
 from pokedex.utils import Config
 
 pokemon_bp = Blueprint("pokemon", __name__, template_folder="templates", static_folder="static")
@@ -16,6 +16,8 @@ pokemon_bp = Blueprint("pokemon", __name__, template_folder="templates", static_
 BASE_URL = Config.BASE_URL
 POKEMON_PER_PAGE = Config.POKEMON_PER_PAGE
 ITEMS_PER_PAGE = Config.ITEMS_PER_PAGE
+VALID_SPRITES = Config.VALID_SPRITES
+TYPE_COLORS = Config.TYPE_COLORS
 
 
 @pokemon_bp.route("/")
@@ -181,18 +183,18 @@ def get_pokemon(id_or_name):
         type_data = pokedex.APIResource.fetch_data("type", type_name)
         damage_relations = type_data.get("damage_relations", {})
         type_effectiveness[type_name] = {
-            "color": type_colors.get(type_name, "#FFFFFF"),  # Add color for the type
-            "double_damage_to": [{"name": rel["name"], "color": type_colors.get(rel["name"], "#FFFFFF")} for rel in
+            "color": TYPE_COLORS.get(type_name, "#FFFFFF"),  # Add color for the type
+            "double_damage_to": [{"name": rel["name"], "color": TYPE_COLORS.get(rel["name"], "#FFFFFF")} for rel in
                                  damage_relations.get("double_damage_to", [])],
-            "half_damage_to": [{"name": rel["name"], "color": type_colors.get(rel["name"], "#FFFFFF")} for rel in
+            "half_damage_to": [{"name": rel["name"], "color": TYPE_COLORS.get(rel["name"], "#FFFFFF")} for rel in
                                damage_relations.get("half_damage_to", [])],
-            "no_damage_to": [{"name": rel["name"], "color": type_colors.get(rel["name"], "#FFFFFF")} for rel in
+            "no_damage_to": [{"name": rel["name"], "color": TYPE_COLORS.get(rel["name"], "#FFFFFF")} for rel in
                              damage_relations.get("no_damage_to", [])],
-            "double_damage_from": [{"name": rel["name"], "color": type_colors.get(rel["name"], "#FFFFFF")} for rel
+            "double_damage_from": [{"name": rel["name"], "color": TYPE_COLORS.get(rel["name"], "#FFFFFF")} for rel
                                    in damage_relations.get("double_damage_from", [])],
-            "half_damage_from": [{"name": rel["name"], "color": type_colors.get(rel["name"], "#FFFFFF")} for rel in
+            "half_damage_from": [{"name": rel["name"], "color": TYPE_COLORS.get(rel["name"], "#FFFFFF")} for rel in
                                  damage_relations.get("half_damage_from", [])],
-            "no_damage_from": [{"name": rel["name"], "color": type_colors.get(rel["name"], "#FFFFFF")} for rel in
+            "no_damage_from": [{"name": rel["name"], "color": TYPE_COLORS.get(rel["name"], "#FFFFFF")} for rel in
                                damage_relations.get("no_damage_from", [])],
         }
 
@@ -207,11 +209,11 @@ def get_pokemon(id_or_name):
     sprites = {
         key: value
         for key, value in data["sprites"].items()
-        if value is not None and key in valid_sprites
+        if value is not None and key in VALID_SPRITES
     }
 
     # Sort the sprites based on the desired order
-    sorted_sprites = {key: sprites[key] for key in valid_sprites if key in sprites}
+    sorted_sprites = {key: sprites[key] for key in VALID_SPRITES if key in sprites}
 
     # Initialize evolution_chain to None
     evolution_chain = None
@@ -447,7 +449,7 @@ def get_type(id_or_name):
                 "type_detail.html",
                 type_effectiveness=data,
                 pokemon_list=pokemon_list,
-                type_colors=type_colors,
+                type_colors=TYPE_COLORS,
                 summary_html=summary_html,
             )
         except ValueError as e:
