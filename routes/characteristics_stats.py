@@ -1,6 +1,7 @@
 # routes/characteristics_stats.py
 import logging
 import markdown
+import pandas as pd
 from flask import Blueprint, render_template, abort
 from markupsafe import Markup
 from requests.exceptions import HTTPError
