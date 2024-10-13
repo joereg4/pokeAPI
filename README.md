@@ -1,30 +1,51 @@
-# Pokédex API
+# Pokédex Web Application
 
 ## Overview
 
-This project provides a RESTful API to fetch Pokémon details, including species, evolution chain, and more.
+This Flask-based web application provides a comprehensive Pokédex, offering detailed information about Pokémon, their characteristics, locations, and more. It utilizes the PokéAPI as its primary data source and implements efficient caching mechanisms to improve performance.
 
 ---
 
 ## Table of Contents
 
-1. [Setup](#setup)
+1. [Features](#features)
+2. [Technology Stack](#technology-stack)
+3. [Setup](#setup)
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
-2. [Running the API](#running-the-api)
-3. [Features](#features)
-4. [Directory Structure](#directory-structure)
-5. [Contributing](#contributing)
-6. [License](#license)
+4. [Running the Application](#running-the-application)
+5. [Project Structure](#project-structure)
+6. [Caching System](#caching-system)
+7. [Testing](#testing)
+8. [Contributing](#contributing)
+9. [License](#license)
 
 ---
+
+## Features
+
+- Detailed information on Pokémon, including stats, abilities, and evolutions
+- Data on locations, items, berries, and more from the Pokémon universe
+- Efficient two-level caching system for improved performance
+- Modular design with Flask blueprints
+- Comprehensive test suite
+
+## Technology Stack
+
+- Flask: Web framework
+- Python 3.9+: Programming language
+- PokéAPI: Primary data source
+- Flask-Caching: High-level caching for route responses
+- Shelve: Low-level caching for Pokédex-specific data
+- Pandas: Data manipulation and analysis
+- Markdown: Text-to-HTML conversion for summaries
 
 ## Setup
 
 ### Prerequisites
 
 - Python 3.9+
-- Flask
+- pip (Python package manager)
 - Virtualenv (recommended)
 
 ### Installation
@@ -32,19 +53,15 @@ This project provides a RESTful API to fetch Pokémon details, including species
 1. **Clone the Repository**
     ```bash
     git clone <repository_url>
-    ```
-
-2. **Navigate to the Project Directory**
-    ```bash
     cd pokeAPI
     ```
 
-3. **(Recommended) Set Up a Virtual Environment**
+2. **Set Up a Virtual Environment**
     ```bash
-    virtualenv venv
+    python -m venv venv
     ```
 
-4. **Activate the Virtual Environment**
+3. **Activate the Virtual Environment**
     - macOS/Linux:
         ```bash
         source venv/bin/activate
@@ -54,18 +71,14 @@ This project provides a RESTful API to fetch Pokémon details, including species
         .\venv\Scripts\activate
         ```
 
-5. **Install Required Packages**
+4. **Install Required Packages**
     ```bash
     pip install -r requirements.txt
     ```
 
-6. **Configure Logging**
-    To use Python's native logging, ensure you have imported the `logging` module and initialized it as per your requirements.
+5. **Configure Environment Variables**
+    Create a `.env` file in the project root and add necessary environment variables (refer to `pokedex/utils.py` for required variables).
 
----
+## Running the Application
 
-## Running the API
-
-Execute the following command to start the Pokédex API:
-```bash
-flask run
+Execute the following command to start the Pokédex Web Application:

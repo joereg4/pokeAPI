@@ -77,6 +77,6 @@ In `pokedex/helper.py`, there are several utility functions:
 
 - `get_path`: Retrieves file paths for resources
 - `get_summary`: Fetches summaries from CSV files
-- `type_colors`: A dictionary mapping Pokémon types to their corresponding colors
+- `TYPE_COLORS`: A dictionary mapping Pokémon types to their corresponding colors
 
 These utility functions and configurations play a crucial role in supporting the main functionality of the application, providing necessary data and settings for various operations.
