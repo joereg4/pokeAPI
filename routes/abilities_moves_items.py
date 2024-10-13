@@ -24,7 +24,7 @@ ITEMS_PER_PAGE = Config.ITEMS_PER_PAGE
 def get_ability(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the abilities list
-        url = "https://pokeapi.co/api/v2/ability"
+        url = f"{BASE_URL}/ability"
         abilities = fetch_all_results(url)
         return render_template("abilities.html", abilities=abilities)
     else:
@@ -68,7 +68,7 @@ def get_ability(id_or_name):
 def get_item(id_or_name):
     if id_or_name is None:
         # Fetch all items
-        url = "https://pokeapi.co/api/v2/item"
+        url = f"{BASE_URL}/item"
         data = fetch_all_results(url)
         return render_template("items.html", data=data)
     else:
@@ -231,9 +231,9 @@ def get_machine(id_):
 @abilities_moves_items_bp.route("/machine/", defaults={"page": 1})
 def get_machines(page=1):
     try:
-        per_page = 20  # Number of machines to display per page
+        per_page = ITEMS_PER_PAGE  # Number of machines to display per page
         offset = (page - 1) * per_page
-        url = f"https://pokeapi.co/api/v2/machine?offset={offset}&limit={per_page}"
+        url = f"{BASE_URL}/machine?offset={offset}&limit={per_page}"
 
         response = requests.get(url)
         if response.status_code != 200:
@@ -294,7 +294,7 @@ def get_moves_list():
 def get_move(id_or_name):
     if id_or_name is None:
         # Fetch all moves
-        url = "https://pokeapi.co/api/v2/move"
+        url = f"{BASE_URL}/move"
         data = fetch_all_results(url)
         return render_template("moves.html", data=data)
     else:
@@ -381,7 +381,7 @@ def get_move_category(id_or_name):
     try:
         if id_or_name is None:
             # Fetch all move categories
-            url = "https://pokeapi.co/api/v2/move-category"
+            url = f"{BASE_URL}/move-category"
             data = fetch_all_results(url)
             return render_template("move_categories.html", data=data)
         else:
@@ -428,7 +428,7 @@ def get_move_damage_class(id_or_name):
 def get_move_learn_method(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the move learn method list
-        url = "https://pokeapi.co/api/v2/move-learn-method"
+        url = f"{BASE_URL}/move-learn-method"
         data = fetch_all_results(url)
         return render_template("move_learn_methods.html", data=data)
     else:

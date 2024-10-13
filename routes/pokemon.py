@@ -24,11 +24,11 @@ TYPE_COLORS = Config.TYPE_COLORS
 def index():
     pokedex.load_resources()  # Load resources from the CSV
     # Fetch total Pokémon count
-    pokemon_count_response = requests.get("https://pokeapi.co/api/v2/pokemon?limit=1")
+    pokemon_count_response = requests.get(f"{BASE_URL}/pokemon?limit=1")
     pokemon_count = pokemon_count_response.json()["count"]
 
     # Fetch total types count
-    types_count_response = requests.get("https://pokeapi.co/api/v2/type?limit=1")
+    types_count_response = requests.get(f"{BASE_URL}/type?limit=1")
     types_count = types_count_response.json()["count"]
 
     return render_template(
@@ -70,7 +70,7 @@ def get_detective_pikachu_pokemon():
 def get_pokedex(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the list of Pokédexes
-        url = "https://pokeapi.co/api/v2/pokedex"
+        url = f"{BASE_URL}/pokedex"
         data = fetch_all_results(url)
         return render_template("pokedex.html", data=data)
     else:
@@ -274,7 +274,7 @@ def get_pokemon(id_or_name):
 def get_pokemon_color(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the colors list
-        url = "https://pokeapi.co/api/v2/pokemon-color"
+        url = f"{BASE_URL}/pokemon-color"
         colors = fetch_all_results(url)
         return render_template("colors.html", colors=colors)
     else:
@@ -319,7 +319,7 @@ def get_pokemon_form(id_or_name):
 def get_pokemon_habitat(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the habitats list
-        url = "https://pokeapi.co/api/v2/pokemon-habitat"
+        url = f"{BASE_URL}/pokemon-habitat"
         habitats = fetch_all_results(url)
         return render_template("habitats.html", habitats=habitats)
     else:
@@ -349,7 +349,7 @@ def get_pokemon_habitat(id_or_name):
 def get_pokemon_shape(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the shapes list
-        url = "https://pokeapi.co/api/v2/pokemon-shape"
+        url = f"{BASE_URL}/pokemon-shape"
         types = fetch_all_results(url)
         return render_template("shapes.html", types=types)
     else:
@@ -375,7 +375,7 @@ def get_pokemon_shape(id_or_name):
 def get_pokemon_species(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the Pokémon species list
-        url = "https://pokeapi.co/api/v2/pokemon-species"
+        url = f"{BASE_URL}/pokemon-species"
         data = fetch_all_results(url)
         return render_template("pokemon_species.html", data=data)
     else:
@@ -414,7 +414,7 @@ def get_pokemon_species(id_or_name):
 def get_type(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the types list
-        url = "https://pokeapi.co/api/v2/type"
+        url = f"{BASE_URL}/type"
         types = fetch_all_results(url)
         return render_template("types.html", types=types)
     else:

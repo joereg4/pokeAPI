@@ -11,6 +11,7 @@ from cache import cache
 from pokedex import fetch_all_results, get_path, get_summary
 from pokedex.utils import Config, resources_dict
 
+BASE_URL = Config.BASE_URL
 utilities_bp = Blueprint("utilities", __name__, template_folder="templates")
 
 
@@ -136,7 +137,7 @@ def get_language(id_or_name):
 def get_version(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the versions list
-        url = "https://pokeapi.co/api/v2/version"
+        url = f"{BASE_URL}/version"
         data = fetch_all_results(url)
         return render_template("versions.html", data=data)
     else:
@@ -175,7 +176,7 @@ def get_version(id_or_name):
 def get_version_group(id_or_name):
     if id_or_name is None:
         # No id_or_name provided, render the version groups list
-        url = "https://pokeapi.co/api/v2/version-group"
+        url = f"{BASE_URL}/version-group"
         data = fetch_all_results(url)
         return render_template("version_groups.html", data=data)
     else:
