@@ -14,7 +14,7 @@
                     {% for method_rate in data.encounter_method_rates %}
                         <li>
                             Method: <a
-                                href="{{ url_for('pokemon.get_encounter_method', id_or_name=method_rate.encounter_method.name) }}">{{ method_rate.encounter_method.name | replace("-", " ") | title }}</a>
+                                href="{{ url_for('utilities.get_encounter_method', id_or_name=method_rate.encounter_method.name) }}">{{ method_rate.encounter_method.name | replace("-", " ") | title }}</a>
                             <ul>
                                 {% for version_detail in method_rate.version_details %}
                                     <li>{{ version_detail.version.name | title }} - Rate: {{ version_detail.rate }}%
