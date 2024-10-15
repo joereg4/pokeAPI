@@ -3,6 +3,7 @@
 
 import os
 import shelve
+import logging
 
 from .common import cache_uri_build, sprite_filepath_build
 
@@ -138,9 +139,20 @@ def set_cache(new_path=None):
     if new_path is None:
         new_path = get_default_cache()
 
-    CACHE_DIR = safe_make_dirs(os.path.abspath(new_path))
-    API_CACHE = os.path.join(CACHE_DIR, "api.cache")
-    SPRITE_CACHE = safe_make_dirs(os.path.join(CACHE_DIR, "sprite"))
+    logging.critical(f"Attempting to set cache at: {new_path}")
+
+    try:
+        CACHE_DIR = safe_make_dirs(os.path.abspath(new_path))
+        logging.critical(f"CACHE_DIR set to: {CACHE_DIR}")
+
+        API_CACHE = os.path.join(CACHE_DIR, "api.cache")
+        logging.critical(f"API_CACHE set to: {API_CACHE}")
+
+        SPRITE_CACHE = safe_make_dirs(os.path.join(CACHE_DIR, "sprite"))
+        logging.critical(f"SPRITE_CACHE set to: {SPRITE_CACHE}")
+
+    except Exception as e:
+        logging.error(f"Error setting cache: {str(e)}")
 
     return CACHE_DIR, API_CACHE, SPRITE_CACHE
 

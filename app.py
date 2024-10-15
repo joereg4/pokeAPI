@@ -12,15 +12,15 @@ pokedex.env.load_environment()
 def create_app(test_config=None):
     app = Flask(__name__)
 
-    # Configure the cache
-    cache.init_app(app, config={'CACHE_TYPE': 'SimpleCache'})
-
     # Get the current environment with fallback
     env = pokedex.env.get_env_variable("FLASK_ENV").lower()
 
     if env not in ["development", "production"]:
         env = "production"  # Default to production if invalid
 
+    # Log the environment
+    logging.critical(f"Application starting in {env.upper()} environment")
+    print(f"Application starting in {env.upper()} environment")
     # Set up logging based on environment
     if env == "development":
         logging.basicConfig(level=logging.INFO)
@@ -32,6 +32,12 @@ def create_app(test_config=None):
         logging.basicConfig(level=logging.WARNING)
         app.logger.setLevel(logging.WARNING)
 
+    # Configure the cache
+    cache.init_app(app, config={'CACHE_TYPE': 'SimpleCache'})
+
+    # Set the cache location for the low-level cache
+    pokedex.cache.set_cache() 
+    
     # Override config if test_config is provided
     if test_config:
         app.config.update(test_config)
