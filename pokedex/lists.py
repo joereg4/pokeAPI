@@ -29,7 +29,7 @@ def get_fallback_image(pokedex):
 def get_official_artwork(name, official_artwork, entry_number):
     # If official artwork is missing, call fallback function
     if official_artwork is None:
-        logging.debug(f"Official artwork missing for {name}. Generating fallback image.")
+        logging.warning(f"Official artwork missing for {name}. Generating fallback image.")
         official_artwork = get_fallback_image(entry_number)
     else:
         official_artwork
@@ -63,7 +63,6 @@ class PokemonList:
             "pokemon_encounters", "held_by_pokemon", "learned_by_pokemon", "varieties"
         ]
         self.key = next((k for k in possible_keys if k in self.data), None)
-        logging.debug(f"Key identified: {self.key}")
         if not self.key:
             raise ValueError("No valid key found in data for Pokémon list.")
         if self.key == "pokemon_entries":
@@ -86,7 +85,6 @@ class PokemonList:
                 "types": pokemon.get("types", []),
                 "sprites": pokemon.get("sprites", {}),
             })
-            logging.debug(f'Added {pokemon_name} to the Pokémon list')
         else:
             logging.warning(f"No sprites found for Pokémon '{pokemon_name}'")
 
@@ -94,7 +92,6 @@ class PokemonList:
         """Handle the species data and recursive Pokémon list creation."""
         try:
             species_data = APIResource.fetch_data("pokemon-species", species_name)
-            logging.debug(f"Fetched species data for: {species_name}")
             species_pokemon_list = PokemonList(species_data["varieties"]).create_pokemon_list()
 
             entry_number = species_data.get('pokedex_numbers', [{}])[0].get('entry_number', None)
@@ -111,7 +108,6 @@ class PokemonList:
 
     def process_pokemon_entry(self, pokemon_entry):
         """Process each Pokémon entry based on the identified key."""
-        logging.debug(f"Processing entry: {pokemon_entry}")
         if self.key == "pokemon_species":
             species_name = fetch_species_data(pokemon_entry)
             if species_name:
@@ -125,7 +121,6 @@ class PokemonList:
                 return
             if pokemon_name:
                 pokemon = APIResource.fetch_data("pokemon", pokemon_name)
-                logging.debug(f"Fetched Pokémon data for: {pokemon_name}")
                 self.add_pokemon_to_list(pokemon_name, pokemon)
 
     def create_pokemon_list(self):
@@ -136,12 +131,10 @@ class PokemonList:
             else:
                 self.identify_key()
 
-            logging.debug(f"Processing {len(self.pokemon_entries)} Pokémon entries")
             for pokemon_entry in self.pokemon_entries:
                 self.process_pokemon_entry(pokemon_entry)
 
             self.pokemon_list.sort(key=lambda x: x.get("id", float("inf")))
-            logging.debug(f"Final Pokémon list: {self.pokemon_list}")
             return self.pokemon_list
         except ValueError as e:
             logging.error(f"Error fetching Pokémon data under key '{self.key}': {e}")

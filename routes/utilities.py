@@ -5,6 +5,7 @@ import pandas as pd
 import sys
 from flask import Blueprint, render_template, abort, json
 from markupsafe import Markup
+from werkzeug.exceptions import HTTPException
 
 import pokedex
 from cache import cache
@@ -44,17 +45,24 @@ def get_endpoint_data(api_endpoint, id_or_name):
             data = func(id_or_name)
             return render_template("generic.html", data=data)
         else:
-            # If the endpoint is not found, raise an appropriate error
-            raise ValueError(f"No such endpoint: {api_endpoint}")
+            # If the endpoint is not found, abort with a 404 error
+            logging.warning(f"No such endpoint: {api_endpoint}")
+            abort(404, description=f"No such endpoint: {api_endpoint}")
     except ValueError as e:
-        # Handle ValueError and return a 400 Bad Request status with the error message
-        return str(e), 400
+        # Handle ValueError and abort with a 400 Bad Request status
+        logging.error(f"ValueError: {str(e)}")
+        abort(400, description=str(e))
     except AttributeError:
         # Handle AttributeError in case the function is not found in the current module
-        return f"Function for endpoint '{api_endpoint}' not found.", 404
+        logging.error(f"Function for endpoint '{api_endpoint}' not found.")
+        abort(404, description=f"Function for endpoint '{api_endpoint}' not found.")
+    except HTTPException:
+        # Re-raise HTTP exceptions (like abort(404)) without modification
+        raise
     except Exception as e:
-        # Handle any other exceptions and return a 500 Internal Server Error
-        return f"An error occurred: {str(e)}", 500
+        # Handle any other exceptions and abort with a 500 Internal Server Error
+        logging.exception(f"An unexpected error occurred: {str(e)}")
+        abort(500, description="An unexpected error occurred")
 
 
 @utilities_bp.route("/encounter-condition/<id_or_name>")
