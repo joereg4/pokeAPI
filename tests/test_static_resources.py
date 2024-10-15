@@ -1,0 +1,28 @@
+from unittest.mock import patch
+
+import pytest
+
+from tests.test_helper import get_test_client, load_mock_data, assert_response_status
+
+
+@pytest.fixture
+def client():
+    return get_test_client()
+
+
+def test_static_resources_integration(client):
+    """Test that CSS and JS files are properly linked in the HTML."""
+    response = client.get('/')  # or any other route that includes the base template
+
+    # Assert that the response status is OK
+    assert response.status_code == 200
+
+    # Check for CSS file link
+    assert b'<link rel="stylesheet" href="/static/css/styles.css">' in response.data
+
+    # Check for JavaScript file link
+    assert b'<script src="/static/js/search.js"></script>' in response.data
+
+    # Optionally, check for Bootstrap or other resources if needed
+    assert b'<link rel="stylesheet" href="/static/css/bootstrap.css">' in response.data
+    assert b'<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>' in response.data
