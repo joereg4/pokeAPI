@@ -1,4 +1,4 @@
-# common.py
+# cache.py
 # -*- coding: utf-8 -*-
 
 import os
@@ -46,6 +46,7 @@ def save_sprite(data, sprite_type, sprite_id, **kwargs):
     with open(abs_path, "wb") as img_file:
         img_file.write(data["img_data"])
 
+    print(f"Sprite saved successfully: {os.path.exists(abs_path)}")
     return None
 
 
@@ -96,17 +97,17 @@ def safe_make_dirs(path, mode=0o777):
 def get_default_cache():
     """Get the default cache location.
 
-    Adheres to the XDG Base Directory specification, as described in
-    https://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
+    Returns a path relative to the project root for the cache directory.
 
     :return: the default cache directory absolute path
     """
+    # Get the project root directory (assuming cache.py is in the pokedex folder)
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-    xdg_cache_home = os.environ.get("XDG_CACHE_HOME") or os.path.join(
-        os.path.expanduser("~"), ".cache"
-    )
+    # Define the cache directory relative to the project root
+    cache_dir = os.path.join(project_root, ".cache", "Pokedex")
 
-    return os.path.join(xdg_cache_home, "Pokedex")
+    return cache_dir
 
 
 def get_sprite_path(sprite_type, sprite_id, **kwargs):
