@@ -17,10 +17,7 @@ def create_app(test_config=None):
 
     if env not in ["development", "production"]:
         env = "production"  # Default to production if invalid
-
-    # Log the environment
-    logging.critical(f"Application starting in {env.upper()} environment")
-    print(f"Application starting in {env.upper()} environment")
+    
     # Set up logging based on environment
     if env == "development":
         logging.basicConfig(level=logging.INFO)
