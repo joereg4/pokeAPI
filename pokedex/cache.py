@@ -98,15 +98,22 @@ def safe_make_dirs(path, mode=0o777):
 def get_default_cache():
     """Get the default cache location.
 
-    Returns a path relative to the project root for the cache directory.
+    Returns a path for the cache directory, adapting to dev or prod environments.
 
     :return: the default cache directory absolute path
     """
-    # Get the project root directory (assuming cache.py is in the pokedex folder)
-    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # Check if we're in a production-like environment
+    if os.path.exists('/var/www/pokeAPI'):
+        project_root = '/var/www/pokeAPI'
+    else:
+        # Assume we're in development
+        project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-    # Define the cache directory relative to the project root
+    # Define the cache directory
     cache_dir = os.path.join(project_root, ".cache", "Pokedex")
+
+    logging.critical(f"Project root detected: {project_root}")
+    logging.critical(f"Cache directory set to: {cache_dir}")
 
     return cache_dir
 
