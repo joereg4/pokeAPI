@@ -385,16 +385,25 @@ def get_move_category(id_or_name):
             data = fetch_all_results(url)
             return render_template("move_categories.html", data=data)
         else:
+            try:
+                # Fetch details for a specific move
+                id_or_name = int(id_or_name)
+            except ValueError:
+                pass  # If the conversion fails, it remains a string
+
             # Fetch details for a specific move category
             category = pokedex.APIResource.fetch_data("move-category", id_or_name)
-
             if "name" not in category:
                 abort(404, description=f"Move Category '{id_or_name}' not found")
 
             moves = []
             for move in category["moves"]:
-                move_detail = pokedex.APIResource.fetch_data("move", move["name"])
-                moves.append(move_detail)
+                try:
+                    move_detail = pokedex.APIResource.fetch_data("move", move["name"])
+                    moves.append(move_detail)
+                except Exception as e:
+                    logging.error(f"Error fetching move {move['name']}: {str(e)}")
+                    continue
 
             return render_template(
                 "move_category_detail.html", category=category, moves=moves,
