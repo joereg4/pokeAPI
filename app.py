@@ -24,7 +24,7 @@ def create_app(test_config=None):
         logging.getLogger("urllib3").setLevel(logging.WARNING)
         app.logger.setLevel(logging.DEBUG)
         cache_timeout = int(os.getenv("CACHE_TIMEOUT", 300))
-        app.logger.info(f"CACHE_TIMEOUT is set to: {cache_timeout}")
+        app.logger.debug(f"CACHE_TIMEOUT is set to: {cache_timeout}")
     else:
         logging.basicConfig(level=logging.WARNING)
         app.logger.setLevel(logging.WARNING)
@@ -33,7 +33,7 @@ def create_app(test_config=None):
     cache.init_app(app, config={'CACHE_TYPE': 'SimpleCache'})
 
     # Set the cache location for the low-level cache
-    pokedex.cache.set_cache() 
+    pokedex.cache.initialize_cache() 
     
     # Override config if test_config is provided
     if test_config:
