@@ -26,17 +26,31 @@ TYPE_COLORS = Config.TYPE_COLORS
 def index():
     pokedex.load_resources()  # Load resources from the CSV
     # Fetch total Pokémon count
-    pokemon_count_response = requests.get(f"{BASE_URL}/pokemon?limit=1")
+    pokemon_count_response = requests.get("https://pokeapi.co/api/v2/pokemon?limit=1")
     pokemon_count = pokemon_count_response.json()["count"]
-
     # Fetch total types count
-    types_count_response = requests.get(f"{BASE_URL}/type?limit=1")
+    types_count_response = requests.get("https://pokeapi.co/api/v2/type?limit=1")
     types_count = types_count_response.json()["count"]
-
+    # Fetch total abilities count
+    abilities_count_response = requests.get("https://pokeapi.co/api/v2/ability?limit=1")
+    abilities_count = abilities_count_response.json()["count"]
+    # Fetch total colors count
+    color_count_response = requests.get("https://pokeapi.co/api/v2/pokemon-color?limit=1")
+    color_count = color_count_response.json()["count"]
+    # Fetch total habitat count
+    habitat_count_response = requests.get("https://pokeapi.co/api/v2/pokemon-habitat?limit=1")
+    habitat_count = habitat_count_response.json()["count"]
+    # Fetch total habitat count
+    shape_count_response = requests.get("https://pokeapi.co/api/v2/pokemon-shape?limit=1")
+    shape_count = shape_count_response.json()["count"]
     return render_template(
         "index.html",
         pokemon_count=pokemon_count,
         types_count=types_count,
+        abilities_count=abilities_count,
+        color_count=color_count,
+        habitat_count=habitat_count,
+        shape_count=shape_count,
     )
 
 
