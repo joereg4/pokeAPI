@@ -3,9 +3,9 @@
 
 import os
 import logging
-import redis
 import time
 import json
+import redis
 
 from .common import cache_uri_build, sprite_filepath_build
 
@@ -17,7 +17,7 @@ CACHE_EXPIRATION_DAYS = 7
 
 
 # Add a Redis client
-redis_client = redis.Redis(host='localhost', port=6379, db=0)
+redis_client = redis.Redis.from_url(os.getenv('REDIS_URL', 'redis://localhost:6379/0'))
 
 
 def save(data, endpoint, resource_id=None, subresource=None):

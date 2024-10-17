@@ -79,6 +79,22 @@ This Flask-based web application provides a comprehensive Pokédex, offering det
 5. **Configure Environment Variables**
     Create a `.env` file in the project root and add necessary environment variables (refer to `pokedex/utils.py` for required variables).
 
+## Redis Setup
+
+This application uses Redis for caching. To set up Redis:
+
+1. Install Redis on your local machine
+2. Start the Redis server:
+   ```
+   redis-server
+   ```
+3. Set the `REDIS_URL` environment variable or add it to your `.env` file:
+   ```
+   REDIS_URL=redis://localhost:6379/0
+   ```
+
+For production, ensure you have a Redis instance available and set the `REDIS_URL` environment variable accordingly.
+
 ## Running the Application
 
 Execute the following command to start the Pokédex Web Application:
