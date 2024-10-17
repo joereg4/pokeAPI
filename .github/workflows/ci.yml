@@ -29,11 +29,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Wait for Redis
+        run: |
+          while ! nc -z localhost 6379; do
+            sleep 1
+          done
+
       - name: Run tests
         env:
           FLASK_ENV: development
           FLASK_APP: app.py
           FLASK_DEBUG: 1
+          REDIS_URL: redis://localhost:6379/0
         run: |
           pytest
 
@@ -46,4 +53,3 @@ jobs:
             -H "X-Hub-Signature-256: sha256=$signature" \
             -d "$payload" \
             https://pokedexapi.com/webhook/
-

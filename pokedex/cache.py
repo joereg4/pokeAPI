@@ -2,8 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import os
-import shelve
 import logging
+import time
+import json
+import redis
 
 from .common import cache_uri_build, sprite_filepath_build
 
@@ -11,6 +13,11 @@ from .common import cache_uri_build, sprite_filepath_build
 CACHE_DIR = None
 API_CACHE = None
 SPRITE_CACHE = None
+CACHE_EXPIRATION_DAYS = 7
+
+
+# Add a Redis client
+redis_client = redis.Redis.from_url(os.getenv('REDIS_URL', 'redis://localhost:6379/0'))
 
 
 def save(data, endpoint, resource_id=None, subresource=None):
@@ -23,13 +30,16 @@ def save(data, endpoint, resource_id=None, subresource=None):
     uri = cache_uri_build(endpoint, resource_id, subresource)
 
     try:
-        with shelve.open(API_CACHE) as cache:
-            cache[uri] = data
-    except OSError as error:
-        if error.errno == 11:  # Cache open by another person/program
-            logging.warning('Cache unavailable, skipping save')
-        else:
-            raise error
+        # Set the data in Redis
+        redis_client.set(uri, json.dumps(data))
+        
+        # Calculate expiration time (current time + 7 days)
+        expiration_time = int(time.time()) + (CACHE_EXPIRATION_DAYS * 24 * 60 * 60)
+        
+        # Set the expiration time for the key
+        redis_client.expireat(uri, expiration_time)
+    except redis.RedisError as error:
+        logging.warning(f'Redis error, skipping save: {error}')
 
     return None
 
@@ -53,17 +63,13 @@ def load(endpoint, resource_id=None, subresource=None):
     uri = cache_uri_build(endpoint, resource_id, subresource)
 
     try:
-        with shelve.open(API_CACHE) as cache:
-            data = cache[uri]
-            return data
-    except KeyError:
-        raise
-    except OSError as error:
-        if error.errno == 11:
-            logging.warning('Cache unavailable, skipping load')
-            raise KeyError("Cache could not be opened.")
-        else:
-            raise
+        data = redis_client.get(uri)
+        if data is None:
+            raise KeyError("Data not found in cache")
+        return json.loads(data)
+    except redis.RedisError as error:
+        logging.warning(f'Redis error, skipping load: {error}')
+        raise KeyError("Cache could not be accessed.")
 
 
 def load_sprite(sprite_type, sprite_id, **kwargs):
@@ -117,41 +123,33 @@ def get_default_cache():
 def get_sprite_path(sprite_type, sprite_id, **kwargs):
     rel_filepath = sprite_filepath_build(sprite_type, sprite_id, **kwargs)
     abs_path = os.path.join(SPRITE_CACHE, rel_filepath)
-
     return abs_path
 
 
 def set_cache(new_path=None):
     """Simple function to change the cache location.
 
-    `new_path` can be an absolute or relative path. If the directory does not
-    exist yet, this function will create it. If None it will set the cache to
-    the default cache directory.
-
-    If you are going to change the cache directory, this function should be
-    called at the top of your script, before you make any calls to the API.
-    This is to avoid duplicate files and excess API calls.
+    This function now only sets up the sprite cache directory.
+    Redis connection is established globally.
 
     :param new_path: relative or absolute path to the desired new cache
-    directory
-    :return: str, str
+    directory for sprites
+    :return: str
     """
-
-    global CACHE_DIR, API_CACHE, SPRITE_CACHE
 
     if new_path is None:
         new_path = get_default_cache()
 
     try:
         CACHE_DIR = safe_make_dirs(os.path.abspath(new_path))
-        API_CACHE = os.path.join(CACHE_DIR, "api.cache")
         SPRITE_CACHE = safe_make_dirs(os.path.join(CACHE_DIR, "sprite"))
 
     except Exception as e:
         logging.error(f"Error setting cache: {str(e)}")
 
-    return CACHE_DIR, API_CACHE, SPRITE_CACHE
+    return CACHE_DIR
 
 
 def initialize_cache():
-    CACHE_DIR, API_CACHE, SPRITE_CACHE = set_cache()
+    CACHE_DIR = set_cache()
+
