@@ -6,7 +6,6 @@ import logging  # Add this import
 
 from .utils import Config
 
-
 BASE_URL = Config.BASE_URL
 SPRITE_URL = Config.SPRITE_URL
 ENDPOINTS = Config.ENDPOINTS

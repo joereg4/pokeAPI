@@ -13,10 +13,12 @@ from cache import cache
 from pokedex.helper import fetch_all_results, get_summary, get_path, create_pokemon_list, get_pokemon_cards
 from pokedex.utils import Config
 
-abilities_moves_items_bp = Blueprint("abilities_moves_items", __name__, template_folder="templates", static_folder="static")
+abilities_moves_items_bp = Blueprint("abilities_moves_items", __name__, template_folder="templates",
+                                     static_folder="static")
 
 BASE_URL = Config.BASE_URL
 ITEMS_PER_PAGE = Config.ITEMS_PER_PAGE
+
 
 @abilities_moves_items_bp.route("/ability/", defaults={"id_or_name": None})
 @abilities_moves_items_bp.route("/ability/<id_or_name>")

@@ -12,7 +12,6 @@ from cache import cache
 from pokedex.helper import fetch_all_results, create_pokemon_list, get_summary, get_path, get_pokemon_cards
 from pokedex.utils import Config
 
-
 pokemon_bp = Blueprint("pokemon", __name__, template_folder="templates", static_folder="static")
 
 BASE_URL = Config.BASE_URL
@@ -392,7 +391,6 @@ def get_pokemon_shape(id_or_name):
 @pokemon_bp.route("/pokemon-species/", defaults={"id_or_name": None})
 @pokemon_bp.route("/pokemon-species/<id_or_name>")
 def get_pokemon_species(id_or_name):
-    
     if id_or_name is None:
         url = f"{BASE_URL}/pokemon-species"
         data = fetch_all_results(url)
@@ -410,7 +408,6 @@ def get_pokemon_species(id_or_name):
                 logging.warning(f"No data found for Pokemon species: {id_or_name}")
                 abort(404, description=f"Pokemon species '{id_or_name}' not found")
 
-
             simplified_data = {
                 "pokemon_species": [
                     {
@@ -422,7 +419,7 @@ def get_pokemon_species(id_or_name):
             pokemon_list = pokedex.PokemonList(simplified_data).create_pokemon_list()
 
             return render_template("pokemon_species_detail.html", data=data, pokemon_list=pokemon_list)
-        
+
         except ValueError as e:
             logging.error(f"ValueError in fetching species {id_or_name}: {e}")
             abort(404, description=f"Pokemon species '{id_or_name}' not found")
@@ -432,7 +429,6 @@ def get_pokemon_species(id_or_name):
         except Exception as e:
             logging.exception(f"Unexpected error occurred while fetching Pokemon species {id_or_name}: {e}")
             abort(500, description="An unexpected error occurred")
-
 
 
 @pokemon_bp.route("/type/", defaults={"id_or_name": None})

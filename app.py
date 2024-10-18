@@ -17,7 +17,7 @@ def create_app(test_config=None):
 
     if env not in ["development", "production"]:
         env = "production"  # Default to production if invalid
-    
+
     # Set up logging based on environment
     if env == "development":
         logging.basicConfig(level=logging.INFO)
@@ -36,8 +36,8 @@ def create_app(test_config=None):
     })
 
     # Set the cache location for the low-level cache
-    pokedex.cache.initialize_cache() 
-    
+    pokedex.cache.initialize_cache()
+
     # Override config if test_config is provided
     if test_config:
         app.config.update(test_config)
