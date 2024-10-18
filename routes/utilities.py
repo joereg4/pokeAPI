@@ -3,14 +3,14 @@ import logging
 import markdown
 import pandas as pd
 import sys
-from flask import Blueprint, render_template, abort, json
+from flask import Blueprint, render_template, abort
 from markupsafe import Markup
 from werkzeug.exceptions import HTTPException
 
 import pokedex
 from cache import cache
 from pokedex import fetch_all_results, get_path, get_summary
-from pokedex.utils import Config, resources_dict
+from pokedex.utils import Config
 
 BASE_URL = Config.BASE_URL
 utilities_bp = Blueprint("utilities", __name__, template_folder="templates")
@@ -22,11 +22,6 @@ def handle_value_error(error):
     logging.error(str(error))
     # Return a custom error message and a 400 Bad Request status code
     return str(error), 400
-
-
-@utilities_bp.context_processor
-def inject_resources():
-    return dict(resources_json=json.dumps(resources_dict))
 
 
 @utilities_bp.route("/<api_endpoint>/<id_or_name>")
