@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="{{ url_for('pokemon.static', filename='css/styles.css') }}">
     <!-- Include jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/b1a97eb09e.js" crossorigin="anonymous"></script>
     <!-- 16x16 and 32x32 PNG icons -->
     <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='img/favicon-32x32.png') }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='img/favicon-16x16.png') }}">
@@ -59,8 +61,11 @@
 </div>
 <footer class="bg-light text-center py-4">
     <div class="container">
-        <p>Created by <a href="https://github.com/joereg4">Joe Regenstein</a>, thank you PokéAPI. Pokémon and Pokémon
-            character names are trademarks of Nintendo.</p>
+        <p>Created by Joe Regenstein, thank you <a href="https://pokeapi.co/" target="_blank" rel="noopener noreferrer">PokéAPI</a> and <a href="https://dev.pokemontcg.io/" target="_blank" rel="noopener noreferrer">Pokémon TCG API</a>. Pokémon and Pokémon
+            character names are trademarks of Nintendo.
+            <a class="text-decoration-none" href="https://www.linkedin.com/in/josephregenstein/" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-linkedin"></i></a>
+            <a class="text-decoration-none" href="https://github.com/joereg4" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i></a>
+        </p>
     </div>
     <script>
         const resources = {{ resources_json | safe }};
