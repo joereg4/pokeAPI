@@ -3,14 +3,14 @@ import logging
 import markdown
 import pandas as pd
 import requests
-from flask import Blueprint, render_template, abort, url_for, request
+from flask import Blueprint, render_template, abort, url_for, request, json
 from markupsafe import Markup
 from werkzeug.exceptions import HTTPException
 
 import pokedex
 from cache import cache
 from pokedex.helper import fetch_all_results, create_pokemon_list, get_summary, get_path, get_pokemon_cards
-from pokedex.utils import Config
+from pokedex.utils import Config, resources_dict
 
 pokemon_bp = Blueprint("pokemon", __name__, template_folder="templates", static_folder="static")
 
@@ -20,10 +20,13 @@ ITEMS_PER_PAGE = Config.ITEMS_PER_PAGE
 VALID_SPRITES = Config.VALID_SPRITES
 TYPE_COLORS = Config.TYPE_COLORS
 
+@pokemon_bp.context_processor
+def inject_resources():
+    return dict(resources_json=json.dumps(resources_dict))
+
 
 @pokemon_bp.route("/")
 def index():
-    pokedex.load_resources()  # Load resources from the CSV
     # Fetch total Pokémon count
     pokemon_count_response = requests.get("https://pokeapi.co/api/v2/pokemon?limit=1")
     pokemon_count = pokemon_count_response.json()["count"]
