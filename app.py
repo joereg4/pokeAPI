@@ -4,6 +4,7 @@ from flask import Flask, render_template
 import pokedex
 from cache import cache
 from routes import blueprints
+from pokedex.utils import load_resources
 
 # Load environment variables
 pokedex.env.load_environment()
@@ -42,6 +43,9 @@ def create_app(test_config=None):
     if test_config:
         app.config.update(test_config)
 
+    with app.app_context():
+        load_resources()
+    
     for blueprint in blueprints:
         app.register_blueprint(blueprint)
 
