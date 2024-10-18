@@ -19,4 +19,3 @@ for filename in os.listdir(current_directory):
             attr = getattr(module, attr_name)
             if isinstance(attr, Blueprint):
                 blueprints.append(attr)
-

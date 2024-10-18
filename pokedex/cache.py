@@ -15,7 +15,6 @@ API_CACHE = None
 SPRITE_CACHE = None
 CACHE_EXPIRATION_DAYS = 7
 
-
 # Add a Redis client
 redis_client = redis.Redis.from_url(os.getenv('REDIS_URL', 'redis://localhost:6379/0'))
 
@@ -32,10 +31,10 @@ def save(data, endpoint, resource_id=None, subresource=None):
     try:
         # Set the data in Redis
         redis_client.set(uri, json.dumps(data))
-        
+
         # Calculate expiration time (current time + 7 days)
         expiration_time = int(time.time()) + (CACHE_EXPIRATION_DAYS * 24 * 60 * 60)
-        
+
         # Set the expiration time for the key
         redis_client.expireat(uri, expiration_time)
     except redis.RedisError as error:
@@ -45,7 +44,6 @@ def save(data, endpoint, resource_id=None, subresource=None):
 
 
 def save_sprite(data, sprite_type, sprite_id, **kwargs):
-
     abs_path = data["path"]
 
     # Make intermediate directories; this line removes the file+extension.
@@ -152,4 +150,3 @@ def set_cache(new_path=None):
 
 def initialize_cache():
     CACHE_DIR = set_cache()
-

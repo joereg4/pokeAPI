@@ -567,6 +567,7 @@ def pokemon_species(id_or_name, **kwargs):
     """
     return APIResource("pokemon-species", id_or_name, **kwargs)
 
+
 def stat(id_or_name, **kwargs):
     """Quick stat lookup.
 
