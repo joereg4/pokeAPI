@@ -141,18 +141,18 @@
     </section>
 
     <!-- Ai Summary -->
-    <section>
-        <div class="container pt-5">
-            <h2>Summary</h2>
-            <div class="row">
-                <div class="col">
-                    {% if summary_html %}
+    {% if summary_html %}
+        <section>
+            <div class="container pt-5">
+                <h2>Summary</h2>
+                <div class="row">
+                    <div class="col">
                         <p>{{ summary_html | safe }}</p>
-                    {% endif %}
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    {% endif %}
     <!-- Type Effectiveness -->
     <section>
         <div class="container pt-5">
