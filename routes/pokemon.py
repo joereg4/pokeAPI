@@ -253,8 +253,8 @@ def get_pokemon(id_or_name):
     # Retrieve the summary for the Pokémon
     summary = get_summary(data['name'], df)
 
-    # Convert the markdown summary to HTML
-    summary_html = Markup(markdown.markdown(summary)) if summary else None
+    # Convert the markdown summary to HTML, ensuring summary is a string
+    summary_html = Markup(markdown.markdown(str(summary))) if summary and isinstance(summary, str) else None
 
     try:
         cards = get_pokemon_cards(data['name'])
@@ -480,3 +480,4 @@ def get_type(id_or_name):
             )
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
+
