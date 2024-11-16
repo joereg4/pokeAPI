@@ -25,4 +25,4 @@ def test_static_resources_integration(client):
 
     # Optionally, check for Bootstrap or other resources if needed
     assert b'<link rel="stylesheet" href="/static/css/bootstrap.css">' in response.data
-    assert b'<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>' in response.data
+    assert b'<script src="/static/vendor/jquery/jquery-3.7.1.js"></script>' in response.data
