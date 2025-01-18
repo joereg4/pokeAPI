@@ -367,4 +367,4 @@ def test_type_route(client):
 
     # Test non-existent type
     response = client.get("/type/nonexistent")
-    assert response.status_code == 400
+    assert response.status_code == 404

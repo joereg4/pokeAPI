@@ -35,7 +35,7 @@ def test_item_route(client):
 
     # Test non-existent item
     response = client.get("/item/nonexistent")
-    assert response.status_code == 400
+    assert response.status_code == 404
 
 
 def test_move_route(client):
@@ -49,7 +49,7 @@ def test_move_route(client):
 
     # Test non-existent move
     response = client.get("/move/nonexistent")
-    assert response.status_code == 400
+    assert response.status_code == 404
 
 
 def test_machine_route(client):
