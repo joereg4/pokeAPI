@@ -7,6 +7,7 @@ from requests.exceptions import HTTPError
 from flask import Blueprint, render_template, abort, url_for, request, json
 from markupsafe import Markup
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from werkzeug.exceptions import HTTPException
 
 import pokedex
 from cache import cache
@@ -18,6 +19,9 @@ from pokedex.helper import (
     get_pokemon_cards,
 )
 from pokedex.utils import Config, resources_dict
+from pokedex import APIResource
+from pokedex.interface import name_id_convert
+from routes.utilities import get_endpoint_data
 
 pokemon_bp = Blueprint(
     "pokemon", __name__, template_folder="templates", static_folder="static"
@@ -179,7 +183,7 @@ def get_pokedex(id_or_name):
                 abort(404, description=f"Pokedex '{id_or_name}' not found")
             else:
                 logging.error(f"HTTP error occurred: {e}")
-                return str(e), e.response.status_code
+                abort(500, description=str(e))
         except Exception as e:
             logging.exception(
                 f"Unexpected error occurred while fetching Pokedex {id_or_name}: {e}"
@@ -235,27 +239,33 @@ def get_pokemon_list():
 
 
 @pokemon_bp.route("/pokemon/<id_or_name>")
-@cache.cached(timeout=Config.CACHE_TIMEOUT)
+# @cache.cached(timeout=Config.CACHE_TIMEOUT)  # Temporarily disabled for testing
 def get_pokemon(id_or_name):
+    logging.info(f"get_pokemon called with id_or_name: {id_or_name}")
+
     csv_file_path = get_path("pokemon.csv")
     df = pd.read_csv(csv_file_path)
 
     try:
-        id_or_name = int(id_or_name)
-    except ValueError:
-        pass
+        try:
+            id_or_name = int(id_or_name)
+            logging.info(f"Converted id_or_name to integer: {id_or_name}")
+        except ValueError:
+            logging.info(f"Using id_or_name as string: {id_or_name}")
+            pass
 
-    try:
+        logging.info(f"Attempting to fetch pokemon data for: {id_or_name}")
         data = pokedex.APIResource.fetch_data("pokemon", id_or_name)
     except ValueError as e:
-        logging.error(f"ValueError in fetching pokemon {id_or_name}: {e}")
+        logging.error(f"ValueError in get_pokemon for {id_or_name}: {str(e)}")
         abort(404, description=f"Pokemon '{id_or_name}' not found")
     except HTTPError as e:
+        logging.error(f"HTTPError in get_pokemon for {id_or_name}: {str(e)}")
         if e.response.status_code == 404:
             abort(404, description=f"Pokemon '{id_or_name}' not found")
         else:
             logging.error(f"HTTP error occurred: {e}")
-            return str(e), e.response.status_code
+            abort(500, description=str(e))
     except Exception as e:
         logging.exception(
             f"Unexpected error occurred while fetching Pokemon {id_or_name}: {e}"
@@ -263,9 +273,12 @@ def get_pokemon(id_or_name):
         abort(500, description="An unexpected error occurred")
 
     if not data or "name" not in data:
-        logging.warning(f"No data found for Pokemon: {id_or_name}")
+        logging.warning(f"Pokemon data missing or invalid for: {id_or_name}")
         abort(404, description=f"Pokemon '{id_or_name}' not found")
 
+    logging.info(f"Successfully fetched pokemon data for: {id_or_name}")
+
+    # Process the data
     data = {
         "name": data["name"].title(),
         "id": data["id"],
@@ -282,6 +295,7 @@ def get_pokemon(id_or_name):
         "types": data.get("types", []),
         "stats": data.get("stats", []),
     }
+    logging.info(f"Processed basic pokemon data for: {data['name']}")
 
     # Categorize moves by how they're learned using a dictionary mapping
     move_method_mapping = {
@@ -492,7 +506,7 @@ def get_pokemon_color(id_or_name):
                 abort(404, description=f"Pokemon color '{id_or_name}' not found")
             else:
                 logging.error(f"HTTP error occurred: {e}")
-                return str(e), e.response.status_code
+                abort(500, description=str(e))
         except Exception as e:
             logging.exception(
                 f"Unexpected error occurred while fetching Pokemon color {id_or_name}: {e}"
@@ -526,7 +540,7 @@ def get_pokemon_form(id_or_name):
             abort(404, description=f"Pokemon form '{id_or_name}' not found")
         else:
             logging.error(f"HTTP error occurred: {e}")
-            return str(e), e.response.status_code
+            abort(500, description=str(e))
     except Exception as e:
         logging.exception(
             f"Unexpected error occurred while fetching Pokemon form {id_or_name}: {e}"
@@ -564,7 +578,7 @@ def get_pokemon_habitat(id_or_name):
                 abort(404, description=f"Pokemon habitat '{id_or_name}' not found")
             else:
                 logging.error(f"HTTP error occurred: {e}")
-                return str(e), e.response.status_code
+                abort(500, description=str(e))
         except Exception as e:
             logging.exception(
                 f"Unexpected error occurred while fetching Pokemon habitat {id_or_name}: {e}"
@@ -605,7 +619,7 @@ def get_pokemon_shape(id_or_name):
                 abort(404, description=f"Pokemon shape '{id_or_name}' not found")
             else:
                 logging.error(f"HTTP error occurred: {e}")
-                return str(e), e.response.status_code
+                abort(500, description=str(e))
         except Exception as e:
             logging.exception(
                 f"Unexpected error occurred while fetching Pokemon shape {id_or_name}: {e}"
@@ -654,12 +668,11 @@ def get_pokemon_species(id_or_name):
             logging.error(f"ValueError in fetching species {id_or_name}: {e}")
             abort(404, description=f"Pokemon species '{id_or_name}' not found")
         except HTTPError as e:
-            # Handle HTTP errors, specifically 404
             if e.response.status_code == 404:
                 abort(404, description=f"Pokemon species '{id_or_name}' not found")
             else:
                 logging.error(f"HTTP error occurred: {e}")
-                return str(e), e.response.status_code
+                abort(500, description=str(e))
         except Exception as e:
             logging.exception(
                 f"Unexpected error occurred while fetching Pokemon species {id_or_name}: {e}"
@@ -667,53 +680,76 @@ def get_pokemon_species(id_or_name):
             abort(500, description="An unexpected error occurred")
 
 
-@pokemon_bp.route("/type/", defaults={"id_or_name": None})
+@pokemon_bp.route("/type/")
 @pokemon_bp.route("/type/<id_or_name>")
-@cache.cached(timeout=Config.CACHE_TIMEOUT)
-def get_type(id_or_name):
-    if id_or_name is None:
-        url = f"{BASE_URL}/type"
-        types = fetch_all_results(url)
-        return render_template("types.html", types=types)
-    else:
+def get_type(id_or_name=None):
+    logging.info(
+        f"[get_type] Route called with id_or_name: {id_or_name}, type: {type(id_or_name)}"
+    )
+    try:
+        if id_or_name is None:
+            logging.debug("[get_type] No id_or_name provided, fetching all types")
+            url = f"{BASE_URL}/type"
+            data = fetch_all_results(url)
+            return render_template("types.html", data=data)
+
+        # First try to validate the input
+        logging.debug(
+            f"[get_type] About to validate input: {id_or_name}, type: {type(id_or_name)}"
+        )
+        try:
+            pokedex.common.validate("type", id_or_name)
+            logging.debug("[get_type] Input validation successful")
+        except ValueError as e:
+            logging.error(f"[get_type] Validation error: {str(e)}, type: {type(e)}")
+            # If it's a "not found" error, return 404
+            if "not found" in str(e).lower():
+                logging.debug(
+                    "[get_type] ValueError contains 'not found', returning 404"
+                )
+                abort(404, description=str(e))
+            # If it's a "bad id" error, try to fetch the data anyway
+            # If the data doesn't exist, we'll get a 404 from the API
+            logging.debug(
+                "[get_type] ValueError is a 'bad id' error, continuing to API call"
+            )
+
         try:
             id_or_name = int(id_or_name)
+            logging.debug(f"[get_type] Converted id_or_name to integer: {id_or_name}")
         except ValueError:
+            logging.debug(f"[get_type] Using id_or_name as string: {id_or_name}")
             pass
 
-        try:
-            data = pokedex.APIResource.fetch_data("type", id_or_name)
-        except ValueError as e:
-            logging.error(f"ValueError in fetching type {id_or_name}: {e}")
-            abort(404, description=f"Pokemon type '{id_or_name}' not found")
-        except HTTPError as e:
-            if e.response.status_code == 404:
-                abort(404, description=f"Pokemon type '{id_or_name}' not found")
-            else:
-                logging.error(f"HTTP error occurred: {e}")
-                return str(e), e.response.status_code
-        except Exception as e:
-            logging.exception(
-                f"Unexpected error occurred while fetching Pokemon type {id_or_name}: {e}"
-            )
-            abort(500, description="An unexpected error occurred")
+        logging.debug(f"[get_type] Attempting to fetch data for: {id_or_name}")
+        data = pokedex.APIResource.fetch_data("type", id_or_name)
 
         if not data or "name" not in data:
-            logging.warning(f"No data found for Pokemon type: {id_or_name}")
-            abort(404, description=f"Pokemon type '{id_or_name}' not found")
+            logging.warning(
+                f"[get_type] No data or missing name for type: {id_or_name}"
+            )
+            abort(404, description=f"Type '{id_or_name}' not found")
 
-        pokemon_list = create_pokemon_list(data)
-
-        # Fetch Summary
-        csv_file_path = get_path("type.csv")
-        df = pd.read_csv(csv_file_path)
-        summary = get_summary(data["name"], df)
-        summary_html = Markup(markdown.markdown(summary)) if summary else None
-
-        return render_template(
-            "type_detail.html",
-            type_effectiveness=data,
-            pokemon_list=pokemon_list,
-            type_colors=TYPE_COLORS,
-            summary_html=summary_html,
+        logging.info(f"[get_type] Successfully fetched data for type: {id_or_name}")
+        return render_template("type.html", data=data)
+    except ValueError as e:
+        logging.error(f"[get_type] ValueError in route: {str(e)}, type: {type(e)}")
+        # If it's a "not found" error from the API, return 404
+        if "not found" in str(e).lower():
+            abort(404, description=str(e))
+        # Otherwise, it's a bad request
+        abort(400, description=str(e))
+    except HTTPError as e:
+        logging.error(
+            f"[get_type] HTTPError: {str(e)}, status_code: {e.response.status_code}"
         )
+        if e.response.status_code == 404:
+            abort(404, description=f"Type '{id_or_name}' not found")
+        else:
+            logging.error(f"[get_type] HTTP error occurred: {e}")
+            abort(500, description=str(e))
+    except Exception as e:
+        logging.error(
+            f"[get_type] Unexpected error: {str(e)}, type: {type(e)}", exc_info=True
+        )
+        abort(500, description=str(e))
