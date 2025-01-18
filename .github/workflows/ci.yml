@@ -8,7 +8,10 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04]
+    runs-on: ${{ matrix.os }}
 
     services:
       redis:
@@ -27,6 +30,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.9'
+          cache: 'pip'  # Enable pip caching
 
       - name: Install dependencies
         run: |
@@ -43,7 +47,7 @@ jobs:
           pytest -n 4
 
       - name: Send webhook payload
-        if: success()  # This ensures that the webhook is called only if tests pass
+        if: success() && matrix.os == 'ubuntu-22.04'  # Only send webhook from one environment
         run: |  
           payload='{}'
           signature=$(echo -n "$payload" | openssl dgst -sha256 -hmac "${{ secrets.WEBHOOK_SECRET }}" | sed 's/^.* //')
