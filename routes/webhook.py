@@ -59,9 +59,9 @@ def webhook():
         try:
             # Construct the command to source the virtual environment and install requirements
             activate_and_install = [
-                "bash",
+                "/bin/bash",
                 "-c",
-                "source /var/www/pokeAPI/venv/bin/activate && pip install -r /var/www/pokeAPI/requirements.txt",
+                ". /var/www/pokeAPI/venv/bin/activate && cd /var/www/pokeAPI && pip install -r requirements.txt",
             ]
 
             result = subprocess.run(
