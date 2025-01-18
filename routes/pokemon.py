@@ -6,7 +6,7 @@ import requests
 from requests.exceptions import HTTPError
 from flask import Blueprint, render_template, abort, url_for, request, json
 from markupsafe import Markup
-from werkzeug.exceptions import HTTPException
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import pokedex
 from cache import cache
@@ -29,47 +29,67 @@ ITEMS_PER_PAGE = Config.ITEMS_PER_PAGE
 VALID_SPRITES = Config.VALID_SPRITES
 TYPE_COLORS = Config.TYPE_COLORS
 
+# Add type data cache at module level
+_type_cache = {}
+
 
 @pokemon_bp.context_processor
 def inject_resources():
     return dict(resources_json=json.dumps(resources_dict))
 
 
+def fetch_count(endpoint):
+    """Fetch count for a specific endpoint"""
+    try:
+        response = requests.get(f"{BASE_URL}/{endpoint}?limit=1")
+        if response.status_code == 200:
+            return endpoint, response.json()["count"]
+        logging.error(f"Error fetching {endpoint} count: Status {response.status_code}")
+        return endpoint, 0
+    except Exception as e:
+        logging.error(f"Error fetching count for {endpoint}: {e}")
+        return endpoint, 0
+
+
 @pokemon_bp.route("/")
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
 def index():
-    # Fetch total Pokémon count
-    pokemon_count_response = requests.get("https://pokeapi.co/api/v2/pokemon?limit=1")
-    pokemon_count = pokemon_count_response.json()["count"]
-    # Fetch total types count
-    types_count_response = requests.get("https://pokeapi.co/api/v2/type?limit=1")
-    types_count = types_count_response.json()["count"]
-    # Fetch total abilities count
-    abilities_count_response = requests.get("https://pokeapi.co/api/v2/ability?limit=1")
-    abilities_count = abilities_count_response.json()["count"]
-    # Fetch total colors count
-    color_count_response = requests.get(
-        "https://pokeapi.co/api/v2/pokemon-color?limit=1"
-    )
-    color_count = color_count_response.json()["count"]
-    # Fetch total habitat count
-    habitat_count_response = requests.get(
-        "https://pokeapi.co/api/v2/pokemon-habitat?limit=1"
-    )
-    habitat_count = habitat_count_response.json()["count"]
-    # Fetch total habitat count
-    shape_count_response = requests.get(
-        "https://pokeapi.co/api/v2/pokemon-shape?limit=1"
-    )
-    shape_count = shape_count_response.json()["count"]
-    return render_template(
-        "index.html",
-        pokemon_count=pokemon_count,
-        types_count=types_count,
-        abilities_count=abilities_count,
-        color_count=color_count,
-        habitat_count=habitat_count,
-        shape_count=shape_count,
-    )
+    endpoints = {
+        "pokemon": "pokemon_count",
+        "type": "types_count",
+        "ability": "abilities_count",
+        "pokemon-color": "color_count",
+        "pokemon-habitat": "habitat_count",
+        "pokemon-shape": "shape_count",
+    }
+
+    counts = {}
+    try:
+        with ThreadPoolExecutor(max_workers=6) as executor:
+            # Submit all requests concurrently
+            future_to_endpoint = {
+                executor.submit(fetch_count, endpoint): endpoint
+                for endpoint in endpoints.keys()
+            }
+
+            # Collect results as they complete
+            for future in as_completed(future_to_endpoint):
+                endpoint, count = future.result()
+                counts[endpoints[endpoint]] = count
+
+        return render_template("index.html", **counts)
+    except Exception as e:
+        logging.error(f"Error fetching counts: {e}")
+        # Fallback to zero counts if there's an error
+        return render_template(
+            "index.html",
+            pokemon_count=0,
+            types_count=0,
+            abilities_count=0,
+            color_count=0,
+            habitat_count=0,
+            shape_count=0,
+        )
 
 
 @pokemon_bp.route("/detective-pikachu")

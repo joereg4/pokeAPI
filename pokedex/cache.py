@@ -6,6 +6,8 @@ import logging
 import time
 import json
 import redis
+from redis import ConnectionPool
+import socket
 
 from .common import cache_uri_build, sprite_filepath_build
 
@@ -15,8 +17,23 @@ API_CACHE = None
 SPRITE_CACHE = None
 CACHE_EXPIRATION_DAYS = 7
 
-# Add a Redis client
-redis_client = redis.Redis.from_url(os.getenv('REDIS_URL', 'redis://localhost:6379/0'))
+# Configure Redis connection pool
+REDIS_POOL = ConnectionPool.from_url(
+    os.getenv("REDIS_URL", "redis://localhost:6379/0"),
+    max_connections=10,
+    socket_timeout=2,
+    socket_connect_timeout=2,
+    retry_on_timeout=True,
+    health_check_interval=30,
+)
+
+# Create Redis client with connection pool
+redis_client = redis.Redis(
+    connection_pool=REDIS_POOL,
+    socket_keepalive=True,
+    retry_on_timeout=True,
+    decode_responses=True,  # Automatically decode responses to strings
+)
 
 
 def save(data, endpoint, resource_id=None, subresource=None):
@@ -29,16 +46,17 @@ def save(data, endpoint, resource_id=None, subresource=None):
     uri = cache_uri_build(endpoint, resource_id, subresource)
 
     try:
-        # Set the data in Redis
-        redis_client.set(uri, json.dumps(data))
-
-        # Calculate expiration time (current time + 7 days)
-        expiration_time = int(time.time()) + (CACHE_EXPIRATION_DAYS * 24 * 60 * 60)
-
-        # Set the expiration time for the key
-        redis_client.expireat(uri, expiration_time)
+        # Compress and set the data in Redis
+        compressed_data = json.dumps(data).encode("utf-8")
+        redis_client.set(
+            uri,
+            compressed_data,
+            ex=(
+                CACHE_EXPIRATION_DAYS * 24 * 60 * 60
+            ),  # Use ex parameter for expiration
+        )
     except redis.RedisError as error:
-        logging.warning(f'Redis error, skipping save: {error}')
+        logging.warning(f"Redis error, skipping save: {error}")
 
     return None
 
@@ -66,7 +84,7 @@ def load(endpoint, resource_id=None, subresource=None):
             raise KeyError("Data not found in cache")
         return json.loads(data)
     except redis.RedisError as error:
-        logging.warning(f'Redis error, skipping load: {error}')
+        logging.warning(f"Redis error, skipping load: {error}")
         raise KeyError("Cache could not be accessed.")
 
 
@@ -106,8 +124,8 @@ def get_default_cache():
     :return: the default cache directory absolute path
     """
     # Check if we're in a production-like environment
-    if os.path.exists('/var/www/pokeAPI'):
-        project_root = '/var/www/pokeAPI'
+    if os.path.exists("/var/www/pokeAPI"):
+        project_root = "/var/www/pokeAPI"
     else:
         # Assume we're in development
         project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

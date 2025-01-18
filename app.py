@@ -14,7 +14,9 @@ def create_app(test_config=None):
     app = Flask(__name__)
 
     # Get the current environment with fallback
-    env = pokedex.env.get_env_variable("FLASK_ENV").lower()
+    env = pokedex.env.get_env_variable("FLASK_ENV", "production")
+    if env:
+        env = env.lower()
 
     if env not in ["development", "production"]:
         env = "production"  # Default to production if invalid
@@ -31,10 +33,13 @@ def create_app(test_config=None):
         app.logger.setLevel(logging.WARNING)
 
     # Configure the cache to use Redis
-    cache.init_app(app, config={
-        'CACHE_TYPE': 'RedisCache',
-        'CACHE_REDIS_URL': os.getenv('REDIS_URL', 'redis://localhost:6379/0')
-    })
+    cache.init_app(
+        app,
+        config={
+            "CACHE_TYPE": "RedisCache",
+            "CACHE_REDIS_URL": os.getenv("REDIS_URL", "redis://localhost:6379/0"),
+        },
+    )
 
     # Set the cache location for the low-level cache
     pokedex.cache.initialize_cache()
@@ -45,7 +50,7 @@ def create_app(test_config=None):
 
     with app.app_context():
         load_resources()
-    
+
     for blueprint in blueprints:
         app.register_blueprint(blueprint)
 
@@ -55,12 +60,12 @@ def create_app(test_config=None):
 
     @app.errorhandler(404)
     def not_found(e):
-        message = e.description if hasattr(e, 'description') else "Page not found"
+        message = e.description if hasattr(e, "description") else "Page not found"
         return render_template("404.html", message=message), 404
 
     return app
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = create_app()
     app.run()
