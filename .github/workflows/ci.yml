@@ -8,10 +8,7 @@ on:
 
 jobs:
   test:
-    strategy:
-      matrix:
-        os: [ubuntu-22.04, ubuntu-24.04]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-24.04  # Explicitly using 24.04
 
     services:
       redis:
@@ -47,7 +44,7 @@ jobs:
           pytest -n 4
 
       - name: Send webhook payload
-        if: success() && matrix.os == 'ubuntu-22.04'  # Only send webhook from one environment
+        if: success()  # Send webhook on successful tests
         run: |  
           payload='{}'
           signature=$(echo -n "$payload" | openssl dgst -sha256 -hmac "${{ secrets.WEBHOOK_SECRET }}" | sed 's/^.* //')
