@@ -23,41 +23,40 @@ def check_cache_health():
         status = "healthy" if result == test_value else "unhealthy"
         cache_status = "operational" if result == test_value else "value mismatch"
 
-        # Return HTML if specifically requested
-        if request.args.get("format") == "html":
-            return render_template(
-                "health.html",
-                status=status,
-                cache=cache_status,
-                stats=stats,
-                current_time=datetime.utcnow(),
+        # Return JSON if specifically requested
+        if request.headers.get("Accept") == "application/json":
+            return jsonify({"status": status, "cache": cache_status, "stats": stats}), (
+                200 if status == "healthy" else 500
             )
 
-        # Return JSON by default
-        return jsonify({"status": status, "cache": cache_status, "stats": stats}), (
-            200 if status == "healthy" else 500
+        # Return HTML by default
+        return render_template(
+            "health.html",
+            status=status,
+            cache=cache_status,
+            stats=stats,
+            current_time=datetime.utcnow(),
         )
 
     except Exception as e:
-        if request.args.get("format") == "html":
-            return render_template(
-                "health.html",
-                status="unhealthy",
-                cache=str(e),
-                stats={
-                    "hit_rate": 0,
-                    "used_memory_human": "N/A",
-                    "connected_clients": 0,
-                    "total_connections_received": 0,
-                    "uptime_in_seconds": 0,
-                },
-                current_time=datetime.utcnow(),
-            )
+        if request.headers.get("Accept") == "application/json":
+            return jsonify({"status": "unhealthy", "cache": str(e)}), 500
 
-        return jsonify({"status": "unhealthy", "cache": str(e)}), 500
+        return render_template(
+            "health.html",
+            status="unhealthy",
+            cache=str(e),
+            stats={
+                "hit_rate": 0,
+                "used_memory_human": "N/A",
+                "connected_clients": 0,
+                "total_connections_received": 0,
+                "uptime_in_seconds": 0,
+            },
+            current_time=datetime.utcnow(),
+        )
 
 
-# Add JSON endpoint for API consumers
 @health_bp.route("/health/cache/json")
 def check_cache_health_json():
     """Check if Redis cache is functioning properly (JSON response)"""
