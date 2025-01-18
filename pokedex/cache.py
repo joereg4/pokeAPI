@@ -55,10 +55,9 @@ def save(data, endpoint, resource_id=None, subresource=None):
                 CACHE_EXPIRATION_DAYS * 24 * 60 * 60
             ),  # Use ex parameter for expiration
         )
-    except redis.RedisError as error:
+    except (redis.RedisError, Exception) as error:
         logging.warning(f"Redis error, skipping save: {error}")
-
-    return None
+        return None
 
 
 def save_sprite(data, sprite_type, sprite_id, **kwargs):

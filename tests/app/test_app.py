@@ -2,6 +2,7 @@ from pytest import fixture
 from flask import url_for
 
 from tests.test_helper import get_test_client, assert_response_status
+from utils import get_cache_stats, warm_common_endpoints
 
 
 @fixture

@@ -45,14 +45,22 @@ def create_app(test_config=None):
         logging.basicConfig(level=logging.WARNING)
         app.logger.setLevel(logging.WARNING)
 
-    # Configure the cache to use Redis
-    cache.init_app(
-        app,
-        config={
-            "CACHE_TYPE": "RedisCache",
-            "CACHE_REDIS_URL": os.getenv("REDIS_URL", "redis://localhost:6379/0"),
+    # Configure Redis cache with enhanced settings
+    cache_config = {
+        "CACHE_TYPE": "RedisCache",
+        "CACHE_REDIS_URL": os.getenv("REDIS_URL", "redis://localhost:6379/0"),
+        "CACHE_DEFAULT_TIMEOUT": int(os.getenv("CACHE_DEFAULT_TIMEOUT", 3600)),
+        "CACHE_KEY_PREFIX": "pokedex:",
+        "CACHE_OPTIONS": {
+            "socket_timeout": 2,
+            "socket_connect_timeout": 2,
+            "retry_on_timeout": True,
+            "max_connections": 10,
         },
-    )
+        "CACHE_REDIS_COMPRESSION_ENABLED": True,
+    }
+
+    cache.init_app(app, config=cache_config)
 
     # Set the cache location for the low-level cache
     pokedex.cache.initialize_cache()
