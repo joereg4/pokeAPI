@@ -40,7 +40,7 @@ jobs:
           FLASK_DEBUG: 1
           REDIS_URL: redis://localhost:6379/0
         run: |
-          pytest
+          pytest -n 4
 
       - name: Send webhook payload
         if: success()  # This ensures that the webhook is called only if tests pass
