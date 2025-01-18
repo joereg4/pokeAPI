@@ -11,7 +11,7 @@ def client():
 
 def test_cache_health_endpoint(client):
     """Test the cache health check endpoint"""
-    response = client.get("/health/cache")
+    response = client.get("/health/cache/json")
     assert response.status_code == 200
 
     data = response.get_json()
@@ -36,7 +36,7 @@ def test_cache_health_with_redis_failure(client, mocker):
         side_effect=Exception("Redis connection failed"),
     )
 
-    response = client.get("/health/cache")
+    response = client.get("/health/cache/json")
     assert response.status_code == 500
 
     data = response.get_json()
