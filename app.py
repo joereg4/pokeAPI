@@ -1,6 +1,7 @@
 import logging
 import os
 from flask import Flask, render_template
+from flask_compress import Compress
 import pokedex
 from cache import cache
 from routes import blueprints
@@ -12,6 +13,18 @@ pokedex.env.load_environment()
 
 def create_app(test_config=None):
     app = Flask(__name__)
+
+    # Configure compression
+    app.config["COMPRESS_MIMETYPES"] = [
+        "text/html",
+        "text/css",
+        "text/xml",
+        "application/json",
+        "application/javascript",
+    ]
+    app.config["COMPRESS_LEVEL"] = 6
+    app.config["COMPRESS_MIN_SIZE"] = 500
+    Compress(app)
 
     # Get the current environment with fallback
     env = pokedex.env.get_env_variable("FLASK_ENV", "production")
