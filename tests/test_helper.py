@@ -8,17 +8,24 @@ from cache import cache
 
 def load_mock_data(file_name):
     """Load mock data from a JSON file located in the mock_data directory."""
-    file_path = os.path.join(os.path.dirname(__file__), '..', 'mock_data', file_name)
-    with open(file_path, 'r') as file:
+    file_path = os.path.join(os.path.dirname(__file__), "..", "mock_data", file_name)
+    with open(file_path, "r") as file:
         return json.load(file)
 
 
 def get_test_client():
+    # Set test environment variables
+    os.environ["FLASK_ENV"] = "development"
+    os.environ["TESTING"] = "True"
+
     # Initialize the app using the factory function
-    app = create_app({
-        'TESTING': True,
-        'DEBUG_PRINT_ROUTES': False  # Explicitly set this to avoid KeyError
-    })
+    app = create_app(
+        {
+            "TESTING": True,
+            "DEBUG_PRINT_ROUTES": False,  # Explicitly set this to avoid KeyError
+            "CACHE_TYPE": "SimpleCache",  # Use simple cache for testing
+        }
+    )
     return app.test_client()
 
 
@@ -27,7 +34,7 @@ def clear_cache():
 
 
 def mock_http_get(mock_response):
-    return patch('requests.get', return_value=mock_response)
+    return patch("requests.get", return_value=mock_response)
 
 
 def assert_json_response(response, expected_status=200):
