@@ -208,10 +208,26 @@ def get_pokemon_list():
 
     pokemon_list = []
 
-    # Fetch details for each Pokémon in the current set
-    for pokemon in data["results"]:
-        pokemon = pokedex.APIResource.fetch_data("pokemon", pokemon["name"])
-        pokemon_list.append(pokemon)
+    # Batch fetch Pokemon details using ThreadPoolExecutor
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        future_to_pokemon = {
+            executor.submit(
+                pokedex.APIResource.fetch_data, "pokemon", pokemon["name"]
+            ): pokemon["name"]
+            for pokemon in data["results"]
+        }
+
+        for future in as_completed(future_to_pokemon):
+            pokemon_name = future_to_pokemon[future]
+            try:
+                pokemon = future.result()
+                if pokemon:
+                    pokemon_list.append(pokemon)
+            except Exception as e:
+                logging.error(f"Error fetching details for {pokemon_name}: {e}")
+
+    # Sort the list by ID to maintain order
+    pokemon_list.sort(key=lambda x: x.get("id", float("inf")))
 
     return render_template(
         "pokemon_list.html", pokemon_list=pokemon_list, current_page=page
@@ -267,7 +283,14 @@ def get_pokemon(id_or_name):
         "stats": data.get("stats", []),
     }
 
-    # Categorize moves by how they're learned
+    # Categorize moves by how they're learned using a dictionary mapping
+    move_method_mapping = {
+        "level-up": "level_up",
+        "machine": "tm_hm",
+        "egg": "breeding",
+        "tutor": "tutor",
+    }
+
     move_categories = {
         "level_up": [],
         "tm_hm": [],
@@ -276,92 +299,135 @@ def get_pokemon(id_or_name):
         "other": [],
     }
 
+    # Process all moves at once
     for move_detail in data.get("moves", []):
-        move_learned_method = move_detail["version_group_details"][0][
-            "move_learn_method"
-        ]["name"]
+        version_details = move_detail["version_group_details"][0]
+        move_learned_method = version_details["move_learn_method"]["name"]
+
         move_data = {
             "name": move_detail["move"]["name"].replace("-", " ").title(),
             "url": url_for(
                 "abilities_moves_items.get_move",
                 id_or_name=move_detail["move"]["name"],
             ),
-            "level_learned_at": move_detail["version_group_details"][0][
-                "level_learned_at"
-            ],
+            "level_learned_at": version_details["level_learned_at"],
         }
 
-        if move_learned_method == "level-up":
-            move_categories["level_up"].append(move_data)
-        elif move_learned_method == "machine":
-            move_categories["tm_hm"].append(move_data)
-        elif move_learned_method == "egg":
-            move_categories["breeding"].append(move_data)
-        elif move_learned_method == "tutor":
-            move_categories["tutor"].append(move_data)
-        else:
-            move_categories["other"].append(move_data)
+        # Use the mapping to categorize moves, defaulting to "other"
+        category = move_method_mapping.get(move_learned_method, "other")
+        move_categories[category].append(move_data)
+
+    # Sort level-up moves by level
+    move_categories["level_up"].sort(key=lambda x: x["level_learned_at"])
 
     # Fetch and process type effectiveness
     type_effectiveness = {}
     for type_info in data["types"]:
         type_name = type_info["type"]["name"]
-        type_data = pokedex.APIResource.fetch_data("type", type_name)
-        damage_relations = type_data.get("damage_relations", {})
-        type_effectiveness[type_name] = {
-            "color": TYPE_COLORS.get(type_name, "#FFFFFF"),  # Add color for the type
-            "double_damage_to": [
-                {
-                    "name": rel["name"],
-                    "color": TYPE_COLORS.get(rel["name"], "#FFFFFF"),
-                }
-                for rel in damage_relations.get("double_damage_to", [])
-            ],
-            "half_damage_to": [
-                {
-                    "name": rel["name"],
-                    "color": TYPE_COLORS.get(rel["name"], "#FFFFFF"),
-                }
-                for rel in damage_relations.get("half_damage_to", [])
-            ],
-            "no_damage_to": [
-                {
-                    "name": rel["name"],
-                    "color": TYPE_COLORS.get(rel["name"], "#FFFFFF"),
-                }
-                for rel in damage_relations.get("no_damage_to", [])
-            ],
-            "double_damage_from": [
-                {
-                    "name": rel["name"],
-                    "color": TYPE_COLORS.get(rel["name"], "#FFFFFF"),
-                }
-                for rel in damage_relations.get("double_damage_from", [])
-            ],
-            "half_damage_from": [
-                {
-                    "name": rel["name"],
-                    "color": TYPE_COLORS.get(rel["name"], "#FFFFFF"),
-                }
-                for rel in damage_relations.get("half_damage_from", [])
-            ],
-            "no_damage_from": [
-                {
-                    "name": rel["name"],
-                    "color": TYPE_COLORS.get(rel["name"], "#FFFFFF"),
-                }
-                for rel in damage_relations.get("no_damage_from", [])
-            ],
-        }
+        if type_name not in _type_cache:
+            type_data = pokedex.APIResource.fetch_data("type", type_name)
+            damage_relations = type_data.get("damage_relations", {})
+            _type_cache[type_name] = {
+                "color": TYPE_COLORS.get(type_name, "#FFFFFF"),
+                "double_damage_to": [
+                    {
+                        "name": rel["name"],
+                        "color": TYPE_COLORS.get(rel["name"], "#FFFFFF"),
+                    }
+                    for rel in damage_relations.get("double_damage_to", [])
+                ],
+                "half_damage_to": [
+                    {
+                        "name": rel["name"],
+                        "color": TYPE_COLORS.get(rel["name"], "#FFFFFF"),
+                    }
+                    for rel in damage_relations.get("half_damage_to", [])
+                ],
+                "no_damage_to": [
+                    {
+                        "name": rel["name"],
+                        "color": TYPE_COLORS.get(rel["name"], "#FFFFFF"),
+                    }
+                    for rel in damage_relations.get("no_damage_to", [])
+                ],
+                "double_damage_from": [
+                    {
+                        "name": rel["name"],
+                        "color": TYPE_COLORS.get(rel["name"], "#FFFFFF"),
+                    }
+                    for rel in damage_relations.get("double_damage_from", [])
+                ],
+                "half_damage_from": [
+                    {
+                        "name": rel["name"],
+                        "color": TYPE_COLORS.get(rel["name"], "#FFFFFF"),
+                    }
+                    for rel in damage_relations.get("half_damage_from", [])
+                ],
+                "no_damage_from": [
+                    {
+                        "name": rel["name"],
+                        "color": TYPE_COLORS.get(rel["name"], "#FFFFFF"),
+                    }
+                    for rel in damage_relations.get("no_damage_from", [])
+                ],
+            }
+        type_effectiveness[type_name] = _type_cache[type_name]
 
-    # Try to fetch species data, but continue without it if it fails
+    # Try to fetch species data and related information in one block
     species_data = None
+    evolution_chain = None
+    entry_number = None
     try:
         species_data = pokedex.APIResource.fetch_data(
             "pokemon-species", data["species"]["name"]
         )
-    except requests.exceptions.HTTPError:
-        logging.debug(f"No species data found for Pokémon {data['name']}")
+        if species_data:
+            # Get evolution chain if available
+            if "evolution_chain" in species_data and species_data[
+                "evolution_chain"
+            ].get("url"):
+                evolution_id = pokedex.get_species_id_from_url(
+                    species_data["evolution_chain"]["url"]
+                )
+                evolution_chain_data = pokedex.APIResource.fetch_data(
+                    "evolution-chain", evolution_id
+                )
+                if evolution_chain_data:
+                    pokemon_name = evolution_chain_data["chain"]["species"]["name"]
+                    evolution_chain = pokedex.get_chain(
+                        evolution_chain_data, pokemon_name
+                    )
+
+            # Get entry number from first pokedex number
+            entry_number = next(
+                (
+                    entry.get("entry_number")
+                    for entry in species_data.get("pokedex_numbers", [])
+                    if "entry_number" in entry
+                ),
+                None,
+            )
+    except requests.exceptions.HTTPError as e:
+        logging.warning(f"HTTP error fetching species data for {data['name']}: {e}")
+    except Exception as e:
+        logging.error(f"Error processing species data for {data['name']}: {e}")
+
+    # Get official artwork using the entry number we already have
+    official_artwork = None
+    try:
+        official_artwork = (
+            data.get("sprites", {})
+            .get("other", {})
+            .get("official-artwork", {})
+            .get("front_default")
+        )
+        if entry_number:
+            official_artwork = pokedex.get_official_artwork(
+                data["name"], official_artwork, entry_number
+            )
+    except Exception as e:
+        logging.warning(f"Error getting official artwork for {data['name']}: {e}")
 
     # Get the sprite data and filter out null values and unwanted sprites
     sprites = {
@@ -369,33 +435,7 @@ def get_pokemon(id_or_name):
         for key, value in data["sprites"].items()
         if value is not None and key in VALID_SPRITES
     }
-
-    # Sort the sprites based on the desired order
     sorted_sprites = {key: sprites[key] for key in VALID_SPRITES if key in sprites}
-
-    # Initialize evolution_chain to None
-    evolution_chain = None
-
-    if species_data:
-        # Check if the evolution_chain key exists before attempting to access it
-        if (
-            "evolution_chain" in species_data
-            and "url" in species_data["evolution_chain"]
-        ):
-            evolution_id = pokedex.get_species_id_from_url(
-                species_data["evolution_chain"]["url"]
-            )
-
-            # Using evolution_id get the chain
-            evolution_chain_data = pokedex.APIResource.fetch_data(
-                "evolution-chain", evolution_id
-            )
-            pokemon_name = evolution_chain_data["chain"]["species"]["name"]
-
-            evolution_chain = pokedex.get_chain(evolution_chain_data, pokemon_name)
-        else:
-            logging.debug(f"No evolution chain found for Pokémon with ID {id_or_name}")
-            evolution_chain = None
 
     # Retrieve the summary for the Pokémon
     summary = get_summary(data["name"], df)
@@ -413,26 +453,6 @@ def get_pokemon(id_or_name):
         # Log the exception and proceed with an empty list
         logging.debug(f"Error fetching cards for {data['name']}: {e}")
         cards = []
-
-    # Check for Official Artwork
-    try:
-        entry_number = species_data.get("pokedex_numbers", [{}])[0].get(
-            "entry_number", None
-        )
-        official_artwork = (
-            data.get("sprites", {})
-            .get("other", {})
-            .get("official-artwork", {})
-            .get("front_default")
-        )
-        official_artwork = pokedex.get_official_artwork(
-            data["name"], official_artwork, entry_number
-        )
-    except Exception as e:
-        logging.debug(
-            f"Error identifying entry number and official artwork for {data['name']}: {e}"
-        )
-        official_artwork = None
 
     return render_template(
         "pokemon_detail.html",
