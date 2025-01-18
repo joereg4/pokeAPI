@@ -1,0 +1,56 @@
+{
+    "id": 1,
+    "name": "bulbasaur",
+    "base_happiness": 50,
+    "capture_rate": 45,
+    "color": {
+        "name": "green",
+        "url": "https://pokeapi.co/api/v2/pokemon-color/5/"
+    },
+    "habitat": {
+        "name": "grassland",
+        "url": "https://pokeapi.co/api/v2/pokemon-habitat/3/"
+    },
+    "shape": {
+        "name": "quadruped",
+        "url": "https://pokeapi.co/api/v2/pokemon-shape/8/"
+    },
+    "is_baby": false,
+    "is_legendary": false,
+    "is_mythical": false,
+    "varieties": [
+        {
+            "is_default": true,
+            "pokemon": {
+                "name": "bulbasaur",
+                "url": "https://pokeapi.co/api/v2/pokemon/1/"
+            }
+        }
+    ],
+    "generation": {
+        "name": "generation-i",
+        "url": "https://pokeapi.co/api/v2/generation/1/"
+    },
+    "growth_rate": {
+        "name": "medium-slow",
+        "url": "https://pokeapi.co/api/v2/growth-rate/4/"
+    },
+    "flavor_text_entries": [
+        {
+            "flavor_text": "A strange seed was planted on its back at birth.",
+            "language": {
+                "name": "en",
+                "url": "https://pokeapi.co/api/v2/language/9/"
+            },
+            "version": {
+                "name": "red",
+                "url": "https://pokeapi.co/api/v2/version/1/"
+            }
+        }
+    ],
+    "pokemon_species": [
+        {
+            "name": "bulbasaur"
+        }
+    ]
+} 
