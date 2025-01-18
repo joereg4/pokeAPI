@@ -3,12 +3,14 @@ import os
 import tempfile
 from pokedex import cache
 
+
 @pytest.fixture
 def temp_sprite_cache(monkeypatch):
     """Fixture to set up a temporary sprite cache directory."""
     with tempfile.TemporaryDirectory() as tmpdirname:
-        monkeypatch.setattr(cache, 'SPRITE_CACHE', tmpdirname)
+        monkeypatch.setattr(cache, "SPRITE_CACHE", tmpdirname)
         yield tmpdirname
+
 
 def test_sprite_cache_functionality(temp_sprite_cache):
     """Test that sprite data is cached and retrieved properly."""

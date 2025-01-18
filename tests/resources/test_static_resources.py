@@ -2,6 +2,7 @@ from unittest.mock import patch
 
 import pytest
 
+from utils import get_cache_stats, warm_common_endpoints
 from tests.test_helper import get_test_client, load_mock_data, assert_response_status
 
 
@@ -12,7 +13,7 @@ def client():
 
 def test_static_resources_integration(client):
     """Test that CSS and JS files are properly linked in the HTML."""
-    response = client.get('/')  # or any other route that includes the base template
+    response = client.get("/")  # or any other route that includes the base template
 
     # Assert that the response status is OK
     assert response.status_code == 200
@@ -25,4 +26,7 @@ def test_static_resources_integration(client):
 
     # Optionally, check for Bootstrap or other resources if needed
     assert b'<link rel="stylesheet" href="/static/css/bootstrap.css">' in response.data
-    assert b'<script src="/static/vendor/jquery/jquery-3.7.1.js"></script>' in response.data
+    assert (
+        b'<script src="/static/vendor/jquery/jquery-3.7.1.js"></script>'
+        in response.data
+    )

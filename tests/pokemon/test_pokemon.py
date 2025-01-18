@@ -3,6 +3,7 @@ from app import create_app
 import json
 from requests.exceptions import HTTPError
 from test_helper import load_mock_data
+from utils import get_cache_stats, warm_common_endpoints
 
 
 @pytest.fixture

@@ -1,5 +1,6 @@
 import pytest
 from app import create_app
+from utils import get_cache_stats, warm_common_endpoints
 
 
 @pytest.fixture
