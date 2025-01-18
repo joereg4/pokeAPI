@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}Cache Health Status{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+            <h1 class="h3 mb-0">Cache Health Status</h1>
+            <span class="badge {% if status == 'healthy' %}bg-success{% else %}bg-danger{% endif %} px-3 py-2">
+                {{ status|title }}
+            </span>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 bg-light border-0">
+                    <div class="card-body">
+                        <h6 class="text-muted text-uppercase small mb-2">Cache Status</h6>
+                        <div class="h4 mb-0">{{ cache }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 bg-light border-0">
+                    <div class="card-body">
+                        <h6 class="text-muted text-uppercase small mb-2">Hit Rate</h6>
+                        <div class="h4 mb-0">{{ "%.2f"|format(stats.hit_rate * 100) }}%</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 bg-light border-0">
+                    <div class="card-body">
+                        <h6 class="text-muted text-uppercase small mb-2">Memory Usage</h6>
+                        <div class="h4 mb-0">{{ stats.used_memory_human }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 bg-light border-0">
+                    <div class="card-body">
+                        <h6 class="text-muted text-uppercase small mb-2">Connected Clients</h6>
+                        <div class="h4 mb-0">{{ stats.connected_clients }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 bg-light border-0">
+                    <div class="card-body">
+                        <h6 class="text-muted text-uppercase small mb-2">Total Connections</h6>
+                        <div class="h4 mb-0">{{ stats.total_connections_received }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 bg-light border-0">
+                    <div class="card-body">
+                        <h6 class="text-muted text-uppercase small mb-2">Uptime</h6>
+                        <div class="h4 mb-0">{{ (stats.uptime_in_seconds / 86400)|round(1) }} days</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-muted text-center small mt-4">
+            Last updated: {{ current_time.strftime('%Y-%m-%d %H:%M:%S UTC') }}
+        </div>
+    </div>
+</div>
+
+<div class="text-end mt-3">
+    <a href="{{ url_for('health.check_cache_health_json') }}" class="btn btn-outline-secondary btn-sm">
+        <i class="fas fa-code me-1"></i>View JSON
+    </a>
+</div>
+{% endblock %} 
