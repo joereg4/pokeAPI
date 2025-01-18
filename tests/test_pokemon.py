@@ -1,6 +1,8 @@
 import pytest
 from app import create_app
 import json
+from requests.exceptions import HTTPError
+from test_helper import load_mock_data
 
 
 @pytest.fixture
@@ -53,16 +55,170 @@ def test_pokemon_list_route(client):
     assert response.status_code == 200
 
 
-def test_pokemon_detail_route(client):
-    # Test with ID
+def test_pokemon_detail_route(client, mocker):
+    # Mock successful Pokemon data fetch
+    mock_pokemon_data = {
+        "name": "bulbasaur",
+        "id": 1,
+        "sprites": {
+            "front_default": "some_url",
+            "other": {"official-artwork": {"front_default": "some_url"}},
+        },
+        "species": {"name": "bulbasaur", "url": "some_url"},
+        "base_experience": 64,
+        "height": 7,
+        "weight": 69,
+        "is_default": True,
+        "order": 1,
+        "abilities": [],
+        "moves": [
+            {
+                "move": {"name": "tackle", "url": "some_url"},
+                "version_group_details": [
+                    {"move_learn_method": {"name": "level-up"}, "level_learned_at": 1}
+                ],
+            }
+        ],
+        "held_items": [],
+        "types": [{"type": {"name": "grass", "url": "some_url"}}],
+        "stats": [],
+    }
+
+    # Mock type data
+    mock_type_data = {
+        "name": "grass",
+        "damage_relations": {
+            "double_damage_to": [{"name": "water", "url": "some_url"}],
+            "half_damage_to": [{"name": "fire", "url": "some_url"}],
+            "no_damage_to": [],
+            "double_damage_from": [{"name": "fire", "url": "some_url"}],
+            "half_damage_from": [{"name": "water", "url": "some_url"}],
+            "no_damage_from": [],
+        },
+    }
+
+    # Mock species data
+    mock_species_data = {
+        "name": "bulbasaur",
+        "flavor_text_entries": [
+            {
+                "flavor_text": "Test description",
+                "language": {"name": "en"},
+                "version": {"name": "red"},
+            }
+        ],
+        "pokedex_numbers": [
+            {
+                "entry_number": 1,
+                "pokedex": {
+                    "name": "national",
+                    "url": "https://pokeapi.co/api/v2/pokedex/1/",
+                },
+            }
+        ],
+        "evolution_chain": {"url": "some_url"},
+        "habitat": {"name": "grassland"},
+        "color": {"name": "green"},
+        "shape": {"name": "quadruped"},
+    }
+
+    # Mock evolution chain data
+    mock_evolution_chain_data = {
+        "chain": {"species": {"name": "bulbasaur"}, "evolves_to": []}
+    }
+
+    def mock_fetch_data(endpoint, resource_id):
+        if endpoint == "pokemon":
+            return mock_pokemon_data
+        elif endpoint == "type":
+            return mock_type_data
+        elif endpoint == "pokemon-species":
+            return mock_species_data
+        elif endpoint == "evolution-chain":
+            return mock_evolution_chain_data
+        return None
+
+    mocker.patch("pokedex.APIResource.fetch_data", side_effect=mock_fetch_data)
+
+    # Mock get_summary function
+    mocker.patch("pokedex.helper.get_summary", return_value="A test summary")
+
+    # Mock get_pokemon_cards function
+    mocker.patch("pokedex.helper.get_pokemon_cards", return_value=[])
+
+    # Mock get_species_id_from_url function
+    mocker.patch("pokedex.get_species_id_from_url", return_value=1)
+
+    # Mock get_chain function
+    mocker.patch("pokedex.get_chain", return_value=[])
+
+    # Mock get_official_artwork function
+    mocker.patch("pokedex.get_official_artwork", return_value="some_url")
+
+    # Mock get_path function
+    mocker.patch("pokedex.helper.get_path", return_value="mock_path")
+
+    # Mock pandas read_csv
+    class MockDataFrame:
+        def __init__(self):
+            self.empty = False
+            self._name_series = MockSeries("bulbasaur")
+            self._data = {"name": self._name_series}
+
+        def __getitem__(self, key):
+            if isinstance(key, str):
+                return self._data.get(key, self)
+            # Handle boolean indexing
+            return MockDataFrame()
+
+        @property
+        def str(self):
+            return self
+
+        def lower(self):
+            return self._name_series
+
+        @property
+        def iloc(self):
+            return self
+
+        def __getattr__(self, name):
+            return self
+
+        def __len__(self):
+            return 1
+
+    class MockSeries:
+        def __init__(self, value):
+            self.value = value
+
+        @property
+        def str(self):
+            return self
+
+        def lower(self):
+            return self.value.lower()
+
+        def __eq__(self, other):
+            if isinstance(other, str):
+                return self.value.lower() == other.lower()
+            return False
+
+    mocker.patch("pandas.read_csv", return_value=MockDataFrame())
+
+    # Test with valid ID
     response = client.get("/pokemon/1")
     assert response.status_code == 200
 
-    # Test with name
+    # Test with valid name
     response = client.get("/pokemon/bulbasaur")
     assert response.status_code == 200
 
-    # Test non-existent pokemon
+    # Test with non-existent Pokemon
+    def mock_fetch_none(endpoint, resource_id):
+        return None
+
+    mocker.patch("pokedex.APIResource.fetch_data", side_effect=mock_fetch_none)
     response = client.get("/pokemon/nonexistent")
     assert response.status_code == 404
 
@@ -142,8 +298,7 @@ def test_pokemon_species_route(client, mocker):
     }
 
     # Mock data for individual species
-    with open("mock_data/minimal_species.json", "r") as f:
-        mock_species_data = json.load(f)
+    mock_species_data = load_mock_data("minimal_species.json")
 
     # Mock pokemon data
     mock_pokemon_data = {
