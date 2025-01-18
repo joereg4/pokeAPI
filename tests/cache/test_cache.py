@@ -4,11 +4,19 @@ import pytest
 from test_helper import get_test_client, assert_json_response, assert_response_status
 from cache import cache
 from utils import get_cache_stats, warm_common_endpoints
+from flask import current_app
 
 
 @pytest.fixture
 def client():
     return get_test_client()
+
+
+@pytest.fixture
+def app_context(client):
+    """Provide Flask application context for tests"""
+    with client.application.app_context():
+        yield
 
 
 def test_route_caching(client):
@@ -25,7 +33,7 @@ def test_route_caching(client):
     assert response1.data == response2.data
 
 
-def test_cache_invalidation():
+def test_cache_invalidation(app_context):
     """Test cache clearing functionality"""
     key = "test_key"
     cache.set(key, "test_value")
@@ -35,7 +43,7 @@ def test_cache_invalidation():
     assert cache.get(key) is None
 
 
-def test_cache_timeout():
+def test_cache_timeout(app_context):
     """Test that cached items expire properly"""
     import time
 
