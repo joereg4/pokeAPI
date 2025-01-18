@@ -3,9 +3,18 @@ import requests
 from .cache import get_sprite_path, load, load_sprite, save, save_sprite
 from .common import api_url_build, sprite_url_build
 
+# Create a session object for connection pooling
+_session = requests.Session()
+_session.mount(
+    "http://", requests.adapters.HTTPAdapter(pool_connections=100, pool_maxsize=100)
+)
+_session.mount(
+    "https://", requests.adapters.HTTPAdapter(pool_connections=100, pool_maxsize=100)
+)
+
 
 def _http_get(url, **params):
-    response = requests.get(url, params=params)
+    response = _session.get(url, params=params)
     response.raise_for_status()
     return response
 
@@ -79,9 +88,9 @@ def filter_english_data(data):
                 filtered_entries = [
                     entry
                     for entry in entries
-                    if isinstance(entry, dict) and
-                       isinstance(entry.get("language", {}), dict) and
-                       entry["language"].get("name") == "en"
+                    if isinstance(entry, dict)
+                    and isinstance(entry.get("language", {}), dict)
+                    and entry["language"].get("name") == "en"
                 ]
                 filtered_data[field] = filtered_entries
     return filtered_data
