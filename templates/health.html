@@ -63,6 +63,42 @@
             </div>
         </div>
 
+        <div class="mt-4 pt-4 border-top">
+            <h4 class="h5 mb-3">Rate Limits</h4>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 bg-light border-0">
+                        <div class="card-body">
+                            <h6 class="text-muted text-uppercase small mb-2">Current Limit</h6>
+                            <div class="h4 mb-0">{{ rate_limits.limit }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 bg-light border-0">
+                        <div class="card-body">
+                            <h6 class="text-muted text-uppercase small mb-2">Remaining</h6>
+                            <div class="h4 mb-0">{{ rate_limits.remaining }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 bg-light border-0">
+                        <div class="card-body">
+                            <h6 class="text-muted text-uppercase small mb-2">Reset Time</h6>
+                            <div class="h4 mb-0">
+                                {% if rate_limits.reset %}
+                                    {{ rate_limits.reset.strftime('%H:%M:%S') }}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="text-muted text-center small mt-4">
             Last updated: {{ current_time.strftime('%Y-%m-%d %H:%M:%S UTC') }}
         </div>
