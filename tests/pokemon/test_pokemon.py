@@ -4,14 +4,33 @@ import json
 from requests.exceptions import HTTPError
 from test_helper import load_mock_data
 from utils import get_cache_stats, warm_common_endpoints
+from flask_limiter.errors import RateLimitExceeded
+from unittest.mock import patch
 
 
 @pytest.fixture
 def client():
     app = create_app()
     app.config["TESTING"] = True
+    app.config["RATELIMIT_ENABLED"] = False  # Disable rate limiting globally
+
+    # Disable rate limiting for all endpoints
+    from limiter import limiter
+
+    limiter.enabled = False
+
     with app.test_client() as client:
-        yield client
+        with app.app_context():
+            yield client
+
+
+@pytest.fixture(autouse=True)
+def mock_limiter(mocker):
+    """Mock the rate limiter to prevent rate limit errors in tests."""
+    with patch("flask_limiter.extension.Limiter.current_limit", return_value=None):
+        with patch("flask_limiter.extension.Limiter.check", return_value=True):
+            with patch("flask_limiter.extension.Limiter.reset", return_value=None):
+                yield
 
 
 def test_pokemon_index_route(client):
@@ -57,7 +76,8 @@ def test_pokemon_list_route(client):
 
 
 def test_pokemon_detail_route(client, mocker):
-    # Mock successful Pokemon data fetch
+    """Test the Pokémon detail route with a redirect."""
+    # Mock successful Pokémon data fetch
     mock_pokemon_data = {
         "name": "bulbasaur",
         "id": 1,
@@ -65,7 +85,10 @@ def test_pokemon_detail_route(client, mocker):
             "front_default": "some_url",
             "other": {"official-artwork": {"front_default": "some_url"}},
         },
-        "species": {"name": "bulbasaur", "url": "some_url"},
+        "species": {
+            "name": "bulbasaur",
+            "url": "https://pokeapi.co/api/v2/pokemon-species/1/",
+        },
         "base_experience": 64,
         "height": 7,
         "weight": 69,
@@ -85,22 +108,14 @@ def test_pokemon_detail_route(client, mocker):
         "stats": [],
     }
 
-    # Mock type data
-    mock_type_data = {
-        "name": "grass",
-        "damage_relations": {
-            "double_damage_to": [{"name": "water", "url": "some_url"}],
-            "half_damage_to": [{"name": "fire", "url": "some_url"}],
-            "no_damage_to": [],
-            "double_damage_from": [{"name": "fire", "url": "some_url"}],
-            "half_damage_from": [{"name": "water", "url": "some_url"}],
-            "no_damage_from": [],
-        },
-    }
-
     # Mock species data
     mock_species_data = {
         "name": "bulbasaur",
+        "id": 1,
+        "names": [{"name": "Bulbasaur", "language": {"name": "en"}}],
+        "habitat": {"name": "grassland"},
+        "shape": {"name": "quadruped"},
+        "color": {"name": "green"},
         "flavor_text_entries": [
             {
                 "flavor_text": "Test description",
@@ -117,111 +132,167 @@ def test_pokemon_detail_route(client, mocker):
                 },
             }
         ],
-        "evolution_chain": {"url": "some_url"},
-        "habitat": {"name": "grassland"},
-        "color": {"name": "green"},
-        "shape": {"name": "quadruped"},
+        "evolution_chain": {"url": "https://pokeapi.co/api/v2/evolution-chain/1/"},
+    }
+
+    # Mock palafin species data
+    mock_palafin_species_data = {
+        "name": "palafin",
+        "id": 964,
+        "names": [{"name": "Palafin", "language": {"name": "en"}}],
+        "habitat": {"name": "sea"},
+        "shape": {"name": "fish"},
+        "color": {"name": "blue"},
+        "flavor_text_entries": [
+            {
+                "flavor_text": "Test description",
+                "language": {"name": "en"},
+                "version": {"name": "scarlet"},
+            }
+        ],
+        "pokedex_numbers": [
+            {
+                "entry_number": 964,
+                "pokedex": {
+                    "name": "national",
+                    "url": "https://pokeapi.co/api/v2/pokedex/1/",
+                },
+            }
+        ],
+        "evolution_chain": {"url": "https://pokeapi.co/api/v2/evolution-chain/964/"},
     }
 
     # Mock evolution chain data
     mock_evolution_chain_data = {
-        "chain": {"species": {"name": "bulbasaur"}, "evolves_to": []}
+        "chain": {
+            "species": {
+                "name": "palafin",
+                "url": "https://pokeapi.co/api/v2/pokemon-species/964/",
+            },
+            "evolves_to": [],
+            "evolution_details": [],
+            "is_baby": False,
+        },
+        "id": 964,
     }
 
-    def mock_fetch_data(endpoint, resource_id):
-        if endpoint == "pokemon":
-            return mock_pokemon_data
-        elif endpoint == "type":
-            return mock_type_data
-        elif endpoint == "pokemon-species":
-            return mock_species_data
-        elif endpoint == "evolution-chain":
+    # Mock evolution chain list
+    mock_evolution_chain_list = [
+        {
+            "name": "palafin",
+            "species_id": 964,
+            "sprite": "some_url",
+            "min_level": None,
+            "trigger": None,
+        }
+    ]
+
+    # Mock the API call to handle both palfin and palafin
+    def mock_fetch_data_with_error(endpoint, resource_id):
+        if resource_id == "palfin":
+            from requests.exceptions import HTTPError
+
+            response = mocker.Mock()
+            response.status_code = 404
+            raise HTTPError("404 Client Error", response=response)
+        elif endpoint == "pokemon-species" and (
+            resource_id == "palafin" or resource_id == "PALAFIN"
+        ):
+            return mock_palafin_species_data
+        elif endpoint == "evolution-chain" and (
+            resource_id == "964" or resource_id == 964
+        ):
             return mock_evolution_chain_data
+        elif endpoint == "evolution-chain" and (resource_id == "1" or resource_id == 1):
+            return {
+                "chain": {
+                    "species": {
+                        "name": "bulbasaur",
+                        "url": "https://pokeapi.co/api/v2/pokemon-species/1/",
+                    },
+                    "evolves_to": [],
+                    "evolution_details": [],
+                    "is_baby": False,
+                },
+                "id": 1,
+            }
+        elif resource_id == "palafin" or resource_id == "PALAFIN":
+            # Mock data for the Pokemon endpoint
+            return {
+                "name": "palafin",
+                "id": 964,
+                "sprites": {
+                    "front_default": "some_url",
+                    "other": {"official-artwork": {"front_default": "some_url"}},
+                },
+                "species": {
+                    "name": "palafin",
+                    "url": "https://pokeapi.co/api/v2/pokemon-species/964/",
+                },
+                "base_experience": 160,
+                "height": 13,
+                "weight": 97,
+                "is_default": True,
+                "order": 964,
+                "abilities": [],
+                "moves": [],
+                "held_items": [],
+                "types": [{"type": {"name": "water", "url": "some_url"}}],
+                "stats": [],
+            }
+        elif endpoint == "type" and resource_id == "water":
+            # Mock type data for water
+            return {
+                "name": "water",
+                "damage_relations": {
+                    "double_damage_to": [],
+                    "half_damage_to": [],
+                    "no_damage_to": [],
+                    "double_damage_from": [],
+                    "half_damage_from": [],
+                    "no_damage_from": [],
+                },
+            }
+        elif endpoint == "type" and resource_id == "grass":
+            # Mock type data for grass
+            return {
+                "name": "grass",
+                "damage_relations": {
+                    "double_damage_to": [{"name": "water", "url": "some_url"}],
+                    "half_damage_to": [{"name": "fire", "url": "some_url"}],
+                    "no_damage_to": [],
+                    "double_damage_from": [{"name": "fire", "url": "some_url"}],
+                    "half_damage_from": [{"name": "water", "url": "some_url"}],
+                    "no_damage_from": [],
+                },
+            }
+        elif endpoint == "pokemon" and (resource_id == "1" or resource_id == 1):
+            return mock_pokemon_data
+        elif endpoint == "pokemon-species" and (resource_id == "1" or resource_id == 1):
+            return mock_species_data
         return None
 
-    mocker.patch("pokedex.APIResource.fetch_data", side_effect=mock_fetch_data)
+    mocker.patch(
+        "pokedex.APIResource.fetch_data", side_effect=mock_fetch_data_with_error
+    )
+    mocker.patch("pokedex.get_chain", return_value=mock_evolution_chain_list)
 
-    # Mock get_summary function
-    mocker.patch("pokedex.helper.get_summary", return_value="A test summary")
+    # Test redirect for palfin (misspelled) - should ultimately 404
+    response = client.get("/pokemon/palfin")
+    assert response.status_code == 302  # First redirect
+    redirect_url = response.headers["Location"]
+    response = client.get(redirect_url)
+    assert response.status_code == 404  # Should 404 after redirect
 
-    # Mock get_pokemon_cards function
-    mocker.patch("pokedex.helper.get_pokemon_cards", return_value=[])
-
-    # Mock get_species_id_from_url function
-    mocker.patch("pokedex.get_species_id_from_url", return_value=1)
-
-    # Mock get_chain function
-    mocker.patch("pokedex.get_chain", return_value=[])
-
-    # Mock get_official_artwork function
-    mocker.patch("pokedex.get_official_artwork", return_value="some_url")
-
-    # Mock get_path function
-    mocker.patch("pokedex.helper.get_path", return_value="mock_path")
-
-    # Mock pandas read_csv
-    class MockDataFrame:
-        def __init__(self):
-            self.empty = False
-            self._name_series = MockSeries("bulbasaur")
-            self._data = {"name": self._name_series}
-
-        def __getitem__(self, key):
-            if isinstance(key, str):
-                return self._data.get(key, self)
-            # Handle boolean indexing
-            return MockDataFrame()
-
-        @property
-        def str(self):
-            return self
-
-        def lower(self):
-            return self._name_series
-
-        @property
-        def iloc(self):
-            return self
-
-        def __getattr__(self, name):
-            return self
-
-        def __len__(self):
-            return 1
-
-    class MockSeries:
-        def __init__(self, value):
-            self.value = value
-
-        @property
-        def str(self):
-            return self
-
-        def lower(self):
-            return self.value.lower()
-
-        def __eq__(self, other):
-            if isinstance(other, str):
-                return self.value.lower() == other.lower()
-            return False
-
-    mocker.patch("pandas.read_csv", return_value=MockDataFrame())
+    # Test case-insensitive palafin (correct spelling) - should succeed
+    response = client.get("/pokemon/PALAFIN")
+    assert response.status_code == 200  # Should succeed
+    assert b"Palafin" in response.data  # Should contain the Pokemon name
 
     # Test with valid ID
     response = client.get("/pokemon/1")
     assert response.status_code == 200
-
-    # Test with valid name
-    response = client.get("/pokemon/bulbasaur")
-    assert response.status_code == 200
-
-    # Test with non-existent Pokemon
-    def mock_fetch_none(endpoint, resource_id):
-        return None
-
-    mocker.patch("pokedex.APIResource.fetch_data", side_effect=mock_fetch_none)
-    response = client.get("/pokemon/nonexistent")
-    assert response.status_code == 404
+    assert b"Bulbasaur" in response.data
 
 
 def test_pokemon_color_route(client):
