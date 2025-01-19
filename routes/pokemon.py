@@ -4,7 +4,7 @@ import markdown
 import pandas as pd
 import requests
 from requests.exceptions import HTTPError
-from flask import Blueprint, render_template, abort, url_for, request, json
+from flask import Blueprint, render_template, abort, url_for, request, json, redirect
 from markupsafe import Markup
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from werkzeug.exceptions import HTTPException
@@ -258,11 +258,29 @@ def get_pokemon(id_or_name):
         data = pokedex.APIResource.fetch_data("pokemon", id_or_name)
     except ValueError as e:
         logging.error(f"ValueError in get_pokemon for {id_or_name}: {str(e)}")
-        abort(404, description=f"Pokemon '{id_or_name}' not found")
+        # Try pokemon-species endpoint
+        try:
+            logging.info(f"Attempting to fetch pokemon-species data for: {id_or_name}")
+            return redirect(
+                url_for("pokemon.get_pokemon_species", id_or_name=id_or_name)
+            )
+        except Exception as e:
+            logging.error(f"Error fetching pokemon-species data: {e}")
+            abort(404, description=f"Pokemon '{id_or_name}' not found")
     except HTTPError as e:
         logging.error(f"HTTPError in get_pokemon for {id_or_name}: {str(e)}")
         if e.response.status_code == 404:
-            abort(404, description=f"Pokemon '{id_or_name}' not found")
+            # Try pokemon-species endpoint
+            try:
+                logging.info(
+                    f"Attempting to fetch pokemon-species data for: {id_or_name}"
+                )
+                return redirect(
+                    url_for("pokemon.get_pokemon_species", id_or_name=id_or_name)
+                )
+            except Exception as e:
+                logging.error(f"Error fetching pokemon-species data: {e}")
+                abort(404, description=f"Pokemon '{id_or_name}' not found")
         else:
             logging.error(f"HTTP error occurred: {e}")
             abort(500, description=str(e))
@@ -274,7 +292,15 @@ def get_pokemon(id_or_name):
 
     if not data or "name" not in data:
         logging.warning(f"Pokemon data missing or invalid for: {id_or_name}")
-        abort(404, description=f"Pokemon '{id_or_name}' not found")
+        # Try pokemon-species endpoint
+        try:
+            logging.info(f"Attempting to fetch pokemon-species data for: {id_or_name}")
+            return redirect(
+                url_for("pokemon.get_pokemon_species", id_or_name=id_or_name)
+            )
+        except Exception as e:
+            logging.error(f"Error fetching pokemon-species data: {e}")
+            abort(404, description=f"Pokemon '{id_or_name}' not found")
 
     logging.info(f"Successfully fetched pokemon data for: {id_or_name}")
 
@@ -651,19 +677,6 @@ def get_pokemon_species(id_or_name):
 
         try:
             data = pokedex.APIResource.fetch_data("pokemon-species", id_or_name)
-
-            if not data or "name" not in data:
-                logging.warning(f"No data found for Pokemon species: {id_or_name}")
-                abort(404, description=f"Pokemon species '{id_or_name}' not found")
-
-            simplified_data = {"pokemon_species": [{"name": data.get("name")}]}
-
-            pokemon_list = pokedex.PokemonList(simplified_data).create_pokemon_list()
-
-            return render_template(
-                "pokemon_species_detail.html", data=data, pokemon_list=pokemon_list
-            )
-
         except ValueError as e:
             logging.error(f"ValueError in fetching species {id_or_name}: {e}")
             abort(404, description=f"Pokemon species '{id_or_name}' not found")
@@ -678,6 +691,22 @@ def get_pokemon_species(id_or_name):
                 f"Unexpected error occurred while fetching Pokemon species {id_or_name}: {e}"
             )
             abort(500, description="An unexpected error occurred")
+
+        if not data or "name" not in data:
+            logging.warning(f"No data found for Pokemon species: {id_or_name}")
+            abort(404, description=f"Pokemon species '{id_or_name}' not found")
+
+        try:
+            simplified_data = {"pokemon_species": [{"name": data.get("name")}]}
+            pokemon_list = pokedex.PokemonList(simplified_data).create_pokemon_list()
+            return render_template(
+                "pokemon_species_detail.html", data=data, pokemon_list=pokemon_list
+            )
+        except Exception as e:
+            logging.exception(f"Error processing species data for {id_or_name}: {e}")
+            abort(
+                500, description="An error occurred while processing the species data"
+            )
 
 
 @pokemon_bp.route("/type/")
