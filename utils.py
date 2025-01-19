@@ -14,6 +14,7 @@ def get_cache_stats():
         info = redis_client.info()
 
         stats = {
+            "status": "connected",
             "used_memory_human": info["used_memory_human"],
             "hit_rate": info.get("keyspace_hits", 0)
             / (info.get("keyspace_hits", 0) + info.get("keyspace_misses", 1)),
@@ -25,7 +26,14 @@ def get_cache_stats():
         return stats
     except Exception as e:
         logger.error(f"Error getting cache stats: {e}")
-        return None
+        return {
+            "status": "disconnected",
+            "hit_rate": 0,
+            "used_memory_human": "N/A",
+            "connected_clients": 0,
+            "total_connections_received": 0,
+            "uptime_in_seconds": 0,
+        }
 
 
 def clear_expired_keys():
