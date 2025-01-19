@@ -1,113 +1,91 @@
 {% extends 'base.html' %}
 
-{% block title %}Cache Health Status{% endblock %}
+{% block title %}Health Status{% endblock %}
 
 {% block content %}
-<div class="card shadow-sm">
-    <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
-            <h1 class="h3 mb-0">Cache Health Status</h1>
-            <span class="badge {% if status == 'healthy' %}bg-success{% else %}bg-danger{% endif %} px-3 py-2">
-                {{ status|title }}
-            </span>
-        </div>
-
-        <div class="row g-4">
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 bg-light border-0">
-                    <div class="card-body">
-                        <h6 class="text-muted text-uppercase small mb-2">Cache Status</h6>
-                        <div class="h4 mb-0">{{ cache }}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 bg-light border-0">
-                    <div class="card-body">
-                        <h6 class="text-muted text-uppercase small mb-2">Hit Rate</h6>
-                        <div class="h4 mb-0">{{ "%.2f"|format(stats.hit_rate * 100) }}%</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 bg-light border-0">
-                    <div class="card-body">
-                        <h6 class="text-muted text-uppercase small mb-2">Memory Usage</h6>
-                        <div class="h4 mb-0">{{ stats.used_memory_human }}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 bg-light border-0">
-                    <div class="card-body">
-                        <h6 class="text-muted text-uppercase small mb-2">Connected Clients</h6>
-                        <div class="h4 mb-0">{{ stats.connected_clients }}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 bg-light border-0">
-                    <div class="card-body">
-                        <h6 class="text-muted text-uppercase small mb-2">Total Connections</h6>
-                        <div class="h4 mb-0">{{ stats.total_connections_received }}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 bg-light border-0">
-                    <div class="card-body">
-                        <h6 class="text-muted text-uppercase small mb-2">Uptime</h6>
-                        <div class="h4 mb-0">{{ (stats.uptime_in_seconds / 86400)|round(1) }} days</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="mt-4 pt-4 border-top">
-            <h4 class="h5 mb-3">Rate Limits</h4>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card h-100 bg-light border-0">
-                        <div class="card-body">
-                            <h6 class="text-muted text-uppercase small mb-2">Current Limit</h6>
-                            <div class="h4 mb-0">{{ rate_limits.limit }}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card h-100 bg-light border-0">
-                        <div class="card-body">
-                            <h6 class="text-muted text-uppercase small mb-2">Remaining</h6>
-                            <div class="h4 mb-0">{{ rate_limits.remaining }}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card h-100 bg-light border-0">
-                        <div class="card-body">
-                            <h6 class="text-muted text-uppercase small mb-2">Reset Time</h6>
-                            <div class="h4 mb-0">
-                                {% if rate_limits.reset %}
-                                    {{ rate_limits.reset.strftime('%H:%M:%S') }}
-                                {% else %}
-                                    N/A
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="text-muted text-center small mt-4">
-            Last updated: {{ current_time.strftime('%Y-%m-%d %H:%M:%S UTC') }}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h3">Health Status 
+                <span class="badge {% if status == 'healthy' %}bg-success{% else %}bg-danger{% endif %}">
+                    {{ status|title }}
+                </span>
+            </h1>
         </div>
     </div>
-</div>
 
-<div class="text-end mt-3">
-    <a href="{{ url_for('health.check_cache_health_json') }}" class="btn btn-outline-secondary btn-sm">
-        <i class="fas fa-code me-1"></i>View JSON
-    </a>
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">Cache Status</h6>
+                    <p class="card-text">{{ cache }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">Hit Rate</h6>
+                    <p class="card-text">{{ stats.hit_rate }}%</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">Memory Usage</h6>
+                    <p class="card-text">{{ stats.used_memory_human }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">Connected Clients</h6>
+                    <p class="card-text">{{ stats.connected_clients }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">Total Connections</h6>
+                    <p class="card-text">{{ stats.total_connections_received }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">Uptime</h6>
+                    <p class="card-text">{{ stats.uptime_in_seconds }} seconds</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col">
+            <h4 class="h5">Rate Limits</h4>
+            <p>
+                <strong>Limit:</strong> {{ rate_limits.limit }}<br>
+                <strong>Remaining:</strong> {{ rate_limits.remaining }}<br>
+                <strong>Reset:</strong> {{ rate_limits.reset }}
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <p class="text-muted">Last updated: {{ current_time }}</p>
+            <a href="{{ url_for('health.health_cache_json') }}" class="btn btn-outline-secondary btn-sm">
+                View JSON
+            </a>
+        </div>
+    </div>
 </div>
 {% endblock %} 
