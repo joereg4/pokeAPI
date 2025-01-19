@@ -6,6 +6,7 @@ import pokedex
 from cache import cache
 from routes import blueprints
 from pokedex.utils import load_resources
+from limiter import limiter
 
 # Load environment variables
 pokedex.env.load_environment()
@@ -13,6 +14,9 @@ pokedex.env.load_environment()
 
 def create_app(test_config=None):
     app = Flask(__name__)
+
+    # Initialize rate limiter
+    limiter.init_app(app)
 
     # Configure compression
     app.config["COMPRESS_MIMETYPES"] = [
@@ -83,6 +87,10 @@ def create_app(test_config=None):
     def not_found(e):
         message = e.description if hasattr(e, "description") else "Page not found"
         return render_template("404.html", message=message), 404
+
+    @app.errorhandler(429)
+    def ratelimit_handler(e):
+        return render_template("429.html", message=str(e.description)), 429
 
     return app
 
