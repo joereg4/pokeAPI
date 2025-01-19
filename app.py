@@ -2,6 +2,8 @@ import logging
 import os
 from flask import Flask, render_template
 from flask_compress import Compress
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import pokedex
 from cache import cache
 from routes import blueprints
@@ -10,9 +12,19 @@ from pokedex.utils import load_resources
 # Load environment variables
 pokedex.env.load_environment()
 
+# Initialize limiter
+limiter = Limiter(
+    key_func=get_remote_address,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri=os.getenv("REDIS_URL", "redis://localhost:6379/0"),
+)
+
 
 def create_app(test_config=None):
     app = Flask(__name__)
+
+    # Initialize rate limiter
+    limiter.init_app(app)
 
     # Configure compression
     app.config["COMPRESS_MIMETYPES"] = [
@@ -83,6 +95,10 @@ def create_app(test_config=None):
     def not_found(e):
         message = e.description if hasattr(e, "description") else "Page not found"
         return render_template("404.html", message=message), 404
+
+    @app.errorhandler(429)
+    def ratelimit_handler(e):
+        return render_template("429.html", message=str(e.description)), 429
 
     return app
 

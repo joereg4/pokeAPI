@@ -1,9 +1,23 @@
-from flask import Blueprint, jsonify, render_template, request
+from flask import Blueprint, jsonify, render_template, request, current_app
 from utils import get_cache_stats, warm_common_endpoints
 from cache import cache
 from datetime import datetime
+from app import limiter
 
 health_bp = Blueprint("health", __name__)
+
+
+def get_rate_limit_info():
+    """Get rate limit information for the current IP"""
+    limits = limiter.current_limit
+    if not limits:
+        return {"remaining": "unlimited", "reset": None, "limit": "unlimited"}
+
+    return {
+        "remaining": limiter.get_window_stats(*limits)[1],
+        "reset": datetime.fromtimestamp(limiter.get_window_stats(*limits)[0]),
+        "limit": str(limits[0]),
+    }
 
 
 @health_bp.route("/health/cache")
@@ -23,11 +37,19 @@ def check_cache_health():
         status = "healthy" if result == test_value else "unhealthy"
         cache_status = "operational" if result == test_value else "value mismatch"
 
+        # Get rate limit info
+        rate_limits = get_rate_limit_info()
+
         # Return JSON if specifically requested
         if request.headers.get("Accept") == "application/json":
-            return jsonify({"status": status, "cache": cache_status, "stats": stats}), (
-                200 if status == "healthy" else 500
-            )
+            return jsonify(
+                {
+                    "status": status,
+                    "cache": cache_status,
+                    "stats": stats,
+                    "rate_limits": rate_limits,
+                }
+            ), (200 if status == "healthy" else 500)
 
         # Return HTML by default
         return render_template(
@@ -35,12 +57,22 @@ def check_cache_health():
             status=status,
             cache=cache_status,
             stats=stats,
+            rate_limits=rate_limits,
             current_time=datetime.utcnow(),
         )
 
     except Exception as e:
         if request.headers.get("Accept") == "application/json":
-            return jsonify({"status": "unhealthy", "cache": str(e)}), 500
+            return (
+                jsonify(
+                    {
+                        "status": "unhealthy",
+                        "cache": str(e),
+                        "rate_limits": get_rate_limit_info(),
+                    }
+                ),
+                500,
+            )
 
         return render_template(
             "health.html",
@@ -53,6 +85,7 @@ def check_cache_health():
                 "total_connections_received": 0,
                 "uptime_in_seconds": 0,
             },
+            rate_limits=get_rate_limit_info(),
             current_time=datetime.utcnow(),
         )
 
@@ -77,6 +110,7 @@ def check_cache_health_json():
                         "status": "healthy",
                         "cache": "operational",
                         "stats": get_cache_stats(),
+                        "rate_limits": get_rate_limit_info(),
                     }
                 ),
                 200,
@@ -87,6 +121,7 @@ def check_cache_health_json():
                     {
                         "status": "unhealthy",
                         "cache": "value mismatch",
+                        "rate_limits": get_rate_limit_info(),
                     }
                 ),
                 500,
@@ -97,6 +132,7 @@ def check_cache_health_json():
                 {
                     "status": "unhealthy",
                     "cache": str(e),
+                    "rate_limits": get_rate_limit_info(),
                 }
             ),
             500,
