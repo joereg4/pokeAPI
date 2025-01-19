@@ -2,43 +2,278 @@ import pytest
 from flask import url_for
 from tests.test_helper import get_test_client, assert_response_status
 from utils import get_cache_stats, warm_common_endpoints
+from bs4 import BeautifulSoup
+from limiter import limiter
+from app import create_app
+from datetime import datetime, timedelta
+from flask_limiter.errors import RateLimitExceeded
+from flask_limiter.wrappers import Limit
 
 
 @pytest.fixture
 def client():
-    return get_test_client()
+    app = create_app()
+    app.config["TESTING"] = True
+    with app.test_client() as client:
+        with app.app_context():
+            yield client
 
 
-def test_cache_health_endpoint(client):
-    """Test the cache health check endpoint"""
+@pytest.fixture
+def mock_rate_limiter(mocker):
+    """Mock rate limiter for testing"""
+    mock_limit = mocker.MagicMock()
+    mock_limit.amount = 200
+    mock_limit.__str__.return_value = "200 per day"
+
+    mock_limiter = mocker.patch("routes.health.limiter")
+    mock_limiter.current_limits = [mock_limit]
+    mock_limiter.limiter.get_hit_count.return_value = 50
+    mock_limiter.limiter.get_window_expiry.return_value = int(
+        (datetime.now() + timedelta(days=1)).timestamp()
+    )
+
+    return mock_limiter
+
+
+@pytest.fixture
+def mock_redis_stats(mocker):
+    """Mock Redis stats for testing"""
+    mock_stats = {
+        "status": "connected",
+        "hit_rate": 75.5,
+        "used_memory_human": "1.5M",
+        "connected_clients": 10,
+        "total_connections_received": 100,
+        "uptime_in_seconds": 3600,
+    }
+    mocker.patch("routes.health.get_cache_stats", return_value=mock_stats)
+    return mock_stats
+
+
+@pytest.fixture
+def mock_redis_cache(mocker):
+    """Mock Redis cache for testing"""
+    mock_cache = mocker.patch("routes.health.cache")
+    mock_cache.set.return_value = True
+    mock_cache.get.return_value = "ok"
+    return mock_cache
+
+
+def test_cache_health_endpoint_json(client, mock_rate_limiter, mock_redis_stats):
+    """Test the JSON endpoint of the health check"""
+    print("\n=== Testing JSON Health Endpoint ===")
     response = client.get("/health/cache/json")
+    print(f"Response status: {response.status_code}")
+
+    data = response.get_json()
+    print(f"Response data: {data}")
+    assert response.status_code == 200
+    assert data["status"] == "healthy"  # Since mock_redis_stats has status="connected"
+    assert data["cache"] == mock_redis_stats
+    assert "rate_limits" in data
+
+    # Verify rate limit info structure
+    rate_limits = data["rate_limits"]
+    print(f"Rate limits: {rate_limits}")
+    assert rate_limits["limit"] == "200 per day"
+    assert rate_limits["remaining"] == 150  # max_requests(200) - hit_count(50)
+    assert rate_limits["max_requests"] == 200
+    assert "reset" in rate_limits
+    print("=== End Test ===\n")
+
+
+def test_cache_health_endpoint_html(
+    client, mock_rate_limiter, mock_redis_stats, mock_redis_cache
+):
+    """Test the HTML view of the health check"""
+    print("\n=== Testing HTML Health Endpoint ===")
+    response = client.get("/health/cache")
+    print(f"Response status: {response.status_code}")
+    assert response.status_code == 200
+
+    # Parse HTML response
+    soup = BeautifulSoup(response.data, "html.parser")
+    print(f"Page title: {soup.title.string}")
+
+    # Check status badge
+    status_badge = soup.find("span", class_="badge")
+    print(f"Status badge: {status_badge.text if status_badge else 'Not found'}")
+    assert status_badge is not None
+    assert "Healthy" in status_badge.text
+
+    # Check all stat cards are present
+    stat_cards = soup.find_all("div", class_="card-body")
+    stat_labels = [card.find("h6").text.strip().lower() for card in stat_cards]
+    print(f"Found stat labels: {stat_labels}")
+
+    expected_stats = [
+        "cache status",
+        "hit rate",
+        "memory usage",
+        "connected clients",
+        "total connections",
+        "uptime",
+    ]
+
+    for stat in expected_stats:
+        assert any(stat in label for label in stat_labels)
+
+    # Check rate limit section
+    rate_limit_section = soup.find("h4", class_="h5")
+    print(
+        f"Rate limit section: {rate_limit_section.text if rate_limit_section else 'Not found'}"
+    )
+    assert rate_limit_section is not None
+    assert "Rate Limits" in rate_limit_section.text
+    print("=== End Test ===\n")
+
+
+def test_cache_health_with_redis_failure(client, mock_rate_limiter, mocker):
+    """Test health check when Redis is not responding"""
+    print("\n=== Testing Redis Failure ===")
+
+    # Mock Redis stats to simulate failure
+    mock_failed_stats = {
+        "status": "disconnected",
+        "error": "Redis connection failed",
+        "hit_rate": 0,
+        "used_memory_human": "N/A",
+        "connected_clients": 0,
+        "total_connections_received": 0,
+        "uptime_in_seconds": 0,
+    }
+    mocker.patch("routes.health.get_cache_stats", return_value=mock_failed_stats)
+
+    # Mock Redis cache to simulate failure
+    mock_cache = mocker.patch("routes.health.cache")
+    mock_cache.set.side_effect = Exception("Redis connection failed")
+    mock_cache.get.side_effect = Exception("Redis connection failed")
+
+    # Test JSON endpoint
+    print("Testing JSON endpoint...")
+    response = client.get("/health/cache/json")
+    print(f"Response status: {response.status_code}")
     assert response.status_code == 200
 
     data = response.get_json()
-    assert data["status"] == "healthy"
-    assert data["cache"] == "operational"
-    assert "stats" in data
+    print(f"Response data: {data}")
+    assert data["status"] == "unhealthy"
+    assert data["cache"]["status"] == "disconnected"
+    assert "rate_limits" in data
 
-    # Verify stats structure
-    stats = data["stats"]
-    assert "used_memory_human" in stats
-    assert "connected_clients" in stats
-    assert "hit_rate" in stats
-    assert "total_connections_received" in stats
-    assert "uptime_in_seconds" in stats
+    # Test HTML endpoint
+    print("\nTesting HTML endpoint...")
+    response = client.get("/health/cache")
+    print(f"Response status: {response.status_code}")
+    assert response.status_code == 200
+
+    soup = BeautifulSoup(response.data, "html.parser")
+    status_badge = soup.find("span", class_="badge")
+    print(f"Status badge: {status_badge.text if status_badge else 'Not found'}")
+    assert "Unhealthy" in status_badge.text
+    print("=== End Test ===\n")
 
 
-def test_cache_health_with_redis_failure(client, mocker):
-    """Test health check when Redis is not responding"""
-    # Mock Redis client to raise an exception
-    mocker.patch(
-        "flask_caching.backends.rediscache.RedisCache.get",
-        side_effect=Exception("Redis connection failed"),
+def test_rate_limit_exceeded(client, mock_rate_limiter, mocker):
+    """Test rate limit exceeded scenario"""
+    print("\n=== Testing Rate Limit Exceeded ===")
+
+    # Create a test route with a very strict rate limit
+    def test_endpoint():
+        return "OK"
+
+    print(
+        f"Original endpoint attributes: module={getattr(test_endpoint, '__module__', None)}, name={getattr(test_endpoint, '__name__', None)}, qualname={getattr(test_endpoint, '__qualname__', None)}"
     )
 
-    response = client.get("/health/cache/json")
-    assert response.status_code == 500
+    # Add necessary attributes that Flask-Limiter expects
+    test_endpoint.__module__ = "tests.app.test_health"
+    test_endpoint.__name__ = "test_endpoint"
+    test_endpoint.__qualname__ = "test_endpoint"
 
-    data = response.get_json()
-    assert data["status"] == "unhealthy"
-    assert "Redis connection failed" in data["cache"]
+    print(
+        f"Modified endpoint attributes: module={test_endpoint.__module__}, name={test_endpoint.__name__}, qualname={test_endpoint.__qualname__}"
+    )
+
+    # Create a wrapper function that preserves attributes and enforces rate limits
+    def wrapper(f):
+        def wrapped(*args, **kwargs):
+            hit_count = mock_rate_limiter.limiter.get_hit_count.return_value
+            if hit_count >= 1:  # Rate limit exceeded
+                # Create a Limit object similar to the one in mock_rate_limiter fixture
+                limit = mocker.MagicMock(spec=Limit)
+                limit.amount = 1
+                limit.__str__.return_value = "1 per minute"
+                limit.error_message = "1 per minute"
+                raise RateLimitExceeded(limit)
+            return f(*args, **kwargs)
+
+        # Copy attributes from the original function
+        wrapped.__module__ = f.__module__
+        wrapped.__name__ = f.__name__
+        wrapped.__qualname__ = f.__qualname__
+        return wrapped
+
+    # Apply rate limit with our wrapper
+    print("Applying rate limit decorator...")
+    mock_rate_limiter.limit.return_value = wrapper
+    limited_endpoint = mock_rate_limiter.limit("1/minute")(test_endpoint)
+
+    print(
+        f"Limited endpoint attributes: module={getattr(limited_endpoint, '__module__', None)}, name={getattr(limited_endpoint, '__name__', None)}, qualname={getattr(limited_endpoint, '__qualname__', None)}"
+    )
+    print(f"Limited endpoint type: {type(limited_endpoint)}")
+    print(f"Limited endpoint dir: {dir(limited_endpoint)}")
+
+    print("Registering test route with limit: 1/minute")
+    client.application.add_url_rule(
+        "/test-rate-limit", "test_rate_limit", limited_endpoint, methods=["GET"]
+    )
+
+    print("Route map:")
+    for rule in client.application.url_map.iter_rules():
+        print(f"  {rule.endpoint} -> {rule.rule} [{','.join(rule.methods)}]")
+
+    # First request should succeed
+    print("\nMaking first request...")
+    mock_rate_limiter.limiter.get_hit_count.return_value = 0
+    response = client.get("/test-rate-limit")
+    print(f"First response status: {response.status_code}")
+    assert response.status_code == 200
+
+    # Second request should fail due to rate limit
+    print("\nMaking second request (should be rate limited)...")
+    mock_rate_limiter.limiter.get_hit_count.return_value = 1
+    response = client.get("/test-rate-limit")
+    print(f"Second response status: {response.status_code}")
+    assert response.status_code == 429
+
+    # Check if the error page title is present
+    soup = BeautifulSoup(response.data, "html.parser")
+    title = soup.find("h1")
+    print(f"Error page title: {title.text if title else 'Not found'}")
+    assert title and "Rate Limit Exceeded" in title.text
+    print("=== End Test ===\n")
+
+
+def test_rate_limit_headers(client, mock_rate_limiter, mock_redis_stats):
+    """Test rate limit headers in API responses"""
+    print("\n=== Testing Rate Limit Headers ===")
+    response = client.get("/health/cache/json")
+    print(f"Response status: {response.status_code}")
+    print(f"Response headers: {dict(response.headers)}")
+    assert response.status_code == 200
+
+    # Check for rate limit headers
+    headers = response.headers
+    print(f"X-RateLimit-Limit: {headers.get('X-RateLimit-Limit')}")
+    print(f"X-RateLimit-Remaining: {headers.get('X-RateLimit-Remaining')}")
+    print(f"X-RateLimit-Reset: {headers.get('X-RateLimit-Reset')}")
+
+    assert headers.get("X-RateLimit-Limit") == "200"
+    assert (
+        headers.get("X-RateLimit-Remaining") == "150"
+    )  # max_requests(200) - hit_count(50)
+    assert "X-RateLimit-Reset" in headers
+    print("=== End Test ===\n")
