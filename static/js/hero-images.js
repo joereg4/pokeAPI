@@ -5,11 +5,18 @@ document.addEventListener("DOMContentLoaded", function () {
     const containerHeight = heroImages.clientHeight;
     const baseSize = 70; // Base size for images
 
+    // Detect if we're on a mobile device
+    const isMobile = window.innerWidth <= 768;
+
     // Row configurations: each entry is [number of images, size multiplier, top offset percentage]
-    const rowConfigs = [
-        [11, 3, -10],  // Row 1: 11 images, 3x base size, bottom
-        [13, 2, 30],  // Row 2: 13 images, 2x base size, 30% from bottom
-        [11, 1.5, 55]  // Row 3: 11 images, 1.5x base size, 55% from bottom
+    const rowConfigs = isMobile ? [
+        [5, 3, -10],   // Mobile: Row 1: 5 images, 3x base size, bottom
+        [7, 2, 30],    // Mobile: Row 2: 7 images, 2x base size, middle
+        [5, 1.5, 55]   // Mobile: Row 3: 5 images, 1.5x base size, top
+    ] : [
+        [11, 3, -10],  // Desktop: Row 1: 11 images, 3x base size, bottom
+        [13, 2, 30],   // Desktop: Row 2: 13 images, 2x base size, middle
+        [11, 1.5, 55]  // Desktop: Row 3: 11 images, 1.5x base size, top
     ];
 
     // Set to keep track of used Pokémon IDs
@@ -123,5 +130,14 @@ document.addEventListener("DOMContentLoaded", function () {
             positionImages(images, row, numImages, topOffsetPercentage, zIndex);
             // No need to add hover events as title attribute will show tooltip natively
         });
+    });
+
+    // Add window resize handler to reload the page when switching between mobile and desktop
+    let lastIsMobile = isMobile;
+    window.addEventListener('resize', () => {
+        const currentIsMobile = window.innerWidth <= 768;
+        if (currentIsMobile !== lastIsMobile) {
+            location.reload();
+        }
     });
 });
