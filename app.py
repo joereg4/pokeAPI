@@ -1,12 +1,13 @@
 import logging
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_compress import Compress
 import pokedex
 from cache import cache
 from routes import blueprints
 from pokedex.utils import load_resources, Config
 from limiter import limiter
+from routes.health import increment_api_counter
 
 # Load environment variables
 pokedex.env.load_environment()
@@ -76,6 +77,19 @@ def create_app(test_config=None):
 
     for blueprint in blueprints:
         app.register_blueprint(blueprint)
+
+    @app.before_request
+    def track_request():
+        """Track API calls before each request"""
+        # Skip tracking for static files and health checks
+        if not request.path.startswith("/static") and not request.path.startswith(
+            "/health"
+        ):
+            try:
+                increment_api_counter()
+                app.logger.info(f"API call tracked for: {request.path}")
+            except Exception as e:
+                app.logger.error(f"Error tracking API call: {e}")
 
     @app.errorhandler(403)
     def forbidden(e):
