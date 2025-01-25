@@ -37,7 +37,7 @@ def test_index_counts(client, mocker):
     # Mock the fetch_count function to return actual counts for each endpoint
     def mock_fetch_count(endpoint):
         counts = {
-            "pokemon": 1302,
+            "pokemon": 1304,
             "ability": 367,
             "type": 21,
             "pokemon-color": 10,
@@ -54,7 +54,7 @@ def test_index_counts(client, mocker):
 
         # Check that the response contains the correct counts for resources
         html = response.data.decode()
-        assert '<h3 class="card-title">1302</h3>' in html
+        assert '<h3 class="card-title">1304</h3>' in html
         assert '<h3 class="card-title">367</h3>' in html
         assert '<h3 class="card-title">21</h3>' in html
         assert '<h3 class="card-title">10</h3>' in html
