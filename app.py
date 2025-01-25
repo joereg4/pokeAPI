@@ -5,7 +5,7 @@ from flask_compress import Compress
 import pokedex
 from cache import cache
 from routes import blueprints
-from pokedex.utils import load_resources
+from pokedex.utils import load_resources, Config
 from limiter import limiter
 
 # Load environment variables
@@ -43,8 +43,6 @@ def create_app(test_config=None):
         logging.basicConfig(level=logging.INFO)
         logging.getLogger("urllib3").setLevel(logging.WARNING)
         app.logger.setLevel(logging.DEBUG)
-        cache_timeout = int(os.getenv("CACHE_TIMEOUT", 300))
-        app.logger.debug(f"CACHE_TIMEOUT is set to: {cache_timeout}")
     else:
         logging.basicConfig(level=logging.WARNING)
         app.logger.setLevel(logging.WARNING)
@@ -53,7 +51,7 @@ def create_app(test_config=None):
     cache_config = {
         "CACHE_TYPE": "RedisCache",
         "CACHE_REDIS_URL": os.getenv("REDIS_URL", "redis://localhost:6379/0"),
-        "CACHE_DEFAULT_TIMEOUT": int(os.getenv("CACHE_DEFAULT_TIMEOUT", 3600)),
+        "CACHE_DEFAULT_TIMEOUT": Config.CACHE_TIMEOUT,
         "CACHE_KEY_PREFIX": "pokedex:",
         "CACHE_OPTIONS": {
             "socket_timeout": 2,
