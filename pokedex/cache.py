@@ -17,6 +17,8 @@ API_CACHE = None
 SPRITE_CACHE = None
 CACHE_EXPIRATION_DAYS = 7
 
+logger = logging.getLogger(__name__)
+
 
 def save(data, endpoint, resource_id=None, subresource=None):
     if data == dict():  # No point in saving empty data.
@@ -52,7 +54,7 @@ def save_sprite(data, sprite_type, sprite_id, **kwargs):
     with open(abs_path, "wb") as img_file:
         img_file.write(data["img_data"])
 
-    print(f"Sprite saved successfully: {os.path.exists(abs_path)}")
+    logger.debug(f"Sprite saved successfully: {os.path.exists(abs_path)}")
     return None
 
 
