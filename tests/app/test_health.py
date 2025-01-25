@@ -83,33 +83,32 @@ def test_cache_health_endpoint_html(
     status_badge = soup.find("span", class_="badge")
     print(f"Status badge: {status_badge.text if status_badge else 'Not found'}")
     assert status_badge is not None
-    assert "Healthy" in status_badge.text
+    assert "operational" in status_badge.text.strip().lower()
 
-    # Check all stat cards are present
-    stat_cards = soup.find_all("div", class_="card-body")
-    stat_labels = [card.find("h6").text.strip().lower() for card in stat_cards]
-    print(f"Found stat labels: {stat_labels}")
-
-    expected_stats = [
-        "cache status",
-        "hit rate",
-        "memory usage",
-        "connected clients",
-        "total connections",
-        "uptime",
+    # Check for required sections
+    required_sections = [
+        "Cache Status",
+        "Cache Statistics",
+        "Rate Limits",
+        "API Call Statistics",
     ]
 
-    for stat in expected_stats:
-        assert any(stat in label for label in stat_labels)
+    for section in required_sections:
+        heading = soup.find("h4", string=lambda t: section in t if t else False)
+        assert heading is not None, f"Missing section: {section}"
+        print(f"Found section: {section}")
 
-    # Check rate limit section
-    rate_limit_section = soup.find("h4", class_="h5")
-    print(
-        f"Rate limit section: {rate_limit_section.text if rate_limit_section else 'Not found'}"
-    )
-    assert rate_limit_section is not None
-    assert "Rate Limits" in rate_limit_section.text
-    print("=== End Test ===\n")
+    # Check all sections have content
+    cards = soup.find_all("div", class_="card-body")
+    assert len(cards) >= len(required_sections), "Missing some content cards"
+
+    # Verify each card has content
+    for card in cards:
+        heading = card.find("h4", class_="h5")
+        assert heading is not None, "Card missing heading"
+        content = card.find("p")
+        assert content is not None, "Card missing content"
+        print(f"Verified card: {heading.text.strip()}")
 
 
 def test_cache_health_with_redis_failure(client, mock_rate_limiter, mocker):
