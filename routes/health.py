@@ -12,8 +12,49 @@ from datetime import datetime
 from limiter import limiter
 from flask_limiter.util import get_remote_address
 import time
+import redis
+import os
 
 health_bp = Blueprint("health", __name__)
+
+# Initialize Redis connection for API call tracking
+redis_client = redis.from_url(os.getenv("REDIS_URL", "redis://localhost:6379/0"))
+
+
+def increment_api_counter():
+    """Increment the API call counter for the current hour and day"""
+    now = int(time.time())
+    hour_key = f"api_calls:hour:{now // 3600}"
+    day_key = f"api_calls:day:{now // 86400}"
+
+    pipe = redis_client.pipeline()
+    pipe.incr(hour_key)
+    pipe.expire(hour_key, 3600)  # Expire after 1 hour
+    pipe.incr(day_key)
+    pipe.expire(day_key, 86400)  # Expire after 1 day
+    results = pipe.execute()
+    return results[0], results[2]  # Return hourly and daily counts
+
+
+def get_api_stats():
+    """Get current API call statistics"""
+    now = int(time.time())
+    hour_key = f"api_calls:hour:{now // 3600}"
+    day_key = f"api_calls:day:{now // 86400}"
+
+    hourly_calls = redis_client.get(hour_key)
+    daily_calls = redis_client.get(day_key)
+
+    return {
+        "hourly_calls": int(hourly_calls) if hourly_calls else 0,
+        "daily_calls": int(daily_calls) if daily_calls else 0,
+        "current_hour": datetime.fromtimestamp(now // 3600 * 3600).strftime(
+            "%Y-%m-%d %H:00:00"
+        ),
+        "current_day": datetime.fromtimestamp(now // 86400 * 86400).strftime(
+            "%Y-%m-%d"
+        ),
+    }
 
 
 def get_rate_limit_info():
@@ -78,6 +119,9 @@ def check_cache_health():
         # Get rate limit info
         rate_limits = get_rate_limit_info()
 
+        # Get API stats
+        api_stats = get_api_stats()
+
         # Return JSON if specifically requested
         if request.headers.get("Accept") == "application/json":
             response = make_response(
@@ -87,6 +131,7 @@ def check_cache_health():
                         "cache": cache_status,
                         "stats": stats,
                         "rate_limits": rate_limits,
+                        "api_calls": api_stats,
                     }
                 )
             )
@@ -100,43 +145,18 @@ def check_cache_health():
                 )
             return response, (200 if status == "healthy" else 500)
 
-        # Return HTML by default
+        # Render HTML template
         return render_template(
             "health.html",
-            status=status,
-            cache=cache_status,
+            cache_status=cache_status,
             stats=stats,
             rate_limits=rate_limits,
-            current_time=datetime.utcnow(),
+            api_stats=api_stats,
+            current_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         )
 
     except Exception as e:
-        if request.headers.get("Accept") == "application/json":
-            return (
-                jsonify(
-                    {
-                        "status": "unhealthy",
-                        "cache": str(e),
-                        "rate_limits": get_rate_limit_info(),
-                    }
-                ),
-                500,
-            )
-
-        return render_template(
-            "health.html",
-            status="unhealthy",
-            cache=str(e),
-            stats={
-                "hit_rate": 0,
-                "used_memory_human": "N/A",
-                "connected_clients": 0,
-                "total_connections_received": 0,
-                "uptime_in_seconds": 0,
-            },
-            rate_limits=get_rate_limit_info(),
-            current_time=datetime.utcnow(),
-        )
+        return str(e), 500
 
 
 @health_bp.route("/health/cache/json")
@@ -180,12 +200,16 @@ def health_cache_json():
             "retry_after": retry_after,
         }
 
+        # Get API stats
+        api_stats = get_api_stats()
+
         response = make_response(
             jsonify(
                 {
                     "status": "healthy",
                     "cache": stats,
                     "rate_limits": rate_limits,
+                    "api_calls": api_stats,
                 }
             )
         )
@@ -210,6 +234,7 @@ def health_cache_json():
                     "status": "unhealthy",
                     "cache": str(e),
                     "rate_limits": get_rate_limit_info(),
+                    "api_calls": get_api_stats(),
                 }
             )
         )

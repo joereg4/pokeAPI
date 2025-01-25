@@ -1,68 +1,21 @@
 {% extends 'base.html' %}
 
-{% block title %}Health Status{% endblock %}
+{% block title %}Health Check{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container py-5">
+    <h1 class="mb-4">System Health</h1>
+
     <div class="row mb-4">
         <div class="col">
-            <h1 class="h3">Health Status 
-                <span class="badge {% if status == 'healthy' %}bg-success{% else %}bg-danger{% endif %}">
-                    {{ status|title }}
-                </span>
-            </h1>
-        </div>
-    </div>
-
-    <div class="row mb-4">
-        <div class="col-md-4">
             <div class="card">
                 <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">Cache Status</h6>
-                    <p class="card-text">{{ cache }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">Hit Rate</h6>
-                    <p class="card-text">{{ stats.hit_rate }}%</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">Memory Usage</h6>
-                    <p class="card-text">{{ stats.used_memory_human }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">Connected Clients</h6>
-                    <p class="card-text">{{ stats.connected_clients }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">Total Connections</h6>
-                    <p class="card-text">{{ stats.total_connections_received }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">Uptime</h6>
-                    <p class="card-text">{{ stats.uptime_in_seconds }} seconds</p>
+                    <h4 class="h5">Cache Status</h4>
+                    <p class="mb-0">
+                        <span class="badge {% if cache_status == 'operational' %}bg-success{% else %}bg-danger{% endif %}">
+                            {{ cache_status }}
+                        </span>
+                    </p>
                 </div>
             </div>
         </div>
@@ -70,12 +23,47 @@
 
     <div class="row mb-4">
         <div class="col">
-            <h4 class="h5">Rate Limits</h4>
-            <p>
-                <strong>Limit:</strong> {{ rate_limits.limit }}<br>
-                <strong>Remaining:</strong> {{ rate_limits.remaining }}<br>
-                <strong>Reset:</strong> {{ rate_limits.reset }}
-            </p>
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="h5">Cache Statistics</h4>
+                    <p>
+                        <strong>Hit Rate:</strong> {{ "%.2f"|format(stats.hit_rate) }}%<br>
+                        <strong>Memory Usage:</strong> {{ stats.used_memory_human }}<br>
+                        <strong>Connected Clients:</strong> {{ stats.connected_clients }}<br>
+                        <strong>Total Connections:</strong> {{ stats.total_connections_received }}<br>
+                        <strong>Uptime:</strong> {{ stats.uptime_in_seconds // 3600 }} hours
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="h5">Rate Limits</h4>
+                    <p>
+                        <strong>Limit:</strong> {{ rate_limits.limit }}<br>
+                        <strong>Remaining:</strong> {{ rate_limits.remaining }}<br>
+                        <strong>Reset:</strong> {{ rate_limits.reset }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="h5">API Call Statistics</h4>
+                    <p>
+                        <strong>Current Hour ({{ api_stats.current_hour }}):</strong> {{ api_stats.hourly_calls }} calls<br>
+                        <strong>Current Day ({{ api_stats.current_day }}):</strong> {{ api_stats.daily_calls }} calls
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 
