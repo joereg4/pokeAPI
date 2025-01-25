@@ -6,34 +6,16 @@ import logging
 import time
 import json
 import redis
-from redis import ConnectionPool
 import socket
 
 from .common import cache_uri_build, sprite_filepath_build
+from .redis_client import redis_client
 
 # Cache locations will be set at the end of this file.
 CACHE_DIR = None
 API_CACHE = None
 SPRITE_CACHE = None
 CACHE_EXPIRATION_DAYS = 7
-
-# Configure Redis connection pool
-REDIS_POOL = ConnectionPool.from_url(
-    os.getenv("REDIS_URL", "redis://localhost:6379/0"),
-    max_connections=10,
-    socket_timeout=2,
-    socket_connect_timeout=2,
-    retry_on_timeout=True,
-    health_check_interval=30,
-)
-
-# Create Redis client with connection pool
-redis_client = redis.Redis(
-    connection_pool=REDIS_POOL,
-    socket_keepalive=True,
-    retry_on_timeout=True,
-    decode_responses=True,  # Automatically decode responses to strings
-)
 
 
 def save(data, endpoint, resource_id=None, subresource=None):

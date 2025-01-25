@@ -12,8 +12,8 @@
                 <div class="card-body">
                     <h4 class="h5">Cache Status</h4>
                     <p class="mb-0">
-                        <span class="badge {% if cache_status == 'operational' %}bg-success{% else %}bg-danger{% endif %}">
-                            {{ cache_status }}
+                        <span class="badge {% if status == 'healthy' %}bg-success{% else %}bg-danger{% endif %}">
+                            {{ cache }}
                         </span>
                     </p>
                 </div>
@@ -27,7 +27,7 @@
                 <div class="card-body">
                     <h4 class="h5">Cache Statistics</h4>
                     <p>
-                        <strong>Hit Rate:</strong> {{ "%.2f"|format(stats.hit_rate) }}%<br>
+                        <strong>Hit Rate:</strong> {{ "%.2f"|format(stats.hit_rate * 100) }}%<br>
                         <strong>Memory Usage:</strong> {{ stats.used_memory_human }}<br>
                         <strong>Connected Clients:</strong> {{ stats.connected_clients }}<br>
                         <strong>Total Connections:</strong> {{ stats.total_connections_received }}<br>
@@ -69,7 +69,7 @@
 
     <div class="row">
         <div class="col">
-            <p class="text-muted">Last updated: {{ current_time }}</p>
+            <p class="text-muted">Last updated: {{ last_updated }}</p>
             <a href="{{ url_for('health.health_cache_json') }}" class="btn btn-outline-secondary btn-sm">
                 View JSON
             </a>

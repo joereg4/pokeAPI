@@ -12,13 +12,30 @@ from datetime import datetime
 from limiter import limiter
 from flask_limiter.util import get_remote_address
 import time
-import redis
-import os
+from pokedex.redis_client import redis_client
 
 health_bp = Blueprint("health", __name__)
 
-# Initialize Redis connection for API call tracking
-redis_client = redis.from_url(os.getenv("REDIS_URL", "redis://localhost:6379/0"))
+
+def get_rate_limit_info():
+    """Get current rate limit information"""
+    try:
+        # Get the current limit for this endpoint
+        current_limit = limiter.current_limit
+        if not current_limit:
+            return {}
+
+        # Get rate limit info directly from the RequestLimit object
+        result = {
+            "limit": int(str(current_limit.limit).split()[0]),  # "500 per hour" -> 500
+            "remaining": current_limit.remaining,
+            "reset": current_limit.reset_at,
+            "current": int(str(current_limit.limit).split()[0])
+            - current_limit.remaining,
+        }
+        return result
+    except Exception as e:
+        return {}
 
 
 def increment_api_counter():
@@ -57,49 +74,8 @@ def get_api_stats():
     }
 
 
-def get_rate_limit_info():
-    """Get rate limit information for the current IP"""
-    print("\n=== Rate Limit Info Debug ===")
-    try:
-        # Get the current limits
-        current_limits = limiter.current_limits
-        print(f"Current limit: {current_limits}")
-        if not current_limits:
-            print("No limits found")
-            return {"remaining": None, "reset": None, "limit": None}
-
-        # Get the first limit rule
-        limit_rule = current_limits[0]
-        print(f"Limit rule: {limit_rule}")
-
-        # Get the current limit info from the limiter
-        limit_info = limiter.get_window_stats(limit_rule.key_func())
-        print(f"Limit info: {limit_info}")
-
-        if limit_info:
-            reset, current = limit_info
-            remaining = max(0, limit_rule.amount - current)
-        else:
-            reset = None
-            remaining = limit_rule.amount
-            current = 0
-
-        result = {
-            "remaining": remaining,
-            "reset": reset,
-            "limit": str(limit_rule),
-            "max_requests": limit_rule.amount,
-            "current": current,
-            "retry_after": reset - int(time.time()) if reset else None,
-        }
-        print(f"Final result: {result}")
-        return result
-    except Exception as e:
-        print(f"Error getting rate limit info: {str(e)}")
-        return {"remaining": None, "reset": None, "limit": None}
-
-
 @health_bp.route("/health/cache")
+@limiter.limit("500 per hour")  # Add rate limit to match our default
 def check_cache_health():
     """Check if Redis cache is functioning properly"""
     try:
@@ -135,10 +111,10 @@ def check_cache_health():
                     }
                 )
             )
-            if rate_limits.get("max_requests"):
+            if rate_limits.get("limit"):
                 response.headers.update(
                     {
-                        "X-RateLimit-Limit": str(rate_limits["max_requests"]),
+                        "X-RateLimit-Limit": str(rate_limits["limit"]),
                         "X-RateLimit-Remaining": str(rate_limits["remaining"]),
                         "X-RateLimit-Reset": str(rate_limits["reset"]),
                     }
@@ -148,15 +124,25 @@ def check_cache_health():
         # Render HTML template
         return render_template(
             "health.html",
-            cache_status=cache_status,
+            status=status,
+            cache=cache_status,
             stats=stats,
             rate_limits=rate_limits,
             api_stats=api_stats,
-            current_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            last_updated=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         )
 
     except Exception as e:
-        return str(e), 500
+        return (
+            jsonify(
+                {
+                    "status": "unhealthy",
+                    "cache": str(e),
+                    "rate_limits": get_rate_limit_info(),
+                }
+            ),
+            500,
+        )
 
 
 @health_bp.route("/health/cache/json")
@@ -176,29 +162,8 @@ def health_cache_json():
             )
             return response, 500
 
-        # Initialize rate limit variables
-        limit = None
-        remaining = None
-        reset = None
-        current = 0
-        retry_after = None
-
-        # Get rate limit info from the current request
-        current_limit = limiter.current_limit
-        if current_limit:
-            # Get the limit value
-            limit = int(str(current_limit.limit).split()[0])
-            remaining = current_limit.remaining
-            reset = current_limit.reset_at
-            current = limit - remaining
-
-        rate_limits = {
-            "limit": limit,
-            "remaining": remaining,
-            "reset": reset,
-            "current": current,
-            "retry_after": retry_after,
-        }
+        # Get rate limit info
+        rate_limits = get_rate_limit_info()
 
         # Get API stats
         api_stats = get_api_stats()
@@ -215,15 +180,13 @@ def health_cache_json():
         )
 
         # Add rate limit headers if we have the info
-        if limit is not None:
+        if rate_limits.get("limit"):
             headers = {
-                "X-RateLimit-Limit": str(limit),
-                "X-RateLimit-Remaining": str(remaining),
+                "X-RateLimit-Limit": str(rate_limits["limit"]),
+                "X-RateLimit-Remaining": str(rate_limits["remaining"]),
             }
-            if reset:
-                headers["X-RateLimit-Reset"] = str(reset)
-            if retry_after:
-                headers["Retry-After"] = str(retry_after)
+            if rate_limits.get("reset"):
+                headers["X-RateLimit-Reset"] = str(rate_limits["reset"])
             response.headers.update(headers)
 
         return response

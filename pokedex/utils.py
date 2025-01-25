@@ -12,13 +12,15 @@ load_environment()
 
 
 class Config:
-    BASE_URL = get_env_variable('BASE_URL', 'https://pokeapi.co/api/v2')
-    SPRITE_URL = get_env_variable('SPRITE_URL', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites')
-    POKEMON_PER_PAGE = int(get_env_variable('POKEMON_PER_PAGE', 60))
-    ITEMS_PER_PAGE = int(get_env_variable('ITEMS_PER_PAGE', 50))
-    WEBHOOK_SECRET = get_env_variable('WEBHOOK_SECRET')
-    CACHE_TIMEOUT = int(get_env_variable('CACHE_TIMEOUT', 300))
-    REDIS_URL = get_env_variable('REDIS_URL', 'redis://localhost:6379/0')
+    BASE_URL = get_env_variable("BASE_URL", "https://pokeapi.co/api/v2")
+    SPRITE_URL = get_env_variable(
+        "SPRITE_URL", "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites"
+    )
+    POKEMON_PER_PAGE = int(get_env_variable("POKEMON_PER_PAGE", 60))
+    ITEMS_PER_PAGE = int(get_env_variable("ITEMS_PER_PAGE", 50))
+    WEBHOOK_SECRET = get_env_variable("WEBHOOK_SECRET")
+    CACHE_TIMEOUT = int(get_env_variable("CACHE_TIMEOUT", 3600))  # Default 1 hour cache
+    REDIS_URL = get_env_variable("REDIS_URL", "redis://localhost:6379/0")
     SPRITE_EXT = "png"
     # Define the valid sprite names to filter
     VALID_SPRITES = [
@@ -50,7 +52,7 @@ class Config:
         "dragon": "#6F35FC",
         "dark": "#705746",
         "steel": "#B7B7CE",
-        "fairy": "#D685AD"
+        "fairy": "#D685AD",
     }
     ENDPOINTS = [
         "ability",
@@ -104,11 +106,10 @@ class Config:
     ]
 
 
-
 def get_csv_file_paths():
     root_path = current_app.root_path
     # Find all CSV files in the static/resources directory
-    csv_file_paths = glob.glob(os.path.join(root_path, 'static', 'resources', '*.csv'))
+    csv_file_paths = glob.glob(os.path.join(root_path, "static", "resources", "*.csv"))
     return csv_file_paths
 
 
@@ -123,7 +124,7 @@ def load_resources():
 
     for csv_file_path in csv_file_paths:
         try:
-            with open(csv_file_path, mode='r') as file:
+            with open(csv_file_path, mode="r") as file:
                 reader = csv.reader(file)
                 next(reader)  # Skip the header row
 
