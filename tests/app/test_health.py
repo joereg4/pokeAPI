@@ -217,9 +217,12 @@ def test_rate_limit_exceeded(client, mock_rate_limiter, mocker):
 
     # Check if the error page title is present
     soup = BeautifulSoup(response.data, "html.parser")
-    title = soup.find("h1")
-    print(f"Error page title: {title.text if title else 'Not found'}")
-    assert title and "Rate Limit Exceeded" in title.text
+    error_code = soup.find("h1")
+    error_message = soup.find("p", class_="lead")
+    print(f"Error page title: {error_code.text if error_code else 'Not found'}")
+    print(f"Error message: {error_message.text if error_message else 'Not found'}")
+    assert error_code and "429" in error_code.text
+    assert error_message and "Rate Limit Exceeded" in error_message.text
     print("=== End Test ===\n")
 
 
