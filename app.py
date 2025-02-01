@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template, request
 from flask_compress import Compress
 import pokedex
-from cache import cache
+from cache import cache, get_cache_config
 from routes import blueprints
 from pokedex.utils import load_resources, Config
 from limiter import limiter
@@ -49,21 +49,7 @@ def create_app(test_config=None):
         app.logger.setLevel(logging.WARNING)
 
     # Configure Redis cache with enhanced settings
-    cache_config = {
-        "CACHE_TYPE": "RedisCache",
-        "CACHE_REDIS_URL": os.getenv("REDIS_URL", "redis://localhost:6379/0"),
-        "CACHE_DEFAULT_TIMEOUT": Config.CACHE_TIMEOUT,
-        "CACHE_KEY_PREFIX": "pokedex:",
-        "CACHE_OPTIONS": {
-            "socket_timeout": 2,
-            "socket_connect_timeout": 2,
-            "retry_on_timeout": True,
-            "max_connections": 10,
-        },
-        "CACHE_REDIS_COMPRESSION_ENABLED": True,
-    }
-
-    cache.init_app(app, config=cache_config)
+    cache.init_app(app, config=get_cache_config())
 
     # Set the cache location for the low-level cache
     pokedex.cache.initialize_cache()
@@ -99,6 +85,14 @@ def create_app(test_config=None):
     def not_found(e):
         message = e.description if hasattr(e, "description") else "Page not found"
         return render_template("404.html", message=message), 404
+
+    @app.errorhandler(500)
+    def internal_error(e):
+        app.logger.error(f"Internal Server Error: {str(e)}")
+        return (
+            render_template("500.html", message="An internal server error occurred"),
+            500,
+        )
 
     @app.errorhandler(429)
     def ratelimit_handler(e):
