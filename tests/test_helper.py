@@ -22,7 +22,7 @@ def get_test_client():
         "SECRET_KEY": "test-secret-key",
         "WTF_CSRF_ENABLED": False,
         "LOGIN_DISABLED": False,
-        "SQLALCHEMY_BINDS": None
+        "SQLALCHEMY_BINDS": {},
     }
     app = create_app(test_config)
     return app.test_client()

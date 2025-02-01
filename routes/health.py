@@ -133,13 +133,38 @@ def check_cache_health():
 
     except Exception as e:
         error_msg = str(e)
+        # Return JSON if specifically requested
+        if request.headers.get("Accept") == "application/json":
+            return (
+                jsonify(
+                    {
+                        "status": "unhealthy",
+                        "cache": error_msg,
+                        "rate_limits": get_rate_limit_info(),
+                    }
+                ),
+                500,
+            )
+
+        # Return HTML error page for other requests
+        error_stats = {
+            "status": "disconnected",
+            "hit_rate": 0,
+            "used_memory_human": "N/A",
+            "connected_clients": 0,
+            "total_connections_received": 0,
+            "uptime_in_seconds": 0,
+            "error": error_msg,
+        }
         return (
-            jsonify(
-                {
-                    "status": "unhealthy",
-                    "cache": error_msg,
-                    "rate_limits": get_rate_limit_info(),
-                }
+            render_template(
+                "health.html",
+                status="unhealthy",
+                cache="error",
+                stats=error_stats,
+                rate_limits=get_rate_limit_info(),
+                api_stats=get_api_stats(),
+                last_updated=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             ),
             500,
         )
