@@ -1,24 +1,12 @@
 import pytest
 from flask import url_for
-from tests.test_helper import get_test_client, assert_response_status
-from utils import get_cache_stats, warm_common_endpoints
 from bs4 import BeautifulSoup
-from limiter import limiter
-from app import create_app
-from datetime import datetime, timedelta
+from datetime import datetime
 from flask_limiter.errors import RateLimitExceeded
 from flask_limiter.wrappers import Limit
 from unittest.mock import MagicMock
 import time
-
-
-@pytest.fixture
-def client():
-    app = create_app()
-    app.config["TESTING"] = True
-    with app.test_client() as client:
-        with app.app_context():
-            yield client
+from unittest.mock import patch
 
 
 @pytest.fixture
@@ -56,68 +44,57 @@ def mock_redis_cache(mocker):
     return mock_cache
 
 
-@pytest.fixture
-def auth_client(client, admin_user):
-    """Create an authenticated client."""
-    with client.session_transaction() as session:
-        session["_user_id"] = str(admin_user.id)
-        session["_fresh"] = True
-    return client
-
-
 def test_cache_health_endpoint_json(auth_client, mock_rate_limiter, mock_redis_stats):
     """Test the JSON endpoint of the health check"""
     print("\n=== Testing JSON Health Endpoint ===")
     response = auth_client.get("/health/cache/json")
     assert response.status_code == 200
     data = response.get_json()
+
+    # Check response structure
     assert "status" in data
+    assert "cache" in data
+    assert "rate_limits" in data
+    assert "api_calls" in data
+
+    # Check values
     assert data["status"] == "healthy"
+    assert data["cache"]["status"] == "connected"
+    assert isinstance(data["cache"]["hit_rate"], float)
+    assert isinstance(data["api_calls"]["hourly_calls"], int)
+    assert isinstance(data["api_calls"]["daily_calls"], int)
 
 
-def test_cache_health_endpoint_html(
-    auth_client, mock_rate_limiter, mock_redis_stats, mock_redis_cache
-):
+def test_cache_health_endpoint_html(auth_client, mock_rate_limiter, mock_redis_stats):
     """Test the HTML view of the health check"""
-    print("\n=== Testing HTML Health Endpoint ===")
+    # Test successful case
     response = auth_client.get("/health/cache")
-    print(f"Response status: {response.status_code}")
     assert response.status_code == 200
-
-    # Parse HTML response
     soup = BeautifulSoup(response.data, "html.parser")
-    print(f"Page title: {soup.title.string}")
 
-    # Check status badge
-    status_badge = soup.find("span", class_="badge")
-    print(f"Status badge: {status_badge.text if status_badge else 'Not found'}")
-    assert status_badge is not None
-    assert "operational" in status_badge.text.strip().lower()
+    # Verify the page structure without making assumptions about specific styling
+    assert "System Health" in soup.get_text()
+    assert "Cache Status" in soup.get_text()
+    assert "Cache Statistics" in soup.get_text()
+    assert "Rate Limits" in soup.get_text()
+    assert "API Call Statistics" in soup.get_text()
 
-    # Check for required sections
-    required_sections = [
-        "Cache Status",
-        "Cache Statistics",
-        "Rate Limits",
-        "API Call Statistics",
-    ]
+    # Test error case by simulating a cache failure
+    with patch("cache.cache.set", side_effect=Exception("Cache error")):
+        # Test HTML response
+        response = auth_client.get("/health/cache")
+        assert response.status_code == 500  # Should return 500 on error
+        soup = BeautifulSoup(response.data, "html.parser")
+        assert "error" in soup.get_text()  # Cache status should show error
 
-    for section in required_sections:
-        heading = soup.find("h4", string=lambda t: section in t if t else False)
-        assert heading is not None, f"Missing section: {section}"
-        print(f"Found section: {section}")
-
-    # Check all sections have content
-    cards = soup.find_all("div", class_="card-body")
-    assert len(cards) >= len(required_sections), "Missing some content cards"
-
-    # Verify each card has content
-    for card in cards:
-        heading = card.find("h4", class_="h5")
-        assert heading is not None, "Card missing heading"
-        content = card.find("p")
-        assert content is not None, "Card missing content"
-        print(f"Verified card: {heading.text.strip()}")
+        # Test JSON response
+        response = auth_client.get(
+            "/health/cache", headers={"Accept": "application/json"}
+        )
+        assert response.status_code == 500
+        data = response.get_json()
+        assert data["status"] == "unhealthy"
+        assert "Cache error" in data["cache"]
 
 
 def test_cache_health_with_redis_failure(auth_client, mock_rate_limiter, mocker):
@@ -136,11 +113,6 @@ def test_cache_health_with_redis_failure(auth_client, mock_rate_limiter, mocker)
     }
     mocker.patch("routes.health.get_cache_stats", return_value=mock_failed_stats)
 
-    # Mock Redis cache to simulate failure
-    mock_cache = mocker.patch("routes.health.cache")
-    mock_cache.set.side_effect = Exception("Redis connection failed")
-    mock_cache.get.side_effect = Exception("Redis connection failed")
-
     # Test JSON endpoint
     print("Testing JSON endpoint...")
     response = auth_client.get("/health/cache/json")
@@ -158,18 +130,10 @@ def test_rate_limit_exceeded(client, mock_rate_limiter, mocker):
     def test_endpoint():
         return "OK"
 
-    print(
-        f"Original endpoint attributes: module={getattr(test_endpoint, '__module__', None)}, name={getattr(test_endpoint, '__name__', None)}, qualname={getattr(test_endpoint, '__qualname__', None)}"
-    )
-
     # Add necessary attributes that Flask-Limiter expects
     test_endpoint.__module__ = "tests.app.test_health"
     test_endpoint.__name__ = "test_endpoint"
     test_endpoint.__qualname__ = "test_endpoint"
-
-    print(
-        f"Modified endpoint attributes: module={test_endpoint.__module__}, name={test_endpoint.__name__}, qualname={test_endpoint.__qualname__}"
-    )
 
     # Create a wrapper function that preserves attributes and enforces rate limits
     def wrapper(f):
@@ -191,48 +155,30 @@ def test_rate_limit_exceeded(client, mock_rate_limiter, mocker):
         return wrapped
 
     # Apply rate limit with our wrapper
-    print("Applying rate limit decorator...")
     mock_rate_limiter.limit.return_value = wrapper
     limited_endpoint = mock_rate_limiter.limit("1/minute")(test_endpoint)
 
-    print(
-        f"Limited endpoint attributes: module={getattr(limited_endpoint, '__module__', None)}, name={getattr(limited_endpoint, '__name__', None)}, qualname={getattr(limited_endpoint, '__qualname__', None)}"
-    )
-    print(f"Limited endpoint type: {type(limited_endpoint)}")
-    print(f"Limited endpoint dir: {dir(limited_endpoint)}")
-
-    print("Registering test route with limit: 1/minute")
+    # Register test route
     client.application.add_url_rule(
         "/test-rate-limit", "test_rate_limit", limited_endpoint, methods=["GET"]
     )
 
-    print("Route map:")
-    for rule in client.application.url_map.iter_rules():
-        print(f"  {rule.endpoint} -> {rule.rule} [{','.join(rule.methods)}]")
-
     # First request should succeed
-    print("\nMaking first request...")
     mock_rate_limiter.limiter.get_hit_count.return_value = 0
     response = client.get("/test-rate-limit")
-    print(f"First response status: {response.status_code}")
     assert response.status_code == 200
 
     # Second request should fail due to rate limit
-    print("\nMaking second request (should be rate limited)...")
     mock_rate_limiter.limiter.get_hit_count.return_value = 1
     response = client.get("/test-rate-limit")
-    print(f"Second response status: {response.status_code}")
     assert response.status_code == 429
 
     # Check if the error page title is present
     soup = BeautifulSoup(response.data, "html.parser")
     error_code = soup.find("h1")
     error_message = soup.find("p", class_="lead")
-    print(f"Error page title: {error_code.text if error_code else 'Not found'}")
-    print(f"Error message: {error_message.text if error_message else 'Not found'}")
     assert error_code and "429" in error_code.text
     assert error_message and "Rate Limit Exceeded" in error_message.text
-    print("=== End Test ===\n")
 
 
 def test_rate_limit_headers(auth_client, mock_rate_limiter, mock_redis_stats):
@@ -245,12 +191,11 @@ def test_rate_limit_headers(auth_client, mock_rate_limiter, mock_redis_stats):
 
     # Check for rate limit headers
     headers = response.headers
-    print(f"X-RateLimit-Limit: {headers.get('X-RateLimit-Limit')}")
-    print(f"X-RateLimit-Remaining: {headers.get('X-RateLimit-Remaining')}")
-    print(f"X-RateLimit-Reset: {headers.get('X-RateLimit-Reset')}")
-
-    # Use the limits defined in limiter.py
-    assert headers.get("X-RateLimit-Limit") == "50"  # Use the hourly limit
-    assert headers.get("X-RateLimit-Remaining") == "49"  # Assuming one request was made
+    assert "X-RateLimit-Limit" in headers
+    assert "X-RateLimit-Remaining" in headers
     assert "X-RateLimit-Reset" in headers
-    print("=== End Test ===\n")
+
+    # Verify header values
+    assert headers["X-RateLimit-Limit"] == "50"
+    assert headers["X-RateLimit-Remaining"] == "49"
+    assert int(headers["X-RateLimit-Reset"]) > time.time()

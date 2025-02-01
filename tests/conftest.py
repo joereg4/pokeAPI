@@ -4,7 +4,7 @@ import pytest
 from unittest.mock import patch, MagicMock
 from app import create_app
 from model import db, User
-from flask_login import LoginManager
+from flask_login import LoginManager, login_user
 
 # Add the tests directory to the Python path
 test_dir = os.path.dirname(os.path.abspath(__file__))
@@ -21,25 +21,31 @@ def disable_rate_limiter():
 @pytest.fixture(scope="function")
 def app():
     """Create and configure a test Flask application instance."""
-    # Mock Redis and cache initialization
-    with patch("pokedex.cache.initialize_cache"), patch("cache.cache.init_app"):
-        # Use SQLite for testing
-        test_config = {
-            "TESTING": True,
-            "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
-            "SQLALCHEMY_TRACK_MODIFICATIONS": False,
-            "SECRET_KEY": "test-secret-key",
-            "WTF_CSRF_ENABLED": False,  # Disable CSRF for testing
-            "LOGIN_DISABLED": False,  # Enable login for testing
-        }
-        app = create_app(test_config)
-        
-        # Create all tables in the test database
-        with app.app_context():
-            db.create_all()
-            yield app
-            db.session.remove()
-            db.drop_all()
+    # Use SQLite for testing
+    test_config = {
+        "TESTING": True,
+        "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
+        "SQLALCHEMY_TRACK_MODIFICATIONS": False,
+        "SQLALCHEMY_BINDS": {},  # Set empty dict instead of None
+        "SECRET_KEY": "test-secret-key",
+        "WTF_CSRF_ENABLED": False,  # Disable CSRF for testing
+        "LOGIN_DISABLED": False,  # Enable login for testing
+        # Add Flask-Caching configuration
+        "CACHE_TYPE": "SimpleCache",
+        "CACHE_DEFAULT_TIMEOUT": 300,
+    }
+    app = create_app(test_config)
+
+    # Create all tables in the test database
+    with app.app_context():
+        # Initialize cache
+        from cache import cache
+        cache.init_app(app)
+
+        db.create_all()
+        yield app
+        db.session.remove()
+        db.drop_all()
 
 
 @pytest.fixture(scope="function")
@@ -82,24 +88,6 @@ def regular_user(app):
         db.session.commit()
 
 
-@pytest.fixture(scope="function")
-def auth_client(client, admin_user):
-    """Create an authenticated client with admin privileges."""
-    with client.session_transaction() as session:
-        session["_user_id"] = str(admin_user.id)
-        session["_fresh"] = True
-    return client
-
-
-@pytest.fixture(scope="function")
-def regular_auth_client(client, regular_user):
-    """Create an authenticated client without admin privileges."""
-    with client.session_transaction() as session:
-        session["_user_id"] = str(regular_user.id)
-        session["_fresh"] = True
-    return client
-
-
 @pytest.fixture(autouse=True)
 def mock_redis(mocker):
     """Mock Redis for all tests."""
@@ -107,6 +95,17 @@ def mock_redis(mocker):
     mock.ping.return_value = True
     mock.get.return_value = "test_value"
     mock.set.return_value = True
+
+    # Mock pipeline operations
+    mock_pipeline = MagicMock()
+    mock_pipeline.execute.return_value = [
+        10,
+        True,
+        100,
+        True,
+    ]  # hourly_count, expire1, daily_count, expire2
+    mock.pipeline.return_value = mock_pipeline
+
     return mock
 
 
@@ -123,3 +122,27 @@ def mock_cache_stats(mocker):
     }
     mocker.patch("routes.health.get_cache_stats", return_value=mock_stats)
     return mock_stats
+
+
+@pytest.fixture(scope="function")
+def auth_client(client, admin_user, app):
+    """Create an authenticated client with admin privileges."""
+    with app.app_context():
+        with app.test_request_context():
+            login_user(admin_user)
+            with client.session_transaction() as session:
+                session["_user_id"] = str(admin_user.id)
+                session["_fresh"] = True
+            yield client
+
+
+@pytest.fixture(scope="function")
+def regular_auth_client(client, regular_user, app):
+    """Create an authenticated client without admin privileges."""
+    with app.app_context():
+        with app.test_request_context():
+            login_user(regular_user)
+            with client.session_transaction() as session:
+                session["_user_id"] = str(regular_user.id)
+                session["_fresh"] = True
+            yield client
