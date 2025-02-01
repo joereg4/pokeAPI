@@ -11,6 +11,7 @@ from cache import cache
 from datetime import datetime
 from limiter import limiter
 from flask_limiter.util import get_remote_address
+from flask_login import login_required
 import time
 from pokedex.redis_client import redis_client
 
@@ -75,13 +76,11 @@ def get_api_stats():
 
 
 @health_bp.route("/health/cache")
-@limiter.limit("500 per hour")  # Add rate limit to match our default
+@login_required
+@limiter.limit("500 per hour")
 def check_cache_health():
     """Check if Redis cache is functioning properly"""
     try:
-        # Pre-warm the cache
-        warm_common_endpoints()
-
         # Try to set and get a test key
         test_key = "health_check"
         test_value = "ok"
@@ -133,19 +132,46 @@ def check_cache_health():
         )
 
     except Exception as e:
+        error_msg = str(e)
+        # Return JSON if specifically requested
+        if request.headers.get("Accept") == "application/json":
+            return (
+                jsonify(
+                    {
+                        "status": "unhealthy",
+                        "cache": error_msg,
+                        "rate_limits": get_rate_limit_info(),
+                    }
+                ),
+                500,
+            )
+
+        # Return HTML error page for other requests
+        error_stats = {
+            "status": "disconnected",
+            "hit_rate": 0,
+            "used_memory_human": "N/A",
+            "connected_clients": 0,
+            "total_connections_received": 0,
+            "uptime_in_seconds": 0,
+            "error": error_msg,
+        }
         return (
-            jsonify(
-                {
-                    "status": "unhealthy",
-                    "cache": str(e),
-                    "rate_limits": get_rate_limit_info(),
-                }
+            render_template(
+                "health.html",
+                status="unhealthy",
+                cache="error",
+                stats=error_stats,
+                rate_limits=get_rate_limit_info(),
+                api_stats=get_api_stats(),
+                last_updated=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             ),
             500,
         )
 
 
 @health_bp.route("/health/cache/json")
+@login_required
 def health_cache_json():
     """Health check endpoint for cache status (JSON response)"""
     try:
@@ -191,11 +217,12 @@ def health_cache_json():
 
         return response
     except Exception as e:
+        error_msg = str(e)
         response = make_response(
             jsonify(
                 {
                     "status": "unhealthy",
-                    "cache": str(e),
+                    "cache": error_msg,
                     "rate_limits": get_rate_limit_info(),
                     "api_calls": get_api_stats(),
                 }

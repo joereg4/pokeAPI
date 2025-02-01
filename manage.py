@@ -1,0 +1,104 @@
+#!/usr/bin/env python3
+import click
+from flask.cli import FlaskGroup
+from app import create_app
+from model import db, User
+
+
+def create_cli_app():
+    return create_app()
+
+
+cli = FlaskGroup(create_app=create_cli_app)
+
+
+@cli.command()
+@click.option("--username", prompt=True, help="Username for the user")
+@click.option("--email", prompt=True, help="Email address for the user")
+@click.option(
+    "--password",
+    prompt=True,
+    hide_input=True,
+    confirmation_prompt=True,
+    help="Password for the user",
+)
+@click.option("--admin", is_flag=True, help="Make the user an admin")
+def create_user(username, email, password, admin):
+    """Create a new user."""
+    try:
+        user = User(username=username, email=email, is_admin=admin)
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+        click.echo(f"User {username} created successfully!")
+    except Exception as e:
+        click.echo(f"Error creating user: {str(e)}", err=True)
+
+
+@cli.command()
+@click.argument("username")
+@click.option("--email", help="New email for the user")
+@click.option("--password", help="New password for the user")
+@click.option("--admin", type=bool, help="Set admin status (True/False)")
+def update_user(username, email, password, admin):
+    """Update an existing user."""
+    try:
+        user = User.query.filter_by(username=username).first()
+        if not user:
+            click.echo(f"User {username} not found.", err=True)
+            return
+
+        if email:
+            user.email = email
+        if password:
+            user.set_password(password)
+        if admin is not None:
+            user.is_admin = admin
+
+        db.session.commit()
+        click.echo(f"User {username} updated successfully!")
+    except Exception as e:
+        click.echo(f"Error updating user: {str(e)}", err=True)
+
+
+@cli.command()
+@click.argument("username")
+def delete_user(username):
+    """Delete a user."""
+    try:
+        user = User.query.filter_by(username=username).first()
+        if not user:
+            click.echo(f"User {username} not found.", err=True)
+            return
+
+        db.session.delete(user)
+        db.session.commit()
+        click.echo(f"User {username} deleted successfully!")
+    except Exception as e:
+        click.echo(f"Error deleting user: {str(e)}", err=True)
+
+
+@cli.command()
+def list_users():
+    """List all users."""
+    try:
+        users = User.query.all()
+        if not users:
+            click.echo("No users found.")
+            return
+
+        click.echo("\nUser List:")
+        click.echo("-" * 80)
+        click.echo(f"{'Username':<20} {'Email':<30} {'Admin':<10} {'Created At'}")
+        click.echo("-" * 80)
+
+        for user in users:
+            click.echo(
+                f"{user.username:<20} {user.email:<30} {str(user.is_admin):<10} {user.created_at}"
+            )
+    except Exception as e:
+        click.echo(f"Error listing users: {str(e)}", err=True)
+
+
+if __name__ == "__main__":
+    cli()
