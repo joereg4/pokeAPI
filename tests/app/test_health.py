@@ -56,10 +56,19 @@ def mock_redis_cache(mocker):
     return mock_cache
 
 
-def test_cache_health_endpoint_json(client, mock_rate_limiter, mock_redis_stats):
+@pytest.fixture
+def auth_client(client, admin_user):
+    """Create an authenticated client."""
+    with client.session_transaction() as session:
+        session["_user_id"] = str(admin_user.id)
+        session["_fresh"] = True
+    return client
+
+
+def test_cache_health_endpoint_json(auth_client, mock_rate_limiter, mock_redis_stats):
     """Test the JSON endpoint of the health check"""
     print("\n=== Testing JSON Health Endpoint ===")
-    response = client.get("/health/cache/json")
+    response = auth_client.get("/health/cache/json")
     assert response.status_code == 200
     data = response.get_json()
     assert "status" in data
@@ -67,11 +76,11 @@ def test_cache_health_endpoint_json(client, mock_rate_limiter, mock_redis_stats)
 
 
 def test_cache_health_endpoint_html(
-    client, mock_rate_limiter, mock_redis_stats, mock_redis_cache
+    auth_client, mock_rate_limiter, mock_redis_stats, mock_redis_cache
 ):
     """Test the HTML view of the health check"""
     print("\n=== Testing HTML Health Endpoint ===")
-    response = client.get("/health/cache")
+    response = auth_client.get("/health/cache")
     print(f"Response status: {response.status_code}")
     assert response.status_code == 200
 
@@ -111,7 +120,7 @@ def test_cache_health_endpoint_html(
         print(f"Verified card: {heading.text.strip()}")
 
 
-def test_cache_health_with_redis_failure(client, mock_rate_limiter, mocker):
+def test_cache_health_with_redis_failure(auth_client, mock_rate_limiter, mocker):
     """Test health check when Redis is not responding"""
     print("\n=== Testing Redis Failure ===")
 
@@ -134,7 +143,7 @@ def test_cache_health_with_redis_failure(client, mock_rate_limiter, mocker):
 
     # Test JSON endpoint
     print("Testing JSON endpoint...")
-    response = client.get("/health/cache/json")
+    response = auth_client.get("/health/cache/json")
     assert response.status_code == 500
     data = response.get_json()
     assert data["status"] == "unhealthy"
@@ -226,10 +235,10 @@ def test_rate_limit_exceeded(client, mock_rate_limiter, mocker):
     print("=== End Test ===\n")
 
 
-def test_rate_limit_headers(client, mock_rate_limiter, mock_redis_stats):
+def test_rate_limit_headers(auth_client, mock_rate_limiter, mock_redis_stats):
     """Test rate limit headers in API responses"""
     print("\n=== Testing Rate Limit Headers ===")
-    response = client.get("/health/cache/json")
+    response = auth_client.get("/health/cache/json")
     print(f"Response status: {response.status_code}")
     print(f"Response headers: {dict(response.headers)}")
     assert response.status_code == 200

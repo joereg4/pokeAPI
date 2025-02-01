@@ -4,11 +4,27 @@ import pytest
 
 from utils import get_cache_stats, warm_common_endpoints
 from tests.test_helper import get_test_client, load_mock_data, assert_response_status
+from app import create_app
+from model import db
 
 
 @pytest.fixture
 def client():
-    return get_test_client()
+    """Create a test client."""
+    test_config = {
+        "TESTING": True,
+        "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
+        "SQLALCHEMY_TRACK_MODIFICATIONS": False,
+        "SECRET_KEY": "test-secret-key",
+        "WTF_CSRF_ENABLED": False,
+        "LOGIN_DISABLED": False,
+    }
+    app = create_app(test_config)
+    with app.app_context():
+        db.create_all()
+        yield app.test_client()
+        db.session.remove()
+        db.drop_all()
 
 
 def test_static_resources_integration(client):

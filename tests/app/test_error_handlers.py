@@ -1,33 +1,26 @@
 import pytest
 from flask import url_for, abort
 from app import create_app
+from model import db
 
 
 @pytest.fixture
 def client():
-    app = create_app({"TESTING": True})
-    app.config["RATELIMIT_ENABLED"] = False
-
-    # Create test routes that trigger specific errors
-    @app.route("/test-403")
-    def trigger_403():
-        abort(403)
-
-    @app.route("/test-404")
-    def trigger_404():
-        abort(404)
-
-    @app.route("/test-500")
-    def trigger_500():
-        abort(500)
-
-    @app.route("/test-429")
-    def trigger_429():
-        abort(429)
-
-    with app.test_client() as test_client:
-        with app.app_context():
-            yield test_client
+    """Create a test client."""
+    test_config = {
+        "TESTING": True,
+        "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
+        "SQLALCHEMY_TRACK_MODIFICATIONS": False,
+        "SECRET_KEY": "test-secret-key",
+        "WTF_CSRF_ENABLED": False,
+        "LOGIN_DISABLED": False,
+    }
+    app = create_app(test_config)
+    with app.app_context():
+        db.create_all()
+        yield app.test_client()
+        db.session.remove()
+        db.drop_all()
 
 
 def test_403_error_page(client):

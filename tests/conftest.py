@@ -1,7 +1,10 @@
 import os
 import sys
 import pytest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
+from app import create_app
+from model import db, User
+from flask_login import LoginManager
 
 # Add the tests directory to the Python path
 test_dir = os.path.dirname(os.path.abspath(__file__))
@@ -13,3 +16,110 @@ def disable_rate_limiter():
     """Disable rate limiting for all tests."""
     with patch("flask_limiter.extension.Limiter.exempt", return_value=True):
         yield
+
+
+@pytest.fixture(scope="function")
+def app():
+    """Create and configure a test Flask application instance."""
+    # Mock Redis and cache initialization
+    with patch("pokedex.cache.initialize_cache"), patch("cache.cache.init_app"):
+        # Use SQLite for testing
+        test_config = {
+            "TESTING": True,
+            "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
+            "SQLALCHEMY_TRACK_MODIFICATIONS": False,
+            "SECRET_KEY": "test-secret-key",
+            "WTF_CSRF_ENABLED": False,  # Disable CSRF for testing
+            "LOGIN_DISABLED": False,  # Enable login for testing
+        }
+        app = create_app(test_config)
+        
+        # Create all tables in the test database
+        with app.app_context():
+            db.create_all()
+            yield app
+            db.session.remove()
+            db.drop_all()
+
+
+@pytest.fixture(scope="function")
+def client(app):
+    """Create a test client for the app."""
+    return app.test_client()
+
+
+@pytest.fixture(scope="function")
+def runner(app):
+    """Create a test CLI runner for the app."""
+    return app.test_cli_runner()
+
+
+@pytest.fixture(scope="function")
+def admin_user(app):
+    """Create an admin user for testing."""
+    with app.app_context():
+        user = User(username="admin", email="admin@test.com", is_admin=True)
+        user.set_password("admin123")
+        db.session.add(user)
+        db.session.commit()
+        yield user
+        db.session.rollback()  # Rollback any pending changes
+        db.session.query(User).delete()  # Delete all users
+        db.session.commit()
+
+
+@pytest.fixture(scope="function")
+def regular_user(app):
+    """Create a regular user for testing."""
+    with app.app_context():
+        user = User(username="user", email="user@test.com", is_admin=False)
+        user.set_password("user123")
+        db.session.add(user)
+        db.session.commit()
+        yield user
+        db.session.rollback()  # Rollback any pending changes
+        db.session.query(User).delete()  # Delete all users
+        db.session.commit()
+
+
+@pytest.fixture(scope="function")
+def auth_client(client, admin_user):
+    """Create an authenticated client with admin privileges."""
+    with client.session_transaction() as session:
+        session["_user_id"] = str(admin_user.id)
+        session["_fresh"] = True
+    return client
+
+
+@pytest.fixture(scope="function")
+def regular_auth_client(client, regular_user):
+    """Create an authenticated client without admin privileges."""
+    with client.session_transaction() as session:
+        session["_user_id"] = str(regular_user.id)
+        session["_fresh"] = True
+    return client
+
+
+@pytest.fixture(autouse=True)
+def mock_redis(mocker):
+    """Mock Redis for all tests."""
+    mock = mocker.patch("pokedex.redis_client.redis_client")
+    mock.ping.return_value = True
+    mock.get.return_value = "test_value"
+    mock.set.return_value = True
+    return mock
+
+
+@pytest.fixture(autouse=True)
+def mock_cache_stats(mocker):
+    """Mock cache stats for all tests."""
+    mock_stats = {
+        "status": "connected",
+        "hit_rate": 75.5,
+        "used_memory_human": "1.5M",
+        "connected_clients": 10,
+        "total_connections_received": 100,
+        "uptime_in_seconds": 3600,
+    }
+    mocker.patch("routes.health.get_cache_stats", return_value=mock_stats)
+    return mock_stats
