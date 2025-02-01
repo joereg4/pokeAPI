@@ -6,22 +6,34 @@ from test_helper import load_mock_data
 from utils import get_cache_stats, warm_common_endpoints
 from flask_limiter.errors import RateLimitExceeded
 from unittest.mock import patch
+from model import db
 
 
 @pytest.fixture
 def client():
-    app = create_app()
-    app.config["TESTING"] = True
-    app.config["RATELIMIT_ENABLED"] = False  # Disable rate limiting globally
+    test_config = {
+        "TESTING": True,
+        "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
+        "SQLALCHEMY_TRACK_MODIFICATIONS": False,
+        "SECRET_KEY": "test-secret-key",
+        "WTF_CSRF_ENABLED": False,
+        "LOGIN_DISABLED": False,
+        "CACHE_TYPE": "SimpleCache",
+        "CACHE_DEFAULT_TIMEOUT": 300,
+        "RATELIMIT_ENABLED": False,  # Disable rate limiting globally
+    }
+    app = create_app(test_config)
 
     # Disable rate limiting for all endpoints
     from limiter import limiter
 
     limiter.enabled = False
 
-    with app.test_client() as client:
-        with app.app_context():
-            yield client
+    with app.app_context():
+        db.create_all()
+        yield app.test_client()
+        db.session.remove()
+        db.drop_all()
 
 
 @pytest.fixture(autouse=True)
