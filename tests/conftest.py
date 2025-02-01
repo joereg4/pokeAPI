@@ -11,6 +11,11 @@ test_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, test_dir)
 
 
+def is_sqlite_url(url):
+    """Check if the database URL is for SQLite."""
+    return "sqlite" in str(url).lower()
+
+
 @pytest.fixture(autouse=True)
 def disable_rate_limiter():
     """Disable rate limiting for all tests."""
@@ -21,31 +26,43 @@ def disable_rate_limiter():
 @pytest.fixture(scope="function")
 def app():
     """Create and configure a test Flask application instance."""
-    # Use SQLite for testing
+    # Force SQLite for testing, regardless of environment settings
     test_config = {
         "TESTING": True,
-        "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
+        "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",  # Force SQLite for tests
         "SQLALCHEMY_TRACK_MODIFICATIONS": False,
-        "SQLALCHEMY_BINDS": {},  # Set empty dict instead of None
+        "SQLALCHEMY_BINDS": {},
         "SECRET_KEY": "test-secret-key",
-        "WTF_CSRF_ENABLED": False,  # Disable CSRF for testing
-        "LOGIN_DISABLED": False,  # Enable login for testing
-        # Add Flask-Caching configuration
+        "WTF_CSRF_ENABLED": False,
+        "LOGIN_DISABLED": False,
         "CACHE_TYPE": "SimpleCache",
         "CACHE_DEFAULT_TIMEOUT": 300,
     }
-    app = create_app(test_config)
 
-    # Create all tables in the test database
-    with app.app_context():
-        # Initialize cache
-        from cache import cache
-        cache.init_app(app)
+    # Ensure no environment variables can override the test database
+    with patch.dict("os.environ", {"DATABASE_URL": "sqlite:///:memory:"}):
+        app = create_app(test_config)
 
-        db.create_all()
-        yield app
-        db.session.remove()
-        db.drop_all()
+        # Create all tables in the test database
+        with app.app_context():
+            # Double check we're using SQLite before proceeding
+            if not is_sqlite_url(db.engine.url):
+                raise RuntimeError(
+                    "Test attempted to connect to non-SQLite database! "
+                    "This is a safety check to prevent tests from modifying production data."
+                )
+
+            # Initialize cache
+            from cache import cache
+
+            cache.init_app(app)
+
+            db.create_all()
+            yield app
+
+            # Clean up
+            db.session.remove()
+            db.drop_all()
 
 
 @pytest.fixture(scope="function")
@@ -64,13 +81,21 @@ def runner(app):
 def admin_user(app):
     """Create an admin user for testing."""
     with app.app_context():
+        # Safety check - ensure we're using SQLite
+        if not is_sqlite_url(db.engine.url):
+            raise RuntimeError(
+                "Test attempted to connect to non-SQLite database! "
+                "This is a safety check to prevent tests from modifying production data."
+            )
+
         user = User(username="admin", email="admin@test.com", is_admin=True)
         user.set_password("admin123")
         db.session.add(user)
         db.session.commit()
         yield user
-        db.session.rollback()  # Rollback any pending changes
-        db.session.query(User).delete()  # Delete all users
+        # Clean up - only if using SQLite
+        db.session.rollback()
+        db.session.query(User).delete()
         db.session.commit()
 
 
@@ -78,13 +103,21 @@ def admin_user(app):
 def regular_user(app):
     """Create a regular user for testing."""
     with app.app_context():
+        # Safety check - ensure we're using SQLite
+        if not is_sqlite_url(db.engine.url):
+            raise RuntimeError(
+                "Test attempted to connect to non-SQLite database! "
+                "This is a safety check to prevent tests from modifying production data."
+            )
+
         user = User(username="user", email="user@test.com", is_admin=False)
         user.set_password("user123")
         db.session.add(user)
         db.session.commit()
         yield user
-        db.session.rollback()  # Rollback any pending changes
-        db.session.query(User).delete()  # Delete all users
+        # Clean up - only if using SQLite
+        db.session.rollback()
+        db.session.query(User).delete()
         db.session.commit()
 
 
