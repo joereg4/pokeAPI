@@ -1,14 +1,28 @@
 import pytest
 from app import create_app
 from utils import get_cache_stats, warm_common_endpoints
+from model import db
 
 
 @pytest.fixture
 def client():
-    app = create_app()
-    app.config["TESTING"] = True
-    with app.test_client() as client:
-        yield client
+    test_config = {
+        "TESTING": True,
+        "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
+        "SQLALCHEMY_TRACK_MODIFICATIONS": False,
+        "SECRET_KEY": "test-secret-key",
+        "WTF_CSRF_ENABLED": False,
+        "LOGIN_DISABLED": False,
+        "CACHE_TYPE": "SimpleCache",
+        "CACHE_DEFAULT_TIMEOUT": 300,
+    }
+    app = create_app(test_config)
+
+    with app.app_context():
+        db.create_all()
+        yield app.test_client()
+        db.session.remove()
+        db.drop_all()
 
 
 def test_ability_route(client):
