@@ -14,18 +14,17 @@ def load_mock_data(file_name):
 
 
 def get_test_client():
-    # Set test environment variables
-    os.environ["FLASK_ENV"] = "development"
-    os.environ["TESTING"] = "True"
-
-    # Initialize the app using the factory function
-    app = create_app(
-        {
-            "TESTING": True,
-            "DEBUG_PRINT_ROUTES": False,  # Explicitly set this to avoid KeyError
-            "CACHE_TYPE": "SimpleCache",  # Use simple cache for testing
-        }
-    )
+    """Get a test client with test configuration."""
+    test_config = {
+        "TESTING": True,
+        "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
+        "SQLALCHEMY_TRACK_MODIFICATIONS": False,
+        "SECRET_KEY": "test-secret-key",
+        "WTF_CSRF_ENABLED": False,
+        "LOGIN_DISABLED": False,
+        "SQLALCHEMY_BINDS": {},
+    }
+    app = create_app(test_config)
     return app.test_client()
 
 

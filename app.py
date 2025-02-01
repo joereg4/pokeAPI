@@ -1,13 +1,17 @@
 import logging
 import os
-from flask import Flask, render_template, request
+import json
+from flask import Flask, render_template, request, abort
 from flask_compress import Compress
+from flask_migrate import Migrate
 import pokedex
 from cache import cache, get_cache_config
 from routes import blueprints
-from pokedex.utils import load_resources, Config
+from pokedex.utils import load_resources, Config, resources_dict
 from limiter import limiter
 from routes.health import increment_api_counter
+from model import db
+from routes.auth import init_auth
 
 # Load environment variables
 pokedex.env.load_environment()
@@ -36,7 +40,7 @@ def create_app(test_config=None):
     if env:
         env = env.lower()
 
-    if env not in ["development", "production"]:
+    if env not in ["development", "production", "testing"]:
         env = "production"  # Default to production if invalid
 
     # Set up logging based on environment
@@ -54,15 +58,37 @@ def create_app(test_config=None):
     # Set the cache location for the low-level cache
     pokedex.cache.initialize_cache()
 
-    # Override config if test_config is provided
+    # Apply test configuration first if provided
     if test_config:
         app.config.update(test_config)
+    else:
+        # Configure SQLAlchemy for non-test environments
+        app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
+            "DATABASE_URL", "postgresql://localhost/pokeapi"
+        )
+        app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+        app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev")
+
+    # Initialize SQLAlchemy and Migrate
+    db.init_app(app)
+    migrate = Migrate(app, db)
+
+    # Initialize authentication
+    init_auth(app)
 
     with app.app_context():
         load_resources()
+        # Create database tables
+        db.create_all()
 
+    # Register blueprints (includes auth_bp and admin_bp from routes)
     for blueprint in blueprints:
         app.register_blueprint(blueprint)
+
+    @app.context_processor
+    def inject_resources():
+        """Make resources available to all templates."""
+        return dict(resources_json=json.dumps(resources_dict))
 
     @app.before_request
     def track_request():
@@ -97,6 +123,24 @@ def create_app(test_config=None):
     @app.errorhandler(429)
     def ratelimit_handler(e):
         return render_template("429.html", message=str(e.description)), 429
+
+    # Test routes for error handlers
+    if test_config and test_config.get("TESTING", False):
+        @app.route("/test-403")
+        def test_403():
+            abort(403)
+
+        @app.route("/test-404")
+        def test_404():
+            abort(404)
+
+        @app.route("/test-500")
+        def test_500():
+            abort(500)
+
+        @app.route("/test-429")
+        def test_429():
+            abort(429)
 
     return app
 
