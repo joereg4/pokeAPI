@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Summary Review</h2>
+    
+    <form method="GET" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control" 
+                   placeholder="Search resources..." value="{{ search_term }}">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+
+    {% if resources %}
+    <div class="list-group">
+        {% for resource in resources %}
+        <div class="list-group-item">
+            <h5>{{ resource.name }} ({{ resource.resource }})</h5>
+            <div class="current-summary">
+                {{ resource.summary | markdown | safe }}
+            </div>
+            <form method="POST" action="{{ url_for('summary_review.update_summary', resource=resource.resource, name=resource.name) }}">
+                <button type="submit" class="btn btn-primary mt-2">Generate New Summary</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        {% if search_term %}
+        <p>No resources found matching your search.</p>
+        {% else %}
+        <p>Enter a search term to find resources.</p>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %} 
