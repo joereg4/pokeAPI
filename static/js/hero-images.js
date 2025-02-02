@@ -112,14 +112,14 @@ document.addEventListener("DOMContentLoaded", function () {
         for (let i = 0; i < numImages; i++) {
             const randomId = getUniquePokemonId(); // Get a unique Pokémon ID
             const size = baseSize * sizeMultiplier;
-            const imgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${randomId}.png`;
+            const imgUrl = `/artwork/${randomId}`;
 
             // Fetch Pokémon name from the PokeAPI and create the image element
             const imagePromise = fetch(`https://pokeapi.co/api/v2/pokemon/${randomId}`)
                 .then(response => response.json())
                 .then(data => {
-                    const imgElement = createImageElement(imgUrl, size, toTitleCase(data.name)); // Convert name to title case
-                    images.push(imgElement); // Push the image to the images array
+                    const imgElement = createImageElement(imgUrl, size, toTitleCase(data.name));
+                    images.push(imgElement);
                 });
 
             imagePromises.push(imagePromise); // Add the promise to the array
