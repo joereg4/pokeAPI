@@ -117,18 +117,15 @@ def get_type(id_or_name):
             if "name" not in data:
                 abort(404, description=f"Pokemon type '{id_or_name}' not found")
 
+            # Create pokemon list with cached sprites
             pokemon_list = create_pokemon_list(data)
 
-            # Fetch Summary
-            csv_file_path = get_path("type.csv")
-            df = pd.read_csv(csv_file_path)
-
-            # Retrieve the summary
+            # Get summary from database
             summary = get_summary(data["name"], "type")
 
             # Convert the markdown summary to HTML
             if summary:
-                summary_html = Markup(markdown.markdown(summary))
+                summary_html = Markup(markdown.markdown(str(summary)))
             else:
                 summary_html = None
 
@@ -141,3 +138,12 @@ def get_type(id_or_name):
             )
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
+        except HTTPError as e:
+            if e.response.status_code == 404:
+                abort(404, description=f"Pokemon type '{id_or_name}' not found")
+            else:
+                logging.error(f"HTTP error occurred: {e}")
+                abort(500, description=str(e))
+        except Exception as e:
+            logging.error(f"Unexpected error: {str(e)}", exc_info=True)
+            abort(500, description=str(e))
