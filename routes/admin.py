@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
-from model import User, db
+from models.model import User, db
 from functools import wraps
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")

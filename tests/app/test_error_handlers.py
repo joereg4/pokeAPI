@@ -1,7 +1,7 @@
 import pytest
 from flask import url_for, abort
 from app import create_app
-from model import db
+from models.model import db
 
 
 @pytest.fixture
