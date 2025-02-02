@@ -5,6 +5,7 @@ import pandas as pd
 from flask import Blueprint, render_template, abort
 from markupsafe import Markup
 from requests.exceptions import HTTPError
+import werkzeug.exceptions
 
 import pokedex
 from cache import cache
@@ -144,6 +145,9 @@ def get_type(id_or_name):
             else:
                 logging.error(f"HTTP error occurred: {e}")
                 abort(500, description=str(e))
+        except werkzeug.exceptions.NotFound:
+            # Re-raise NotFound (404) exceptions
+            raise
         except Exception as e:
             logging.error(f"Unexpected error: {str(e)}", exc_info=True)
             abort(500, description=str(e))
