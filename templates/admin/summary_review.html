@@ -8,6 +8,9 @@
         <div class="input-group">
             <input type="text" name="search" class="form-control" 
                    placeholder="Search resources..." value="{{ search_term }}">
+            {% if request.args.get('return_to') %}
+            <input type="hidden" name="return_to" value="{{ request.args.get('return_to') }}">
+            {% endif %}
             <button type="submit" class="btn btn-primary">Search</button>
         </div>
     </form>
@@ -20,7 +23,11 @@
             <div class="current-summary">
                 {{ resource.summary | markdown | safe }}
             </div>
-            <form method="POST" action="{{ url_for('summary_review.update_summary', resource=resource.resource, name=resource.name) }}">
+            <form method="POST" action="{{ url_for('summary_review.update_summary', 
+                                                  resource=resource.resource, 
+                                                  name=resource.name,
+                                                  return_to=request.args.get('return_to')) }}">
+                <input type="hidden" name="search_term" value="{{ search_term }}">
                 <button type="submit" class="btn btn-primary mt-2">Generate New Summary</button>
             </form>
         </div>

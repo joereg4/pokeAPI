@@ -66,10 +66,12 @@ def invalidate_related_caches(resource_type, resource_id):
             f"pokemon_{resource_id}",
             f"pokemon_species_{resource_id}",
             f"evolution_chain_*",
+            f"summary_*",
         ],
         "move": [
             f"move_{resource_id}",
             f"pokemon_*",
+            f"summary_*",
         ],
     }
 

@@ -16,6 +16,7 @@ from flask_login import login_required, current_user
 from routes.admin import admin_required
 from models.model import Resource, db
 import markdown
+from utils import invalidate_related_caches
 
 
 summary_review_bp = Blueprint("summary_review", __name__)
@@ -54,11 +55,25 @@ def summary_review():
 
 
 @summary_review_bp.route(
-    "/summary-review/<string:resource>/<string:name>", methods=["POST"]
+    "/summary-review/<string:resource>/<string:name>", methods=["GET", "POST"]
 )
 @login_required
 @admin_required
 def update_summary(resource, name):
+    # For GET requests, redirect to the summary review page with search parameters
+    if request.method == "GET":
+        search_term = request.args.get("search_term", "")
+        return_to = request.args.get("return_to")
+        if search_term:
+            return redirect(
+                url_for(
+                    "summary_review.summary_review",
+                    search=search_term,
+                    return_to=return_to,
+                )
+            )
+        return redirect(url_for("summary_review.summary_review"))
+
     resource_obj = Resource.query.filter_by(resource=resource, name=name).first()
     if not resource_obj:
         flash("Resource not found", "error")
@@ -72,10 +87,18 @@ def update_summary(resource, name):
         if request.form.get("action") == "accept":
             resource_obj.summary = request.form.get("edited_summary", current_summary)
             db.session.commit()
+            # Invalidate related caches after updating the summary
+            invalidate_related_caches(resource_obj.resource, resource_obj.name)
             flash("Summary updated successfully", "success")
             return_to = request.args.get("return_to")
             if return_to:
                 return redirect(return_to)
+            # If no return_to, redirect to search results if we have a search term
+            search_term = request.form.get("search_term")
+            if search_term:
+                return redirect(
+                    url_for("summary_review.summary_review", search=search_term)
+                )
             return redirect(url_for("summary_review.summary_review"))
 
         prompt = f"""Analyze the following summary and provide a corrected version that:
