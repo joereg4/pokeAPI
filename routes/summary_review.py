@@ -61,21 +61,24 @@ def update_summary(resource, name):
 
     current_summary = resource_obj.summary
     try:
-        prompt = f"""Analyze the following summary and provide a corrected version that:
-1. Uses **bold text** for emphasis and section names
-2. Uses simple paragraph breaks to separate sections
-3. Uses bullet points (not numbered lists)
-4. Maintains a clean, consistent style without HTML headings
-5. Organizes information into clear sections (like Type, Abilities, etc.)
-6. Is comprehensive but concise
-7. Follows this format:
-   - First paragraph introduces the Pokémon
-   - Use "**Type:**" for type information
-   - Use "**Abilities:**" for abilities
-   - Use "**Notable Features:**" for other important information
-8. Is not longer than the original summary
+        max_tokens = request.form.get("max_tokens", 2000, type=int)
+        custom_instructions = request.form.get("custom_instructions", "").strip()
 
-Only provide the corrected summary without any additional analysis or comments:
+        prompt = f"""Analyze the following summary and provide a corrected version that:
+1. Completes any unfinished sentences or thoughts from the original summary
+2. Maintains the existing structure and style
+3. Uses **bold text** for emphasis on important terms
+4. Ensures all information is accurate and complete
+5. Preserves all existing information while fixing any grammatical issues
+6. Only adds new information if a section is clearly incomplete
+7. Keeps the same length and scope as the original summary
+
+Only provide the corrected summary without any additional analysis or comments.
+Do not restructure the summary unless a section is clearly incomplete.
+
+{custom_instructions if custom_instructions else ""}
+
+Original summary for reference:
 
 {current_summary}
 """
@@ -88,18 +91,26 @@ Only provide the corrected summary without any additional analysis or comments:
                 },
                 {"role": "user", "content": prompt},
             ],
-            max_tokens=2000,
+            max_tokens=max_tokens,
         )
 
         new_summary = response.choices[0].message.content.strip()
 
         if request.form.get("action") == "accept":
-            resource_obj.summary = new_summary
+            resource_obj.summary = request.form.get("edited_summary", new_summary)
             db.session.commit()
             flash("Summary updated successfully", "success")
+            return_to = request.args.get("return_to")
+            if return_to:
+                return redirect(return_to)
 
         return render_template(
-            "admin/summary_preview.html", resource=resource_obj, new_summary=new_summary
+            "admin/summary_preview.html",
+            resource=resource_obj,
+            new_summary=new_summary,
+            return_to=request.args.get("return_to"),
+            max_tokens=max_tokens,
+            custom_instructions=custom_instructions,
         )
 
     except Exception as e:
@@ -110,20 +121,18 @@ Only provide the corrected summary without any additional analysis or comments:
 def analyze_summary(summary, max_tokens=1000):
     while True:
         prompt = f"""Analyze the following summary and provide a corrected version that:
-1. Uses **bold text** for emphasis and section names
-2. Uses simple paragraph breaks to separate sections
-3. Uses bullet points (not numbered lists)
-4. Maintains a clean, consistent style without HTML headings
-5. Organizes information into clear sections (like Type, Abilities, etc.)
-6. Is comprehensive but concise
-7. Follows this format:
-   - First paragraph introduces the Pokémon
-   - Use "**Type:**" for type information
-   - Use "**Abilities:**" for abilities
-   - Use "**Notable Features:**" for other important information
-8. Is not longer than the original summary
+1. Completes any unfinished sentences or thoughts from the original summary
+2. Maintains the existing structure and style
+3. Uses **bold text** for emphasis on important terms
+4. Ensures all information is accurate and complete
+5. Preserves all existing information while fixing any grammatical issues
+6. Only adds new information if a section is clearly incomplete
+7. Keeps the same length and scope as the original summary
 
-Only provide the corrected summary without any additional analysis or comments:
+Only provide the corrected summary without any additional analysis or comments.
+Do not restructure the summary unless a section is clearly incomplete.
+
+Original summary for reference:
 
 {summary}
 """
@@ -174,6 +183,16 @@ def process_csv_file(filename):
         json.dump(data, jsonfile, indent=2, ensure_ascii=False)
 
     print(f"Finished processing {filename}. Results saved to {output_file}")
+
+
+@summary_review_bp.route("/render-markdown", methods=["POST"])
+@login_required
+@admin_required
+def render_markdown():
+    data = request.get_json()
+    if not data or "text" not in data:
+        return ""
+    return markdown.markdown(data["text"]) if data["text"] else ""
 
 
 if __name__ == "__main__":

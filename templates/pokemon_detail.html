@@ -144,7 +144,18 @@
     {% if summary_html %}
         <section>
             <div class="container pt-5">
-                <h2>Summary</h2>
+                <h2>
+                    Summary
+                    {% if current_user.is_authenticated and current_user.is_admin %}
+                        <a href="{{ url_for('summary_review.summary_review', 
+                                           search=data.name,
+                                           return_to=url_for('pokemon.get_pokemon', id_or_name=data.name)) }}" 
+                           class="text-decoration-none" 
+                           title="Edit Summary">
+                            <i class="fas fa-pencil-alt" style="font-size: 75%"></i>
+                        </a>
+                    {% endif %}
+                </h2>
                 <div class="row">
                     <div class="col">
                         <p>{{ summary_html | safe }}</p>
