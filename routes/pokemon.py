@@ -243,9 +243,6 @@ def get_pokemon_list():
 def get_pokemon(id_or_name):
     logging.info(f"get_pokemon called with id_or_name: {id_or_name}")
 
-    csv_file_path = get_path("pokemon.csv")
-    df = pd.read_csv(csv_file_path)
-
     try:
         try:
             id_or_name = int(id_or_name)
@@ -478,7 +475,7 @@ def get_pokemon(id_or_name):
     sorted_sprites = {key: sprites[key] for key in VALID_SPRITES if key in sprites}
 
     # Retrieve the summary for the Pokémon
-    summary = get_summary(data["name"], df)
+    summary = get_summary(data["name"], "pokemon")
 
     # Convert the markdown summary to HTML, ensuring summary is a string
     summary_html = (
