@@ -218,7 +218,6 @@ def get_pokemon_list():
 
 @pokemon_bp.route("/pokemon/<id_or_name>")
 def get_pokemon(id_or_name):
-    logging.info(f"get_pokemon called with id_or_name: {id_or_name}")
 
     try:
         try:
