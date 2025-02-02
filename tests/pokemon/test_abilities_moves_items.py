@@ -1,7 +1,7 @@
 import pytest
 from app import create_app
 from utils import get_cache_stats, warm_common_endpoints
-from model import db
+from models.model import db
 
 
 @pytest.fixture

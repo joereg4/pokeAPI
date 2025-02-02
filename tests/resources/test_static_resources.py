@@ -5,7 +5,7 @@ import pytest
 from utils import get_cache_stats, warm_common_endpoints
 from tests.test_helper import get_test_client, load_mock_data, assert_response_status
 from app import create_app
-from model import db
+from models.model import db
 
 
 @pytest.fixture
