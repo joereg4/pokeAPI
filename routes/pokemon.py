@@ -1,7 +1,6 @@
 # routes/pokemon.py
 import logging
 import markdown
-import pandas as pd
 import requests
 from requests.exceptions import HTTPError
 from flask import Blueprint, render_template, abort, url_for, request, json, redirect
@@ -15,7 +14,6 @@ from pokedex.helper import (
     fetch_all_results,
     create_pokemon_list,
     get_summary,
-    get_path,
     get_pokemon_cards,
 )
 from pokedex.utils import Config, resources_dict
@@ -222,12 +220,17 @@ def get_pokemon_list():
 
 @pokemon_bp.route("/pokemon/<id_or_name>")
 def get_pokemon(id_or_name):
+    logging.info(f"get_pokemon called with id_or_name: {id_or_name}")
+
     try:
         try:
             id_or_name = int(id_or_name)
+            logging.info(f"Converted id_or_name to integer: {id_or_name}")
         except ValueError:
+            logging.info(f"Using id_or_name as string: {id_or_name}")
             pass
 
+        logging.info(f"Attempting to fetch pokemon data for: {id_or_name}")
         data = pokedex.APIResource.fetch_data("pokemon", id_or_name)
     except ValueError as e:
         logging.error(f"ValueError in get_pokemon for {id_or_name}: {str(e)}")
@@ -575,78 +578,3 @@ def get_pokemon_species(id_or_name):
             abort(
                 500, description="An error occurred while processing the species data"
             )
-
-
-@pokemon_bp.route("/type/")
-@pokemon_bp.route("/type/<id_or_name>")
-def get_type(id_or_name=None):
-    logging.info(
-        f"[get_type] Route called with id_or_name: {id_or_name}, type: {type(id_or_name)}"
-    )
-    try:
-        if id_or_name is None:
-            logging.debug("[get_type] No id_or_name provided, fetching all types")
-            url = f"{BASE_URL}/type"
-            data = fetch_all_results(url)
-            return render_template("types.html", data=data)
-
-        # First try to validate the input
-        logging.debug(
-            f"[get_type] About to validate input: {id_or_name}, type: {type(id_or_name)}"
-        )
-        try:
-            pokedex.common.validate("type", id_or_name)
-            logging.debug("[get_type] Input validation successful")
-        except ValueError as e:
-            logging.error(f"[get_type] Validation error: {str(e)}, type: {type(e)}")
-            # If it's a "not found" error, return 404
-            if "not found" in str(e).lower():
-                logging.debug(
-                    "[get_type] ValueError contains 'not found', returning 404"
-                )
-                abort(404, description=str(e))
-            # If it's a "bad id" error, try to fetch the data anyway
-            # If the data doesn't exist, we'll get a 404 from the API
-            logging.debug(
-                "[get_type] ValueError is a 'bad id' error, continuing to API call"
-            )
-
-        try:
-            id_or_name = int(id_or_name)
-            logging.debug(f"[get_type] Converted id_or_name to integer: {id_or_name}")
-        except ValueError:
-            logging.debug(f"[get_type] Using id_or_name as string: {id_or_name}")
-            pass
-
-        logging.debug(f"[get_type] Attempting to fetch data for: {id_or_name}")
-        data = pokedex.APIResource.fetch_data("type", id_or_name)
-
-        if not data or "name" not in data:
-            logging.warning(
-                f"[get_type] No data or missing name for type: {id_or_name}"
-            )
-            abort(404, description=f"Type '{id_or_name}' not found")
-
-        logging.info(f"[get_type] Successfully fetched data for type: {id_or_name}")
-        return render_template("type.html", data=data)
-    except ValueError as e:
-        logging.error(f"[get_type] ValueError in route: {str(e)}, type: {type(e)}")
-        # If it's a "not found" error from the API, return 404
-        if "not found" in str(e).lower():
-            abort(404, description=str(e))
-        # Otherwise, it's a bad request
-        abort(400, description=str(e))
-    except HTTPError as e:
-        logging.error(
-            f"[get_type] HTTPError: {str(e)}, status_code: {e.response.status_code}"
-        )
-        if e.response.status_code == 404:
-            abort(404, description=f"Type '{id_or_name}' not found")
-        else:
-            logging.error(f"[get_type] HTTP error occurred: {e}")
-            abort(500, description=str(e))
-    except Exception as e:
-        logging.error(
-            f"[get_type] Unexpected error: {str(e)}, type: {type(e)}", exc_info=True
-        )
-        abort(500, description=str(e))
