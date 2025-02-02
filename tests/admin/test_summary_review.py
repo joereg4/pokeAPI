@@ -1,5 +1,59 @@
 import pytest
 from models.model import Resource, db
+from unittest.mock import MagicMock, patch
+from dataclasses import dataclass
+from typing import List, Optional, Dict
+
+
+# Mock OpenAI response types
+@dataclass
+class ChatCompletionMessage:
+    content: str
+    role: str
+    function_call: Optional[dict] = None
+    tool_calls: Optional[List] = None
+
+
+@dataclass
+class CompletionChoice:
+    message: ChatCompletionMessage
+    finish_reason: str
+    index: int
+    logprobs: Optional[dict] = None
+
+
+@dataclass
+class ChatCompletion:
+    id: str
+    choices: List[CompletionChoice]
+    created: int
+    model: str
+    object: str
+    system_fingerprint: Optional[str] = None
+    usage: Optional[Dict[str, int]] = None
+
+
+@pytest.fixture
+def mock_openai_response():
+    """Mock OpenAI API response"""
+    message = ChatCompletionMessage(
+        content="Updated by AI", role="assistant", function_call=None, tool_calls=None
+    )
+    choice = CompletionChoice(
+        finish_reason="stop",
+        index=0,
+        message=message,
+        logprobs=None,
+    )
+    return ChatCompletion(
+        id="test",
+        choices=[choice],
+        created=1234567890,
+        model="gpt-4",
+        object="chat.completion",
+        system_fingerprint=None,
+        usage={"completion_tokens": 10, "prompt_tokens": 20, "total_tokens": 30},
+    )
 
 
 @pytest.fixture
@@ -33,8 +87,16 @@ def test_render_markdown_endpoint(auth_client):
     assert b"<p><strong>Bold</strong> text</p>" in response.data
 
 
-def test_summary_update_with_custom_instructions(auth_client, app):
+@patch("routes.summary_review.get_openai_client")
+def test_summary_update_with_custom_instructions(
+    mock_get_client, auth_client, app, mock_openai_response
+):
     """Test summary update with custom instructions and token limit"""
+    # Set up mock OpenAI client
+    mock_client = MagicMock()
+    mock_client.chat.completions.create.return_value = mock_openai_response
+    mock_get_client.return_value = mock_client
+
     with app.app_context():
         # Create test resource using test db session
         resource = Resource(resource="pokemon", name="test", summary="Original summary")
