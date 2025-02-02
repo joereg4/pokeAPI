@@ -47,6 +47,9 @@ def create_app(test_config=None):
     if env == "development":
         logging.basicConfig(level=logging.INFO)
         logging.getLogger("urllib3").setLevel(logging.WARNING)
+        logging.getLogger("pokedex").setLevel(
+            logging.INFO
+        )  # Ensure pokedex logs are visible
         app.logger.setLevel(logging.DEBUG)
     else:
         logging.basicConfig(level=logging.WARNING)
