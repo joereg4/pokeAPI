@@ -72,7 +72,10 @@
         <div class="card-body">
             <ul class="list-group">
                 <li class="list-group-item">
-                    <a href="{{ url_for('health.check_cache_health') }}" class="text-decoration-none">/health/cache</a>
+                    <a href="{{ url_for('summary_review.summary_review') }}" class="btn btn-primary">/admin/summary-review</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="{{ url_for('health.check_cache_health') }}" class="btn btn-primary">/health/cache</a>
                 </li>
                 <!-- Add more protected routes here as needed -->
             </ul>
