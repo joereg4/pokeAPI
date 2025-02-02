@@ -233,6 +233,7 @@ def get_pokemon(id_or_name):
         logging.error(f"ValueError in get_pokemon for {id_or_name}: {str(e)}")
         # Try pokemon-species endpoint
         try:
+            logging.info(f"Attempting to fetch pokemon-species data for: {id_or_name}")
             return redirect(
                 url_for("pokemon.get_pokemon_species", id_or_name=id_or_name)
             )
@@ -242,12 +243,35 @@ def get_pokemon(id_or_name):
     except HTTPError as e:
         logging.error(f"HTTPError in get_pokemon for {id_or_name}: {str(e)}")
         if e.response.status_code == 404:
-            abort(404, description=f"Pokemon '{id_or_name}' not found")
+            # Try pokemon-species endpoint
+            try:
+                logging.info(
+                    f"Attempting to fetch pokemon-species data for: {id_or_name}"
+                )
+                return redirect(
+                    url_for("pokemon.get_pokemon_species", id_or_name=id_or_name)
+                )
+            except Exception as e:
+                logging.error(f"Error fetching pokemon-species data: {e}")
+                abort(404, description=f"Pokemon '{id_or_name}' not found")
         else:
+            logging.error(f"HTTP error occurred: {e}")
             abort(500, description=str(e))
     except Exception as e:
         logging.error(f"Error in get_pokemon for {id_or_name}: {str(e)}")
         abort(500, description=str(e))
+
+    if not data or "name" not in data:
+        logging.warning(f"Pokemon data missing or invalid for: {id_or_name}")
+        # Try pokemon-species endpoint
+        try:
+            logging.info(f"Attempting to fetch pokemon-species data for: {id_or_name}")
+            return redirect(
+                url_for("pokemon.get_pokemon_species", id_or_name=id_or_name)
+            )
+        except Exception as e:
+            logging.error(f"Error fetching pokemon-species data: {e}")
+            abort(404, description=f"Pokemon '{id_or_name}' not found")
 
     # Initialize variables
     species_data = None
