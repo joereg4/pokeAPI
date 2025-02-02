@@ -1,4 +1,5 @@
 import requests
+import logging
 
 from .cache import get_sprite_path, load, load_sprite, save, save_sprite
 from .common import api_url_build, sprite_url_build
@@ -56,6 +57,7 @@ def _call_sprite_api(sprite_type, sprite_id, **kwargs):
 
 
 def get_sprite(sprite_type, sprite_id, **kwargs):
+    """Get sprite data for a resource."""
     force_lookup = kwargs.get("force_lookup", False)
 
     if not force_lookup:
@@ -63,6 +65,7 @@ def get_sprite(sprite_type, sprite_id, **kwargs):
             return load_sprite(sprite_type, sprite_id, **kwargs)
         except FileNotFoundError:
             pass
+
     data = _call_sprite_api(sprite_type, sprite_id, **kwargs)
     save_sprite(data, sprite_type, sprite_id, **kwargs)
     return data

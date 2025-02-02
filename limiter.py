@@ -7,7 +7,10 @@ from pokedex.redis_client import REDIS_POOL
 limiter = Limiter(
     app=None,  # We'll initialize the app later
     key_func=get_remote_address,
-    default_limits=["2000 per day", "500 per hour"],  # Increased limits
+    default_limits=[
+        "10000 per day",
+        "2000 per hour",
+    ],  # Significantly increased limits for development
     storage_uri="redis://",
     storage_options={
         "connection_pool": REDIS_POOL,
