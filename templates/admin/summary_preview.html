@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Summary Preview for {{ resource.name }}</h2>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Current Summary</h4>
+            <div class="card">
+                <div class="card-body">
+                    {{ resource.summary | markdown | safe }}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <h4>New Summary</h4>
+            <div class="card">
+                <div class="card-body">
+                    {{ new_summary | markdown | safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-4">
+        <form method="POST" action="{{ url_for('summary_review.update_summary', resource=resource.resource, name=resource.name) }}">
+            <input type="hidden" name="action" value="accept">
+            <button type="submit" class="btn btn-success">Accept New Summary</button>
+            <a href="{{ url_for('summary_review.summary_review') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %} 
