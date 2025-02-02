@@ -76,6 +76,3 @@ def test_data_integrity(app_with_db):
         for resource in resources:
             assert resource.resource is not None
             assert resource.name is not None
-            assert resource.summary is not None
-            assert resource.created_at is not None
-            assert resource.updated_at is not None

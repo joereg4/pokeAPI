@@ -14,8 +14,12 @@ from pokedex.utils import Config
 BASE_URL = Config.BASE_URL
 TYPE_COLORS = Config.TYPE_COLORS
 
-characteristics_stats_bp = Blueprint("characteristics_stats", __name__, template_folder="templates",
-                                     static_folder="static")
+characteristics_stats_bp = Blueprint(
+    "characteristics_stats",
+    __name__,
+    template_folder="templates",
+    static_folder="static",
+)
 
 
 @characteristics_stats_bp.route("/characteristic/", defaults={"id_": None})
@@ -29,7 +33,7 @@ def get_characteristic(id_):
 
         # Extract the ID from the URL for each characteristic
         for characteristic in data:
-            characteristic['id'] = int(characteristic['url'].split('/')[-2])
+            characteristic["id"] = int(characteristic["url"].split("/")[-2])
 
         return render_template("characteristics.html", data=data)
     else:
@@ -116,11 +120,11 @@ def get_type(id_or_name):
             pokemon_list = create_pokemon_list(data)
 
             # Fetch Summary
-            csv_file_path = get_path('type.csv')
+            csv_file_path = get_path("type.csv")
             df = pd.read_csv(csv_file_path)
 
             # Retrieve the summary
-            summary = get_summary(data['name'], df)
+            summary = get_summary(data["name"], "type")
 
             # Convert the markdown summary to HTML
             if summary:
