@@ -147,13 +147,11 @@ def get_detective_pikachu_pokemon():
         "braviary",
     ]
 
-    # Transform the list into the expected format
-    data = {
-        "detective": [{"pokemon": {"name": name}} for name in detective_pikachu_pokemon]
-    }
+    # Transform the list into the expected format for create_pokemon_list
+    pokemon_list = [{"name": name} for name in detective_pikachu_pokemon]
 
-    # Create the Pokémon list from the predefined list of Pokémon names
-    pokemon_list = create_pokemon_list(data)
+    # Create the Pokémon list with sprites
+    pokemon_list = create_pokemon_list(pokemon_list)
 
     # Render a template for the Detective Pikachu Pokémon
     return render_template("detective_pikachu.html", pokemon_list=pokemon_list)
