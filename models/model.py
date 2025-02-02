@@ -5,9 +5,10 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
+
 class User(UserMixin, db.Model):
-    __tablename__ = 'users'
-    
+    __tablename__ = "users"
+
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -23,4 +24,18 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
-        return f'<User {self.username}>' 
+        return f"<User {self.username}>"
+
+
+class Resource(db.Model):
+    """Model for all Pokémon resources (pokemon, abilities, moves, etc.)"""
+
+    __tablename__ = "resources"
+
+    resource = db.Column(db.String(50), nullable=False, primary_key=True)
+    name = db.Column(db.String(100), nullable=False, primary_key=True)
+    summary = db.Column(db.Text)
+
+    __table_args__ = (
+        db.UniqueConstraint("resource", "name", name="uix_resource_name"),
+    )

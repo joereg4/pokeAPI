@@ -91,7 +91,9 @@ def get_encounter_condition_value(id_or_name):
         data = pokedex.APIResource.fetch_data("encounter-condition-value", id_or_name)
 
         if "name" not in data:
-            abort(404, description=f"Encounter Condition Value '{id_or_name}' not found")
+            abort(
+                404, description=f"Encounter Condition Value '{id_or_name}' not found"
+            )
 
         return render_template("generic.html", data=data)
     except ValueError as e:
@@ -157,11 +159,7 @@ def get_version(id_or_name):
                 abort(404, description=f"Version '{id_or_name}' not found")
 
             # Fetch Summary
-            csv_file_path = get_path('version.csv')
-            df = pd.read_csv(csv_file_path)
-
-            # Retrieve the summary
-            summary = get_summary(data['name'], df)
+            summary = get_summary(data["name"], "version")
 
             # Convert the markdown summary to HTML
             if summary:
@@ -169,7 +167,9 @@ def get_version(id_or_name):
             else:
                 summary_html = None
 
-            return render_template("version_detail.html", data=data, summary_html=summary_html)
+            return render_template(
+                "version_detail.html", data=data, summary_html=summary_html
+            )
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
@@ -195,11 +195,7 @@ def get_version_group(id_or_name):
                 abort(404, description=f"Version Group '{id_or_name}' not found")
 
             # Fetch Summary
-            csv_file_path = get_path('version-group.csv')
-            df = pd.read_csv(csv_file_path)
-
-            # Retrieve the summary
-            summary = get_summary(data['name'], df)
+            summary = get_summary(data["name"], "version-group")
 
             # Convert the markdown summary to HTML
             if summary:
@@ -207,6 +203,8 @@ def get_version_group(id_or_name):
             else:
                 summary_html = None
 
-            return render_template("version_group_detail.html", data=data, summary_html=summary_html)
+            return render_template(
+                "version_group_detail.html", data=data, summary_html=summary_html
+            )
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status

@@ -13,7 +13,9 @@ from pokedex.utils import Config
 
 BASE_URL = Config.BASE_URL
 
-breeding_bp = Blueprint("breeding", __name__, template_folder="templates", static_folder="static")
+breeding_bp = Blueprint(
+    "breeding", __name__, template_folder="templates", static_folder="static"
+)
 
 
 @breeding_bp.route("/egg-group/", defaults={"id_or_name": None})
@@ -42,11 +44,7 @@ def get_egg_group(id_or_name):
             pokemon_list = create_pokemon_list(data)
 
             # Fetch Summary
-            csv_file_path = get_path('egg-group.csv')
-            df = pd.read_csv(csv_file_path)
-
-            # Retrieve the summary
-            summary = get_summary(data['name'], df)
+            summary = get_summary(data["name"], "egg-group")
 
             # Convert the markdown summary to HTML
             if summary:
@@ -58,7 +56,7 @@ def get_egg_group(id_or_name):
                 "egg_group_detail.html",
                 data=data,
                 pokemon_list=pokemon_list,
-                summary_html=summary_html
+                summary_html=summary_html,
             )
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status

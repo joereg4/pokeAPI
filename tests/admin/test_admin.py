@@ -1,6 +1,6 @@
 import pytest
 from flask import url_for
-from model import User, db
+from models.model import User, db
 from app import create_app
 
 

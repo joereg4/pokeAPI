@@ -10,11 +10,21 @@ from requests.exceptions import HTTPError
 
 import pokedex
 from cache import cache
-from pokedex.helper import fetch_all_results, get_summary, get_path, create_pokemon_list, get_pokemon_cards
+from pokedex.helper import (
+    fetch_all_results,
+    get_summary,
+    get_path,
+    create_pokemon_list,
+    get_pokemon_cards,
+)
 from pokedex.utils import Config
 
-abilities_moves_items_bp = Blueprint("abilities_moves_items", __name__, template_folder="templates",
-                                     static_folder="static")
+abilities_moves_items_bp = Blueprint(
+    "abilities_moves_items",
+    __name__,
+    template_folder="templates",
+    static_folder="static",
+)
 
 BASE_URL = Config.BASE_URL
 ITEMS_PER_PAGE = Config.ITEMS_PER_PAGE
@@ -46,11 +56,7 @@ def get_ability(id_or_name):
             pokemon_list = create_pokemon_list(data)
 
             # Fetch Summary
-            csv_file_path = get_path('ability.csv')
-            df = pd.read_csv(csv_file_path)
-
-            # Retrieve the summary
-            summary = get_summary(data['name'], df)
+            summary = get_summary(data["name"], "ability")
 
             # Convert the markdown summary to HTML
             if summary:
@@ -58,8 +64,12 @@ def get_ability(id_or_name):
             else:
                 summary_html = None
 
-            return render_template("ability_detail.html", data=data, pokemon_list=pokemon_list,
-                                   summary_html=summary_html)
+            return render_template(
+                "ability_detail.html",
+                data=data,
+                pokemon_list=pokemon_list,
+                summary_html=summary_html,
+            )
         except ValueError as e:
             abort(404, description=str(e))
 
@@ -90,11 +100,7 @@ def get_item(id_or_name):
             pokemon_list = create_pokemon_list(data)
 
             # Fetch Summary
-            csv_file_path = get_path('item.csv')
-            df = pd.read_csv(csv_file_path)
-
-            # Retrieve the summary
-            summary = get_summary(data['name'], df)
+            summary = get_summary(data["name"], "item")
 
             # Convert the markdown summary to HTML
             if summary:
@@ -103,19 +109,23 @@ def get_item(id_or_name):
                 summary_html = None
 
             try:
-                name = '"{}"'.format(data['name'])
+                name = '"{}"'.format(data["name"])
                 # Replace '-' with ' ' before calling get_pokemon_cards
-                cards = get_pokemon_cards(name.replace('-', ' '))
+                cards = get_pokemon_cards(name.replace("-", " "))
             except Exception as e:
                 # Log the exception and proceed with an empty list
-                logging.debug(f"Error fetching cards for {data['name'].replace('-', '+')}: {e}")
+                logging.debug(
+                    f"Error fetching cards for {data['name'].replace('-', '+')}: {e}"
+                )
                 cards = []
 
-            return render_template("item_detail.html",
-                                   data=data,
-                                   pokemon_list=pokemon_list,
-                                   summary_html=summary_html,
-                                   cards=cards)
+            return render_template(
+                "item_detail.html",
+                data=data,
+                pokemon_list=pokemon_list,
+                summary_html=summary_html,
+                cards=cards,
+            )
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
@@ -136,7 +146,9 @@ def get_item_attribute(id_or_name):
             abort(404, description=f"Item Attribute '{id_or_name}' not found")
 
         items_list = data.pop("items", [])  # Extract items to a separate variable
-        return render_template("item_attribute_detail.html", data=data, items_list=items_list)
+        return render_template(
+            "item_attribute_detail.html", data=data, items_list=items_list
+        )
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
@@ -205,9 +217,11 @@ def get_machine(id_):
         machine_data = pokedex.APIResource.fetch_data("machine", id_)
 
         # Fetch related data: item, move, and version group
-        item_data = pokedex.APIResource.fetch_data("item", machine_data['item']['name'])
-        move_data = pokedex.APIResource.fetch_data("move", machine_data['move']['name'])
-        version_group_data = pokedex.APIResource.fetch_data("version-group", machine_data['version_group']['name'])
+        item_data = pokedex.APIResource.fetch_data("item", machine_data["item"]["name"])
+        move_data = pokedex.APIResource.fetch_data("move", machine_data["move"]["name"])
+        version_group_data = pokedex.APIResource.fetch_data(
+            "version-group", machine_data["version_group"]["name"]
+        )
 
         # Handle cases where any of the data is missing or invalid
         if not all([item_data, move_data, version_group_data]):
@@ -218,7 +232,7 @@ def get_machine(id_):
             machine_data=machine_data,
             item_data=item_data,
             move_data=move_data,
-            version_group_data=version_group_data
+            version_group_data=version_group_data,
         )
     except (ValueError, HTTPError) as e:
         # Handle HTTP errors or other exceptions
@@ -246,29 +260,37 @@ def get_machines(page=1):
         complete_machines = []
 
         # Process the results and extract the ID for each machine
-        for machine in data['results']:
-            machine_id = int(re.search(r'/(\d+)/$', machine['url']).group(1))
+        for machine in data["results"]:
+            machine_id = int(re.search(r"/(\d+)/$", machine["url"]).group(1))
             machine_data = pokedex.APIResource.fetch_data("machine", machine_id)
 
             # Fetch related data: item, move, and version group
-            item_data = pokedex.APIResource.fetch_data("item", machine_data['item']['name'])
-            move_data = pokedex.APIResource.fetch_data("move", machine_data['move']['name'])
-            version_group_data = pokedex.APIResource.fetch_data("version-group", machine_data['version_group']['name'])
+            item_data = pokedex.APIResource.fetch_data(
+                "item", machine_data["item"]["name"]
+            )
+            move_data = pokedex.APIResource.fetch_data(
+                "move", machine_data["move"]["name"]
+            )
+            version_group_data = pokedex.APIResource.fetch_data(
+                "version-group", machine_data["version_group"]["name"]
+            )
 
             # Combine details into a single dictionary
             machine_detail = {
-                'id': machine_id,
-                'item': item_data,
-                'move': move_data,
-                'version_group': version_group_data
+                "id": machine_id,
+                "item": item_data,
+                "move": move_data,
+                "version_group": version_group_data,
             }
 
             complete_machines.append(machine_detail)
 
-        total_count = data['count']
+        total_count = data["count"]
         total_pages = (total_count + per_page - 1) // per_page
 
-        return render_template("machine.html", data=complete_machines, page=page, total_pages=total_pages)
+        return render_template(
+            "machine.html", data=complete_machines, page=page, total_pages=total_pages
+        )
     except (ValueError, HTTPError) as e:
         # Handle HTTP errors or other exceptions
         if isinstance(e, HTTPError) and e.response.status_code == 404:
@@ -280,7 +302,7 @@ def get_machines(page=1):
 
 @abilities_moves_items_bp.route("/move/")
 def get_moves_list():
-    page = request.args.get('page', 1, type=int)
+    page = request.args.get("page", 1, type=int)
     per_page = ITEMS_PER_PAGE
     offset = (page - 1) * per_page
     endpoint = f"{BASE_URL}/move/?limit={per_page}&offset={offset}"
@@ -288,7 +310,7 @@ def get_moves_list():
     response = requests.get(endpoint)
     moves_list = response.json()
 
-    return render_template('moves.html', moves_list=moves_list, current_page=page)
+    return render_template("moves.html", moves_list=moves_list, current_page=page)
 
 
 @abilities_moves_items_bp.route("/move/<id_or_name>")
@@ -318,22 +340,25 @@ def get_move(id_or_name):
             category = None
             if data.get("meta") and data["meta"].get("category"):
                 category_name = data["meta"]["category"]["name"]
-                category = pokedex.APIResource.fetch_data("move-category", category_name)
+                category = pokedex.APIResource.fetch_data(
+                    "move-category", category_name
+                )
             else:
                 logging.debug(f"No category found for move {data['name']}")
 
             # Fetch Summary
-            csv_file_path = get_path('move.csv')
-            df = pd.read_csv(csv_file_path)
-
-            # Retrieve the summary
-            summary = get_summary(data['name'], df)
+            summary = get_summary(data["name"], "move")
 
             # Convert the markdown summary to HTML
             summary_html = Markup(markdown.markdown(summary)) if summary else None
 
-            return render_template("move_detail.html", data=data, category=category, pokemon_list=pokemon_list,
-                                   summary_html=summary_html)
+            return render_template(
+                "move_detail.html",
+                data=data,
+                category=category,
+                pokemon_list=pokemon_list,
+                summary_html=summary_html,
+            )
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
@@ -408,7 +433,9 @@ def get_move_category(id_or_name):
                     continue
 
             return render_template(
-                "move_category_detail.html", category=category, moves=moves,
+                "move_category_detail.html",
+                category=category,
+                moves=moves,
             )
     except Exception as e:
         return str(e), 404

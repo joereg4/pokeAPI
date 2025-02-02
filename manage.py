@@ -2,7 +2,7 @@
 import click
 from flask.cli import FlaskGroup
 from app import create_app
-from model import db, User
+from models.model import db, User
 
 
 def create_cli_app():
