@@ -10,7 +10,7 @@ from routes import blueprints
 from pokedex.utils import load_resources, Config, resources_dict
 from limiter import limiter
 from routes.health import increment_api_counter
-from model import db
+from models.model import db
 from routes.auth import init_auth
 
 # Load environment variables
@@ -47,6 +47,9 @@ def create_app(test_config=None):
     if env == "development":
         logging.basicConfig(level=logging.INFO)
         logging.getLogger("urllib3").setLevel(logging.WARNING)
+        logging.getLogger("pokedex").setLevel(
+            logging.INFO
+        )  # Ensure pokedex logs are visible
         app.logger.setLevel(logging.DEBUG)
     else:
         logging.basicConfig(level=logging.WARNING)
@@ -78,8 +81,9 @@ def create_app(test_config=None):
 
     with app.app_context():
         load_resources()
-        # Create database tables
-        db.create_all()
+        # Create database tables only in testing environment
+        if test_config and test_config.get("TESTING", False):
+            db.create_all()
 
     # Register blueprints (includes auth_bp and admin_bp from routes)
     for blueprint in blueprints:
@@ -126,6 +130,7 @@ def create_app(test_config=None):
 
     # Test routes for error handlers
     if test_config and test_config.get("TESTING", False):
+
         @app.route("/test-403")
         def test_403():
             abort(403)

@@ -13,7 +13,9 @@ from pokedex.utils import Config
 
 BASE_URL = Config.BASE_URL
 
-berries_contests_bp = Blueprint("berries_contests", __name__, template_folder="templates", static_folder="static")
+berries_contests_bp = Blueprint(
+    "berries_contests", __name__, template_folder="templates", static_folder="static"
+)
 
 
 @berries_contests_bp.route("/berry/", defaults={"id_or_name": None})
@@ -35,11 +37,7 @@ def get_berry(id_or_name):
                 abort(404, description=f"Berry '{id_or_name}' not found")
 
             # Fetch Summary
-            csv_file_path = get_path('berry.csv')
-            df = pd.read_csv(csv_file_path)
-
-            # Retrieve the summary
-            summary = get_summary(data['name'], df)
+            summary = get_summary(data["name"], "berry")
 
             # Convert the markdown summary to HTML
             if summary:
@@ -47,7 +45,9 @@ def get_berry(id_or_name):
             else:
                 summary_html = None
 
-            return render_template("berry_detail.html", data=data, summary_html=summary_html)
+            return render_template(
+                "berry_detail.html", data=data, summary_html=summary_html
+            )
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
@@ -109,7 +109,7 @@ def get_contest_effect(id_):
 
         # Extract the ID from the URL for each contest effect
         for effect in data:
-            effect['id'] = int(effect['url'].split('/')[-2])
+            effect["id"] = int(effect["url"].split("/")[-2])
 
         return render_template("contest_effects.html", data=data)
     else:

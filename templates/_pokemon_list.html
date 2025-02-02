@@ -9,12 +9,9 @@
                 <div class="card h-100">
                     <a class="text-decoration-none"
                        href="{{ url_for('pokemon.get_pokemon', id_or_name=pokemon.name) }}">
-
                         {% if pokemon.official_artwork %}
                             <img src="{{ pokemon.official_artwork }}"
-                                  class="card-img-top" alt="{{ pokemon.name }}">
-                        {% elif pokemon.sprites and pokemon.sprites['other']['official-artwork']['front_default'] %}
-                            <img src="{{ pokemon.sprites['other']['official-artwork']['front_default'] }}" class="card-img-top" alt="{{ pokemon.name }}">
+                                 class="card-img-top" alt="{{ pokemon.name }}">
                         {% else %}
                             <img src="{{ url_for('pokemon.static', filename='img/default_pokemon.png') }}"
                                  class="card-img-top" alt="No Image">

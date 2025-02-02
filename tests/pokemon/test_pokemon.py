@@ -6,7 +6,7 @@ from test_helper import load_mock_data
 from utils import get_cache_stats, warm_common_endpoints
 from flask_limiter.errors import RateLimitExceeded
 from unittest.mock import patch
-from model import db
+from models.model import db
 
 
 @pytest.fixture

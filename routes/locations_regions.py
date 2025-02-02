@@ -12,7 +12,9 @@ from pokedex.utils import Config
 
 BASE_URL = Config.BASE_URL
 
-locations_regions_bp = Blueprint("locations_regions", __name__, template_folder="templates", static_folder="static")
+locations_regions_bp = Blueprint(
+    "locations_regions", __name__, template_folder="templates", static_folder="static"
+)
 
 
 @locations_regions_bp.route("/location/", defaults={"id_or_name": None})
@@ -62,7 +64,9 @@ def get_location_area(id_or_name):
 
         pokemon_list = create_pokemon_list(data)
 
-        return render_template("location_area_detail.html", data=data, pokemon_list=pokemon_list)
+        return render_template(
+            "location_area_detail.html", data=data, pokemon_list=pokemon_list
+        )
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
@@ -127,15 +131,13 @@ def get_region(id_or_name):
                 abort(404, description=f"Region '{id_or_name}' not found")
 
             # Fetch Summary
-            csv_file_path = get_path('region.csv')
-            df = pd.read_csv(csv_file_path)
-
-            # Retrieve the summary
-            summary = get_summary(data['name'], df)
+            summary = get_summary(data["name"], "region")
 
             # Convert the markdown summary to HTML
             summary_html = Markup(markdown.markdown(summary)) if summary else None
 
-            return render_template("region_detail.html", data=data, summary_html=summary_html)
+            return render_template(
+                "region_detail.html", data=data, summary_html=summary_html
+            )
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status

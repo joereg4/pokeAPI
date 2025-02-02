@@ -7,7 +7,7 @@ from flask_login import (
     current_user,
 )
 from datetime import datetime
-from model import User, db
+from models.model import User, db
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 

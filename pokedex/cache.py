@@ -135,19 +135,23 @@ def set_cache(new_path=None):
     directory for sprites
     :return: str
     """
+    global CACHE_DIR, API_CACHE, SPRITE_CACHE
 
     if new_path is None:
         new_path = get_default_cache()
 
     try:
         CACHE_DIR = safe_make_dirs(os.path.abspath(new_path))
+        API_CACHE = safe_make_dirs(os.path.join(CACHE_DIR, "api"))
         SPRITE_CACHE = safe_make_dirs(os.path.join(CACHE_DIR, "sprite"))
-
     except Exception as e:
         logging.error(f"Error setting cache: {str(e)}")
+        raise
 
     return CACHE_DIR
 
 
 def initialize_cache():
+    global CACHE_DIR, API_CACHE, SPRITE_CACHE
     CACHE_DIR = set_cache()
+    return CACHE_DIR

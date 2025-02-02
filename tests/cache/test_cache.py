@@ -7,7 +7,7 @@ from cache import cache
 from utils import get_cache_stats, warm_common_endpoints
 from flask import current_app
 from app import create_app
-from model import db
+from models.model import db
 
 
 @pytest.fixture

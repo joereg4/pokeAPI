@@ -14,8 +14,12 @@ from pokedex.utils import Config
 BASE_URL = Config.BASE_URL
 TYPE_COLORS = Config.TYPE_COLORS
 
-characteristics_stats_bp = Blueprint("characteristics_stats", __name__, template_folder="templates",
-                                     static_folder="static")
+characteristics_stats_bp = Blueprint(
+    "characteristics_stats",
+    __name__,
+    template_folder="templates",
+    static_folder="static",
+)
 
 
 @characteristics_stats_bp.route("/characteristic/", defaults={"id_": None})
@@ -29,7 +33,7 @@ def get_characteristic(id_):
 
         # Extract the ID from the URL for each characteristic
         for characteristic in data:
-            characteristic['id'] = int(characteristic['url'].split('/')[-2])
+            characteristic["id"] = int(characteristic["url"].split("/")[-2])
 
         return render_template("characteristics.html", data=data)
     else:
@@ -113,18 +117,15 @@ def get_type(id_or_name):
             if "name" not in data:
                 abort(404, description=f"Pokemon type '{id_or_name}' not found")
 
+            # Create pokemon list with cached sprites
             pokemon_list = create_pokemon_list(data)
 
-            # Fetch Summary
-            csv_file_path = get_path('type.csv')
-            df = pd.read_csv(csv_file_path)
-
-            # Retrieve the summary
-            summary = get_summary(data['name'], df)
+            # Get summary from database
+            summary = get_summary(data["name"], "type")
 
             # Convert the markdown summary to HTML
             if summary:
-                summary_html = Markup(markdown.markdown(summary))
+                summary_html = Markup(markdown.markdown(str(summary)))
             else:
                 summary_html = None
 
@@ -137,3 +138,12 @@ def get_type(id_or_name):
             )
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
+        except HTTPError as e:
+            if e.response.status_code == 404:
+                abort(404, description=f"Pokemon type '{id_or_name}' not found")
+            else:
+                logging.error(f"HTTP error occurred: {e}")
+                abort(500, description=str(e))
+        except Exception as e:
+            logging.error(f"Unexpected error: {str(e)}", exc_info=True)
+            abort(500, description=str(e))
