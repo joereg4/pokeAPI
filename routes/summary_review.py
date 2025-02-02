@@ -18,9 +18,6 @@ from models.model import Resource, db
 import markdown
 
 
-# Set up OpenAI API key
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
 summary_review_bp = Blueprint("summary_review", __name__)
 
 
@@ -28,6 +25,14 @@ summary_review_bp = Blueprint("summary_review", __name__)
 @summary_review_bp.app_template_filter("markdown")
 def markdown_filter(text):
     return markdown.markdown(text) if text else ""
+
+
+def get_openai_client():
+    """Get OpenAI client with API key from environment"""
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        raise ValueError("OPENAI_API_KEY environment variable is not set")
+    return OpenAI(api_key=api_key)
 
 
 @summary_review_bp.route("/summary-review", methods=["GET"])
@@ -64,6 +69,15 @@ def update_summary(resource, name):
         max_tokens = request.form.get("max_tokens", 2000, type=int)
         custom_instructions = request.form.get("custom_instructions", "").strip()
 
+        if request.form.get("action") == "accept":
+            resource_obj.summary = request.form.get("edited_summary", current_summary)
+            db.session.commit()
+            flash("Summary updated successfully", "success")
+            return_to = request.args.get("return_to")
+            if return_to:
+                return redirect(return_to)
+            return redirect(url_for("summary_review.summary_review"))
+
         prompt = f"""Analyze the following summary and provide a corrected version that:
 1. Completes any unfinished sentences or thoughts from the original summary
 2. Maintains the existing structure and style
@@ -82,6 +96,7 @@ Original summary for reference:
 
 {current_summary}
 """
+        client = get_openai_client()
         response = client.chat.completions.create(
             model="gpt-4",
             messages=[
@@ -95,14 +110,6 @@ Original summary for reference:
         )
 
         new_summary = response.choices[0].message.content.strip()
-
-        if request.form.get("action") == "accept":
-            resource_obj.summary = request.form.get("edited_summary", new_summary)
-            db.session.commit()
-            flash("Summary updated successfully", "success")
-            return_to = request.args.get("return_to")
-            if return_to:
-                return redirect(return_to)
 
         return render_template(
             "admin/summary_preview.html",
@@ -136,7 +143,7 @@ Original summary for reference:
 
 {summary}
 """
-
+        client = get_openai_client()
         response = client.chat.completions.create(
             model="gpt-4",
             messages=[
