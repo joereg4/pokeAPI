@@ -101,7 +101,7 @@ def update_summary(resource, name):
                 )
             return redirect(url_for("summary_review.summary_review"))
 
-        prompt = f"""Analyze the following summary and provide a corrected version that:
+        prompt = f"""{custom_instructions if custom_instructions else ""} Analyze the following summary and provide a corrected version that:
 1. Completes any unfinished sentences or thoughts from the original summary
 2. Maintains the existing structure and style
 3. Uses **bold text** for emphasis on important terms
@@ -112,8 +112,6 @@ def update_summary(resource, name):
 
 Only provide the corrected summary without any additional analysis or comments.
 Do not restructure the summary unless a section is clearly incomplete.
-
-{custom_instructions if custom_instructions else ""}
 
 Original summary for reference:
 
