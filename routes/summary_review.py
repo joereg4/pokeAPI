@@ -103,7 +103,7 @@ def update_summary(resource, name):
 
         prompt = f"""{custom_instructions if custom_instructions else ""} Analyze the following summary and provide a corrected version that:
 1. Completes any unfinished sentences or thoughts from the original summary
-2. Maintains the existing structure and style
+2. Maintains the existing structure and style, maintain great markdown formatting
 3. Uses **bold text** for emphasis on important terms
 4. Ensures all information is accurate and complete
 5. Preserves all existing information while fixing any grammatical issues
@@ -150,7 +150,7 @@ def analyze_summary(summary, max_tokens=1000):
     while True:
         prompt = f"""Analyze the following summary and provide a corrected version that:
 1. Completes any unfinished sentences or thoughts from the original summary
-2. Maintains the existing structure and style
+2. Maintains the existing structure and style, maintain great markdown formatting
 3. Uses **bold text** for emphasis on important terms
 4. Ensures all information is accurate and complete
 5. Preserves all existing information while fixing any grammatical issues
