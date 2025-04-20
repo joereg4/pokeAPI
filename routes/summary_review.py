@@ -17,6 +17,7 @@ from routes.admin import admin_required
 from models.model import Resource, db
 import markdown
 from utils import invalidate_related_caches
+from limiter import limiter
 
 
 summary_review_bp = Blueprint("summary_review", __name__)
@@ -39,6 +40,7 @@ def get_openai_client():
 @summary_review_bp.route("/summary-review", methods=["GET"])
 @login_required
 @admin_required
+@limiter.limit("60 per minute")  # Allow 1 request per second for summary review page
 def summary_review():
     search_term = request.args.get("search", "")
     if search_term:
@@ -59,6 +61,7 @@ def summary_review():
 )
 @login_required
 @admin_required
+@limiter.limit("30 per minute")  # More restrictive for summary updates
 def update_summary(resource, name):
     # For GET requests, redirect to the summary review page with search parameters
     if request.method == "GET":
@@ -216,6 +219,7 @@ def process_csv_file(filename):
 @summary_review_bp.route("/render-markdown", methods=["POST"])
 @login_required
 @admin_required
+@limiter.limit("60 per minute")  # Allow 1 request per second for markdown rendering
 def render_markdown():
     data = request.get_json()
     if not data or "text" not in data:
