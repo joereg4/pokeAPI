@@ -200,7 +200,6 @@ def get_pokedex(id_or_name):
 
 
 @pokemon_bp.route("/pokemon/")
-@limiter.exempt  # Exempt from global rate limit since this is a core feature
 def get_pokemon_list():
     page = request.args.get("page", 1, type=int)
     per_page = POKEMON_PER_PAGE
