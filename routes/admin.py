@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
 from models.model import User, db
 from functools import wraps
+from limiter import limiter
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
 
@@ -20,6 +21,7 @@ def admin_required(f):
 @admin_bp.route("/dashboard")
 @login_required
 @admin_required
+@limiter.limit("60 per minute")  # Allow 1 request per second for dashboard
 def dashboard():
     users = User.query.all()
     return render_template("admin/dashboard.html", users=users)
@@ -28,6 +30,7 @@ def dashboard():
 @admin_bp.route("/users/add", methods=["GET", "POST"])
 @login_required
 @admin_required
+@limiter.limit("30 per minute")  # More restrictive for user creation
 def add_user():
     if request.method == "POST":
         username = request.form.get("username")
@@ -56,6 +59,7 @@ def add_user():
 @admin_bp.route("/users/<int:user_id>/edit", methods=["GET", "POST"])
 @login_required
 @admin_required
+@limiter.limit("30 per minute")  # More restrictive for user editing
 def edit_user(user_id):
     """Edit a user."""
     user = db.session.get(User, user_id)

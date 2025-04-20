@@ -77,7 +77,7 @@ def get_api_stats():
 
 @health_bp.route("/health/cache")
 @login_required
-@limiter.limit("500 per hour")
+@limiter.limit("30 per minute")  # More reasonable limit for health checks
 def check_cache_health():
     """Check if Redis cache is functioning properly"""
     try:
