@@ -7,6 +7,7 @@ from flask import Blueprint, render_template, abort, url_for, request, json, red
 from markupsafe import Markup
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from werkzeug.exceptions import HTTPException
+from limiter import limiter
 
 import pokedex
 from cache import cache
@@ -199,6 +200,7 @@ def get_pokedex(id_or_name):
 
 
 @pokemon_bp.route("/pokemon/")
+@limiter.exempt  # Exempt from global rate limit since this is a core feature
 def get_pokemon_list():
     page = request.args.get("page", 1, type=int)
     per_page = POKEMON_PER_PAGE
