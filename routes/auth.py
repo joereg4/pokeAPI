@@ -8,11 +8,15 @@ from flask_login import (
 )
 from datetime import datetime
 from models.model import User, db
+from limiter import limiter
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 
 @auth_bp.route("/login", methods=["GET", "POST"])
+@limiter.limit(
+    "5 per minute"
+)  # Limit login attempts to 5 per minute to prevent brute force
 def login():
     if request.method == "POST":
         username = request.form.get("username")

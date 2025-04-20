@@ -102,10 +102,10 @@ def create_app(test_config=None):
             "/health"
         ):
             try:
-                increment_api_counter()
-                app.logger.info(f"API call tracked for: {request.path}")
+                # Remove duplicate API call tracking since it's handled in APIResource.py
+                app.logger.info(f"Request tracked for: {request.path}")
             except Exception as e:
-                app.logger.error(f"Error tracking API call: {e}")
+                app.logger.error(f"Error tracking request: {e}")
 
     @app.errorhandler(403)
     def forbidden(e):
