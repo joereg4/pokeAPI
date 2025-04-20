@@ -2,13 +2,6 @@ import pytest
 from limiter import limiter
 
 
-@pytest.fixture(autouse=True)
-def reset_limiter():
-    """Reset the rate limiter before each test."""
-    limiter.reset()
-    yield
-
-
 def test_login_page(client):
     """Test that login page loads correctly."""
     response = client.get("/auth/login")
@@ -51,8 +44,6 @@ def test_login_wrong_password(client, regular_user):
 
 def test_logout(auth_client):
     """Test logout functionality."""
-    # First make a request to reset the rate limiter
-    auth_client.get("/auth/login")
     response = auth_client.get("/auth/logout", follow_redirects=True)
     assert response.status_code == 200
     assert b"You have been logged out." in response.data
@@ -70,8 +61,6 @@ def test_login_required(client):
         # Clear any existing flashed messages
         session.pop("_flashes", None)
 
-    # Make a request to reset the rate limiter
-    client.get("/auth/login")
     response = client.get("/admin/dashboard", follow_redirects=True)
     assert response.status_code == 200
     assert b"You must be logged in to access this page." in response.data
@@ -79,8 +68,6 @@ def test_login_required(client):
 
 def test_already_logged_in(auth_client):
     """Test that logged-in users can still access the login page."""
-    # Make a request to reset the rate limiter
-    auth_client.get("/auth/login")
     response = auth_client.get("/auth/login")
     assert response.status_code == 200
     assert b"Login" in response.data
@@ -88,8 +75,6 @@ def test_already_logged_in(auth_client):
 
 def test_remember_me_functionality(client, admin_user):
     """Test that login works without remember me functionality."""
-    # Make a request to reset the rate limiter
-    client.get("/auth/login")
     response = client.post(
         "/auth/login",
         data={"username": "admin", "password": "admin123"},
