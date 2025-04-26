@@ -278,7 +278,44 @@ def get_pokemon(id_or_name):
     species_data = None
     evolution_chain = None
     type_effectiveness = None
-    move_categories = None
+    move_categories = {
+        "level_up": [],
+        "tm_hm": [],
+        "breeding": [],
+        "tutor": [],
+        "other": [],
+    }
+
+    # Categorize moves by how they're learned using a dictionary mapping
+    move_method_mapping = {
+        "level-up": "level_up",
+        "machine": "tm_hm",
+        "egg": "breeding",
+        "tutor": "tutor",
+    }
+
+    # Process all moves at once
+    for move_detail in data.get("moves", []):
+        version_details = move_detail["version_group_details"][
+            0
+        ]  # Get the first version group details
+        move_learned_method = version_details["move_learn_method"]["name"]
+
+        move_data = {
+            "name": move_detail["move"]["name"].replace("-", " ").title(),
+            "url": url_for(
+                "abilities_moves_items.get_move",
+                id_or_name=move_detail["move"]["name"],
+            ),
+            "level_learned_at": version_details["level_learned_at"],
+        }
+
+        # Use the mapping to categorize moves, defaulting to "other"
+        category = move_method_mapping.get(move_learned_method, "other")
+        move_categories[category].append(move_data)
+
+    # Sort level-up moves by level
+    move_categories["level_up"].sort(key=lambda x: x["level_learned_at"])
 
     try:
         species_data = pokedex.APIResource.fetch_data(
