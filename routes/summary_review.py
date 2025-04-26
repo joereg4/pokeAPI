@@ -17,7 +17,6 @@ from routes.admin import admin_required
 from models.model import Resource, db
 import markdown
 from utils import invalidate_related_caches
-from limiter import limiter
 
 
 summary_review_bp = Blueprint("summary_review", __name__)
@@ -40,7 +39,6 @@ def get_openai_client():
 @summary_review_bp.route("/summary-review", methods=["GET"])
 @login_required
 @admin_required
-@limiter.limit("60 per minute")  # Allow 1 request per second for summary review page
 def summary_review():
     search_term = request.args.get("search", "")
     if search_term:
@@ -61,7 +59,6 @@ def summary_review():
 )
 @login_required
 @admin_required
-@limiter.limit("30 per minute")  # More restrictive for summary updates
 def update_summary(resource, name):
     # For GET requests, redirect to the summary review page with search parameters
     if request.method == "GET":
@@ -219,12 +216,33 @@ def process_csv_file(filename):
 @summary_review_bp.route("/render-markdown", methods=["POST"])
 @login_required
 @admin_required
-@limiter.limit("60 per minute")  # Allow 1 request per second for markdown rendering
 def render_markdown():
     data = request.get_json()
     if not data or "text" not in data:
         return ""
     return markdown.markdown(data["text"]) if data["text"] else ""
+
+
+@summary_review_bp.route(
+    "/summary-review/<string:resource>/<string:name>/edit", methods=["GET"]
+)
+@login_required
+@admin_required
+def edit_summary(resource, name):
+    resource_obj = Resource.query.filter_by(resource=resource, name=name).first()
+    if not resource_obj:
+        flash("Resource not found", "error")
+        return redirect(url_for("summary_review.summary_review"))
+
+    return render_template(
+        "admin/summary_preview.html",
+        resource=resource_obj,
+        new_summary=resource_obj.summary,  # Start with current summary
+        return_to=request.args.get("return_to"),
+        max_tokens=2000,
+        custom_instructions="",
+        is_edit_mode=True,  # New flag to indicate edit mode
+    )
 
 
 if __name__ == "__main__":

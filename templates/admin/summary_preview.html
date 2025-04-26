@@ -39,6 +39,7 @@
     </div>
     
     <div class="mt-4">
+        {% if not is_edit_mode %}
         <form method="POST" class="mb-3" action="{{ url_for('summary_review.update_summary', 
                                                            resource=resource.resource, 
                                                            name=resource.name,
@@ -61,13 +62,14 @@
                 </div>
             </div>
         </form>
+        {% endif %}
 
         <form id="accept-form" method="POST" action="{{ url_for('summary_review.update_summary', 
                                               resource=resource.resource, 
                                               name=resource.name,
                                               return_to=return_to) }}">
             <input type="hidden" name="action" value="accept">
-            <button type="submit" class="btn btn-success">Accept New Summary</button>
+            <button type="submit" class="btn btn-success">Accept Summary</button>
             <a href="{{ return_to }}" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
