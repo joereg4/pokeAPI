@@ -145,3 +145,37 @@ def test_summary_review_unauthorized(client):
     response = client.get("/summary-review")
     assert response.status_code == 302
     assert "/auth/login" in response.location
+
+
+def test_edit_summary(auth_client, app):
+    """Test the edit summary functionality"""
+    with app.app_context():
+        # Create test resource
+        resource = Resource(resource="pokemon", name="test", summary="Original summary")
+        db.session.add(resource)
+        db.session.commit()
+
+        # Test accessing edit page
+        response = auth_client.get(
+            "/summary-review/pokemon/test/edit",
+            query_string={"return_to": "/pokemon/test"},
+        )
+        assert response.status_code == 200
+        assert b"Original summary" in response.data
+        assert b"New Summary (Edit)" in response.data
+
+        # Test accepting edited summary
+        response = auth_client.post(
+            "/summary-review/pokemon/test",
+            data={
+                "action": "accept",
+                "edited_summary": "Edited summary",
+            },
+            query_string={"return_to": "/pokemon/test"},
+        )
+        assert response.status_code == 302
+        assert response.location == "/pokemon/test"
+
+        # Verify database update
+        updated = Resource.query.filter_by(resource="pokemon", name="test").first()
+        assert updated.summary == "Edited summary"
