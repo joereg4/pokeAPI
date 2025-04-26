@@ -43,6 +43,17 @@ def webhook():
 
         # Pull the latest changes from the repository
         try:
+            # First stash any local changes
+            stash_result = subprocess.run(
+                ["git", "-C", "/var/www/pokeAPI", "stash"],
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
+            logging.info("Git stash output: " + stash_result.stdout)
+
+            # Then pull the new changes
             result = subprocess.run(
                 ["git", "-C", "/var/www/pokeAPI", "pull"],
                 check=True,
@@ -51,6 +62,16 @@ def webhook():
                 text=True,
             )
             logging.info("Git pull output: " + result.stdout)
+
+            # Drop the stash since we want the new code
+            drop_result = subprocess.run(
+                ["git", "-C", "/var/www/pokeAPI", "stash", "drop"],
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
+            logging.info("Git stash drop output: " + drop_result.stdout)
         except subprocess.CalledProcessError as e:
             logging.error(f"Git pull failed: {e.stderr}")
             abort(500, f"Git pull failed: {str(e)}")
