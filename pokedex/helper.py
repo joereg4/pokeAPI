@@ -92,12 +92,11 @@ def create_pokemon_list(data):
                 # Fetch the Pokémon data
                 pokemon = pokedex.APIResource.fetch_data("pokemon", pokemon_name)
                 if pokemon and "sprites" in pokemon:
-                    # Get artwork URL
+                    # Get artwork URL - DIRECT FROM GITHUB, BYPASSING CACHE
                     try:
                         if pokemon.get("id"):
-                            official_artwork = get_sprite_url(
-                                pokemon["id"], is_artwork=True
-                            )
+                            # Use direct GitHub URL instead of local cache
+                            official_artwork = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokemon['id']}.png"
                         else:
                             official_artwork = None
                     except Exception as e:
