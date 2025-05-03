@@ -8,6 +8,18 @@
     <div class="container pt-5">
         <div class="row">
             <div class="col">
+                <h2>
+                    Summary
+                    {% if current_user.is_authenticated and current_user.is_admin %}
+                        <a href="{{ url_for('summary_review.summary_review', 
+                                           search=data.name,
+                                           return_to=url_for('abilities_moves_items.get_move', id_or_name=data.name)) }}" 
+                           class="text-decoration-none" 
+                           title="Edit Summary">
+                            <i class="fas fa-pencil-alt" style="font-size: 75%"></i>
+                        </a>
+                    {% endif %}
+                </h2>
                 {% if summary_html %}
                     <p>{{ summary_html | safe }}</p>
                 {% endif %}
