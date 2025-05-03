@@ -9,7 +9,8 @@
             <h2>Type Effectiveness</h2>
             <img class="my-2"
                  src="{{ url_for('pokemon.static', filename='img/type/nameplate/' + type_effectiveness.name | lower + '_np.png') }}"
-                 style="height: 40px">
+                 style="height: 40px"
+                 onerror="this.style.display='none'">
             {% for type_name, relations in type_effectiveness.items() %}
                 <!-- Type Name Row -->
                 {% set relation_types = [
@@ -29,7 +30,8 @@
                                     <div class="me-2">
                                         <a href="{{ url_for('characteristics_stats.get_type', id_or_name=type.name) }}">
                                             <img src="{{ url_for('pokemon.static', filename='img/type/nameplate/' + type.name | lower + '_np.png') }}"
-                                                 style="height: 25px">
+                                                 style="height: 25px"
+                                                 onerror="this.style.display='none'">
                                         </a>
                                     </div>
                                 {% endfor %}
