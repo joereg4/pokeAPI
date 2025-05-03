@@ -23,6 +23,25 @@ def create_app(test_config=None):
     # Initialize rate limiter
     limiter.init_app(app)
 
+    # Exempt specific routes from rate limiting
+    @app.route("/artwork/<path:path>")
+    @limiter.exempt
+    def exempt_artwork(path):
+        # This is just a placeholder - the actual route is in a blueprint
+        pass
+
+    @app.route("/pokemon")
+    @limiter.exempt
+    def exempt_pokemon_list():
+        # This is just a placeholder - the actual route is in a blueprint
+        pass
+
+    @app.route("/type/<path:path>")
+    @limiter.exempt
+    def exempt_type_pokemon_list(path):
+        # This is just a placeholder - the actual route is in a blueprint
+        pass
+
     # Configure compression
     app.config["COMPRESS_MIMETYPES"] = [
         "text/html",
