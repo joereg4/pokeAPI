@@ -32,7 +32,7 @@
     <!-- Header Section -->
     <div class="row mb-4 align-items-center">
         <div class="col-12">
-            <div class="d-flex align-items-center flex-wrap">
+            <div class="d-flex align-items-center flex-wrap mb-0">
                 <h1 class="display-5 fw-bold me-3 mb-0">
                     {{ data.name | replace('-', ' ') | title }}
                 </h1>
@@ -189,9 +189,11 @@
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <span><i class="fas fa-dharmachakra me-2"></i>Damage Class</span>
-                            <span class="badge rounded-pill" style="background-color: {{ damage_colors[data.damage_class.name] | default('#8C888C') }}; color: white;">
-                                {{ data.damage_class.name | title }}
-                            </span>
+                            <a href="{{ url_for('abilities_moves_items.get_move_damage_class', id_or_name=data.damage_class.name) }}" class="text-decoration-none">
+                                <span class="badge rounded-pill" style="background-color: {{ damage_colors[data.damage_class.name] | default('#8C888C') }}; color: white;">
+                                    {{ data.damage_class.name | title }}
+                                </span>
+                            </a>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <span><i class="fas fa-history me-2"></i>Generation</span>
