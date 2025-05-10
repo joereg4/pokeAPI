@@ -1,68 +1,291 @@
 {% extends 'base.html' %}
 
-{% block title %}Move Detail{% endblock %}
+{% block title %}{{ data.name | replace('-', ' ') | title }} | Pokémon Move{% endblock %}
+
+{% block head %}
+<style>
+    /* Additional styles for other elements if needed */
+</style>
+{% endblock %}
+
+{% macro format_generation(gen_name) %}
+  {%- set words = gen_name.replace('-', ' ').split(' ') -%}
+  {%- for word in words -%}
+    {%- if loop.first -%}
+      {{ word | title }}
+    {%- elif word|lower in ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x'] -%}
+      {{ ' ' + word | upper }}
+    {%- else -%}
+      {{ ' ' + word | title }}
+    {%- endif -%}
+  {%- endfor -%}
+{% endmacro %}
+
+{% set damage_colors = {
+    'physical': '#C92112', 
+    'special': '#4F5870',
+    'status': '#8C888C'
+} %}
 
 {% block content %}
-    <h1>{{ data['name'] | title }} Move Detail</h1>
-    <!-- Ai Summary -->
-    <div class="container pt-5">
-        <div class="row">
-            <div class="col">
-                <h2>
-                    Summary
-                    {% if current_user.is_authenticated and current_user.is_admin %}
-                        <a href="{{ url_for('summary_review.summary_review', 
-                                           search=data.name,
-                                           return_to=url_for('abilities_moves_items.get_move', id_or_name=data.name)) }}" 
-                           class="text-decoration-none" 
-                           title="Edit Summary">
-                            <i class="fas fa-pencil-alt" style="font-size: 75%"></i>
-                        </a>
-                    {% endif %}
-                </h2>
-                {% if summary_html %}
-                    <p>{{ summary_html | safe }}</p>
+<div class="container py-4">
+    <!-- Header Section -->
+    <div class="row mb-4 align-items-center">
+        <div class="col-12">
+            <div class="d-flex align-items-center flex-wrap">
+                <h1 class="display-5 fw-bold me-3 mb-0">
+                    {{ data.name | replace('-', ' ') | title }}
+                </h1>
+                {% set type_colors = {
+                    'normal': '#A8A878',
+                    'fire': '#F08030',
+                    'water': '#6890F0',
+                    'grass': '#78C850',
+                    'electric': '#F8D030',
+                    'ice': '#98D8D8',
+                    'fighting': '#C03028',
+                    'poison': '#A040A0',
+                    'ground': '#E0C068',
+                    'flying': '#A890F0',
+                    'psychic': '#F85888',
+                    'bug': '#A8B820',
+                    'rock': '#B8A038',
+                    'ghost': '#705898',
+                    'dragon': '#7038F8',
+                    'dark': '#705848',
+                    'steel': '#B8B8D0',
+                    'fairy': '#EE99AC'
+                } %}
+                {% set bg_color = type_colors[data.type.name] | default('#A8A878') %}
+                {% set text_color = '#FFFFFF' %}
+                {% if data.type.name in ['electric', 'ground', 'steel', 'fairy'] %}
+                    {% set text_color = '#212529' %}
+                {% endif %}
+                <span class="badge me-3" style="background-color: {{ bg_color }}; color: {{ text_color }}; padding: 0.4rem 0.8rem; font-size: 1rem;">
+                    {{ data.type.name | title }}
+                </span>
+                {% if current_user.is_authenticated and current_user.is_admin %}
+                <a href="{{ url_for('summary_review.summary_review', search=data.name, return_to=url_for('abilities_moves_items.get_move', id_or_name=data.name)) }}" 
+                   class="text-decoration-none" title="Edit Summary">
+                    <i class="fas fa-pencil-alt" style="font-size: 24px"></i>
+                </a>
                 {% endif %}
             </div>
         </div>
     </div>
-    <h2>Details</h2>
-    <ul>
-        <li>Power: {{ data['power'] }}</li>
-        <li>Accuracy: {{ data['accuracy'] }}%</li>
-        <li>PP: {{ data['pp'] }}</li>
-        <li>Priority: {{ data['priority'] }}</li>
-        <li>Damage Class: {{ data['damage_class']['name'] | title }}</li>
-        <li>Generation: {{ data['generation']['name'] | title }}</li>
-    </ul>
-    {% if data['effect_entries'] %}
-    <h2>Effect</h2>
-    <ul>
-        {% for entry in data['effect_entries'] %}
-            <li>{{ entry['effect'] }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-    {% if category['name'] %}
-    <h2>Category</h2>
-    <p>
-        <a href="{{ url_for('abilities_moves_items.get_move_category', id_or_name=category['name']) }}">
-            {{ category['name'] | title }}
-        </a>
-    </p>
-    {% endif %}
-    {% if data['flavor_text_entries'] %}
-    <h2>Flavor Texts</h2>
-    <ul>
-        {% for entry in data['flavor_text_entries'] %}
-            <li><strong>{{ entry['version_group']['name'] }}:</strong> {{ entry['flavor_text'] }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-        <section>
-        <div class="container pt-5">
-            <h2 class="pb-1">{{ data.name | title }} Pokémon</h2>
-            {% include '_pokemon_list.html' %}
+
+    <div class="row">
+        <!-- Primary Info Column -->
+        <div class="col-lg-8">
+            <!-- Summary Card -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-primary bg-gradient text-white">
+                    <h2 class="h5 mb-0"><i class="fas fa-info-circle me-2"></i>Summary</h2>
+                </div>
+                <div class="card-body">
+                    {% if summary_html %}
+                    {{ summary_html | safe }}
+                    {% else %}
+                    <p class="text-muted fst-italic">No summary available for this move.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Effect Card -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-primary bg-gradient text-white">
+                    <h2 class="h5 mb-0"><i class="fas fa-magic me-2"></i>Effect</h2>
+                </div>
+                <div class="card-body">
+                    {% if data.effect_entries and data.effect_entries|length > 0 %}
+                        {% set has_english = false %}
+                        {% for entry in data.effect_entries %}
+                            {% if entry.language.name == 'en' %}
+                                {% set has_english = true %}
+                                <p>{{ entry.effect }}</p>
+                                {% if entry.short_effect %}
+                                <p class="text-muted"><strong>Short Effect:</strong> {{ entry.short_effect }}</p>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if not has_english and data.effect_entries|length > 0 %}
+                        <p>{{ data.effect_entries[0].effect }}</p>
+                        {% endif %}
+                    {% else %}
+                    <p class="text-muted">No effect information available.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Game Description Card -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-primary bg-gradient text-white">
+                    <h2 class="h5 mb-0"><i class="fas fa-book me-2"></i>Game Descriptions</h2>
+                </div>
+                <div class="card-body">
+                    {% if data.flavor_text_entries and data.flavor_text_entries|length > 0 %}
+                    <div class="accordion" id="flavorTextsAccordion">
+                        {% set english_entries = [] %}
+                        {% for entry in data.flavor_text_entries %}
+                            {% if entry.language.name == 'en' %}
+                                {% set _ = english_entries.append(entry) %}
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if english_entries|length > 0 %}
+                            {% for entry in english_entries %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading{{ loop.index }}">
+                                    <button class="accordion-button {% if not loop.first %}collapsed{% endif %}" type="button" 
+                                            data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}" 
+                                            aria-expanded="{% if loop.first %}true{% else %}false{% endif %}" aria-controls="collapse{{ loop.index }}">
+                                        {{ entry.version_group.name | replace('-', ' ') | title }}
+                                    </button>
+                                </h2>
+                                <div id="collapse{{ loop.index }}" class="accordion-collapse collapse {% if loop.first %}show{% endif %}" 
+                                     aria-labelledby="heading{{ loop.index }}" data-bs-parent="#flavorTextsAccordion">
+                                    <div class="accordion-body">
+                                        {{ entry.flavor_text }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">No English descriptions available.</p>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No game descriptions available.</p>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-    </section>
+
+        <!-- Secondary Info Column -->
+        <div class="col-lg-4">
+            <!-- Move Details Card -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-primary bg-gradient text-white">
+                    <h2 class="h5 mb-0"><i class="fas fa-list me-2"></i>Move Details</h2>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-fist-raised me-2"></i>Power</span>
+                            <span class="badge bg-secondary rounded-pill">{{ data.power if data.power else '—' }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-bullseye me-2"></i>Accuracy</span>
+                            <span class="badge bg-secondary rounded-pill">{{ data.accuracy if data.accuracy else '—' }}{% if data.accuracy %}%{% endif %}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-battery-half me-2"></i>PP</span>
+                            <span class="badge bg-secondary rounded-pill">{{ data.pp }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-sort-numeric-up me-2"></i>Priority</span>
+                            <span class="badge {% if data.priority > 0 %}bg-success{% elif data.priority < 0 %}bg-danger{% else %}bg-secondary{% endif %} rounded-pill">{{ data.priority }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-dharmachakra me-2"></i>Damage Class</span>
+                            <span class="badge rounded-pill" style="background-color: {{ damage_colors[data.damage_class.name] | default('#8C888C') }}; color: white;">
+                                {{ data.damage_class.name | title }}
+                            </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-history me-2"></i>Generation</span>
+                            <span class="badge bg-secondary rounded-pill">{{ format_generation(data.generation.name) }}</span>
+                        </li>
+                        {% if category and category.name %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-tag me-2"></i>Category</span>
+                            <a href="{{ url_for('abilities_moves_items.get_move_category', id_or_name=category.name) }}" class="text-decoration-none">
+                                <span class="badge bg-primary rounded-pill">{{ category.name | replace('-', ' ') | title }}</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Meta Info Card -->
+            {% if data.meta and (data.meta.crit_rate > 0 or data.meta.drain or data.meta.healing or data.meta.min_hits or data.meta.max_hits or data.meta.min_turns or data.meta.max_turns or data.meta.ailment_chance > 0 or data.meta.flinch_chance > 0 or data.meta.stat_chance > 0) %}
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-primary bg-gradient text-white">
+                    <h2 class="h5 mb-0"><i class="fas fa-info-circle me-2"></i>Additional Info</h2>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% if data.meta.min_hits and data.meta.max_hits %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Hit Count</span>
+                            <span class="badge bg-info">{{ data.meta.min_hits }}-{{ data.meta.max_hits }}</span>
+                        </li>
+                        {% endif %}
+                        {% if data.meta.min_turns and data.meta.max_turns %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Turn Count</span>
+                            <span class="badge bg-info">{{ data.meta.min_turns }}-{{ data.meta.max_turns }}</span>
+                        </li>
+                        {% endif %}
+                        {% if data.meta.crit_rate > 0 %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Critical Hit Rate</span>
+                            <span class="badge bg-warning text-dark">+{{ data.meta.crit_rate }}</span>
+                        </li>
+                        {% endif %}
+                        {% if data.meta.drain != 0 %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Drain</span>
+                            <span class="badge {% if data.meta.drain > 0 %}bg-success{% else %}bg-danger{% endif %}">{{ data.meta.drain }}%</span>
+                        </li>
+                        {% endif %}
+                        {% if data.meta.healing > 0 %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Healing</span>
+                            <span class="badge bg-success">{{ data.meta.healing }}%</span>
+                        </li>
+                        {% endif %}
+                        {% if data.meta.ailment and data.meta.ailment.name != 'none' and data.meta.ailment_chance > 0 %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>{{ data.meta.ailment.name | replace('-', ' ') | title }} Chance</span>
+                            <span class="badge bg-info">{{ data.meta.ailment_chance }}%</span>
+                        </li>
+                        {% endif %}
+                        {% if data.meta.flinch_chance > 0 %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Flinch Chance</span>
+                            <span class="badge bg-info">{{ data.meta.flinch_chance }}%</span>
+                        </li>
+                        {% endif %}
+                        {% if data.meta.stat_chance > 0 %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Stat Change Chance</span>
+                            <span class="badge bg-info">{{ data.meta.stat_chance }}%</span>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Related Pokémon Section -->
+    {% if pokemon_list and pokemon_list|length > 0 %}
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary bg-gradient text-white">
+                    <h2 class="h5 mb-0"><i class="fas fa-paw me-2"></i>Pokémon That Learn {{ data.name | replace('-', ' ') | title }}</h2>
+                </div>
+                <div class="card-body">
+                    {% include '_pokemon_list.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}
