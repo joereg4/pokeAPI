@@ -450,12 +450,14 @@ def get_move_damage_class(id_or_name):
     except ValueError:
         pass  # if the conversion fails, it remains a string
     try:
-        data = pokedex.APIResource.fetch_data("move-damage-class", id_or_name)
+        damage_class = pokedex.APIResource.fetch_data("move-damage-class", id_or_name)
 
-        if "name" not in data:
+        if "name" not in damage_class:
             abort(404, description=f"Move Damage Class '{id_or_name}' not found")
 
-        return render_template("generic.html", data=data)
+        return render_template(
+            "move_damage_class_detail.html", damage_class=damage_class
+        )
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
