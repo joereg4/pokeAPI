@@ -1,118 +1,299 @@
 {% extends 'base.html' %}
 
-{% block title %}Item Detail{% endblock %}
+{% block title %}{{ data.name | replace('-', ' ') | title }} | Pokémon Item{% endblock %}
+
+{% block head %}
+<style>
+    /* Custom styles for pixel art */
+    .pixel-art {
+        image-rendering: pixelated;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: crisp-edges;
+        width: 96px;
+        height: 96px;
+        object-fit: contain;
+        display: block;
+        margin: 0 auto;
+    }
+    
+    .item-image-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f9fa;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 120px;
+        height: 120px;
+        margin: 0 auto;
+        padding: 12px;
+    }
+</style>
+{% endblock %}
+
+{% macro format_generation(gen_name) %}
+  {%- set words = gen_name.replace('-', ' ').split(' ') -%}
+  {%- for word in words -%}
+    {%- if loop.first -%}
+      {{ word | title }}
+    {%- elif word|lower in ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x'] -%}
+      {{ ' ' + word | upper }}
+    {%- else -%}
+      {{ ' ' + word | title }}
+    {%- endif -%}
+  {%- endfor -%}
+{% endmacro %}
 
 {% block content %}
-    <h1 class="detail-page">{{ data.name | title }} <img src="{{ data.sprites.default }}" alt="{{ data.name }} Sprite"
-                                                         class="item-sprite"></h1>
-
-    <!-- Ai Summary -->
-    <div class="container pt-1">
-        <div class="row">
-            <div class="col">
-                <h2>
-                    Summary
-                    {% if current_user.is_authenticated and current_user.is_admin %}
-                        <a href="{{ url_for('summary_review.summary_review', 
-                                           search=data.name,
-                                           return_to=url_for('abilities_moves_items.get_item', id_or_name=data.name)) }}" 
-                           class="text-decoration-none" 
-                           title="Edit Summary">
-                            <i class="fas fa-pencil-alt" style="font-size: 75%"></i>
-                        </a>
+<div class="container py-4">
+    <!-- Header Section -->
+    <div class="row mb-4 align-items-center">
+        <div class="col-12">
+            <div class="d-flex align-items-center">
+                <h1 class="display-5 fw-bold me-3 mb-0">
+                    {{ data.name | replace('-', ' ') | title }}
+                </h1>
+                <div class="item-image-container me-3">
+                    {% if data.sprites and data.sprites.default %}
+                    <img src="{{ data.sprites.default }}" alt="{{ data.name }} Sprite" class="pixel-art">
+                    {% else %}
+                    <div class="text-center text-muted">
+                        <i class="fas fa-image fa-3x mb-2"></i>
+                        <p class="small">No image available</p>
+                    </div>
                     {% endif %}
-                </h2>
-                {% if summary_html %}
-                    <p>{{ summary_html | safe }}</p>
+                </div>
+                {% if current_user.is_authenticated and current_user.is_admin %}
+                <a href="{{ url_for('summary_review.summary_review', search=data.name, return_to=url_for('abilities_moves_items.get_item', id_or_name=data.name)) }}" 
+                   class="text-decoration-none" title="Edit Summary">
+                    <i class="fas fa-pencil-alt" style="font-size: 24px"></i>
+                </a>
                 {% endif %}
+            </div>
+            <div class="mt-3">
+                {% for entry in data.attributes %}
+                <a href="{{ url_for('abilities_moves_items.get_item_attribute', id_or_name=entry.name) }}" class="badge bg-secondary text-decoration-none me-1">
+                    {{ entry.name | replace('-', ' ') | title }}
+                </a>
+                {% endfor %}
             </div>
         </div>
     </div>
-    <div class="container pt-1">
-        <h2>Attribute</h2>
-        <ul>
-            {% for entry in data.attributes %}
-                <a href="{{ url_for('abilities_moves_items.get_item_attribute', id_or_name=entry.name) }}">
-                    {{ entry.name }}</a>
-                {% if not loop.last %}, {% endif %}
-            {% endfor %}
-        </ul>
-    </div>
-    <div class="container pt-1">
-        <h2>Category:</h2>
-        <a href="{{ url_for('abilities_moves_items.get_item_category', id_or_name=data.category.url.split('/')[-2]) }}">
-            {{ data.category.name }}</a>
-    </div>
-    <div class="container pt-1">
-        <h2>Cost:</h2>
-        <p>{{ data.cost }}</p>
-    </div>
-    <div class="container pt-1">
-        <h2>Effect:</h2>
-        <ul>
-            {% for entry in data.effect_entries %}
-                <li>{{ entry.effect }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    <div class="container pt-1">
-        <h2>Flavor Texts:</h2>
-        <ul>
-            {% for entry in data.flavor_text_entries %}
-                <li><strong>{{ entry['version_group']['name'] }}:</strong> {{ entry['text'] }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    <div class="container pt-1">
-        <h2>Fling Effect</h2>
-        <p>
-            <a href="{{ data.fling_effect.url }}">{{ data.fling_effect.name }}</a>
-        </p>
-    </div>
-    <div class="container pt-1">
-        <h2>Fling Power</h2>
-        <p>{{ data.fling_power }}</p>
-    </div>
-    <div class="container pt-1">
-        <h2>Game Indices</h2>
-        <ul>
-            {% for game in data.game_indices %}
-                <li>
-                    <a href="{{ url_for('evolution_growth.get_generation', id_or_name=game.generation.name) }}">{{ game.generation.name }}</a> (Game
-                    Index: {{ game.game_index }})
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
-    <section>
-        <div class="container pt-5">
-            <h2 class="pb-1">{{ data.name | title }} Pokémon</h2>
-            {% include '_pokemon_list.html' %}
+
+    <div class="row">
+        <!-- Primary Info Column -->
+        <div class="col-lg-8">
+            <!-- Summary Card -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-primary bg-gradient text-white">
+                    <h2 class="h5 mb-0"><i class="fas fa-info-circle me-2"></i>Summary</h2>
+                </div>
+                <div class="card-body">
+                    {% if summary_html %}
+                    {{ summary_html | safe }}
+                    {% else %}
+                    <p class="text-muted fst-italic">No summary available for this item.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Effect Card -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-primary bg-gradient text-white">
+                    <h2 class="h5 mb-0"><i class="fas fa-magic me-2"></i>Effect</h2>
+                </div>
+                <div class="card-body">
+                    {% if data.effect_entries and data.effect_entries|length > 0 %}
+                        {% set has_english = false %}
+                        {% for entry in data.effect_entries %}
+                            {% if entry.language.name == 'en' %}
+                                {% set has_english = true %}
+                                <p>{{ entry.effect }}</p>
+                                {% if entry.short_effect %}
+                                <p class="text-muted"><strong>Short Effect:</strong> {{ entry.short_effect }}</p>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if not has_english %}
+                        <p>{{ data.effect_entries[0].effect }}</p>
+                        {% endif %}
+                    {% else %}
+                    <p class="text-muted">No effect information available.</p>
+                    {% endif %}
+                    
+                    {% if data.fling_effect or data.fling_power %}
+                    <hr>
+                    <h3 class="h6">Fling Information</h3>
+                    {% if data.fling_effect %}
+                    <p><strong>Fling Effect:</strong> {{ data.fling_effect.name | replace('-', ' ') | title }}</p>
+                    {% endif %}
+                    {% if data.fling_power %}
+                    <p><strong>Fling Power:</strong> {{ data.fling_power }}</p>
+                    {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Game Description Card -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-primary bg-gradient text-white">
+                    <h2 class="h5 mb-0"><i class="fas fa-book me-2"></i>Game Descriptions</h2>
+                </div>
+                <div class="card-body">
+                    {% if data.flavor_text_entries and data.flavor_text_entries|length > 0 %}
+                    <div class="accordion" id="flavorTextsAccordion">
+                        {% set english_entries = [] %}
+                        {% for entry in data.flavor_text_entries %}
+                            {% if entry.language.name == 'en' %}
+                                {% set _ = english_entries.append(entry) %}
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if english_entries|length > 0 %}
+                            {% for entry in english_entries %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading{{ loop.index }}">
+                                    <button class="accordion-button {% if not loop.first %}collapsed{% endif %}" type="button" 
+                                            data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}" 
+                                            aria-expanded="{% if loop.first %}true{% else %}false{% endif %}" aria-controls="collapse{{ loop.index }}">
+                                        {{ entry.version_group.name | replace('-', ' ') | title }}
+                                    </button>
+                                </h2>
+                                <div id="collapse{{ loop.index }}" class="accordion-collapse collapse {% if loop.first %}show{% endif %}" 
+                                     aria-labelledby="heading{{ loop.index }}" data-bs-parent="#flavorTextsAccordion">
+                                    <div class="accordion-body">
+                                        {{ entry.text }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">No English descriptions available.</p>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No game descriptions available.</p>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-    </section>
-    <section>
-        <div class="container pt-5">
-            <h2>Cards</h2>
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-                {% if cards %}
-                    {% for card in cards %}
+
+        <!-- Secondary Info Column -->
+        <div class="col-lg-4">
+            <!-- Item Details Card -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-primary bg-gradient text-white">
+                    <h2 class="h5 mb-0"><i class="fas fa-list me-2"></i>Item Details</h2>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-coins me-2"></i>Cost</span>
+                            <span class="badge bg-secondary rounded-pill">{{ data.cost }}</span>
+                        </li>
+                        {% if data.category %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-tag me-2"></i>Category</span>
+                            <a href="{{ url_for('abilities_moves_items.get_item_category', id_or_name=data.category.url.split('/')[-2]) }}" class="text-decoration-none">
+                                <span class="badge bg-primary rounded-pill">{{ data.category.name | replace('-', ' ') | title }}</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% if data.attributes and data.attributes|length > 0 %}
+                        <li class="list-group-item">
+                            <span><i class="fas fa-th-list me-2"></i>Attributes</span>
+                            <div class="mt-2">
+                                {% for entry in data.attributes %}
+                                <a href="{{ url_for('abilities_moves_items.get_item_attribute', id_or_name=entry.name) }}" class="badge bg-secondary text-decoration-none me-1">
+                                    {{ entry.name | replace('-', ' ') | title }}
+                                </a>
+                                {% endfor %}
+                            </div>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Game Indices Card -->
+            {% if data.game_indices and data.game_indices|length > 0 %}
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-primary bg-gradient text-white">
+                    <h2 class="h5 mb-0"><i class="fas fa-gamepad me-2"></i>Game Appearances</h2>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Generation</th>
+                                    <th>Game Index</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for game in data.game_indices %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('evolution_growth.get_generation', id_or_name=game.generation.name) }}" class="text-decoration-none">
+                                            {{ format_generation(game.generation.name) }}
+                                        </a>
+                                    </td>
+                                    <td>{{ game.game_index }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Related Pokémon Section -->
+    {% if pokemon_list and pokemon_list|length > 0 %}
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary bg-gradient text-white">
+                    <h2 class="h5 mb-0"><i class="fas fa-paw me-2"></i>Related Pokémon</h2>
+                </div>
+                <div class="card-body">
+                    {% include '_pokemon_list.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Cards Section -->
+    {% if cards and cards|length > 0 %}
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary bg-gradient text-white">
+                    <h2 class="h5 mb-0"><i class="fas fa-id-card me-2"></i>Trading Cards</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+                        {% for card in cards %}
                         <div class="col">
-                            <div class="card h-100">
-                                <div class="card-header text-center">{{ card.name }}</div>
-                                <img src="{{ card.large_image }}" class="card-img-top" alt="card.name">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-header text-center bg-light">{{ card.name }}</div>
+                                <img src="{{ card.large_image }}" class="card-img-top" alt="{{ card.name }}">
                                 <div class="card-body">
                                     <p class="card-text"> Created by <strong>{{ card.artist | title }}</strong> for the
                                         <strong>{{ card.set_name }}</strong> set.</p>
                                 </div>
                             </div>
                         </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="col">
-                        No Data Available
+                        {% endfor %}
                     </div>
-                {% endif %}
+                </div>
             </div>
         </div>
-    </section>
+    </div>
+    {% endif %}
+</div>
 {% endblock %}
