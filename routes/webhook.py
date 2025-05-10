@@ -43,15 +43,18 @@ def webhook():
 
         # Pull the latest changes from the repository
         try:
-            # First stash any local changes
+            # First stash any local changes - use 'git stash -u' to include untracked files
+            # and redirect stderr to stdout to capture all output
             stash_result = subprocess.run(
-                ["git", "-C", "/var/www/pokeAPI", "stash"],
-                check=True,
+                ["git", "-C", "/var/www/pokeAPI", "stash", "-u", "--include-untracked"],
                 stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
                 text=True,
             )
             logging.info("Git stash output: " + stash_result.stdout)
+
+            # Check if anything was stashed
+            was_stashed = "No local changes to save" not in stash_result.stdout
 
             # Then pull the new changes
             result = subprocess.run(
@@ -63,18 +66,21 @@ def webhook():
             )
             logging.info("Git pull output: " + result.stdout)
 
-            # Drop the stash since we want the new code
-            drop_result = subprocess.run(
-                ["git", "-C", "/var/www/pokeAPI", "stash", "drop"],
-                check=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-            )
-            logging.info("Git stash drop output: " + drop_result.stdout)
+            # Only drop the stash if something was actually stashed
+            if was_stashed:
+                drop_result = subprocess.run(
+                    ["git", "-C", "/var/www/pokeAPI", "stash", "drop"],
+                    check=True,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    text=True,
+                )
+                logging.info("Git stash drop output: " + drop_result.stdout)
+            else:
+                logging.info("No stash to drop - nothing was stashed")
         except subprocess.CalledProcessError as e:
-            logging.error(f"Git pull failed: {e.stderr}")
-            abort(500, f"Git pull failed: {str(e)}")
+            logging.error(f"Git command failed: {e.stderr}")
+            abort(500, f"Git command failed: {str(e)}")
 
         # Activate virtual environment and install requirements
         try:
