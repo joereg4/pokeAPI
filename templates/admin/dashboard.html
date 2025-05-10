@@ -81,6 +81,11 @@
             </ul>
 
             <h4 class="mb-3">Batch Summary Management</h4>
+            <div class="alert alert-info mb-3">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>New:</strong> Memory management features have been added to the batch processing system to prevent "Out of Memory" errors.
+                <a href="/docs/memory_management" class="alert-link">View documentation</a>.
+            </div>
             <ul class="list-group mb-4">
                 <li class="list-group-item">
                     <a href="{{ url_for('admin.batch_refresh_summaries', resource_type='pokemon') }}" class="btn btn-success">Batch Refresh Pokémon Summaries</a>

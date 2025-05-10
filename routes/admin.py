@@ -240,6 +240,21 @@ def batch_refresh_summaries(resource_type):
     # Handle form submission for batch refresh
     if request.method == "POST":
         try:
+            import gc
+            import time
+            import psutil
+            import os
+            from datetime import datetime
+
+            # Get the process to monitor memory usage
+            process = psutil.Process(os.getpid())
+
+            # Get batch processing parameters
+            batch_size = int(request.form.get("batch_size", 10))
+            delay_between_items = int(request.form.get("delay_between_items", 1))
+            delay_between_batches = int(request.form.get("delay_between_batches", 5))
+            log_memory_usage = request.form.get("log_memory_usage", "off") == "on"
+
             # Get the list of resource IDs to refresh
             resource_ids = request.form.getlist("resource_ids")
 
@@ -251,59 +266,117 @@ def batch_refresh_summaries(resource_type):
                     )
                 )
 
+            # Create batches
+            batches = [
+                resource_ids[i : i + batch_size]
+                for i in range(0, len(resource_ids), batch_size)
+            ]
+
             # Process count for progress tracking
             processed_count = 0
             total_count = len(resource_ids)
             error_count = 0
 
+            # Log the start of the batch process
+            logging.info(
+                f"Starting batch refresh of {total_count} {resource_type} summaries with batch size {batch_size}"
+            )
+            if log_memory_usage:
+                initial_memory = process.memory_info().rss / 1024 / 1024  # MB
+                logging.info(f"Initial memory usage: {initial_memory:.2f} MB")
+
             # Import the custom_generate_summary function
             from routes.summary_review import custom_generate_summary
 
-            # Process each resource
-            for resource_id in resource_ids:
-                try:
-                    # Check if this resource exists in the database
-                    resource = Resource.query.filter_by(
-                        resource=resource_type, name=resource_id
-                    ).first()
+            # Process each batch
+            for batch_num, batch in enumerate(batches, 1):
+                logging.info(
+                    f"Processing batch {batch_num}/{len(batches)} with {len(batch)} items"
+                )
 
-                    # Generate a new summary
-                    new_summary = custom_generate_summary(
-                        resource_type=resource_type,
-                        resource_name=resource_id,
-                        base_summary="" if not resource else resource.summary,
-                        max_tokens=2000,
+                if log_memory_usage:
+                    before_batch_memory = process.memory_info().rss / 1024 / 1024  # MB
+                    logging.info(
+                        f"Memory before batch {batch_num}: {before_batch_memory:.2f} MB"
                     )
 
-                    # Create or update the resource in the database
-                    if not resource:
-                        resource = Resource(
-                            resource=resource_type,
-                            name=resource_id,
-                            summary=new_summary,
+                # Process each resource in the batch
+                for item_num, resource_id in enumerate(batch, 1):
+                    batch_start_time = datetime.now()
+                    try:
+                        # Check if this resource exists in the database
+                        resource = Resource.query.filter_by(
+                            resource=resource_type, name=resource_id
+                        ).first()
+
+                        # Generate a new summary
+                        new_summary = custom_generate_summary(
+                            resource_type=resource_type,
+                            resource_name=resource_id,
+                            base_summary="" if not resource else resource.summary,
+                            max_tokens=2000,
                         )
-                        db.session.add(resource)
-                    else:
-                        resource.summary = new_summary
 
-                    # Save changes and invalidate cache
-                    db.session.commit()
-                    # Use the imported invalidate_related_caches
-                    invalidate_related_caches(resource_type, resource_id)
+                        # Create or update the resource in the database
+                        if not resource:
+                            resource = Resource(
+                                resource=resource_type,
+                                name=resource_id,
+                                summary=new_summary,
+                            )
+                            db.session.add(resource)
+                        else:
+                            resource.summary = new_summary
 
-                    processed_count += 1
+                        # Save changes and invalidate cache
+                        db.session.commit()
+                        # Use the imported invalidate_related_caches
+                        invalidate_related_caches(resource_type, resource_id)
 
-                    # Log progress after every 5 resources or at the end
-                    if processed_count % 5 == 0 or processed_count == total_count:
+                        processed_count += 1
+
+                        # Log progress for each item
+                        processing_time = (
+                            datetime.now() - batch_start_time
+                        ).total_seconds()
                         logging.info(
-                            f"Processed {processed_count}/{total_count} {resource_type} summaries"
+                            f"Processed {resource_type}/{resource_id} ({processed_count}/{total_count}) in {processing_time:.2f}s"
                         )
 
-                except Exception as e:
-                    logging.error(
-                        f"Error refreshing summary for {resource_type}/{resource_id}: {e}"
+                    except Exception as e:
+                        logging.error(
+                            f"Error refreshing summary for {resource_type}/{resource_id}: {e}"
+                        )
+                        error_count += 1
+
+                    # Add delay between items (if not the last item in the batch)
+                    if item_num < len(batch) and delay_between_items > 0:
+                        logging.info(f"Waiting {delay_between_items}s before next item")
+                        time.sleep(delay_between_items)
+
+                # Force garbage collection after each batch
+                collected = gc.collect()
+
+                if log_memory_usage:
+                    after_batch_memory = process.memory_info().rss / 1024 / 1024  # MB
+                    memory_diff = after_batch_memory - before_batch_memory
+                    logging.info(
+                        f"Memory after batch {batch_num}: {after_batch_memory:.2f} MB (Change: {memory_diff:+.2f} MB)"
                     )
-                    error_count += 1
+                    logging.info(f"Garbage collected {collected} objects")
+
+                # Add delay between batches (if not the last batch)
+                if batch_num < len(batches) and delay_between_batches > 0:
+                    logging.info(f"Waiting {delay_between_batches}s before next batch")
+                    time.sleep(delay_between_batches)
+
+            # Log final memory usage if enabled
+            if log_memory_usage:
+                final_memory = process.memory_info().rss / 1024 / 1024  # MB
+                memory_diff = final_memory - initial_memory
+                logging.info(
+                    f"Final memory usage: {final_memory:.2f} MB (Total change: {memory_diff:+.2f} MB)"
+                )
 
             # Provide feedback
             if error_count > 0:
