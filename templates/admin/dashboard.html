@@ -70,15 +70,39 @@
             <h3>Protected Routes</h3>
         </div>
         <div class="card-body">
+            <h4 class="mb-3">Summary Management</h4>
+            <ul class="list-group mb-4">
+                <li class="list-group-item">
+                    <a href="{{ url_for('summary_review.summary_review') }}" class="btn btn-primary">Summary Review</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="{{ url_for('admin.list_pokemon_summaries') }}" class="btn btn-primary">List Pokémon Summaries</a>
+                </li>
+            </ul>
+
+            <h4 class="mb-3">Batch Summary Management</h4>
+            <ul class="list-group mb-4">
+                <li class="list-group-item">
+                    <a href="{{ url_for('admin.batch_refresh_summaries', resource_type='pokemon') }}" class="btn btn-success">Batch Refresh Pokémon Summaries</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="{{ url_for('admin.batch_refresh_summaries', resource_type='move') }}" class="btn btn-success">Batch Refresh Move Summaries</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="{{ url_for('admin.batch_refresh_summaries', resource_type='ability') }}" class="btn btn-success">Batch Refresh Ability Summaries</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="{{ url_for('admin.batch_refresh_summaries', resource_type='item') }}" class="btn btn-success">Batch Refresh Item Summaries</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="{{ url_for('admin.batch_refresh_summaries', resource_type='type') }}" class="btn btn-success">Batch Refresh Type Summaries</a>
+                </li>
+            </ul>
+
+            <h4 class="mb-3">System Health</h4>
             <ul class="list-group">
                 <li class="list-group-item">
-                    <a href="{{ url_for('summary_review.summary_review') }}" class="btn btn-primary">/admin/summary-review</a>
-                </li>
-                <li class="list-group-item">
-                    <a href="{{ url_for('admin.list_pokemon_summaries') }}" class="btn btn-primary">/admin/list-pokemon-summaries</a>
-                </li>
-                <li class="list-group-item">
-                    <a href="{{ url_for('health.check_cache_health') }}" class="btn btn-primary">/health/cache</a>
+                    <a href="{{ url_for('health.check_cache_health') }}" class="btn btn-primary">Cache Health</a>
                 </li>
                 <!-- Add more protected routes here as needed -->
             </ul>

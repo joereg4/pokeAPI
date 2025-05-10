@@ -438,7 +438,15 @@ If you don't have enough information for a section, provide your best educated d
                 {"role": "user", "content": prompt},
             ],
             max_tokens=max_tokens,
-            tools=[{"type": "web_search"}],
+            tools=[
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "web_search",
+                        "description": "Search the web for information about Pokémon",
+                    },
+                }
+            ],
             tool_choice="auto",
         )
 
@@ -478,7 +486,15 @@ Here's the previous summary that needs to be improved:
                     {"role": "user", "content": retry_prompt},
                 ],
                 max_tokens=max_tokens,
-                tools=[{"type": "web_search"}],
+                tools=[
+                    {
+                        "type": "function",
+                        "function": {
+                            "name": "web_search",
+                            "description": "Search the web for information about Pokémon",
+                        },
+                    }
+                ],
                 tool_choice="auto",
             )
 
@@ -684,7 +700,15 @@ If you don't have enough information for a section, provide your best educated d
                 {"role": "user", "content": prompt},
             ],
             max_tokens=max_tokens,
-            tools=[{"type": "web_search"}],
+            tools=[
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "web_search",
+                        "description": "Search the web for information about Pokémon moves",
+                    },
+                }
+            ],
             tool_choice="auto",
         )
 
@@ -724,7 +748,15 @@ Here's the previous summary that needs to be improved:
                     {"role": "user", "content": retry_prompt},
                 ],
                 max_tokens=max_tokens,
-                tools=[{"type": "web_search"}],
+                tools=[
+                    {
+                        "type": "function",
+                        "function": {
+                            "name": "web_search",
+                            "description": "Search the web for information about Pokémon moves",
+                        },
+                    }
+                ],
                 tool_choice="auto",
             )
 
@@ -910,7 +942,15 @@ If you don't have enough information for a section, provide your best educated d
                 {"role": "user", "content": prompt},
             ],
             max_tokens=max_tokens,
-            tools=[{"type": "web_search"}],
+            tools=[
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "web_search",
+                        "description": "Search the web for information about Pokémon abilities",
+                    },
+                }
+            ],
             tool_choice="auto",
         )
 
@@ -950,7 +990,15 @@ Here's the previous summary that needs to be improved:
                     {"role": "user", "content": retry_prompt},
                 ],
                 max_tokens=max_tokens,
-                tools=[{"type": "web_search"}],
+                tools=[
+                    {
+                        "type": "function",
+                        "function": {
+                            "name": "web_search",
+                            "description": "Search the web for information about Pokémon abilities",
+                        },
+                    }
+                ],
                 tool_choice="auto",
             )
 
@@ -1137,7 +1185,15 @@ If you don't have enough information for a section, provide your best educated d
                 {"role": "user", "content": prompt},
             ],
             max_tokens=max_tokens,
-            tools=[{"type": "web_search"}],
+            tools=[
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "web_search",
+                        "description": "Search the web for information about Pokémon items",
+                    },
+                }
+            ],
             tool_choice="auto",
         )
 
@@ -1177,7 +1233,15 @@ Here's the previous summary that needs to be improved:
                     {"role": "user", "content": retry_prompt},
                 ],
                 max_tokens=max_tokens,
-                tools=[{"type": "web_search"}],
+                tools=[
+                    {
+                        "type": "function",
+                        "function": {
+                            "name": "web_search",
+                            "description": "Search the web for information about Pokémon items",
+                        },
+                    }
+                ],
                 tool_choice="auto",
             )
 
@@ -1404,22 +1468,82 @@ If you don't have enough information for a section, provide your best educated d
                 {"role": "user", "content": prompt},
             ],
             max_tokens=max_tokens,
-            tools=[{"type": "web_search"}],
+            tools=[
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "web_search",
+                        "description": "Search the web for information about Pokémon types",
+                    },
+                }
+            ],
             tool_choice="auto",
         )
 
-        result = response.choices[0].message.content.strip()
+        # Check if we have a valid content in the response
+        if (
+            not hasattr(response.choices[0], "message")
+            or not hasattr(response.choices[0].message, "content")
+            or response.choices[0].message.content is None
+        ):
+            # Handle tool outputs if present
+            if (
+                hasattr(response.choices[0].message, "tool_calls")
+                and response.choices[0].message.tool_calls
+            ):
+                # Try to extract information from tool calls
+                current_app.logger.warning(
+                    "Received tool calls instead of direct content. Processing tool data."
+                )
+                result = "**" + display_name + "** is a Pokémon type.\n\n"
 
-        # Check if the response still contains placeholder text
-        placeholder_pattern = r"\[\w+( \w+)*\]"
-        if re.search(placeholder_pattern, result):
-            # If placeholders remain, try one more time with a more direct prompt
-            current_app.logger.warning(
-                f"Detected placeholders in summary for type {type_name}, retrying..."
-            )
+                # Add some basic information we already have
+                result += "**Type Effectiveness:**\n\n"
+                if double_damage_from:
+                    result += f"- **Weak To:** {', '.join(double_damage_from)}\n"
+                if double_damage_to:
+                    result += f"- **Super Effective Against:** {', '.join(double_damage_to)}\n"
+                if half_damage_from:
+                    result += f"- **Resistant To:** {', '.join(half_damage_from)}\n"
+                if half_damage_to:
+                    result += f"- **Not Very Effective Against:** {', '.join(half_damage_to)}\n"
+                if no_damage_from:
+                    result += f"- **Immune To:** {', '.join(no_damage_from)}\n"
+                if no_damage_to:
+                    result += f"- **No Effect Against:** {', '.join(no_damage_to)}\n"
 
-            retry_prompt = f"""The previous summary for the {display_name} type still contained placeholder text. 
-            
+                # Add generation info if available
+                if generation != "Unknown":
+                    result += (
+                        f"\n**Historical Changes:**\n\n- Introduced in {generation}\n"
+                    )
+
+                # Add basic fallback content
+                result += "\n**Notable Pokémon:**\n\n- Various pure and dual-type Pokémon feature this type\n"
+                result += (
+                    "\n**Move Pool:**\n\n- Multiple moves are available for this type\n"
+                )
+                result += "\n**Competitive Analysis:**\n\n- Has specific strengths and weaknesses in competitive play\n"
+                result += "\n**Interesting Facts:**\n\n- This type has unique characteristics in the Pokémon world\n"
+            else:
+                # Fall back to a basic template
+                current_app.logger.error(
+                    "No valid content or tool calls in API response"
+                )
+                return fallback_template
+        else:
+            result = response.choices[0].message.content.strip()
+
+            # Check if the response still contains placeholder text
+            placeholder_pattern = r"\[\w+( \w+)*\]"
+            if re.search(placeholder_pattern, result):
+                # If placeholders remain, try one more time with a more direct prompt
+                current_app.logger.warning(
+                    f"Detected placeholders in summary for type {type_name}, retrying..."
+                )
+
+                retry_prompt = f"""The previous summary for the {display_name} type still contained placeholder text. 
+                
 Please create a complete summary WITHOUT ANY PLACEHOLDERS. Replace every [placeholder] with actual information.
 
 For any section where you're uncertain, provide a reasonable description based on similar types or your knowledge of the Pokémon universe.
@@ -1434,21 +1558,43 @@ Here's the previous summary that needs to be improved:
 
 {result}"""
 
-            retry_response = client.chat.completions.create(
-                model="gpt-4o",
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "You are a Pokémon expert who creates detailed and accurate summaries of types. You MUST replace ALL placeholder text with actual information, even if you need to make educated guesses based on similar types. Always include a blank line after each section header before starting bullet points.",
-                    },
-                    {"role": "user", "content": retry_prompt},
-                ],
-                max_tokens=max_tokens,
-                tools=[{"type": "web_search"}],
-                tool_choice="auto",
-            )
+                try:
+                    retry_response = client.chat.completions.create(
+                        model="gpt-4o",
+                        messages=[
+                            {
+                                "role": "system",
+                                "content": "You are a Pokémon expert who creates detailed and accurate summaries of types. You MUST replace ALL placeholder text with actual information, even if you need to make educated guesses based on similar types. Always include a blank line after each section header before starting bullet points.",
+                            },
+                            {"role": "user", "content": retry_prompt},
+                        ],
+                        max_tokens=max_tokens,
+                        tools=[
+                            {
+                                "type": "function",
+                                "function": {
+                                    "name": "web_search",
+                                    "description": "Search the web for information about Pokémon types",
+                                },
+                            }
+                        ],
+                        tool_choice="auto",
+                    )
 
-            result = retry_response.choices[0].message.content.strip()
+                    # Check if the retry has valid content
+                    if (
+                        hasattr(retry_response.choices[0], "message")
+                        and hasattr(retry_response.choices[0].message, "content")
+                        and retry_response.choices[0].message.content is not None
+                    ):
+                        result = retry_response.choices[0].message.content.strip()
+                    else:
+                        current_app.logger.warning(
+                            "Retry response has no valid content, keeping original result"
+                        )
+                except Exception as e:
+                    current_app.logger.error(f"Error in retry request: {e}")
+                    # Keep the original result if retry fails
 
         # Post-process the summary to ensure proper formatting
         result = format_pokemon_summary(result)  # Reuse the same formatting function

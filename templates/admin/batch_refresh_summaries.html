@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Batch Refresh {{ resource_type_display }} Summaries</h2>
+        <div>
+            <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-secondary">Back to Dashboard</a>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3>{{ resource_type_display }} Summary Status</h3>
+            <div>
+                <span class="badge bg-primary me-2">{{ resources_list|length }} Total</span>
+                <span class="badge bg-success me-2">{{ total_count - missing_count }} With Summary</span>
+                <span class="badge bg-danger">{{ missing_count }} Missing</span>
+            </div>
+        </div>
+        <div class="card-body">
+            <p class="mb-3">Select {{ resource_type_display }} items to refresh their summaries. This process will use the specialized templates for each resource type.</p>
+            
+            {% if resources_list|length > 0 %}
+                <form method="POST" action="{{ url_for('admin.batch_refresh_summaries', resource_type=resource_type) }}">
+                    <div class="mb-3">
+                        <div class="btn-group mb-3">
+                            <button type="button" class="btn btn-outline-primary" id="selectAll">Select All</button>
+                            <button type="button" class="btn btn-outline-primary" id="selectNone">Deselect All</button>
+                            <button type="button" class="btn btn-outline-primary" id="selectMissing">Select Missing</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;"><input type="checkbox" id="headerCheckbox"></th>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for resource in resources_list %}
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="resource_ids" value="{{ resource.name }}" 
+                                               class="resource-checkbox {% if not resource.has_summary %}missing-summary{% endif %}">
+                                    </td>
+                                    <td>{{ resource.display_name }}</td>
+                                    <td>
+                                        {% if resource.has_summary %}
+                                            <span class="badge bg-success">Has Summary</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Missing Summary</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if resource.has_summary %}
+                                            <a href="{{ url_for('summary_review.edit_summary', resource=resource_type, name=resource.name, return_to=url_for('admin.batch_refresh_summaries', resource_type=resource_type)) }}" class="btn btn-sm btn-primary">
+                                                Edit Summary
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ url_for('summary_review.new_pokemon_summary', pokemon_name=resource.name, return_to=url_for('admin.batch_refresh_summaries', resource_type=resource_type)) }}" class="btn btn-sm btn-primary" {% if resource_type != 'pokemon' %}style="visibility: hidden;"{% endif %}>
+                                                Generate Summary
+                                            </a>
+                                        {% endif %}
+                                        
+                                        {% if resource_type == 'pokemon' %}
+                                            <a href="{{ url_for('pokemon.get_pokemon', id_or_name=resource.name) }}" class="btn btn-sm btn-outline-secondary" target="_blank">
+                                                View Pokémon
+                                            </a>
+                                        {% elif resource_type == 'move' %}
+                                            <a href="{{ url_for('abilities_moves_items.get_move', id_or_name=resource.name) }}" class="btn btn-sm btn-outline-secondary" target="_blank">
+                                                View Move
+                                            </a>
+                                        {% elif resource_type == 'ability' %}
+                                            <a href="{{ url_for('abilities_moves_items.get_ability', id_or_name=resource.name) }}" class="btn btn-sm btn-outline-secondary" target="_blank">
+                                                View Ability
+                                            </a>
+                                        {% elif resource_type == 'item' %}
+                                            <a href="{{ url_for('abilities_moves_items.get_item', id_or_name=resource.name) }}" class="btn btn-sm btn-outline-secondary" target="_blank">
+                                                View Item
+                                            </a>
+                                        {% elif resource_type == 'type' %}
+                                            <a href="{{ url_for('characteristics_stats.get_type', id_or_name=resource.name) }}" class="btn btn-sm btn-outline-secondary" target="_blank">
+                                                View Type
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <strong>Warning:</strong> Refreshing many summaries at once may take a long time and could result in rate limiting from the API.
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="refreshButton">Refresh Selected Summaries</button>
+                    </div>
+                </form>
+            {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    No {{ resource_type_display }} resources found.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3>Batch Refresh Options</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4>Refresh summaries for other resource types:</h4>
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                        <a href="{{ url_for('admin.batch_refresh_summaries', resource_type='pokemon') }}" 
+                           class="btn {% if resource_type == 'pokemon' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                            Pokémon
+                        </a>
+                        <a href="{{ url_for('admin.batch_refresh_summaries', resource_type='move') }}" 
+                           class="btn {% if resource_type == 'move' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                            Moves
+                        </a>
+                        <a href="{{ url_for('admin.batch_refresh_summaries', resource_type='ability') }}" 
+                           class="btn {% if resource_type == 'ability' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                            Abilities
+                        </a>
+                        <a href="{{ url_for('admin.batch_refresh_summaries', resource_type='item') }}" 
+                           class="btn {% if resource_type == 'item' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                            Items
+                        </a>
+                        <a href="{{ url_for('admin.batch_refresh_summaries', resource_type='type') }}" 
+                           class="btn {% if resource_type == 'type' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                            Types
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Handle select all checkbox
+    document.getElementById('headerCheckbox').addEventListener('change', function() {
+        const isChecked = this.checked;
+        document.querySelectorAll('.resource-checkbox').forEach(checkbox => {
+            checkbox.checked = isChecked;
+        });
+        updateRefreshButton();
+    });
+    
+    // Handle select all button
+    document.getElementById('selectAll').addEventListener('click', function() {
+        document.querySelectorAll('.resource-checkbox').forEach(checkbox => {
+            checkbox.checked = true;
+        });
+        document.getElementById('headerCheckbox').checked = true;
+        updateRefreshButton();
+    });
+    
+    // Handle select none button
+    document.getElementById('selectNone').addEventListener('click', function() {
+        document.querySelectorAll('.resource-checkbox').forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        document.getElementById('headerCheckbox').checked = false;
+        updateRefreshButton();
+    });
+    
+    // Handle select missing button
+    document.getElementById('selectMissing').addEventListener('click', function() {
+        document.querySelectorAll('.resource-checkbox').forEach(checkbox => {
+            checkbox.checked = checkbox.classList.contains('missing-summary');
+        });
+        updateRefreshButton();
+    });
+    
+    // Update individual checkboxes
+    document.querySelectorAll('.resource-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            updateRefreshButton();
+        });
+    });
+    
+    // Update refresh button state
+    function updateRefreshButton() {
+        const anyChecked = Array.from(document.querySelectorAll('.resource-checkbox')).some(checkbox => checkbox.checked);
+        const refreshButton = document.getElementById('refreshButton');
+        refreshButton.disabled = !anyChecked;
+        
+        const checkedCount = document.querySelectorAll('.resource-checkbox:checked').length;
+        if (checkedCount > 0) {
+            refreshButton.textContent = `Refresh Selected Summaries (${checkedCount})`;
+        } else {
+            refreshButton.textContent = 'Refresh Selected Summaries';
+        }
+    }
+    
+    // Initialize button state
+    updateRefreshButton();
+</script>
+{% endblock %} 

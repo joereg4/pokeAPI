@@ -5,6 +5,7 @@ from functools import wraps
 from limiter import limiter
 import requests
 import logging
+from utils import invalidate_related_caches
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
 
@@ -120,7 +121,6 @@ def delete_user(user_id):
 @admin_bp.route("/list-pokemon-summaries", methods=["GET"])
 @login_required
 @admin_required
-@limiter.limit("30 per minute")
 def list_pokemon_summaries():
     """List all Pokemon with their summary status."""
     try:
@@ -221,4 +221,197 @@ def list_pokemon_summaries():
             show_missing_only=False,
             total_count=0,
             missing_count=0,
+        )
+
+
+@admin_bp.route(
+    "/batch-refresh-summaries/<string:resource_type>", methods=["GET", "POST"]
+)
+@login_required
+@admin_required
+def batch_refresh_summaries(resource_type):
+    """Batch refresh summaries for a specific resource type."""
+    # Validate the resource type
+    valid_resource_types = ["pokemon", "ability", "move", "item", "type"]
+    if resource_type not in valid_resource_types:
+        flash(f"Invalid resource type: {resource_type}", "error")
+        return redirect(url_for("admin.dashboard"))
+
+    # Handle form submission for batch refresh
+    if request.method == "POST":
+        try:
+            # Get the list of resource IDs to refresh
+            resource_ids = request.form.getlist("resource_ids")
+
+            if not resource_ids:
+                flash("No resources selected for refresh", "warning")
+                return redirect(
+                    url_for(
+                        "admin.batch_refresh_summaries", resource_type=resource_type
+                    )
+                )
+
+            # Process count for progress tracking
+            processed_count = 0
+            total_count = len(resource_ids)
+            error_count = 0
+
+            # Import the custom_generate_summary function
+            from routes.summary_review import custom_generate_summary
+
+            # Process each resource
+            for resource_id in resource_ids:
+                try:
+                    # Check if this resource exists in the database
+                    resource = Resource.query.filter_by(
+                        resource=resource_type, name=resource_id
+                    ).first()
+
+                    # Generate a new summary
+                    new_summary = custom_generate_summary(
+                        resource_type=resource_type,
+                        resource_name=resource_id,
+                        base_summary="" if not resource else resource.summary,
+                        max_tokens=2000,
+                    )
+
+                    # Create or update the resource in the database
+                    if not resource:
+                        resource = Resource(
+                            resource=resource_type,
+                            name=resource_id,
+                            summary=new_summary,
+                        )
+                        db.session.add(resource)
+                    else:
+                        resource.summary = new_summary
+
+                    # Save changes and invalidate cache
+                    db.session.commit()
+                    # Use the imported invalidate_related_caches
+                    invalidate_related_caches(resource_type, resource_id)
+
+                    processed_count += 1
+
+                    # Log progress after every 5 resources or at the end
+                    if processed_count % 5 == 0 or processed_count == total_count:
+                        logging.info(
+                            f"Processed {processed_count}/{total_count} {resource_type} summaries"
+                        )
+
+                except Exception as e:
+                    logging.error(
+                        f"Error refreshing summary for {resource_type}/{resource_id}: {e}"
+                    )
+                    error_count += 1
+
+            # Provide feedback
+            if error_count > 0:
+                flash(
+                    f"Refreshed {processed_count - error_count} summaries with {error_count} errors.",
+                    "warning",
+                )
+            else:
+                flash(
+                    f"Successfully refreshed {processed_count} summaries for {resource_type}.",
+                    "success",
+                )
+
+            return redirect(
+                url_for("admin.batch_refresh_summaries", resource_type=resource_type)
+            )
+
+        except Exception as e:
+            flash(f"Error during batch refresh: {str(e)}", "error")
+            return redirect(
+                url_for("admin.batch_refresh_summaries", resource_type=resource_type)
+            )
+
+    # GET request - display the form with resources to select
+    try:
+        # Fetch resources from appropriate API endpoint
+        all_resources = []
+        offset = 0
+        limit = 100  # Fetch in batches
+
+        # Keep fetching until we have all resources
+        while True:
+            try:
+                endpoint = f"https://pokeapi.co/api/v2/{resource_type}?limit={limit}&offset={offset}"
+                response = requests.get(endpoint)
+
+                if response.status_code != 200:
+                    break
+
+                data = response.json()
+                results = data.get("results", [])
+
+                if not results:
+                    break
+
+                # Add resources to the list
+                all_resources.extend(results)
+
+                # Update offset for next batch
+                offset += limit
+
+                # If we've reached the end, break
+                if offset >= data.get("count", 0):
+                    break
+
+            except Exception as e:
+                logging.error(
+                    f"Error fetching {resource_type} from offset {offset}: {str(e)}"
+                )
+                break
+
+        # Get existing summaries from database
+        db_resources = Resource.query.filter_by(resource=resource_type).all()
+        db_resource_names = {
+            r.name: (
+                r.summary is not None and r.summary.strip() != "" and r.summary != "NaN"
+            )
+            for r in db_resources
+        }
+
+        # Prepare the resource list
+        resources_list = []
+
+        for resource in all_resources:
+            name = resource["name"]
+            has_summary = db_resource_names.get(name, False)
+
+            resources_list.append(
+                {
+                    "name": name,
+                    "display_name": name.replace("-", " ").title(),
+                    "has_summary": has_summary,
+                }
+            )
+
+        # Sort by name
+        resources_list.sort(key=lambda x: x["name"])
+
+        # Add statistics
+        total_count = len(resources_list)
+        missing_count = len([r for r in resources_list if not r["has_summary"]])
+
+        return render_template(
+            "admin/batch_refresh_summaries.html",
+            resource_type=resource_type,
+            resources_list=resources_list,
+            total_count=total_count,
+            missing_count=missing_count,
+            resource_type_display=resource_type.title(),
+        )
+
+    except Exception as e:
+        flash(f"Error: {str(e)}", "error")
+        return render_template(
+            "admin/batch_refresh_summaries.html",
+            resource_type=resource_type,
+            resources_list=[],
+            total_count=0,
+            missing_count=0,
+            resource_type_display=resource_type.title(),
         )
