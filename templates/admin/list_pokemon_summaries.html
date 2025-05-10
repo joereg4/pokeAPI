@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Pokémon Summary Management</h2>
+        <div>
+            <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-secondary">Back to Dashboard</a>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>Filter Options</h3>
+        </div>
+        <div class="card-body">
+            <form action="{{ url_for('admin.list_pokemon_summaries') }}" method="GET" class="row g-3">
+                <div class="col-md-6">
+                    <label for="showMissing" class="form-label">Display</label>
+                    <select name="missing_only" id="showMissing" class="form-select">
+                        <option value="false" {% if not show_missing_only %}selected{% endif %}>Show all Pokémon</option>
+                        <option value="true" {% if show_missing_only %}selected{% endif %}>Show only Pokémon without summaries</option>
+                    </select>
+                </div>
+                <div class="col-md-6 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary">Apply Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3>Pokémon List</h3>
+            <div>
+                <span class="badge bg-primary me-2">{{ pokemon_list|length }} Shown</span>
+                <span class="badge bg-success me-2">{{ total_count - missing_count }} With Summary</span>
+                <span class="badge bg-danger">{{ missing_count }} Missing</span>
+            </div>
+        </div>
+        <div class="card-body">
+            {% if pokemon_list|length == 0 %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    No Pokémon found matching the current criteria.
+                </div>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pokemon in pokemon_list %}
+                            <tr>
+                                <td>{{ pokemon.display_name }}</td>
+                                <td>
+                                    {% if pokemon.has_summary %}
+                                        <span class="badge bg-success">Has Summary</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Missing Summary</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if pokemon.has_summary %}
+                                        <a href="{{ url_for('summary_review.edit_summary', resource='pokemon', name=pokemon.name, return_to=url_for('admin.list_pokemon_summaries', missing_only=show_missing_only)) }}" class="btn btn-sm btn-primary">
+                                            Edit Summary
+                                        </a>
+                                    {% else %}
+                                        <a href="{{ url_for('summary_review.new_pokemon_summary', pokemon_name=pokemon.name, return_to=url_for('admin.list_pokemon_summaries', missing_only=show_missing_only)) }}" class="btn btn-sm btn-primary">
+                                            Generate Summary
+                                        </a>
+                                    {% endif %}
+                                    <a href="{{ url_for('pokemon.get_pokemon', id_or_name=pokemon.name) }}" class="btn btn-sm btn-outline-secondary" target="_blank">
+                                        View Pokémon
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

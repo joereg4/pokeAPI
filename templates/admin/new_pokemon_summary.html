@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>New Summary for {{ display_name }}</h2>
+        <a href="{{ return_to }}" 
+           class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12 mb-3">
+            <div class="alert alert-info">
+                <h4 class="alert-heading">AI-Generated Summary</h4>
+                <p>This summary was created by OpenAI using the official template format and enhanced with web search capabilities for up-to-date information, especially for newer Pokémon. Review the information below and make any necessary edits before accepting.</p>
+            </div>
+        </div>
+        
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h3>Summary Editor</h3>
+                    <div>
+                        <a href="{{ url_for('pokemon.get_pokemon', id_or_name=pokemon_name) }}" class="btn btn-sm btn-outline-secondary me-2" target="_blank">
+                            View Pokémon
+                        </a>
+                        <button type="button" class="btn btn-sm btn-secondary" id="previewBtn">Toggle Preview</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form id="summaryForm" method="POST" action="{{ url_for('summary_review.new_pokemon_summary', pokemon_name=pokemon_name, return_to=return_to) }}">
+                        <input type="hidden" name="current_summary" value="{{ summary }}">
+                        
+                        <div class="form-group mb-3">
+                            <textarea name="summary" class="form-control" rows="20" id="summaryEditor" style="font-family: monospace;">{{ summary }}</textarea>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <span class="input-group-text">Max Tokens:</span>
+                                    <input type="number" class="form-control" name="max_tokens" 
+                                           value="{{ max_tokens|default(2000) }}" min="100" max="8000">
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <textarea class="form-control" name="custom_instructions" 
+                                          placeholder="Add custom instructions for OpenAI (optional)"
+                                          rows="1">{{ custom_instructions|default('') }}</textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary">Regenerate with Instructions</button>
+                            <button type="submit" name="action" value="accept" class="btn btn-success">Accept Summary</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card" id="previewCard" style="display: none;">
+                <div class="card-header">
+                    <h3>Preview</h3>
+                </div>
+                <div class="card-body">
+                    <div id="markdownPreview"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const previewBtn = document.getElementById('previewBtn');
+        const summaryEditor = document.getElementById('summaryEditor');
+        const previewCard = document.getElementById('previewCard');
+        const markdownPreview = document.getElementById('markdownPreview');
+        
+        // Initialize with markdown preview
+        updatePreview();
+        
+        // Toggle preview when button is clicked
+        previewBtn.addEventListener('click', function() {
+            if (previewCard.style.display === 'none') {
+                updatePreview();
+                previewCard.style.display = 'block';
+            } else {
+                previewCard.style.display = 'none';
+            }
+        });
+        
+        // Update preview when content changes
+        summaryEditor.addEventListener('input', updatePreview);
+        
+        function updatePreview() {
+            // Send the markdown to our server endpoint to render
+            fetch("{{ url_for('summary_review.render_markdown') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({text: summaryEditor.value})
+            })
+            .then(response => response.text())
+            .then(html => {
+                markdownPreview.innerHTML = html;
+            });
+        }
+    });
+</script>
+{% endblock %} 
