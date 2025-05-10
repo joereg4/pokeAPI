@@ -447,11 +447,23 @@ def batch_refresh_summaries(resource_type):
             for r in db_resources
         }
 
+        # Track potential duplicates for logging
+        api_resource_names = set()
+        potential_duplicates = set()
+
         # Prepare the resource list
         resources_list = []
 
         for resource in all_resources:
             name = resource["name"]
+
+            # Check for potential duplicates by case-insensitive comparison
+            name_lower = name.lower().strip()
+            if name_lower in api_resource_names:
+                potential_duplicates.add(name_lower)
+                logging.warning(f"Potential duplicate detected in API response: {name}")
+            api_resource_names.add(name_lower)
+
             has_summary = db_resource_names.get(name, False)
 
             resources_list.append(
@@ -461,6 +473,27 @@ def batch_refresh_summaries(resource_type):
                     "has_summary": has_summary,
                 }
             )
+
+        # Log duplicate information
+        if potential_duplicates:
+            logging.warning(
+                f"Found {len(potential_duplicates)} potential duplicate items: {', '.join(potential_duplicates)}"
+            )
+
+        # Use a dictionary to deduplicate items with the same normalized name
+        deduplicated_resources = {}
+        for resource in resources_list:
+            name_key = resource["name"].lower().strip()
+
+            # Only keep one instance of each resource (preferring ones with summaries)
+            if name_key not in deduplicated_resources or (
+                resource["has_summary"]
+                and not deduplicated_resources[name_key]["has_summary"]
+            ):
+                deduplicated_resources[name_key] = resource
+
+        # Convert back to list
+        resources_list = list(deduplicated_resources.values())
 
         # Sort by name
         resources_list.sort(key=lambda x: x["name"])
