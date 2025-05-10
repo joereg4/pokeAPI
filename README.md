@@ -1,3 +1,39 @@
+# Pokémon API Web Application UI Improvements
+
+## Summary of Changes
+
+### Item Display Enhancements
+- Fixed sprite rendering in item_detail.html by adjusting image dimensions to 96px
+- Improved container styling with proper shadows and padding
+- Fixed alignment issues by removing the p-4 class and adding proper centering
+- Reorganized item detail header to place name, sprite, and edit icon in a horizontal row
+
+### Move Category Improvements
+- Created a reusable formatter for category names to handle special characters
+- Replaced custom styling with Bootstrap badges
+- Added error handling for missing data
+- Fixed description duplication issue
+
+### New Move Damage Class Template
+- Created move_damage_class_detail.html to display physical, special, and status moves
+- Implemented proper descriptions from the API
+- Used grid layout for move listings
+- Maintained consistent styling with other pages
+
+### Move Detail Enhancements
+- Made damage class badges link to the move-damage-class route
+- Removed duplicate damage class information
+- Improved spacing in the header section
+
+### Type Display Standardization
+- Replaced type image nameplates with colored badges across:
+  - type_detail.html
+  - pokemon_detail.html
+
+### Overall Improvements
+- Maintained consistent color scheme for type badges
+- Ensured proper formatting of text elements (like uppercase Roman numerals for generation names)
+
 # Pokédex Web Application
 
 ## Overview

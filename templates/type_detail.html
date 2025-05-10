@@ -2,15 +2,49 @@
 
 {% block title %}{{ type_effectiveness.name | title }} - Pokémon Type{% endblock %}
 
+{% block head %}
+<style>
+    /* Additional styles for other elements if needed */
+</style>
+{% endblock %}
+
 {% block content %}
     <!-- Type Effectiveness -->
     <section>
         <div class="container pt-5">
             <h2>Type Effectiveness</h2>
-            <img class="my-2"
-                 src="{{ url_for('pokemon.static', filename='img/type/nameplate/' + type_effectiveness.name | lower + '_np.png') }}"
-                 style="height: 40px"
-                 onerror="this.style.display='none'">
+            {% set type_colors = {
+                'normal': '#A8A878',
+                'fire': '#F08030',
+                'water': '#6890F0',
+                'grass': '#78C850',
+                'electric': '#F8D030',
+                'ice': '#98D8D8',
+                'fighting': '#C03028',
+                'poison': '#A040A0',
+                'ground': '#E0C068',
+                'flying': '#A890F0',
+                'psychic': '#F85888',
+                'bug': '#A8B820',
+                'rock': '#B8A038',
+                'ghost': '#705898',
+                'dragon': '#7038F8',
+                'dark': '#705848',
+                'steel': '#B8B8D0',
+                'fairy': '#EE99AC'
+            } %}
+            
+            <div class="mb-4">
+                {% set bg_color = type_colors[type_effectiveness.name] | default('#A8A878') %}
+                {% set text_color = '#FFFFFF' %}
+                {% if type_effectiveness.name in ['electric', 'ground', 'steel', 'fairy'] %}
+                    {% set text_color = '#212529' %}
+                {% endif %}
+                <span class="badge" style="background-color: {{ bg_color }}; color: {{ text_color }}; padding: 0.4rem 0.8rem; font-size: 1rem; min-width: 120px; text-align: center;">
+                    {{ type_effectiveness.name | title }}
+                </span>
+            </div>
+            
             {% for type_name, relations in type_effectiveness.items() %}
                 <!-- Type Name Row -->
                 {% set relation_types = [
@@ -22,18 +56,22 @@
                         {'name': 'No Damage From', 'relation': relations.no_damage_from}
                     ] %}
                 {% for relation in relation_types %}
-                    {% if relation.relation %}
-                        <div class="row pb-1 border-bottom">
-                            <div class="col-2"><strong>{{ relation.name }}</strong></div>
-                            <div class="col-10 d-flex flex-wrap">
+                    {% if relation.relation and relation.relation|length > 0 %}
+                        <div class="row pb-3 mb-2 border-bottom">
+                            <div class="col-md-2 col-3"><strong>{{ relation.name }}</strong></div>
+                            <div class="col-md-10 col-9 d-flex flex-wrap">
                                 {% for type in relation.relation %}
-                                    <div class="me-2">
-                                        <a href="{{ url_for('characteristics_stats.get_type', id_or_name=type.name) }}">
-                                            <img src="{{ url_for('pokemon.static', filename='img/type/nameplate/' + type.name | lower + '_np.png') }}"
-                                                 style="height: 25px"
-                                                 onerror="this.style.display='none'">
-                                        </a>
-                                    </div>
+                                    {% set bg_color = type_colors[type.name] | default('#A8A878') %}
+                                    {% set text_color = '#FFFFFF' %}
+                                    {% if type.name in ['electric', 'ground', 'steel', 'fairy'] %}
+                                        {% set text_color = '#212529' %}
+                                    {% endif %}
+                                    <a href="{{ url_for('characteristics_stats.get_type', id_or_name=type.name) }}" 
+                                       class="text-decoration-none me-2 mb-2">
+                                        <span class="badge" style="background-color: {{ bg_color }}; color: {{ text_color }}; padding: 0.4rem 0.8rem; font-size: 1rem;">
+                                            {{ type.name | title }}
+                                        </span>
+                                    </a>
                                 {% endfor %}
                             </div>
                         </div>
@@ -60,7 +98,9 @@
             <div class="row">
                 <div class="col">
                     {% if summary_html %}
-                        <p>{{ summary_html | safe }}</p>
+                        {{ summary_html | safe }}
+                    {% else %}
+                        <p class="text-muted">No summary available for this type.</p>
                     {% endif %}
                 </div>
             </div>
