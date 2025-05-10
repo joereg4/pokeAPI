@@ -8,7 +8,7 @@ from pokedex.redis_client import REDIS_POOL
 limiter = Limiter(
     app=None,  # We'll initialize the app later
     key_func=get_remote_address,
-    default_limits=["1000 per minute"],  # Set global rate limit
+    default_limits=["3000 per minute"],  # Increased from 1000 to 3000 per minute
     storage_uri="redis://localhost:6379/0",  # Specify Redis connection
     storage_options={
         "connection_pool": REDIS_POOL,
