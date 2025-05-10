@@ -42,6 +42,12 @@ def create_app(test_config=None):
         # This is just a placeholder - the actual route is in a blueprint
         pass
 
+    @app.route("/pokedex/<path:path>")
+    @limiter.exempt
+    def exempt_pokedex_detail(path):
+        # This is just a placeholder - the actual route is in a blueprint
+        pass
+
     # Configure compression
     app.config["COMPRESS_MIMETYPES"] = [
         "text/html",

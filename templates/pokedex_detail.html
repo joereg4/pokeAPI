@@ -3,36 +3,62 @@
 {% block title %}{{ data.name | title }} - Pokédex{% endblock %}
 
 {% block content %}
-
-
     <h1 class="detail-card__title">{{ data.name | title }} Pokédex</h1>
     <div class="detail-grid">
+        <!-- Description Section -->
         <div class="detail-card__info-section">
-            {% if data.descriptions %}
+            {% if data.descriptions and data.descriptions|length > 0 %}
                 <h2 class="detail-card__title">Description</h2>
-                <p>{{ data.descriptions[0].description }}</p>
+                
+                {# Filter for English descriptions or use first one #}
+                {% set en_descriptions = [] %}
+                {% for desc in data.descriptions %}
+                    {% if desc.language and desc.language.name == "en" %}
+                        {% set _ = en_descriptions.append(desc.description) %}
+                    {% endif %}
+                {% endfor %}
+                
+                {% if en_descriptions|length > 0 %}
+                    <p>{{ en_descriptions[0] }}</p>
+                {% else %}
+                    <p>{{ data.descriptions[0].description }}</p>
+                {% endif %}
             {% endif %}
         </div>
+        
         <!-- Region Section -->
         <div class="detail-card__info-section">
             <h2 class="detail-card__title">Region</h2>
-            <p>
-                <a href="{{ url_for('locations_regions.get_region', id_or_name=data.region.name)}}">{{ data.region.name | title }}</a>
-            </p>
+            {% if data.region %}
+                <p>
+                    <a href="{{ url_for('locations_regions.get_region', id_or_name=data.region.name)}}">{{ data.region.name | title }}</a>
+                </p>
+            {% else %}
+                <p>Global (National Pokédex)</p>
+            {% endif %}
         </div>
+        
         <!-- Version Groups Section -->
         <div class="detail-card__info-section">
             <h2 class="detail-card__title">Version Groups</h2>
-            <ul class="detail-card__item">
-                {% for version_group in data.version_groups %}
-                    <li class="detail-card__list">
-                        <a href="{{ url_for('utilities.get_version_group', id_or_name=version_group.name) }}">{{ version_group.name | title }}</a>
-                    </li>
-                {% endfor %}
-            </ul>
+            {% if data.version_groups and data.version_groups|length > 0 %}
+                <ul class="detail-card__item">
+                    {% for version_group in data.version_groups %}
+                        <li class="detail-card__list">
+                            <a href="{{ url_for('utilities.get_version_group', id_or_name=version_group.name) }}">{{ version_group.name | title }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No specific version groups associated with this Pokédex.</p>
+            {% endif %}
         </div>
     </div>
-    <h2 class="detail-card__title">Pokémon in {{ data.name | title }}</h2>
-    {% include '_pokemon_list.html' %}
+    
+    <!-- Pokémon List Section -->
+    <div class="container mt-4">
+        <h2 class="detail-card__title">Pokémon in {{ data.name | title }}</h2>
+        <p class="text-muted">Total Pokémon: {{ pokemon_list|length }}</p>
+        {% include '_pokemon_list.html' %}
     </div>
 {% endblock %}

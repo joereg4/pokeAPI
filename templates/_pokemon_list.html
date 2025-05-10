@@ -1,7 +1,10 @@
 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
     {% if pokemon_list|length == 0 %}
-        <div class="col">
-            None
+        <div class="col-12">
+            <div class="alert alert-info" role="alert">
+                <i class="fas fa-info-circle me-2"></i>
+                No Pokémon found for this selection.
+            </div>
         </div>
     {% else %}
         {% for pokemon in pokemon_list %}
@@ -11,19 +14,33 @@
                        href="{{ url_for('pokemon.get_pokemon', id_or_name=pokemon.name) }}">
                         {% if pokemon.official_artwork %}
                             <img src="{{ pokemon.official_artwork }}"
-                                 class="card-img-top" alt="{{ pokemon.name }}">
+                                 class="card-img-top" 
+                                 alt="{{ pokemon.name }}"
+                                 loading="lazy"
+                                 onerror="this.style.display='none'">
                         {% else %}
                             <img src="{{ url_for('pokemon.static', filename='img/default_pokemon.png') }}"
                                  class="card-img-top" alt="No Image">
                         {% endif %}
                     </a>
                     <div class="card-body">
-                        <h5 class="card-title">{{ pokemon.name | title }}</h5>
+                        <h5 class="card-title">
+                            {% if pokemon.entry_number %}
+                                #{{ pokemon.entry_number }} 
+                            {% endif %}
+                            {{ pokemon.name | title }}
+                        </h5>
                         {% set type_names = [] %}
                         {% for type_entry in pokemon.types %}
                             {% set _ = type_names.append(type_entry.type.name) %}
                         {% endfor %}
-                        <p class="card-text">{{ pokemon.id }} - {{ type_names|join(', ') | title }}</p>
+                        <p class="card-text">
+                            {% if type_names %}
+                                Types: {{ type_names|join(', ') | title }}
+                            {% else %}
+                                <span class="text-muted">Type information unavailable</span>
+                            {% endif %}
+                        </p>
                     </div>
                 </div>
             </div>

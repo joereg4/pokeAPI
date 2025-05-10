@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, send_file, url_for
 from pokedex.api import get_sprite
 from pokedex.common import sprite_url_build
 from pokedex.utils import Config
+from limiter import limiter
 import logging
 import os
 
@@ -11,6 +12,7 @@ VALID_SPRITES = Config.VALID_SPRITES
 
 
 @sprite_bp.route("/artwork/<pokemon_id>")
+@limiter.exempt
 def get_artwork(pokemon_id):
     """Get the official artwork for a Pokémon."""
     try:
@@ -26,6 +28,7 @@ def get_artwork(pokemon_id):
 
 
 @sprite_bp.route("/default/<pokemon_id>")
+@limiter.exempt
 def get_default_sprite(pokemon_id):
     """Get the default front sprite for a Pokémon."""
     try:
@@ -39,6 +42,7 @@ def get_default_sprite(pokemon_id):
 
 
 @sprite_bp.route("/<pokemon_id>/<sprite_type>")
+@limiter.exempt
 def get_specific_sprite(pokemon_id, sprite_type):
     """Get a specific sprite variant for a Pokémon."""
     try:
@@ -80,4 +84,3 @@ def get_sprite_url(pokemon_id, sprite_type=None, is_artwork=False):
         return url_for(
             "sprite.get_default_sprite", pokemon_id=pokemon_id, _external=False
         )
-
