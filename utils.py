@@ -73,6 +73,21 @@ def invalidate_related_caches(resource_type, resource_id):
             f"pokemon_*",
             f"summary_*",
         ],
+        "ability": [
+            f"ability_{resource_id}",
+            f"pokemon_*",  # Invalidate Pokémon with this ability
+            f"summary_*",
+        ],
+        "item": [
+            f"item_{resource_id}",
+            f"summary_*",
+        ],
+        "type": [
+            f"type_{resource_id}",
+            f"pokemon_*",  # Invalidate Pokémon with this type
+            f"type_*",  # Invalidate type relations
+            f"summary_*",
+        ],
     }
 
     deleted_keys = []
