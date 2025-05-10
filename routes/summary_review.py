@@ -359,6 +359,28 @@ def format_pokemon_summary(summary):
     return formatted_summary
 
 
+def format_generation(generation_text):
+    """
+    Format generation text with properly capitalized Roman numerals.
+    Example: "generation ix" -> "Generation IX"
+    """
+    if not generation_text:
+        return "Unknown"
+
+    # First capitalize the word "generation"
+    result = generation_text.replace("-", " ").title()
+
+    # Find Roman numerals and make them uppercase
+    roman_numeral_pattern = r"\b([IiVvXxLlCcDdMm]+)\b"
+
+    def uppercase_roman(match):
+        return match.group(0).upper()
+
+    result = re.sub(roman_numeral_pattern, uppercase_roman, result)
+
+    return result
+
+
 def custom_generate_pokemon_summary(
     pokemon_name, base_summary="", custom_instructions="", max_tokens=2000
 ):
@@ -390,10 +412,9 @@ def custom_generate_pokemon_summary(
                         if species_response.status_code == 200:
                             species_data = species_response.json()
                             if "generation" in species_data:
-                                generation = (
+                                # Format generation with proper Roman numerals
+                                generation = format_generation(
                                     species_data["generation"]["name"]
-                                    .replace("-", " ")
-                                    .title()
                                 )
                 except Exception as e:
                     current_app.logger.error(f"Error fetching species data: {e}")
@@ -407,6 +428,11 @@ def custom_generate_pokemon_summary(
         if pokemon_data and "types" in pokemon_data:
             types = [t["type"]["name"].title() for t in pokemon_data["types"]]
 
+        # Make sure generation has proper Roman numeral formatting
+        if "generation" in generation.lower():
+            if re.search(r"\b[ivxlcdm]+\b", generation.lower()):
+                generation = format_generation(generation)
+
         # If we have a base summary already, use it as the starting point
         if base_summary:
             summary_to_improve = base_summary
@@ -415,7 +441,7 @@ def custom_generate_pokemon_summary(
             prompt = f"""{custom_instructions}
             
 Improve the following Pokémon summary for {display_name}. Maintain the structure and sections of the summary.
-Ensure all information is accurate and maintain the markdown formatting with bold headings. When displaying generation ensure all roman numerals are uppercase.
+Ensure all information is accurate and maintain the markdown formatting with bold headings.
 
 IMPORTANT: Make sure to add a blank line after each section header and before bullet points, like this:
 
@@ -555,8 +581,17 @@ Here's the previous summary that needs to be improved:
     except Exception as e:
         current_app.logger.error(f"Error generating summary with OpenAI: {e}")
 
+        # Format generation for fallback template too
+        generation_text = (
+            generation if "generation" in locals() else "Unknown Generation"
+        )
+        if "generation" in generation_text.lower() and re.search(
+            r"\b[ivxlcdm]+\b", generation_text.lower()
+        ):
+            generation_text = format_generation(generation_text)
+
         # Fallback to a basic template if the API call fails
-        fallback_template = f"""**{display_name}** is a Pokémon introduced in {generation if 'generation' in locals() else 'Unknown Generation'}.
+        fallback_template = f"""**{display_name}** is a Pokémon introduced in {generation_text}.
 
 **Type:** {" / ".join(types) if 'types' in locals() and types else "[Type]"}
 
