@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% macro format_name(name) %}
+  {{- name | replace('-', ' ') | replace('+', ' + ') | replace('_', ' ') | replace('.', '. ') | title -}}
+{% endmacro %}
+
+{% block title %}{{ format_name(damage_class['name']) }} | Move Damage Class{% endblock %}
+
+{% set type_colors = {
+    'normal': '#A8A878',
+    'fire': '#F08030',
+    'water': '#6890F0',
+    'grass': '#78C850',
+    'electric': '#F8D030',
+    'ice': '#98D8D8',
+    'fighting': '#C03028',
+    'poison': '#A040A0',
+    'ground': '#E0C068',
+    'flying': '#A890F0',
+    'psychic': '#F85888',
+    'bug': '#A8B820',
+    'rock': '#B8A038',
+    'ghost': '#705898',
+    'dragon': '#7038F8',
+    'dark': '#705848',
+    'steel': '#B8B8D0',
+    'fairy': '#EE99AC'
+} %}
+
+{% set damage_colors = {
+    'physical': '#C92112',
+    'special': '#4F5870',
+    'status': '#8C888C'
+} %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5 fw-bold d-flex align-items-center">
+                <span class="badge rounded-pill px-3 py-2 me-3" style="background-color: {{ damage_colors[damage_class['name']] | default('#8C888C') }};">
+                    {{ format_name(damage_class['name']) }}
+                </span>
+                Move Damage Class
+            </h1>
+            
+            {% if damage_class['descriptions'] %}
+                {% set has_english = false %}
+                {% set english_description = "" %}
+                
+                {% for description in damage_class['descriptions'] %}
+                    {% if description['language']['name'] == 'en' %}
+                        {% set has_english = true %}
+                        {% set english_description = description['description'] %}
+                    {% endif %}
+                {% endfor %}
+                
+                {% if has_english %}
+                <div class="lead mt-3">
+                    {{ english_description }}
+                </div>
+                {% elif damage_class['descriptions']|length > 0 %}
+                <div class="lead mt-3">
+                    {{ damage_class['descriptions'][0]['description'] }}
+                </div>
+                {% endif %}
+            {% else %}
+                <div class="lead mt-3 text-muted">
+                    No description available for this move damage class.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Moves Section -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary bg-gradient text-white">
+                    <h2 class="h5 mb-0"><i class="fas fa-bolt me-2"></i>Moves with {{ format_name(damage_class['name']) }} Damage Class</h2>
+                </div>
+                <div class="card-body">
+                    {% if damage_class['moves'] %}
+                        <div class="row">
+                            {% for move in damage_class['moves'] %}
+                                <div class="col-md-4 col-lg-3 mb-2">
+                                    <a href="{{ url_for('abilities_moves_items.get_move', id_or_name=move['name']) }}" class="text-decoration-none">
+                                        {{ format_name(move['name']) }}
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No moves found in this damage class.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
