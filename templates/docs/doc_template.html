@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>{{ title }}</h1>
+        <div>
+            <a href="{{ url_for('docs.docs_index') }}" class="btn btn-outline-secondary">All Documentation</a>
+            <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-primary ms-2">Back to Admin</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="documentation-content">
+                {{ content|safe }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .documentation-content h1 { font-size: 2.2rem; margin-top: 1rem; margin-bottom: 1.5rem; }
+    .documentation-content h2 { font-size: 1.8rem; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid #eaecef; padding-bottom: 0.3rem; }
+    .documentation-content h3 { font-size: 1.4rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+    .documentation-content h4 { font-size: 1.2rem; margin-top: 1.2rem; margin-bottom: 0.5rem; }
+    .documentation-content code { background-color: rgba(27,31,35,0.05); border-radius: 3px; padding: 0.2em 0.4em; font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .documentation-content pre { background-color: #f6f8fa; border-radius: 3px; padding: 16px; overflow: auto; }
+    .documentation-content pre code { background-color: transparent; padding: 0; }
+    .documentation-content table { border-collapse: collapse; margin: 1em 0; }
+    .documentation-content table th, .documentation-content table td { padding: 8px 13px; border: 1px solid #dfe2e5; }
+    .documentation-content table th { background-color: #f6f8fa; }
+    .documentation-content ul, .documentation-content ol { padding-left: 2em; }
+    .documentation-content blockquote { border-left: 4px solid #dfe2e5; color: #6a737d; padding: 0 1em; margin: 0; }
+</style>
+{% endblock %} 

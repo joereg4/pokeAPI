@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Documentation</h1>
+        <div>
+            <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-primary">Back to Admin</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Available Documentation</h2>
+        </div>
+        <div class="card-body">
+            {% if docs %}
+                <div class="list-group">
+                    {% for doc in docs %}
+                        <a href="{{ url_for('docs.view_doc', doc_name=doc.name) }}" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{{ doc.title }}</h5>
+                                <small class="text-muted">{{ doc.filename }}</small>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    No documentation files found.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 
