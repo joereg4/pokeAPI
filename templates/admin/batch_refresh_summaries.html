@@ -31,6 +31,59 @@
                         </div>
                     </div>
                     
+                    <!-- Moved Batch Processing Options to the top -->
+                    <div class="card mt-4 mb-4">
+                        <div class="card-header">
+                            <h4>Memory Management Options</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="batch_size" class="form-label">Batch Size:</label>
+                                        <input type="number" class="form-control" id="batch_size" name="batch_size" 
+                                               min="1" max="20" value="10">
+                                        <div class="form-text">Number of items to process in each batch (recommended: 5-10)</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="delay_between_items" class="form-label">Delay Between Items (seconds):</label>
+                                        <input type="number" class="form-control" id="delay_between_items" name="delay_between_items" 
+                                               min="0" max="10" value="1">
+                                        <div class="form-text">Seconds to wait between processing individual items</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="delay_between_batches" class="form-label">Delay Between Batches (seconds):</label>
+                                        <input type="number" class="form-control" id="delay_between_batches" name="delay_between_batches" 
+                                               min="0" max="30" value="5">
+                                        <div class="form-text">Seconds to wait between batches to allow memory cleanup</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="log_memory_usage" name="log_memory_usage">
+                                        <label class="form-check-label" for="log_memory_usage">
+                                            Log memory usage (helpful for debugging memory issues)
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3 mb-4">
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <strong>Warning:</strong> Refreshing many summaries at once may take a long time and could result in rate limiting from the API. Use smaller batch sizes and longer delays for large sets.
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="refreshButton">Refresh Selected Summaries</button>
+                    </div>
+                    
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
@@ -95,57 +148,9 @@
                         </table>
                     </div>
                     
-                    <!-- Batch Processing Options -->
-                    <div class="card mt-4 mb-4">
-                        <div class="card-header">
-                            <h4>Memory Management Options</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label for="batch_size" class="form-label">Batch Size:</label>
-                                        <input type="number" class="form-control" id="batch_size" name="batch_size" 
-                                               min="1" max="20" value="10">
-                                        <div class="form-text">Number of items to process in each batch (recommended: 5-10)</div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label for="delay_between_items" class="form-label">Delay Between Items (seconds):</label>
-                                        <input type="number" class="form-control" id="delay_between_items" name="delay_between_items" 
-                                               min="0" max="10" value="1">
-                                        <div class="form-text">Seconds to wait between processing individual items</div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label for="delay_between_batches" class="form-label">Delay Between Batches (seconds):</label>
-                                        <input type="number" class="form-control" id="delay_between_batches" name="delay_between_batches" 
-                                               min="0" max="30" value="5">
-                                        <div class="form-text">Seconds to wait between batches to allow memory cleanup</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="log_memory_usage" name="log_memory_usage">
-                                        <label class="form-check-label" for="log_memory_usage">
-                                            Log memory usage (helpful for debugging memory issues)
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-3">
-                        <div class="alert alert-warning">
-                            <i class="fas fa-exclamation-triangle me-2"></i>
-                            <strong>Warning:</strong> Refreshing many summaries at once may take a long time and could result in rate limiting from the API. Use smaller batch sizes and longer delays for large sets.
-                        </div>
-                        <button type="submit" class="btn btn-primary" id="refreshButton">Refresh Selected Summaries</button>
+                    <!-- Add duplicate Refresh button at the bottom -->
+                    <div class="mt-4 mb-3">
+                        <button type="submit" class="btn btn-primary" id="refreshButtonBottom">Refresh Selected Summaries</button>
                     </div>
                 </form>
             {% else %}
@@ -240,16 +245,21 @@
     function updateRefreshButton() {
         const anyChecked = Array.from(document.querySelectorAll('.resource-checkbox')).some(checkbox => checkbox.checked);
         const refreshButton = document.getElementById('refreshButton');
+        const refreshButtonBottom = document.getElementById('refreshButtonBottom');
         refreshButton.disabled = !anyChecked;
+        refreshButtonBottom.disabled = !anyChecked;
         
         const checkedCount = document.querySelectorAll('.resource-checkbox:checked').length;
+        let buttonText = 'Refresh Selected Summaries';
+        
         if (checkedCount > 0) {
             const batchSize = parseInt(document.getElementById('batch_size').value);
             const batches = Math.ceil(checkedCount / batchSize);
-            refreshButton.textContent = `Refresh Selected Summaries (${checkedCount} items in ${batches} batches)`;
-        } else {
-            refreshButton.textContent = 'Refresh Selected Summaries';
+            buttonText = `Refresh Selected Summaries (${checkedCount} items in ${batches} batches)`;
         }
+        
+        refreshButton.textContent = buttonText;
+        refreshButtonBottom.textContent = buttonText;
     }
     
     // Update batch count when batch size changes
