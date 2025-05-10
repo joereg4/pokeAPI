@@ -1,21 +1,136 @@
 {% extends 'base.html' %}
 
-{% block title %}Move Category{% endblock %}
+{% macro format_name(name) %}
+  {{- name | replace('-', ' ') | replace('+', ' + ') | replace('_', ' ') | replace('.', '. ') | title -}}
+{% endmacro %}
+
+{% block title %}{{ format_name(category['name']) }} | Move Category{% endblock %}
+
+{% set type_colors = {
+    'normal': '#A8A878',
+    'fire': '#F08030',
+    'water': '#6890F0',
+    'grass': '#78C850',
+    'electric': '#F8D030',
+    'ice': '#98D8D8',
+    'fighting': '#C03028',
+    'poison': '#A040A0',
+    'ground': '#E0C068',
+    'flying': '#A890F0',
+    'psychic': '#F85888',
+    'bug': '#A8B820',
+    'rock': '#B8A038',
+    'ghost': '#705898',
+    'dragon': '#7038F8',
+    'dark': '#705848',
+    'steel': '#B8B8D0',
+    'fairy': '#EE99AC'
+} %}
+
+{% set damage_colors = {
+    'physical': '#C92112',
+    'special': '#4F5870',
+    'status': '#8C888C'
+} %}
 
 {% block content %}
-<h1>Move Category: {{ category['name'] | title }}</h1>
-
-<div class="move-category-details">
-    <h2>Moves</h2>
-    <ul>
-        {% for move in moves %}
-            <li>
-                <a href="{{ url_for('abilities_moves_items.get_move', id_or_name=move['name']) }}">
-                    {{ move['name'] | title }}
-                </a>
-                - Power: {{ move['power'] }}, Accuracy: {{ move['accuracy'] }}%, PP: {{ move['pp'] }}
-            </li>
-        {% endfor %}
-    </ul>
+<div class="container py-4">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5 fw-bold">
+                {{ format_name(category['name']) }} Move Category
+            </h1>
+            
+            {% if category['descriptions'] %}
+                {% set has_english = false %}
+                {% set english_description = "" %}
+                
+                {% for description in category['descriptions'] %}
+                    {% if description['language']['name'] == 'en' %}
+                        {% set has_english = true %}
+                        {% set english_description = description['description'] %}
+                    {% endif %}
+                {% endfor %}
+                
+                {% if has_english %}
+                <div class="lead mt-3">
+                    {{ english_description }}
+                </div>
+                {% elif category['descriptions']|length > 0 %}
+                <div class="lead mt-3">
+                    {{ category['descriptions'][0]['description'] }}
+                </div>
+                {% endif %}
+            {% else %}
+                <div class="lead mt-3 text-muted">
+                    No description available for this move category.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Moves Section -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary bg-gradient text-white">
+                    <h2 class="h5 mb-0"><i class="fas fa-bolt me-2"></i>Moves in this Category</h2>
+                </div>
+                <div class="card-body">
+                    {% if moves %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Move</th>
+                                    <th>Type</th>
+                                    <th>Class</th>
+                                    <th>Power</th>
+                                    <th>Accuracy</th>
+                                    <th>PP</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for move in moves %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('abilities_moves_items.get_move', id_or_name=move['name']) }}" class="text-decoration-none">
+                                            {{ format_name(move['name']) }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        {% if move['type'] and move['type']['name'] %}
+                                        <span class="badge rounded-pill px-3 py-2" style="background-color: {{ type_colors[move['type']['name']] }}; {% if move['type']['name'] in ['electric', 'ground', 'steel', 'fairy'] %}color: #212529;{% endif %}">
+                                            {{ move['type']['name'] | title }}
+                                        </span>
+                                        {% else %}
+                                        <span class="badge bg-secondary rounded-pill">Unknown</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if move['damage_class'] and move['damage_class']['name'] %}
+                                        <span class="badge rounded-pill px-3 py-2" style="background-color: {{ damage_colors[move['damage_class']['name']] }};">
+                                            {{ move['damage_class']['name'] | title }}
+                                        </span>
+                                        {% else %}
+                                        <span class="badge bg-secondary rounded-pill">Unknown</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ move['power'] if move['power'] else '—' }}</td>
+                                    <td>{{ move['accuracy'] if move['accuracy'] else '—' }}{% if move['accuracy'] %}%{% endif %}</td>
+                                    <td>{{ move['pp'] }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No moves found in this category.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
