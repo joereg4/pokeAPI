@@ -3,6 +3,7 @@ import csv
 import json
 from openai import OpenAI
 import sys
+import re
 from flask import (
     Blueprint,
     render_template,
@@ -342,6 +343,22 @@ def new_pokemon_summary(pokemon_name):
         return redirect(return_to)
 
 
+def format_pokemon_summary(summary):
+    """
+    Ensure proper markdown formatting with extra line breaks after headers.
+    This makes bullet point lists render properly in markdown.
+    """
+    # Add a line break after each section header (bold text followed by a colon)
+    formatted_summary = re.sub(r"(\*\*[^*]+:\*\*)\n-", r"\1\n\n-", summary)
+
+    # Handle edge cases where there might be no bullet points by ensuring consistent structure
+    formatted_summary = re.sub(
+        r"(\*\*[^*]+:\*\*)\n([^\n-])", r"\1\n\n\2", formatted_summary
+    )
+
+    return formatted_summary
+
+
 def custom_generate_pokemon_summary(
     pokemon_name, base_summary="", custom_instructions="", max_tokens=2000
 ):
@@ -400,37 +417,50 @@ def custom_generate_pokemon_summary(
 Improve the following Pokémon summary for {display_name}. Maintain the structure and sections of the summary.
 Ensure all information is accurate and maintain the markdown formatting with bold headings.
 
+IMPORTANT: Make sure to add a blank line after each section header and before bullet points, like this:
+
+**Section Header:**
+
+- Bullet point 1
+- Bullet point 2
+
 {summary_to_improve}
 """
         else:
-            # Custom Template specified for Pokémon summaries
+            # Custom Template with proper spacing after headers
             template = f"""**{display_name}** is a {"/".join(types) if types else "[Type]"} Pokémon introduced in {generation}.
 
 **Type:** {" / ".join(types) if types else "[Type]"}
 
 **Abilities:**
+
 - **[Primary Ability]:** [Description]
 - **[Hidden Ability]:** [Description]
 
 **Physical Characteristics:**
+
 - [Notable physical feature 1]
 - [Notable physical feature 2]
 - [Notable physical feature 3]
 
 **Behavior and Habitat:**
+
 - [Behavior description]
 - [Habitat information]
 
 **In Battle:**
+
 - [Battle strategy or role]
 - [Signature/Notable moves]
 - [Strengths]
 - [Weaknesses]
 
 **Evolution:**
+
 - [Evolution details]
 
 **Interesting Facts:**
+
 - [Interesting fact 1]
 - [Interesting fact 2]
 - [Interesting fact 3]
@@ -452,6 +482,7 @@ IMPORTANT INSTRUCTIONS:
 6. Include factual interesting facts, not placeholders.
 7. Keep the markdown formatting with bold section headers.
 8. Be specific and detailed in your descriptions.
+9. Maintain the exact spacing format with a blank line after each section header.
 
 If you don't have enough information for a section, provide your best educated description based on similar Pokémon rather than leaving placeholders.
 """
@@ -465,7 +496,7 @@ If you don't have enough information for a section, provide your best educated d
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a Pokémon expert who creates detailed and accurate summaries of Pokémon with precise information from official sources. You MUST replace all placeholder text with actual information.",
+                    "content": "You are a Pokémon expert who creates detailed and accurate summaries of Pokémon with precise information from official sources. You MUST replace all placeholder text with actual information. Always include a blank line after each section header before starting bullet points.",
                 },
                 {"role": "user", "content": prompt},
             ],
@@ -490,6 +521,12 @@ Please create a complete summary WITHOUT ANY PLACEHOLDERS. Replace every [placeh
 
 For any section where you're uncertain, provide a reasonable description based on similar Pokémon or your knowledge of the Pokémon universe.
 
+IMPORTANT: Make sure to add a blank line after each section header and before bullet points, like this:
+**Section:**
+
+- Bullet point
+- Another bullet point
+
 Here's the previous summary that needs to be improved:
 
 {result}"""
@@ -499,7 +536,7 @@ Here's the previous summary that needs to be improved:
                 messages=[
                     {
                         "role": "system",
-                        "content": "You are a Pokémon expert who creates detailed and accurate summaries. You MUST replace ALL placeholder text with actual information, even if you need to make educated guesses based on similar Pokémon.",
+                        "content": "You are a Pokémon expert who creates detailed and accurate summaries. You MUST replace ALL placeholder text with actual information, even if you need to make educated guesses based on similar Pokémon. Always include a blank line after each section header before starting bullet points.",
                     },
                     {"role": "user", "content": retry_prompt},
                 ],
@@ -509,6 +546,9 @@ Here's the previous summary that needs to be improved:
             )
 
             result = retry_response.choices[0].message.content.strip()
+
+        # Post-process the summary to ensure proper formatting
+        result = format_pokemon_summary(result)
 
         return result
 
@@ -521,30 +561,36 @@ Here's the previous summary that needs to be improved:
 **Type:** {" / ".join(types) if 'types' in locals() and types else "[Type]"}
 
 **Abilities:**
+
 - **Vital Spirit:** Prevents the Pokémon from falling asleep.
 - **Anger Point:** Maxes Attack when hit by a critical hit.
 
 **Physical Characteristics:**
+
 - Muscular bipedal Pokémon with a primate-like appearance
 - Has distinctive coloration and markings
 - Shows signs of its evolutionary heritage
 
 **Behavior and Habitat:**
+
 - Known for its aggressive temperament
 - Typically found in mountainous or forested regions
 - Forms small groups in the wild
 
 **In Battle:**
+
 - Primarily physical attacker with high Attack stat
 - Known for fighting-type moves with good coverage
 - Strong against Normal, Ice, Rock, Dark, and Steel types
 - Vulnerable to Psychic, Flying, and Fairy moves
 
 **Evolution:**
+
 - Evolves from its pre-evolution under specific conditions
 - Evolution triggers specific changes in appearance and abilities
 
 **Interesting Facts:**
+
 - Has a unique place in Pokémon lore and games
 - Featured in various Pokémon media
 - Has distinctive cry and animation in the games
