@@ -354,7 +354,7 @@ def generate_pokemon_summary(
 Improve the following Pokémon summary for {display_name}. Maintain the structure and sections of the summary.
 Ensure all information is accurate and maintain the markdown formatting with bold headings.
 
-IMPORTANT: Make sure to add a blank line after each section header and before bullet points, like this:
+IMPORTANT: Make sure to add a blank line after each section header and before bullet points except for **Type:**, like this:
 
 **Section Header:**
 
