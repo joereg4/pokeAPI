@@ -182,7 +182,6 @@ def get_pokedex(id_or_name):
             pass
 
         try:
-            logging.info(f"Fetching Pokedex data for: {id_or_name}")
             data = pokedex.APIResource.fetch_data("pokedex", id_or_name)
         except ValueError as e:
             logging.error(f"ValueError in fetching pokedex {id_or_name}: {e}")
@@ -207,9 +206,6 @@ def get_pokedex(id_or_name):
         pokemon_list = []
         if "pokemon_entries" in data and data["pokemon_entries"]:
             entries_count = len(data["pokemon_entries"])
-            logging.info(
-                f"Found {entries_count} Pokémon entries in Pokedex {id_or_name}"
-            )
 
             # Create a list for parallel processing
             pokemon_requests = []
@@ -240,9 +236,6 @@ def get_pokedex(id_or_name):
 
                 pokemon_list.extend(batch_pokemon_list)
                 processed += len(batch)
-                logging.info(
-                    f"Processed {processed}/{total_entries} Pokémon for Pokedex {id_or_name}"
-                )
 
             # Sort the list by entry number
             pokemon_list.sort(key=lambda x: x.get("entry_number", float("inf")))
@@ -250,22 +243,6 @@ def get_pokedex(id_or_name):
         return render_template(
             "pokedex_detail.html", data=data, pokemon_list=pokemon_list
         )
-
-
-@pokemon_bp.route("/pokedex/<id_or_name>/debug")
-def debug_pokedex(id_or_name):
-    try:
-        id_or_name = int(id_or_name)
-    except ValueError:
-        pass
-
-    try:
-        data = pokedex.APIResource.fetch_data("pokedex", id_or_name)
-        # Return the raw JSON data
-        return jsonify(data)
-    except Exception as e:
-        logging.error(f"Error fetching pokedex data for debug: {e}")
-        return jsonify({"error": str(e)})
 
 
 @pokemon_bp.route("/pokemon/")
