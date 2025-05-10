@@ -100,5 +100,45 @@ def list_users():
         click.echo(f"Error listing users: {str(e)}", err=True)
 
 
+@cli.command()
+@click.argument("resource_type")
+@click.argument("resource_name", required=False)
+def clear_cache(resource_type, resource_name=None):
+    """
+    Clear cache for specific resource.
+    Usage: python manage.py clear-cache [resource_type] [resource_name]
+    Example: python manage.py clear-cache ability sand-veil
+    """
+    from utils import invalidate_related_caches
+
+    if resource_name:
+        # Clear cache for specific resource
+        count = invalidate_related_caches(resource_type, resource_name)
+        print(f"Cleared {count} cache keys for {resource_type}/{resource_name}")
+    else:
+        # Clear all caches for this resource type
+        from cache import cache
+
+        keys = cache.cache._write_client.keys(f"pokedex:*{resource_type}*")
+        deleted_count = 0
+
+        # Handle bytes/string conversion and delete each key individually
+        for key in keys:
+            try:
+                # Convert bytes to string if needed
+                if isinstance(key, bytes):
+                    key = key.decode("utf-8")
+
+                # Delete the key
+                if cache.cache._write_client.delete(key):
+                    deleted_count += 1
+            except Exception as e:
+                print(f"Error deleting key {key}: {e}")
+
+        print(f"Cleared {deleted_count} cache keys for all {resource_type}s")
+
+    return 0
+
+
 if __name__ == "__main__":
     cli()
