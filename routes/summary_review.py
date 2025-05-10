@@ -415,7 +415,7 @@ def custom_generate_pokemon_summary(
             prompt = f"""{custom_instructions}
             
 Improve the following Pokémon summary for {display_name}. Maintain the structure and sections of the summary.
-Ensure all information is accurate and maintain the markdown formatting with bold headings.
+Ensure all information is accurate and maintain the markdown formatting with bold headings. When displaying generation ensure all roman numerals are uppercase.
 
 IMPORTANT: Make sure to add a blank line after each section header and before bullet points, like this:
 
