@@ -67,7 +67,7 @@
                                 </td>
                                 <td>
                                     <a href="{{ url_for('summary_review.new_pokemon_summary', pokemon_name=pokemon.name, return_to=url_for('admin.list_pokemon_summaries', missing_only=show_missing_only)) }}" class="btn btn-sm btn-primary">
-                                        Generate Summary
+                                        Generate NewSummary
                                     </a>
                                     {% if pokemon.has_summary %}
                                         <a href="{{ url_for('summary_review.edit_summary', resource='pokemon', name=pokemon.name, return_to=url_for('admin.list_pokemon_summaries', missing_only=show_missing_only)) }}" class="btn btn-sm btn-primary">
