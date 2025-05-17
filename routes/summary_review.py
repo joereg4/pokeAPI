@@ -524,38 +524,38 @@ Here's the previous summary that needs to be improved:
 
 **Abilities:**
 
-- **Vital Spirit:** Prevents the Pokémon from falling asleep.
-- **Anger Point:** Maxes Attack when hit by a critical hit.
+- **Vital Spirit:** Prevents the Pokémon from falling asleep, ensuring it remains active and alert during battle, which is especially useful against sleep-inducing moves.
+- **Anger Point:** When struck by a critical hit, this ability maximizes the Pokémon's Attack stat, turning a potentially dangerous situation into an offensive advantage.
 
 **Physical Characteristics:**
 
-- Muscular bipedal Pokémon with a primate-like appearance
-- Has distinctive coloration and markings
-- Shows signs of its evolutionary heritage
+- A powerfully built bipedal Pokémon with a primate-like appearance, featuring well-defined muscles that highlight its physical strength and combat capabilities
+- Possesses distinctive coloration and markings across its body that make it easily recognizable and set it apart from other Fighting-type Pokémon
+- Displays clear evolutionary traits from its previous form while showing more advanced physical development and mature features
 
 **Behavior and Habitat:**
 
-- Known for its aggressive temperament
-- Typically found in mountainous or forested regions
-- Forms small groups in the wild
+- Exhibits an aggressive and territorial temperament, often challenging other Pokémon to demonstrate its strength and establish dominance
+- Primarily inhabits rugged mountainous regions and dense forests where it can train and develop its fighting skills in a natural environment
+- Lives and travels in small, tight-knit groups that work together for protection and hunting, showing surprising social complexity
 
 **In Battle:**
 
-- Primarily physical attacker with high Attack stat
-- Known for fighting-type moves with good coverage
-- Strong against Normal, Ice, Rock, Dark, and Steel types
-- Vulnerable to Psychic, Flying, and Fairy moves
+- Excels as a physical attacker with an impressively high Attack stat, making it a formidable opponent in close-combat situations
+- Specializes in powerful fighting-type moves while maintaining a diverse movepool that provides excellent coverage against multiple types
+- Demonstrates particular effectiveness against Normal, Ice, Rock, Dark, and Steel type Pokémon, making it a valuable team member
+- Must be carefully managed against Psychic, Flying, and Fairy type moves due to type disadvantages that can quickly turn the tide of battle
 
 **Evolution:**
 
-- Evolves from its pre-evolution under specific conditions
-- Evolution triggers specific changes in appearance and abilities
+- Undergoes a significant evolution from its pre-evolved form when specific conditions are met, representing a major milestone in its development
+- The evolution process triggers dramatic changes in both physical appearance and combat abilities, resulting in enhanced fighting capabilities
 
 **Interesting Facts:**
 
-- Has a unique place in Pokémon lore and games
-- Featured in various Pokémon media
-- Has distinctive cry and animation in the games
+- Holds a special significance in Pokémon lore and games, often appearing in key storylines and competitive scenarios
+- Has made numerous memorable appearances across various Pokémon media, including the anime, movies, and trading card game
+- Features a uniquely recognizable cry and battle animation in the games that have become iconic among fans of the series
 """
 
         return fallback_template
