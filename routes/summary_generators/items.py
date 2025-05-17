@@ -219,32 +219,37 @@ Here's the previous summary that needs to be improved:
 
 **Effect:**
 
-- Used by trainers to help their Pokémon
-- Provides a specific benefit in battles or exploration
+- Used by trainers to help and support their Pokémon in various ways
+- Provides specific benefits and advantages during battles or while exploring the world
+- Can make a noticeable difference in Pokémon performance
 
 **In-Game Use:**
 
-- Can be used in various situations in the games
-- May be consumed on use or held by a Pokémon
-- Available in Pokémon Centers or from special vendors
+- Can be utilized in many different situations throughout the games
+- May be a one-time use item that gets consumed or can be held by a Pokémon for continuous effect
+- Readily available for purchase in Pokémon Centers or obtained from specialized vendors and merchants
+- Useful tool for trainers on their journey
 
 **Game Appearances:**
 
-- Featured in multiple generations of Pokémon games
-- Consistent functionality across most game versions
-- Part of the core item collection system
+- Featured prominently across multiple generations of Pokémon games
+- Maintains consistent functionality and effects across most game versions
+- Forms an integral part of the core item collection and management system
+- Has remained a staple throughout the series
 
 **Strategic Applications:**
 
-- May be used in competitive play for specific strategies
-- Can provide advantages in certain battle situations
-- Some trainers use it for specific team compositions
+- Commonly used in competitive play to enable specific battle strategies
+- Can provide significant tactical advantages in certain battle situations
+- Many experienced trainers incorporate it into their team compositions
+- Adds an extra layer of strategy to battles
 
 **Interesting Facts:**
 
-- Part of the Pokémon universe's item ecosystem
-- Has a design that reflects its purpose
-- Recognized by most Pokémon players
+- Plays an important role in the broader Pokémon universe's item ecosystem
+- Features a distinctive design that clearly reflects its intended purpose
+- Widely recognized and utilized by Pokémon players of all experience levels
+- Has become a familiar staple of the franchise
 """
 
         return fallback_template
