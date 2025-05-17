@@ -5,7 +5,7 @@ from unittest.mock import patch, MagicMock
 from cache import cache
 from utils import invalidate_related_caches
 from models.model import Resource, db
-from routes.summary_review import custom_generate_summary
+from routes.summary_generators.generators import generate_summary
 
 
 @pytest.fixture
