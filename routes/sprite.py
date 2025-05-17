@@ -1,14 +1,24 @@
-from flask import Blueprint, jsonify, send_file, url_for
+from flask import Blueprint, jsonify, send_file, url_for, make_response
 from pokedex.api import get_sprite
 from pokedex.common import sprite_url_build
 from pokedex.utils import Config
 from limiter import limiter
 import logging
 import os
+from datetime import datetime, timedelta
 
 sprite_bp = Blueprint("sprite", __name__)
 
 VALID_SPRITES = Config.VALID_SPRITES
+
+
+def add_cache_headers(response):
+    """Add cache control headers to the response"""
+    response.headers["Cache-Control"] = "public, max-age=31536000"  # Cache for 1 year
+    response.headers["Expires"] = (datetime.utcnow() + timedelta(days=365)).strftime(
+        "%a, %d %b %Y %H:%M:%S GMT"
+    )
+    return response
 
 
 @sprite_bp.route("/artwork/<pokemon_id>")
@@ -21,7 +31,8 @@ def get_artwork(pokemon_id):
         )
         if not sprite_data or "path" not in sprite_data:
             return jsonify({"error": "Artwork not found"}), 404
-        return send_file(sprite_data["path"], mimetype="image/png")
+        response = make_response(send_file(sprite_data["path"], mimetype="image/png"))
+        return add_cache_headers(response)
     except Exception as e:
         logging.error(f"Error fetching artwork for Pokémon {pokemon_id}: {e}")
         return jsonify({"error": str(e)}), 500
@@ -35,7 +46,8 @@ def get_default_sprite(pokemon_id):
         sprite_data = get_sprite("pokemon", pokemon_id)
         if not sprite_data or "path" not in sprite_data:
             return jsonify({"error": "Sprite not found"}), 404
-        return send_file(sprite_data["path"], mimetype="image/png")
+        response = make_response(send_file(sprite_data["path"], mimetype="image/png"))
+        return add_cache_headers(response)
     except Exception as e:
         logging.error(f"Error fetching default sprite for Pokémon {pokemon_id}: {e}")
         return jsonify({"error": str(e)}), 500
@@ -61,7 +73,8 @@ def get_specific_sprite(pokemon_id, sprite_type):
         sprite_data = get_sprite("pokemon", pokemon_id, **options)
         if not sprite_data or "path" not in sprite_data:
             return jsonify({"error": "Sprite not found"}), 404
-        return send_file(sprite_data["path"], mimetype="image/png")
+        response = make_response(send_file(sprite_data["path"], mimetype="image/png"))
+        return add_cache_headers(response)
     except Exception as e:
         logging.error(
             f"Error fetching {sprite_type} sprite for Pokémon {pokemon_id}: {e}"
