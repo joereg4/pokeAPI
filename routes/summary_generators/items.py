@@ -64,192 +64,107 @@ IMPORTANT: Make sure to add a blank line after each section header and before bu
 {summary_to_improve}
 """
         else:
-            # Custom Template with proper spacing after headers for items
-            template = f"""**{display_name}** is a {category} item in the Pokémon games.
+            # Example template to show the desired format and structure
+            example_template = """**Leftovers** is a held item in the Pokémon games.
 
 **Basic Information:**
 
-- **Category:** {category}
-- **Cost:** {cost} Pokédollars
-- **Availability:** [Where it can be purchased or found]
+- **Category:** Held Item
+- **Cost:** 200,000 Pokédollars
+- **Availability:** Can be purchased at the Battle Tower/Frontier
 
 **Effect:**
 
-- {effect if effect != "Unknown" else "[Primary effect description]"}
-- [Additional effect details if applicable]
+- Restores 1/16 of the holder's maximum HP at the end of each turn
+- Works in both single and double battles
+- Effect is not prevented by most abilities
+- Can be used multiple times in a battle
 
 **In-Game Use:**
 
-- [How players typically use this item]
-- [When it's most effective]
-- [Limitations or restrictions]
+- Held by defensive Pokémon to increase longevity
+- Particularly effective on Pokémon with high HP stats
+- Can be used to offset damage from status conditions
+- Useful for stalling strategies
 
 **Game Appearances:**
 
-- [First appearance in the series]
-- [Notable games featuring this item]
-- [Any changes across different games]
+- Introduced in Generation II
+- Available in every main series game since
+- Often given as a reward for completing difficult challenges
+- Can be purchased in post-game facilities
 
 **Strategic Applications:**
 
-- [How competitive players use this item]
-- [Which Pokémon benefit most from holding it]
-- [Team strategies involving this item]
+- Essential item for defensive and stalling Pokémon
+- Commonly used on walls and tanks
+- Helps maintain momentum in longer battles
+- Can be used to recover HP without using a move
 
 **Interesting Facts:**
 
-- [Development history or inspiration]
-- [References in anime or manga]
-- [Cultural significance or trivia]
+- One of the most iconic held items in competitive play
+- Has maintained consistent functionality across generations
+- The name refers to food scraps that provide sustenance
+- Featured in the anime as a common held item
 """
 
-            # Prepare the prompt with specific instructions to avoid returning placeholders
+            # Prepare the prompt with specific instructions and the example
             prompt = f"""{custom_instructions}
 
-You are a Pokémon item expert. Create a comprehensive and detailed summary for the item {display_name} following this exact template structure:
+You are a Pokémon item expert. Create a comprehensive and detailed summary for {display_name} following the same structure and level of detail as this example:
 
-{template}
+{example_template}
 
 IMPORTANT INSTRUCTIONS:
-1. Fill in ALL placeholders with specific, accurate information about the item {display_name}.
-2. Do NOT leave any placeholder text like "[Primary effect description]" in your response.
-3. Search the web for the most current and accurate information about this item.
-4. Include realistic information about how this item is used in the games.
-5. Describe the actual effects of the item in detail.
-6. Include specific strategic applications for competitive play.
-7. Keep the markdown formatting with bold section headers.
-8. Be specific and detailed in your descriptions.
-9. Maintain the exact spacing format with a blank line after each section header.
-
-If you don't have enough information for a section, provide your best educated description based on similar items rather than leaving placeholders.
+1. Create a complete summary for {display_name} with the same sections and formatting as the example.
+2. Include specific, accurate information about {display_name}'s:
+   - Category: {category}
+   - Cost: {cost} Pokédollars
+   - Effect: {effect}
+   - In-game usage and availability
+   - Strategic applications
+   - Interesting facts and trivia
+3. Search the web for the most current and accurate information.
+4. Keep the markdown formatting with bold section headers.
+5. Maintain the exact spacing format with a blank line after each section header.
+6. Be specific and detailed in your descriptions.
+7. If you don't have enough information for a section, provide your best educated description based on similar items rather than leaving it vague.
 """
 
         # Call OpenAI API with GPT-4o and web search capability
         client = get_openai_client()
-
-        # Use GPT-4o with web search for new information about the item
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a Pokémon expert who creates detailed and accurate summaries of Pokémon items with precise information from official sources. You MUST replace all placeholder text with actual information. Always include a blank line after each section header before starting bullet points.",
+                    "content": "You are a Pokémon item expert who creates detailed, accurate summaries about items. Use web search to ensure your information is current and accurate.",
                 },
                 {"role": "user", "content": prompt},
             ],
             max_tokens=max_tokens,
-            tools=[
-                {
-                    "type": "function",
-                    "function": {
-                        "name": "web_search",
-                        "description": "Search the web for information about Pokémon items",
-                    },
-                }
-            ],
-            tool_choice="auto",
+            temperature=0.7,
         )
+
+        # Check if we have a valid content in the response
+        if (
+            not hasattr(response.choices[0], "message")
+            or not hasattr(response.choices[0].message, "content")
+            or response.choices[0].message.content is None
+        ):
+            current_app.logger.error("No valid content in API response")
+            raise Exception(
+                "Failed to generate summary: No valid content in API response"
+            )
 
         result = response.choices[0].message.content.strip()
 
-        # Check if the response still contains placeholder text
-        placeholder_pattern = r"\[\w+( \w+)*\]"
-        if re.search(placeholder_pattern, result):
-            # If placeholders remain, try one more time with a more direct prompt
-            current_app.logger.warning(
-                f"Detected placeholders in summary for item {item_name}, retrying..."
-            )
-
-            retry_prompt = f"""The previous summary for the item {display_name} still contained placeholder text. 
-            
-Please create a complete summary WITHOUT ANY PLACEHOLDERS. Replace every [placeholder] with actual information.
-
-For any section where you're uncertain, provide a reasonable description based on similar items or your knowledge of the Pokémon universe.
-
-IMPORTANT: Make sure to add a blank line after each section header and before bullet points, like this:
-**Section:**
-
-- Bullet point
-- Another bullet point
-
-Here's the previous summary that needs to be improved:
-
-{result}"""
-
-            retry_response = client.chat.completions.create(
-                model="gpt-4o",
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "You are a Pokémon expert who creates detailed and accurate summaries of items. You MUST replace ALL placeholder text with actual information, even if you need to make educated guesses based on similar items. Always include a blank line after each section header before starting bullet points.",
-                    },
-                    {"role": "user", "content": retry_prompt},
-                ],
-                max_tokens=max_tokens,
-                tools=[
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "web_search",
-                            "description": "Search the web for information about Pokémon items",
-                        },
-                    }
-                ],
-                tool_choice="auto",
-            )
-
-            result = retry_response.choices[0].message.content.strip()
-
         # Post-process the summary to ensure proper formatting
-        result = format_pokemon_summary(result)  # Reuse the same formatting function
+        result = format_pokemon_summary(result)
 
         return result
 
     except Exception as e:
         current_app.logger.error(f"Error generating item summary with OpenAI: {e}")
-
-        # Fallback to a basic template if the API call fails
-        fallback_template = f"""**{display_name}** is a Pokémon item.
-
-**Basic Information:**
-
-- **Category:** {category if 'category' in locals() else "Item"}
-- **Cost:** {cost if 'cost' in locals() else "Varies"} Pokédollars
-- **Availability:** Can be found in Pokémon games
-
-**Effect:**
-
-- Used by trainers to help and support their Pokémon in various ways
-- Provides specific benefits and advantages during battles or while exploring the world
-- Can make a noticeable difference in Pokémon performance
-
-**In-Game Use:**
-
-- Can be utilized in many different situations throughout the games
-- May be a one-time use item that gets consumed or can be held by a Pokémon for continuous effect
-- Readily available for purchase in Pokémon Centers or obtained from specialized vendors and merchants
-- Useful tool for trainers on their journey
-
-**Game Appearances:**
-
-- Featured prominently across multiple generations of Pokémon games
-- Maintains consistent functionality and effects across most game versions
-- Forms an integral part of the core item collection and management system
-- Has remained a staple throughout the series
-
-**Strategic Applications:**
-
-- Commonly used in competitive play to enable specific battle strategies
-- Can provide significant tactical advantages in certain battle situations
-- Many experienced trainers incorporate it into their team compositions
-- Adds an extra layer of strategy to battles
-
-**Interesting Facts:**
-
-- Plays an important role in the broader Pokémon universe's item ecosystem
-- Features a distinctive design that clearly reflects its intended purpose
-- Widely recognized and utilized by Pokémon players of all experience levels
-- Has become a familiar staple of the franchise
-"""
-
-        return fallback_template
+        raise Exception(f"Failed to generate summary: {str(e)}")

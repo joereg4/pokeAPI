@@ -64,180 +64,101 @@ IMPORTANT: Make sure to add a blank line after each section header and before bu
 {summary_to_improve}
 """
         else:
-            # Custom Template with proper spacing after headers for abilities
-            template = f"""**{display_name}** is a Pokémon ability introduced in {generation}.
+            # Example template to show the desired format and structure
+            example_template = """**Intimidate** is a Pokémon ability introduced in Generation III.
 
 **Effect:**
 
-- {effect if effect != "Unknown" else "[Primary effect description]"}
-- [Additional effect details if applicable]
+- Lowers the Attack stat of opposing Pokémon by one stage when the user enters battle
+- Activates when the user is sent out or when an opponent switches in
+- Can be activated multiple times in a battle
+- Does not affect Pokémon with the Clear Body, Hyper Cutter, or White Smoke abilities
 
 **In Battle:**
 
-- [How this ability affects battles]
-- [Interactions with moves/status conditions]
-- [Strategic applications]
+- Provides immediate defensive utility by weakening physical attackers
+- Particularly effective against physical sweepers and priority move users
+- Can force switches, giving the user's team momentum
+- Works well with defensive Pokémon that can take advantage of weakened opponents
 
 **Pokémon with this Ability:**
 
-- [Common Pokémon with this ability]
-- [Notable Pokémon with this ability]
-- [Information about whether it's a Hidden Ability for certain Pokémon]
+- Arcanine (standard ability)
+- Gyarados (standard ability)
+- Landorus-Therian (signature ability)
+- Many other physical attackers and defensive Pokémon
 
 **Competitive Use:**
 
-- [How this ability is used in competitive play]
-- [Tier viability]
-- [Team synergies]
+- Highly valued in competitive play for its consistent utility
+- Common on defensive pivots and support Pokémon
+- Can be used to check physical attackers without using a move
+- Often paired with Intimidate cycling strategies using multiple users
 
 **Interesting Facts:**
 
-- [When it was introduced]
-- [Changes across generations]
-- [Name origin or trivia]
+- One of the most widely distributed abilities in the series
+- Has remained competitively relevant since its introduction
+- The ability's name reflects its psychological warfare aspect
+- Featured prominently in the anime, often shown with a visual effect
 """
 
-            # Prepare the prompt with specific instructions to avoid returning placeholders
+            # Prepare the prompt with specific instructions and the example
             prompt = f"""{custom_instructions}
 
-You are a Pokémon ability expert. Create a comprehensive and detailed summary for the ability {display_name} following this exact template structure:
+You are a Pokémon ability expert. Create a comprehensive and detailed summary for {display_name} following the same structure and level of detail as this example:
 
-{template}
+{example_template}
 
 IMPORTANT INSTRUCTIONS:
-1. Fill in ALL placeholders with specific, accurate information about the ability {display_name}.
-2. Do NOT leave any placeholder text like "[Primary effect description]" in your response.
-3. Search the web for the most current and accurate information about this ability.
-4. Include realistic information about which Pokémon have this ability.
-5. Describe the actual effects of the ability in detail.
-6. Include specific strategic applications in battles.
-7. Keep the markdown formatting with bold section headers.
-8. Be specific and detailed in your descriptions.
-9. Maintain the exact spacing format with a blank line after each section header.
-
-If you don't have enough information for a section, provide your best educated description based on similar abilities rather than leaving placeholders.
+1. Create a complete summary for {display_name} with the same sections and formatting as the example.
+2. Include specific, accurate information about {display_name}'s:
+   - Effect: {effect}
+   - Generation introduced: {generation}
+   - Battle mechanics and interactions
+   - Notable Pokémon that have this ability
+   - Competitive applications
+   - Interesting facts and trivia
+3. Search the web for the most current and accurate information.
+4. Keep the markdown formatting with bold section headers.
+5. Maintain the exact spacing format with a blank line after each section header.
+6. Be specific and detailed in your descriptions.
+7. If you don't have enough information for a section, provide your best educated description based on similar abilities rather than leaving it vague.
 """
 
         # Call OpenAI API with GPT-4o and web search capability
         client = get_openai_client()
-
-        # Use GPT-4o with web search for new information about the ability
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a Pokémon expert who creates detailed and accurate summaries of Pokémon abilities with precise information from official sources. You MUST replace all placeholder text with actual information. Always include a blank line after each section header before starting bullet points.",
+                    "content": "You are a Pokémon ability expert who creates detailed, accurate summaries about abilities. Use web search to ensure your information is current and accurate.",
                 },
                 {"role": "user", "content": prompt},
             ],
             max_tokens=max_tokens,
-            tools=[
-                {
-                    "type": "function",
-                    "function": {
-                        "name": "web_search",
-                        "description": "Search the web for information about Pokémon abilities",
-                    },
-                }
-            ],
-            tool_choice="auto",
+            temperature=0.7,
         )
+
+        # Check if we have a valid content in the response
+        if (
+            not hasattr(response.choices[0], "message")
+            or not hasattr(response.choices[0].message, "content")
+            or response.choices[0].message.content is None
+        ):
+            current_app.logger.error("No valid content in API response")
+            raise Exception(
+                "Failed to generate summary: No valid content in API response"
+            )
 
         result = response.choices[0].message.content.strip()
 
-        # Check if the response still contains placeholder text
-        placeholder_pattern = r"\[\w+( \w+)*\]"
-        if re.search(placeholder_pattern, result):
-            # If placeholders remain, try one more time with a more direct prompt
-            current_app.logger.warning(
-                f"Detected placeholders in summary for ability {ability_name}, retrying..."
-            )
-
-            retry_prompt = f"""The previous summary for the ability {display_name} still contained placeholder text. 
-            
-Please create a complete summary WITHOUT ANY PLACEHOLDERS. Replace every [placeholder] with actual information.
-
-For any section where you're uncertain, provide a reasonable description based on similar abilities or your knowledge of the Pokémon universe.
-
-IMPORTANT: Make sure to add a blank line after each section header and before bullet points, like this:
-**Section:**
-
-- Bullet point
-- Another bullet point
-
-Here's the previous summary that needs to be improved:
-
-{result}"""
-
-            retry_response = client.chat.completions.create(
-                model="gpt-4o",
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "You are a Pokémon expert who creates detailed and accurate summaries of abilities. You MUST replace ALL placeholder text with actual information, even if you need to make educated guesses based on similar abilities. Always include a blank line after each section header before starting bullet points.",
-                    },
-                    {"role": "user", "content": retry_prompt},
-                ],
-                max_tokens=max_tokens,
-                tools=[
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "web_search",
-                            "description": "Search the web for information about Pokémon abilities",
-                        },
-                    }
-                ],
-                tool_choice="auto",
-            )
-
-            result = retry_response.choices[0].message.content.strip()
-
         # Post-process the summary to ensure proper formatting
-        result = format_pokemon_summary(result)  # Reuse the same formatting function
+        result = format_pokemon_summary(result)
 
         return result
 
     except Exception as e:
         current_app.logger.error(f"Error generating ability summary with OpenAI: {e}")
-
-        # Fallback to a basic template if the API call fails
-        fallback_template = f"""**{display_name}** is a Pokémon ability.
-
-**Effect:**
-
-- Fundamentally changes how a Pokémon interacts with core battle mechanics and systems
-- May provide specific immunities to certain types or status conditions, stat boosts in particular situations, or other beneficial effects
-- Can significantly alter how the Pokémon performs in battle compared to other abilities
-
-**In Battle:**
-
-- Automatically activates under specific conditions during battle, such as when HP is low or weather effects are present
-- Can directly influence the Pokémon's stats, move effectiveness, or ability to be affected by certain moves
-- Creates unique strategic opportunities that skilled trainers can leverage to their advantage
-- May interact with teammates' abilities or moves in interesting ways
-
-**Pokémon with this Ability:**
-
-- Found on multiple Pokémon species across different generations of the games
-- Can appear as either a standard ability that Pokémon normally have, or as a hidden ability that requires special methods to obtain
-- Often thematically connected to the Pokémon's design, type, or role in battle
-- May be signature to certain evolutionary lines or legendary Pokémon
-
-**Competitive Use:**
-
-- Carefully considered during team building as it can enable or enhance specific battle strategies
-- Overall effectiveness and usage rates vary depending on the current competitive metagame and popular strategies
-- Can complement particular move sets and team compositions to create powerful combinations
-- May influence whether certain Pokémon are viable choices in competitive play
-
-**Interesting Facts:**
-
-- Originally introduced in one of the core Pokémon games as part of the ability system
-- Balance adjustments may have been made in subsequent generations to strengthen or weaken its effects
-- The ability's name typically reflects its function or effect in an intuitive way
-- Part of the ongoing evolution of Pokémon battle mechanics since Generation III
-"""
-
-        return fallback_template
+        raise Exception(f"Failed to generate summary: {str(e)}")

@@ -66,186 +66,108 @@ IMPORTANT: Make sure to add a blank line after each section header and before bu
 {summary_to_improve}
 """
         else:
-            # Custom Template with proper spacing after headers for moves
-            template = f"""**{display_name}** is a {move_type}-type {damage_class} move in the Pokémon games.
+            # Example template to show the desired format and structure
+            example_template = """**Thunderbolt** is an Electric-type Special move in the Pokémon games.
 
 **Basic Information:**
 
-- **Type:** {move_type}
-- **Category:** {damage_class}
-- **Power:** {power}
-- **Accuracy:** {accuracy}%
-- **PP:** {pp}
+- **Type:** Electric
+- **Category:** Special
+- **Power:** 90
+- **Accuracy:** 100%
+- **PP:** 15
 
 **Effect:**
 
-- [Primary effect description]
-- [Additional effect details]
-- [Chance of secondary effects if applicable]
+- Deals significant Electric-type damage
+- Has a 10% chance to paralyze the target
+- Can hit non-adjacent Pokémon in Triple Battles
 
 **In-Game Description:**
 
-- [Official in-game description]
+- A strong electric blast is loosed at the target. It may also leave the target with paralysis.
 
 **Notable Users:**
 
-- [Pokémon that commonly learn this move]
-- [Signature users if applicable]
+- Pikachu (signature move in the anime)
+- Jolteon (excellent STAB move)
+- Zapdos (powerful coverage option)
+- Many Electric-type Pokémon learn it via TM
 
 **Strategic Use:**
 
-- [How this move is typically used in battles]
-- [Competitive viability]
-- [Synergies with abilities or items]
+- Reliable STAB move for Electric-types
+- Good coverage against Water and Flying types
+- High accuracy makes it more reliable than Thunder
+- Common choice for special attackers
 
 **Interesting Facts:**
 
-- [Development history or trivia]
-- [Changes across generations]
-- [Cultural references or name origins]
+- Introduced in Generation I
+- Featured prominently in the anime as Pikachu's signature move
+- Based on the real-world phenomenon of lightning
+- Has remained competitively viable across all generations
 """
 
-            # Prepare the prompt with specific instructions to avoid returning placeholders
+            # Prepare the prompt with specific instructions and the example
             prompt = f"""{custom_instructions}
 
-You are a Pokémon move expert. Create a comprehensive and detailed summary for the move {display_name} following this exact template structure:
+You are a Pokémon move expert. Create a comprehensive and detailed summary for {display_name} following the same structure and level of detail as this example:
 
-{template}
+{example_template}
 
 IMPORTANT INSTRUCTIONS:
-1. Fill in ALL placeholders with specific, accurate information about the move {display_name}.
-2. Do NOT leave any placeholder text like "[Primary effect description]" in your response.
-3. Search the web for the most current and accurate information about this move.
-4. Include realistic information about which Pokémon typically learn this move.
-5. Describe the actual effects of the move in detail, including any secondary effects.
-6. Include specific strategic applications in battles.
-7. Keep the markdown formatting with bold section headers.
-8. Be specific and detailed in your descriptions.
-9. Maintain the exact spacing format with a blank line after each section header.
-
-If you don't have enough information for a section, provide your best educated description based on similar moves rather than leaving placeholders.
+1. Create a complete summary for {display_name} with the same sections and formatting as the example.
+2. Include specific, accurate information about {display_name}'s:
+   - Type: {move_type}
+   - Category: {damage_class}
+   - Power: {power}
+   - Accuracy: {accuracy}%
+   - PP: {pp}
+   - Effects and secondary effects
+   - Notable Pokémon that learn it
+   - Strategic applications
+   - Interesting facts
+3. Search the web for the most current and accurate information.
+4. Keep the markdown formatting with bold section headers.
+5. Maintain the exact spacing format with a blank line after each section header.
+6. Be specific and detailed in your descriptions.
+7. If you don't have enough information for a section, provide your best educated description based on similar moves rather than leaving it vague.
 """
 
         # Call OpenAI API with GPT-4o and web search capability
         client = get_openai_client()
-
-        # Use GPT-4o with web search for new information about the move
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a Pokémon expert who creates detailed and accurate summaries of Pokémon moves with precise information from official sources. You MUST replace all placeholder text with actual information. Always include a blank line after each section header before starting bullet points.",
+                    "content": "You are a Pokémon move expert who creates detailed, accurate summaries about moves. Use web search to ensure your information is current and accurate.",
                 },
                 {"role": "user", "content": prompt},
             ],
             max_tokens=max_tokens,
-            tools=[
-                {
-                    "type": "function",
-                    "function": {
-                        "name": "web_search",
-                        "description": "Search the web for information about Pokémon moves",
-                    },
-                }
-            ],
-            tool_choice="auto",
+            temperature=0.7,
         )
+
+        # Check if we have a valid content in the response
+        if (
+            not hasattr(response.choices[0], "message")
+            or not hasattr(response.choices[0].message, "content")
+            or response.choices[0].message.content is None
+        ):
+            current_app.logger.error("No valid content in API response")
+            raise Exception(
+                "Failed to generate summary: No valid content in API response"
+            )
 
         result = response.choices[0].message.content.strip()
 
-        # Check if the response still contains placeholder text
-        placeholder_pattern = r"\[\w+( \w+)*\]"
-        if re.search(placeholder_pattern, result):
-            # If placeholders remain, try one more time with a more direct prompt
-            current_app.logger.warning(
-                f"Detected placeholders in summary for move {move_name}, retrying..."
-            )
-
-            retry_prompt = f"""The previous summary for the move {display_name} still contained placeholder text. 
-            
-Please create a complete summary WITHOUT ANY PLACEHOLDERS. Replace every [placeholder] with actual information.
-
-For any section where you're uncertain, provide a reasonable description based on similar moves or your knowledge of the Pokémon universe.
-
-IMPORTANT: Make sure to add a blank line after each section header and before bullet points, like this:
-**Section:**
-
-- Bullet point
-- Another bullet point
-
-Here's the previous summary that needs to be improved:
-
-{result}"""
-
-            retry_response = client.chat.completions.create(
-                model="gpt-4o",
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "You are a Pokémon expert who creates detailed and accurate summaries of moves. You MUST replace ALL placeholder text with actual information, even if you need to make educated guesses based on similar moves. Always include a blank line after each section header before starting bullet points.",
-                    },
-                    {"role": "user", "content": retry_prompt},
-                ],
-                max_tokens=max_tokens,
-                tools=[
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "web_search",
-                            "description": "Search the web for information about Pokémon moves",
-                        },
-                    }
-                ],
-                tool_choice="auto",
-            )
-
-            result = retry_response.choices[0].message.content.strip()
-
         # Post-process the summary to ensure proper formatting
-        result = format_pokemon_summary(result)  # Reuse the same formatting function
+        result = format_pokemon_summary(result)
 
         return result
 
     except Exception as e:
         current_app.logger.error(f"Error generating move summary with OpenAI: {e}")
-
-        # Fallback to a basic template if the API call fails
-        fallback_template = f"""**{display_name}** is a Pokémon move.
-
-**Basic Information:**
-
-- **Type:** {move_type if 'move_type' in locals() else "Unknown"}
-- **Category:** {damage_class if 'damage_class' in locals() else "Unknown"}
-- **Power:** {power if 'power' in locals() else "?"}
-- **Accuracy:** {accuracy if 'accuracy' in locals() else "?"}%
-- **PP:** {pp if 'pp' in locals() else "?"}
-
-**Effect:**
-
-- Deals damage to the target
-- May have additional effects based on the move type
-
-**In-Game Description:**
-
-- A powerful attack that can cause various effects
-
-**Notable Users:**
-
-- Various Pokémon of compatible types
-- Some Pokémon may learn this move through level-up, TM/TR, or tutoring
-
-**Strategic Use:**
-
-- Can be used in both casual and competitive play
-- Effectiveness depends on the opponent's type and defenses
-- Consider PP consumption for longer battles
-
-**Interesting Facts:**
-
-- Introduced in an earlier generation of Pokémon games
-- Has been featured in the anime series
-- The move's name relates to its effect or appearance
-"""
-
-        return fallback_template
+        raise Exception(f"Failed to generate summary: {str(e)}")

@@ -45,13 +45,8 @@ def generate_pokemon_summary(
 
         # Get types
         types = []
-        if pokemon_data and "types" in pokemon_data:
+        if "types" in pokemon_data:
             types = [t["type"]["name"].title() for t in pokemon_data["types"]]
-
-        # Make sure generation has proper Roman numeral formatting
-        if "generation" in generation.lower():
-            if re.search(r"\b[ivxlcdm]+\b", generation.lower()):
-                generation = format_generation(generation)
 
         # If we have a base summary already, use it as the starting point
         if base_summary:
@@ -63,7 +58,7 @@ def generate_pokemon_summary(
 Improve the following Pokémon summary for {display_name}. Maintain the structure and sections of the summary.
 Ensure all information is accurate and maintain the markdown formatting with bold headings.
 
-IMPORTANT: Make sure to add a blank line after each section header and before bullet points except for **Type:**, like this:
+IMPORTANT: Make sure to add a blank line after each section header and before bullet points, like this:
 
 **Section Header:**
 
@@ -73,141 +68,100 @@ IMPORTANT: Make sure to add a blank line after each section header and before bu
 {summary_to_improve}
 """
         else:
-            # Custom Template with proper spacing after headers
-            template = f"""**{display_name}** is a {"/".join(types) if types else "[Type]"} Pokémon introduced in {generation}.
+            # Example template to show the desired format and structure
+            example_template = """**Pikachu** is an Electric-type Pokémon introduced in Generation I.
 
-**Type:** {" / ".join(types) if types else "[Type]"}
+**Type:** Electric
 
 **Abilities:**
 
-- **[Primary Ability]:** [Description]
-- **[Hidden Ability]:** [Description]
+- **Static:** May paralyze opponents on contact
+- **Lightning Rod:** Draws in all Electric-type moves to boost Special Attack
 
 **Physical Characteristics:**
 
-- [Notable physical feature 1]
-- [Notable physical feature 2]
-- [Notable physical feature 3]
+- Small, yellow, mouse-like Pokémon
+- Red cheeks that store electricity
+- Long, pointed ears with black tips
+- Lightning bolt-shaped tail
 
 **Behavior and Habitat:**
 
-- [Behavior description]
-- [Habitat information]
+- Lives in forests and grasslands
+- Often found near power plants
+- Forms strong bonds with trainers
+- Communicates through electrical signals
 
 **In Battle:**
 
-- [Battle strategy or role]
-- [Signature/Notable moves]
-- [Strengths]
-- [Weaknesses]
+- Fast special attacker
+- Signature moves: Thunderbolt, Volt Tackle
+- Strong against Water and Flying types
+- Weak against Ground types
 
 **Evolution:**
 
-- [Evolution details]
+- Evolves from Pichu when friendship is high
+- Evolves into Raichu with a Thunder Stone
 
 **Interesting Facts:**
 
-- [Interesting fact 1]
-- [Interesting fact 2]
-- [Interesting fact 3]
+- Mascot of the Pokémon franchise
+- Ash's signature Pokémon in the anime
+- Based on the Japanese word "pikapika" (sparkle)
 """
 
-            # Prepare the prompt with specific instructions to avoid returning placeholders
+            # Prepare the prompt with specific instructions and the example
             prompt = f"""{custom_instructions}
 
-You are a Pokémon expert. Create a comprehensive and detailed summary for {display_name} following this exact template structure:
+You are a Pokémon expert. Create a comprehensive and detailed summary for {display_name} following the same structure and level of detail as this example:
 
-{template}
+{example_template}
 
 IMPORTANT INSTRUCTIONS:
-1. Fill in ALL placeholders with specific, accurate information about {display_name}.
-2. Do NOT leave any placeholder text like "[Description]" or "[Notable physical feature]" in your response.
-3. Search the web for the most current and accurate information about this Pokémon.
-4. Include specific abilities with their actual descriptions.
-5. Describe actual physical characteristics, behavior patterns, battle strategies, and evolution chains.
-6. Include factual interesting facts, not placeholders.
-7. Keep the markdown formatting with bold section headers.
-8. Be specific and detailed in your descriptions.
-9. Maintain the exact spacing format with a blank line after each section header.
-
-If you don't have enough information for a section, provide your best educated description based on similar Pokémon rather than leaving placeholders.
+1. Create a complete summary for {display_name} with the same sections and formatting as the example.
+2. Include specific, accurate information about {display_name}'s:
+   - Type(s): {" / ".join(types) if types else "Unknown"}
+   - Abilities (both primary and hidden)
+   - Physical characteristics
+   - Behavior and habitat
+   - Battle strategies and notable moves
+   - Evolution details
+   - Interesting facts
+3. Search the web for the most current and accurate information.
+4. Keep the markdown formatting with bold section headers.
+5. Maintain the exact spacing format with a blank line after each section header.
+6. Be specific and detailed in your descriptions.
+7. If you don't have enough information for a section, provide your best educated description based on similar Pokémon rather than leaving it vague.
 """
 
         # Call OpenAI API with GPT-4o and web search capability
         client = get_openai_client()
-
-        # Use GPT-4o with web search for new information about Pokémon
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a Pokémon expert who creates detailed and accurate summaries of Pokémon with precise information from official sources. You MUST replace all placeholder text with actual information. Always include a blank line after each section header before starting bullet points.",
+                    "content": "You are a Pokémon expert who creates detailed, accurate summaries about Pokémon. Use web search to ensure your information is current and accurate.",
                 },
                 {"role": "user", "content": prompt},
             ],
             max_tokens=max_tokens,
-            tools=[
-                {
-                    "type": "function",
-                    "function": {
-                        "name": "web_search",
-                        "description": "Search the web for information about Pokémon",
-                    },
-                }
-            ],
-            tool_choice="auto",
+            temperature=0.7,
         )
 
+        # Check if we have a valid content in the response
+        if (
+            not hasattr(response.choices[0], "message")
+            or not hasattr(response.choices[0].message, "content")
+            or response.choices[0].message.content is None
+        ):
+            current_app.logger.error("No valid content in API response")
+            raise Exception(
+                "Failed to generate summary: No valid content in API response"
+            )
+
         result = response.choices[0].message.content.strip()
-
-        # Check if the response still contains placeholder text
-        placeholder_pattern = r"\[\w+( \w+)*\]"
-        if re.search(placeholder_pattern, result):
-            # If placeholders remain, try one more time with a more direct prompt
-            current_app.logger.warning(
-                f"Detected placeholders in summary for {pokemon_name}, retrying..."
-            )
-
-            retry_prompt = f"""The previous summary for {display_name} still contained placeholder text. 
-            
-Please create a complete summary WITHOUT ANY PLACEHOLDERS. Replace every [placeholder] with actual information.
-
-For any section where you're uncertain, provide a reasonable description based on similar Pokémon or your knowledge of the Pokémon universe.
-
-IMPORTANT: Make sure to add a blank line after each section header and before bullet points, like this:
-**Section:**
-
-- Bullet point
-- Another bullet point
-
-Here's the previous summary that needs to be improved:
-
-{result}"""
-
-            retry_response = client.chat.completions.create(
-                model="gpt-4o",
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "You are a Pokémon expert who creates detailed and accurate summaries. You MUST replace ALL placeholder text with actual information, even if you need to make educated guesses based on similar Pokémon. Always include a blank line after each section header before starting bullet points.",
-                    },
-                    {"role": "user", "content": retry_prompt},
-                ],
-                max_tokens=max_tokens,
-                tools=[
-                    {
-                        "type": "function",
-                        "function": {
-                            "name": "web_search",
-                            "description": "Search the web for information about Pokémon",
-                        },
-                    }
-                ],
-                tool_choice="auto",
-            )
-
-            result = retry_response.choices[0].message.content.strip()
 
         # Post-process the summary to ensure proper formatting
         result = format_pokemon_summary(result)
@@ -216,55 +170,4 @@ Here's the previous summary that needs to be improved:
 
     except Exception as e:
         current_app.logger.error(f"Error generating summary with OpenAI: {e}")
-
-        # Format generation for fallback template too
-        generation_text = (
-            generation if "generation" in locals() else "Unknown Generation"
-        )
-        if "generation" in generation_text.lower() and re.search(
-            r"\b[ivxlcdm]+\b", generation_text.lower()
-        ):
-            generation_text = format_generation(generation_text)
-
-        # Fallback to a basic template if the API call fails
-        fallback_template = f"""**{display_name}** is a Pokémon introduced in {generation_text}.
-
-**Type:** {" / ".join(types) if 'types' in locals() and types else "[Type]"}
-
-**Abilities:**
-
-- **Vital Spirit:** Prevents the Pokémon from falling asleep, ensuring it remains active and alert during battle, which is especially useful against sleep-inducing moves.
-- **Anger Point:** When struck by a critical hit, this ability maximizes the Pokémon's Attack stat, turning a potentially dangerous situation into an offensive advantage.
-
-**Physical Characteristics:**
-
-- A powerfully built bipedal Pokémon with a primate-like appearance, featuring well-defined muscles that highlight its physical strength and combat capabilities
-- Possesses distinctive coloration and markings across its body that make it easily recognizable and set it apart from other Fighting-type Pokémon
-- Displays clear evolutionary traits from its previous form while showing more advanced physical development and mature features
-
-**Behavior and Habitat:**
-
-- Exhibits an aggressive and territorial temperament, often challenging other Pokémon to demonstrate its strength and establish dominance
-- Primarily inhabits rugged mountainous regions and dense forests where it can train and develop its fighting skills in a natural environment
-- Lives and travels in small, tight-knit groups that work together for protection and hunting, showing surprising social complexity
-
-**In Battle:**
-
-- Excels as a physical attacker with an impressively high Attack stat, making it a formidable opponent in close-combat situations
-- Specializes in powerful fighting-type moves while maintaining a diverse movepool that provides excellent coverage against multiple types
-- Demonstrates particular effectiveness against Normal, Ice, Rock, Dark, and Steel type Pokémon, making it a valuable team member
-- Must be carefully managed against Psychic, Flying, and Fairy type moves due to type disadvantages that can quickly turn the tide of battle
-
-**Evolution:**
-
-- Undergoes a significant evolution from its pre-evolved form when specific conditions are met, representing a major milestone in its development
-- The evolution process triggers dramatic changes in both physical appearance and combat abilities, resulting in enhanced fighting capabilities
-
-**Interesting Facts:**
-
-- Holds a special significance in Pokémon lore and games, often appearing in key storylines and competitive scenarios
-- Has made numerous memorable appearances across various Pokémon media, including the anime, movies, and trading card game
-- Features a uniquely recognizable cry and battle animation in the games that have become iconic among fans of the series
-"""
-
-        return fallback_template
+        raise Exception(f"Failed to generate summary: {str(e)}")
