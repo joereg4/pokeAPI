@@ -3,10 +3,8 @@ from flask import current_app
 from .utils import get_openai_client, format_pokemon_summary
 
 
-def generate_type_summary(
-    type_name, base_summary="", custom_instructions="", max_tokens=2000
-):
-    """Generate a summary specifically for a Pokémon type using OpenAI with the type template."""
+def generate_type_summary(type_name, custom_instructions="", max_tokens=2000):
+    """Generate a summary for a Pokémon type using OpenAI with the Fire example template."""
     try:
         # Get the display name
         display_name = type_name.replace("-", " ").title()
@@ -30,31 +28,10 @@ def generate_type_summary(
                     )
 
         except Exception as e:
-            # Just log the error, we'll still generate a summary with less info
             current_app.logger.error(f"Error fetching Type data: {e}")
 
-        # If we have a base summary already, use it as the starting point
-        if base_summary:
-            summary_to_improve = base_summary
-
-            # Prepare the prompt
-            prompt = f"""{custom_instructions}
-            
-Improve the following Pokémon type summary for {display_name}. Maintain the structure and sections of the summary.
-Ensure all information is accurate and maintain the markdown formatting with bold headings.
-
-IMPORTANT: Make sure to add a blank line after each section header and before bullet points, like this:
-
-**Section Header:**
-
-- Bullet point 1
-- Bullet point 2
-
-{summary_to_improve}
-"""
-        else:
-            # Example template to show the desired format and structure
-            example_template = """**Fire** is one of the eighteen Pokémon types, introduced in Generation I.
+        # Example template to show the desired format and structure
+        example_template = """**Fire** is one of the eighteen Pokémon types, introduced in Generation I.
 
 **Basic Information:**
 
@@ -93,8 +70,8 @@ IMPORTANT: Make sure to add a blank line after each section header and before bu
 - Often associated with the color red in the games
 """
 
-            # Prepare the prompt with specific instructions and the example
-            prompt = f"""{custom_instructions}
+        # Prepare the prompt with specific instructions and the example
+        prompt = f"""{custom_instructions}
 
 You are a Pokémon type expert. Create a comprehensive and detailed summary for {display_name} following the same structure and level of detail as this example:
 

@@ -1,13 +1,10 @@
 import requests
-import re
 from flask import current_app
-from .utils import get_openai_client, format_pokemon_summary, format_generation
+from .utils import get_openai_client, format_pokemon_summary
 
 
-def generate_ability_summary(
-    ability_name, base_summary="", custom_instructions="", max_tokens=2000
-):
-    """Generate a summary specifically for a Pokémon ability using OpenAI with the ability template."""
+def generate_ability_summary(ability_name, custom_instructions="", max_tokens=2000):
+    """Generate a summary for a Pokémon ability using OpenAI with the Intimidate example template."""
     try:
         # Get the display name
         display_name = ability_name.replace("-", " ").title()
@@ -38,34 +35,17 @@ def generate_ability_summary(
                     "generation" in ability_data
                     and "name" in ability_data["generation"]
                 ):
-                    generation = format_generation(ability_data["generation"]["name"])
+                    generation = (
+                        ability_data["generation"]["name"]
+                        .replace("generation-", "")
+                        .upper()
+                    )
 
         except Exception as e:
-            # Just log the error, we'll still generate a summary with less info
             current_app.logger.error(f"Error fetching Ability data: {e}")
 
-        # If we have a base summary already, use it as the starting point
-        if base_summary:
-            summary_to_improve = base_summary
-
-            # Prepare the prompt
-            prompt = f"""{custom_instructions}
-            
-Improve the following Pokémon ability summary for {display_name}. Maintain the structure and sections of the summary.
-Ensure all information is accurate and maintain the markdown formatting with bold headings.
-
-IMPORTANT: Make sure to add a blank line after each section header and before bullet points, like this:
-
-**Section Header:**
-
-- Bullet point 1
-- Bullet point 2
-
-{summary_to_improve}
-"""
-        else:
-            # Example template to show the desired format and structure
-            example_template = """**Intimidate** is a Pokémon ability introduced in Generation III.
+        # Example template to show the desired format and structure
+        example_template = """**Intimidate** is a Pokémon ability introduced in Generation III.
 
 **Effect:**
 
@@ -103,8 +83,8 @@ IMPORTANT: Make sure to add a blank line after each section header and before bu
 - Featured prominently in the anime, often shown with a visual effect
 """
 
-            # Prepare the prompt with specific instructions and the example
-            prompt = f"""{custom_instructions}
+        # Prepare the prompt with specific instructions and the example
+        prompt = f"""{custom_instructions}
 
 You are a Pokémon ability expert. Create a comprehensive and detailed summary for {display_name} following the same structure and level of detail as this example:
 
