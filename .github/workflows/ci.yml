@@ -40,6 +40,7 @@ jobs:
           FLASK_APP: app.py
           FLASK_DEBUG: 1
           REDIS_URL: redis://localhost:6379/0
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           pytest -n 12
 
