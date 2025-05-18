@@ -1,24 +1,18 @@
 import requests
-import re
 from flask import current_app
 from .utils import get_openai_client, format_pokemon_summary
 
 
-def generate_move_summary(
-    move_name, base_summary="", custom_instructions="", max_tokens=2000
-):
-    """Generate a summary specifically for a Pokémon move using OpenAI with the move template."""
+def generate_move_summary(move_name, custom_instructions="", max_tokens=2000):
+    """Generate a summary for a Pokémon move using OpenAI with the Thunderbolt example template."""
     try:
         # Get the display name
         display_name = move_name.replace("-", " ").title()
 
         # Try to get Move data from the API
         move_data = {}
-        move_type = "Unknown"
-        power = "?"
-        accuracy = "?"
-        pp = "?"
-        damage_class = "Unknown"
+        effect = "Unknown"
+        generation = "Unknown"
 
         try:
             # Fetch from move endpoint
@@ -27,47 +21,26 @@ def generate_move_summary(
                 move_data = move_response.json()
 
                 # Extract basic move information
-                if "type" in move_data and "name" in move_data["type"]:
-                    move_type = move_data["type"]["name"].title()
+                if "effect_entries" in move_data:
+                    # Try to find English effect description
+                    for entry in move_data["effect_entries"]:
+                        if entry.get("language", {}).get("name") == "en":
+                            effect = entry.get("effect", "Unknown")
+                            break
 
-                if "power" in move_data and move_data["power"] is not None:
-                    power = str(move_data["power"])
-
-                if "accuracy" in move_data and move_data["accuracy"] is not None:
-                    accuracy = str(move_data["accuracy"])
-
-                if "pp" in move_data and move_data["pp"] is not None:
-                    pp = str(move_data["pp"])
-
-                if "damage_class" in move_data and "name" in move_data["damage_class"]:
-                    damage_class = move_data["damage_class"]["name"].title()
+                # Get generation information
+                if "generation" in move_data and "name" in move_data["generation"]:
+                    generation = (
+                        move_data["generation"]["name"]
+                        .replace("generation-", "")
+                        .upper()
+                    )
 
         except Exception as e:
-            # Just log the error, we'll still generate a summary with less info
             current_app.logger.error(f"Error fetching Move data: {e}")
 
-        # If we have a base summary already, use it as the starting point
-        if base_summary:
-            summary_to_improve = base_summary
-
-            # Prepare the prompt
-            prompt = f"""{custom_instructions}
-            
-Improve the following Pokémon move summary for {display_name}. Maintain the structure and sections of the summary.
-Ensure all information is accurate and maintain the markdown formatting with bold headings.
-
-IMPORTANT: Make sure to add a blank line after each section header and before bullet points, like this:
-
-**Section Header:**
-
-- Bullet point 1
-- Bullet point 2
-
-{summary_to_improve}
-"""
-        else:
-            # Example template to show the desired format and structure
-            example_template = """**Thunderbolt** is an Electric-type Special move in the Pokémon games.
+        # Example template to show the desired format and structure
+        example_template = """**Thunderbolt** is an Electric-type move introduced in Generation I.
 
 **Basic Information:**
 
@@ -79,38 +52,41 @@ IMPORTANT: Make sure to add a blank line after each section header and before bu
 
 **Effect:**
 
-- Deals significant Electric-type damage
+- Deals damage to the target
 - Has a 10% chance to paralyze the target
 - Can hit non-adjacent Pokémon in Triple Battles
+- Affected by Lightning Rod and Motor Drive abilities
 
 **In-Game Description:**
 
-- A strong electric blast is loosed at the target. It may also leave the target with paralysis.
+- A strong electric blast crashes down on the target
+- May leave the target with paralysis
+- One of the most reliable Electric-type moves
 
 **Notable Users:**
 
-- Pikachu (signature move in the anime)
-- Jolteon (excellent STAB move)
-- Zapdos (powerful coverage option)
-- Many Electric-type Pokémon learn it via TM
+- Pikachu (signature move)
+- Jolteon (STAB move)
+- Zapdos (STAB move)
+- Many other Electric-type Pokémon
 
 **Strategic Use:**
 
 - Reliable STAB move for Electric-types
 - Good coverage against Water and Flying types
-- High accuracy makes it more reliable than Thunder
+- Higher accuracy than Thunder
 - Common choice for special attackers
 
 **Interesting Facts:**
 
-- Introduced in Generation I
-- Featured prominently in the anime as Pikachu's signature move
-- Based on the real-world phenomenon of lightning
-- Has remained competitively viable across all generations
+- One of the most iconic moves in the series
+- Featured prominently in the anime
+- Has maintained consistent power and accuracy since Generation I
+- Often used as a benchmark for balanced move design
 """
 
-            # Prepare the prompt with specific instructions and the example
-            prompt = f"""{custom_instructions}
+        # Prepare the prompt with specific instructions and the example
+        prompt = f"""{custom_instructions}
 
 You are a Pokémon move expert. Create a comprehensive and detailed summary for {display_name} following the same structure and level of detail as this example:
 
@@ -119,15 +95,12 @@ You are a Pokémon move expert. Create a comprehensive and detailed summary for 
 IMPORTANT INSTRUCTIONS:
 1. Create a complete summary for {display_name} with the same sections and formatting as the example.
 2. Include specific, accurate information about {display_name}'s:
-   - Type: {move_type}
-   - Category: {damage_class}
-   - Power: {power}
-   - Accuracy: {accuracy}%
-   - PP: {pp}
-   - Effects and secondary effects
-   - Notable Pokémon that learn it
+   - Effect: {effect}
+   - Generation introduced: {generation}
+   - Battle mechanics and interactions
+   - Notable Pokémon that learn this move
    - Strategic applications
-   - Interesting facts
+   - Interesting facts and trivia
 3. Search the web for the most current and accurate information.
 4. Keep the markdown formatting with bold section headers.
 5. Maintain the exact spacing format with a blank line after each section header.

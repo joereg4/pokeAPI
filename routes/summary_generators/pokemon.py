@@ -1,13 +1,10 @@
 import requests
-import re
 from flask import current_app
 from .utils import get_openai_client, format_pokemon_summary, format_generation
 
 
-def generate_pokemon_summary(
-    pokemon_name, base_summary="", custom_instructions="", max_tokens=2000
-):
-    """Generate a summary specifically for a Pokémon using OpenAI with the Pokémon template."""
+def generate_pokemon_summary(pokemon_name, custom_instructions="", max_tokens=2000):
+    """Generate a summary for a Pokémon using OpenAI with the Pikachu example template."""
     try:
         # Get the display name
         display_name = pokemon_name.replace("-", " ").title()
@@ -32,7 +29,6 @@ def generate_pokemon_summary(
                         if species_response.status_code == 200:
                             species_data = species_response.json()
                             if "generation" in species_data:
-                                # Format generation with proper Roman numerals
                                 generation = format_generation(
                                     species_data["generation"]["name"]
                                 )
@@ -40,7 +36,6 @@ def generate_pokemon_summary(
                     current_app.logger.error(f"Error fetching species data: {e}")
 
         except Exception as e:
-            # Just log the error, we'll still generate a summary with less info
             current_app.logger.error(f"Error fetching Pokemon data: {e}")
 
         # Get types
@@ -48,28 +43,8 @@ def generate_pokemon_summary(
         if "types" in pokemon_data:
             types = [t["type"]["name"].title() for t in pokemon_data["types"]]
 
-        # If we have a base summary already, use it as the starting point
-        if base_summary:
-            summary_to_improve = base_summary
-
-            # Prepare the prompt
-            prompt = f"""{custom_instructions}
-            
-Improve the following Pokémon summary for {display_name}. Maintain the structure and sections of the summary.
-Ensure all information is accurate and maintain the markdown formatting with bold headings.
-
-IMPORTANT: Make sure to add a blank line after each section header and before bullet points, like this:
-
-**Section Header:**
-
-- Bullet point 1
-- Bullet point 2
-
-{summary_to_improve}
-"""
-        else:
-            # Example template to show the desired format and structure
-            example_template = """**Pikachu** is an Electric-type Pokémon introduced in Generation I.
+        # Example template to show the desired format and structure
+        example_template = """**Pikachu** is an Electric-type Pokémon introduced in Generation I.
 
 **Type:** Electric
 
@@ -111,8 +86,8 @@ IMPORTANT: Make sure to add a blank line after each section header and before bu
 - Based on the Japanese word "pikapika" (sparkle)
 """
 
-            # Prepare the prompt with specific instructions and the example
-            prompt = f"""{custom_instructions}
+        # Prepare the prompt with specific instructions and the example
+        prompt = f"""{custom_instructions}
 
 You are a Pokémon expert. Create a comprehensive and detailed summary for {display_name} following the same structure and level of detail as this example:
 

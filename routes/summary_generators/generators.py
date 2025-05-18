@@ -42,9 +42,7 @@ def generate_summary(
 
     # Select the appropriate generator based on resource type
     if resource_type in generators:
-        return generators[resource_type](
-            resource_name, base_summary, custom_instructions, max_tokens
-        )
+        return generators[resource_type](resource_name, custom_instructions, max_tokens)
     else:
         # Generic template for unsupported resource types
         return f"Summary for {resource_name} ({resource_type}). This resource type doesn't have a specific template yet."
