@@ -26,17 +26,55 @@ def test_health_check_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
     # Mock Redis pipeline
     mock_pipeline = MagicMock()
     mock_pipeline.execute.return_value = [
-        10,
-        None,
-        100,
-        None,
-    ]  # hourly_calls, expire, daily_calls, expire
+        [b"api_calls:endpoint:main:hour:12345"],  # keys
+        [
+            b"api_calls:resource:1:hour:12345",
+            b"api_calls:resource:2:hour:12345",
+        ],  # resource_keys
+        [b"api_calls:method:GET:hour:12345"],  # method_keys
+        [],  # period_keys
+        b"10",  # hourly
+        b"100",  # daily
+        b"50",  # weekly
+        b"200",  # monthly
+    ]
     mock_redis.pipeline.return_value = mock_pipeline
 
-    # Mock Redis get for API stats
-    mock_redis.get.side_effect = lambda key: (
-        "10" if "hour" in key else "100" if "day" in key else None
+    # Mock Redis keys for traffic stats (simulate two resources and one endpoint)
+    mock_redis.keys.side_effect = lambda pattern: (
+        [b"api_calls:endpoint:main:hour:12345"]
+        if "endpoint" in pattern
+        else (
+            [b"api_calls:resource:1:hour:12345", b"api_calls:resource:2:hour:12345"]
+            if "resource" in pattern
+            else [b"api_calls:method:GET:hour:12345"] if "method" in pattern else []
+        )
     )
+
+    # Mock Redis get for API stats and traffic stats
+    def get_side_effect(key):
+        if isinstance(key, bytes):
+            key = key.decode()
+        if "pokedex:pokemon:1:name" in key:
+            return b"Bulbasaur"
+        if "pokedex:pokemon:2:name" in key:
+            return b"Ivysaur"
+        if "hour" in key:
+            return b"10"
+        if "day" in key:
+            return b"100"
+        if "api_calls:resource:1" in key:
+            return b"7"
+        if "api_calls:resource:2" in key:
+            return b"3"
+        if "api_calls:endpoint:main" in key:
+            return b"5"
+        if "api_calls:method:GET" in key:
+            return b"15"
+        return None
+
+    mock_redis.get.side_effect = get_side_effect
+    mock_redis.mget.side_effect = lambda keys: [get_side_effect(k) for k in keys]
 
     response = auth_client.get("/health/cache", headers={"Accept": "application/json"})
     assert response.status_code == 200
@@ -84,17 +122,55 @@ def test_cache_health_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
     # Mock Redis pipeline
     mock_pipeline = MagicMock()
     mock_pipeline.execute.return_value = [
-        10,
-        None,
-        100,
-        None,
-    ]  # hourly_calls, expire, daily_calls, expire
+        [b"api_calls:endpoint:main:hour:12345"],  # keys
+        [
+            b"api_calls:resource:1:hour:12345",
+            b"api_calls:resource:2:hour:12345",
+        ],  # resource_keys
+        [b"api_calls:method:GET:hour:12345"],  # method_keys
+        [],  # period_keys
+        b"10",  # hourly
+        b"100",  # daily
+        b"50",  # weekly
+        b"200",  # monthly
+    ]
     mock_redis.pipeline.return_value = mock_pipeline
 
-    # Mock Redis get for API stats
-    mock_redis.get.side_effect = lambda key: (
-        "10" if "hour" in key else "100" if "day" in key else None
+    # Mock Redis keys for traffic stats (simulate two resources and one endpoint)
+    mock_redis.keys.side_effect = lambda pattern: (
+        [b"api_calls:endpoint:main:hour:12345"]
+        if "endpoint" in pattern
+        else (
+            [b"api_calls:resource:1:hour:12345", b"api_calls:resource:2:hour:12345"]
+            if "resource" in pattern
+            else [b"api_calls:method:GET:hour:12345"] if "method" in pattern else []
+        )
     )
+
+    # Mock Redis get for API stats and traffic stats
+    def get_side_effect(key):
+        if isinstance(key, bytes):
+            key = key.decode()
+        if "pokedex:pokemon:1:name" in key:
+            return b"Bulbasaur"
+        if "pokedex:pokemon:2:name" in key:
+            return b"Ivysaur"
+        if "hour" in key:
+            return b"10"
+        if "day" in key:
+            return b"100"
+        if "api_calls:resource:1" in key:
+            return b"7"
+        if "api_calls:resource:2" in key:
+            return b"3"
+        if "api_calls:endpoint:main" in key:
+            return b"5"
+        if "api_calls:method:GET" in key:
+            return b"15"
+        return None
+
+    mock_redis.get.side_effect = get_side_effect
+    mock_redis.mget.side_effect = lambda keys: [get_side_effect(k) for k in keys]
 
     response = auth_client.get("/health/cache", headers={"Accept": "application/json"})
     assert response.status_code == 200

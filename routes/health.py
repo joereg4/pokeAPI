@@ -169,6 +169,117 @@ def get_api_stats():
     }
 
 
+def get_traffic_stats():
+    """Get detailed traffic statistics from Redis."""
+    try:
+        pipe = redis_client.pipeline()
+
+        # Get all keys for different metrics
+        pipe.keys("api_calls:endpoint:*")
+        pipe.keys("api_calls:resource:*")
+        pipe.keys("api_calls:method:*")
+        pipe.keys("api_calls:period:*")
+
+        # Get current hour and day counts
+        pipe.get("api_calls:period:hourly")
+        pipe.get("api_calls:period:daily")
+
+        # Get weekly and monthly counts
+        pipe.get("api_calls:period:weekly")
+        pipe.get("api_calls:period:monthly")
+
+        # Execute pipeline
+        (
+            keys,
+            resource_keys,
+            method_keys,
+            period_keys,
+            hourly,
+            daily,
+            weekly,
+            monthly,
+        ) = pipe.execute()
+
+        # Debug prints
+        print("DEBUG: keys:", keys)
+        print("DEBUG: resource_keys:", resource_keys)
+        print("DEBUG: method_keys:", method_keys)
+        print("DEBUG: period_keys:", period_keys)
+        print("DEBUG: hourly:", hourly)
+        print("DEBUG: daily:", daily)
+        print("DEBUG: weekly:", weekly)
+        print("DEBUG: monthly:", monthly)
+
+        # Process endpoint stats
+        endpoints = {}
+        for key in keys:
+            endpoint = key.decode().split(":")[-1]
+            count = int(redis_client.get(key) or 0)
+            endpoints[endpoint] = count
+
+        # Process resource stats with names
+        resources = {}
+        resource_counts = {}
+        for key in resource_keys:
+            resource_id = key.decode().split(":")[-1]
+            count = int(redis_client.get(key) or 0)
+
+            # Skip if it's not a numeric ID
+            if not resource_id.isdigit() and resource_id != "none":
+                continue
+
+            # Get resource name from cache
+            if resource_id != "none":
+                resource_name = redis_client.get(f"pokedex:pokemon:{resource_id}:name")
+                print(
+                    f"DEBUG: resource_id: {resource_id}, resource_name: {resource_name}"
+                )
+                if resource_name:
+                    resource_name = resource_name.decode()
+                else:
+                    resource_name = f"Pokemon #{resource_id}"
+            else:
+                resource_name = "Unknown Resource"
+
+            resources[resource_name] = count
+            resource_counts[resource_id] = count
+
+        # Sort resources by count (most accessed first)
+        sorted_resources = dict(
+            sorted(resources.items(), key=lambda x: x[1], reverse=True)
+        )
+
+        # Process method stats
+        methods = {}
+        for key in method_keys:
+            method = key.decode().split(":")[-1]
+            count = int(redis_client.get(key) or 0)
+            methods[method] = count
+
+        # Process period stats
+        periods = {}
+        for key in period_keys:
+            period = key.decode().split(":")[-1]
+            count = int(redis_client.get(key) or 0)
+            periods[period] = count
+
+        return {
+            "endpoints": endpoints,
+            "resources": sorted_resources,  # Now returns sorted resources with names
+            "methods": methods,
+            "periods": periods,
+            "current_hour": int(hourly or 0),
+            "current_day": int(daily or 0),
+            "hourly_calls": int(hourly or 0),
+            "daily_calls": int(daily or 0),
+            "weekly_calls": int(weekly or 0),
+            "monthly_calls": int(monthly or 0),
+        }
+    except Exception as e:
+        print(f"ERROR in get_traffic_stats: {e}")
+        raise
+
+
 @health_bp.route("/health/cache")
 @login_required
 @limiter.limit("30 per minute")  # More reasonable limit for health checks
@@ -191,6 +302,9 @@ def check_cache_health():
         # Get API stats
         api_stats = get_api_stats()
 
+        # Get traffic stats
+        traffic_stats = get_traffic_stats()
+
         # Return JSON if specifically requested
         if request.headers.get("Accept") == "application/json":
             response = make_response(
@@ -201,17 +315,7 @@ def check_cache_health():
                         "stats": stats,
                         "rate_limits": rate_limits,
                         "api_calls": api_stats,
-                        "traffic_stats": {
-                            "endpoints": api_stats["endpoint_stats"],
-                            "resources": api_stats["resource_stats"],
-                            "methods": api_stats["method_stats"],
-                            "time_periods": {
-                                "hourly": api_stats["hourly_calls"],
-                                "daily": api_stats["daily_calls"],
-                                "weekly": api_stats["weekly_calls"],
-                                "monthly": api_stats["monthly_calls"],
-                            },
-                        },
+                        "traffic_stats": traffic_stats,
                     }
                 )
             )
@@ -233,17 +337,7 @@ def check_cache_health():
             stats=stats,
             rate_limits=rate_limits,
             api_stats=api_stats,
-            traffic_stats={
-                "endpoints": api_stats["endpoint_stats"],
-                "resources": api_stats["resource_stats"],
-                "methods": api_stats["method_stats"],
-                "time_periods": {
-                    "hourly": api_stats["hourly_calls"],
-                    "daily": api_stats["daily_calls"],
-                    "weekly": api_stats["weekly_calls"],
-                    "monthly": api_stats["monthly_calls"],
-                },
-            },
+            traffic_stats=traffic_stats,
             last_updated=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         )
 
@@ -280,6 +374,7 @@ def check_cache_health():
                 stats=error_stats,
                 rate_limits=get_rate_limit_info(),
                 api_stats=get_api_stats(),
+                traffic_stats=get_traffic_stats(),
                 last_updated=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             ),
             500,
@@ -310,6 +405,9 @@ def health_cache_json():
         # Get API stats
         api_stats = get_api_stats()
 
+        # Get traffic stats
+        traffic_stats = get_traffic_stats()
+
         response = make_response(
             jsonify(
                 {
@@ -317,6 +415,7 @@ def health_cache_json():
                     "cache": stats,
                     "rate_limits": rate_limits,
                     "api_calls": api_stats,
+                    "traffic_stats": traffic_stats,
                 }
             )
         )
