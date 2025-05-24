@@ -66,7 +66,7 @@ def test_health_check_unauthorized(client):
 @patch("utils.get_cache_stats")
 @patch("routes.health.cache")
 def test_cache_health_success(mock_routes_cache, mock_stats, mock_redis, auth_client):
-    """Test successful cache health check."""
+    """Test successful health check."""
     # Mock cache behavior
     mock_routes_cache.set.return_value = True
     mock_routes_cache.get.return_value = "ok"
@@ -96,11 +96,19 @@ def test_cache_health_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
         "10" if "hour" in key else "100" if "day" in key else None
     )
 
-    response = auth_client.get("/health/cache")
+    response = auth_client.get("/health/cache", headers={"Accept": "application/json"})
     assert response.status_code == 200
-    assert b"Cache Status" in response.data
-    assert b"operational" in response.data
-    assert b"bg-success" in response.data  # Check for success badge class
+    data = response.get_json()
+    assert data["status"] == "healthy"
+    assert data["cache"] == "operational"
+    assert "stats" in data
+    assert "rate_limits" in data
+    assert "api_calls" in data
+
+    # Also test the HTML output for the new headings
+    response_html = auth_client.get("/health/cache")
+    assert b"System Status" in response_html.data
+    assert b"Cache Statistics" in response_html.data
 
 
 @patch("routes.health.redis_client")
