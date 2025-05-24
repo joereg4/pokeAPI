@@ -200,61 +200,57 @@ def get_traffic_stats():
             monthly,
         ) = pipe.execute()
 
-        # Debug prints
-        print("DEBUG: keys:", keys)
-        print("DEBUG: resource_keys:", resource_keys)
-        print("DEBUG: method_keys:", method_keys)
-        print("DEBUG: period_keys:", period_keys)
-        print("DEBUG: hourly:", hourly)
-        print("DEBUG: daily:", daily)
-        print("DEBUG: weekly:", weekly)
-        print("DEBUG: monthly:", monthly)
-
-        # Process endpoint stats
-        endpoints = {}
+        # Process endpoint stats and organize resources by endpoint
+        endpoint_stats = {}
         for key in keys:
-            endpoint = key.decode().split(":")[-1]
+            key_str = key.decode()
+            parts = key_str.split(":")
+            endpoint = parts[2]  # Get endpoint name from key structure
             count = int(redis_client.get(key) or 0)
-            endpoints[endpoint] = count
+            endpoint_stats[endpoint] = {"total_calls": count, "resources": {}}
 
-        # Process resource stats with names
-        resources = {}
-        resource_counts = {}
+        # Process resource stats and associate them with endpoints
         for key in resource_keys:
-            resource_id = key.decode().split(":")[-1]
+            key_str = key.decode()
+            parts = key_str.split(":")
+            endpoint = parts[2]  # Get endpoint from key structure
+            resource_id = parts[3]  # Get resource_id from key structure
+
             count = int(redis_client.get(key) or 0)
 
-            # Skip if it's not a numeric ID
-            if not resource_id.isdigit() and resource_id != "none":
+            # Skip if it's not a numeric ID and not a named resource
+            if (
+                not resource_id.isdigit()
+                and resource_id != "none"
+                and not resource_id.isalpha()
+            ):
                 continue
 
             # Get resource name from cache
             if resource_id != "none":
-                resource_name = redis_client.get(f"pokedex:pokemon:{resource_id}:name")
-                print(
-                    f"DEBUG: resource_id: {resource_id}, resource_name: {resource_name}"
+                resource_name = redis_client.get(
+                    f"pokedex:{endpoint}:{resource_id}:name"
                 )
                 if resource_name:
                     resource_name = resource_name.decode()
                 else:
-                    resource_name = f"Pokemon #{resource_id}"
+                    resource_name = f"{endpoint.title()} #{resource_id}"
             else:
                 resource_name = "Unknown Resource"
 
-            resources[resource_name] = count
-            resource_counts[resource_id] = count
+            # Add to the appropriate endpoint's resources
+            if endpoint in endpoint_stats:
+                endpoint_stats[endpoint]["resources"][resource_name] = count
 
-        # Sort resources by count (most accessed first)
-        sorted_resources = dict(
-            sorted(resources.items(), key=lambda x: x[1], reverse=True)
-        )
-
-        # Process method stats
-        methods = {}
-        for key in method_keys:
-            method = key.decode().split(":")[-1]
-            count = int(redis_client.get(key) or 0)
-            methods[method] = count
+        # Sort resources within each endpoint by count
+        for endpoint in endpoint_stats:
+            endpoint_stats[endpoint]["resources"] = dict(
+                sorted(
+                    endpoint_stats[endpoint]["resources"].items(),
+                    key=lambda x: x[1],
+                    reverse=True,
+                )
+            )
 
         # Process period stats
         periods = {}
@@ -264,9 +260,7 @@ def get_traffic_stats():
             periods[period] = count
 
         return {
-            "endpoints": endpoints,
-            "resources": sorted_resources,  # Now returns sorted resources with names
-            "methods": methods,
+            "endpoint_stats": endpoint_stats,  # Now contains hierarchical data
             "periods": periods,
             "current_hour": int(hourly or 0),
             "current_day": int(daily or 0),
