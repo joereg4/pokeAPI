@@ -77,9 +77,24 @@
                     <h2>Resource Statistics</h2>
                 </div>
                 <div class="card-body">
-                    {% for resource, count in traffic_stats.resources.items() %}
-                    <p><strong>{{ resource }}:</strong> {{ count }}</p>
-                    {% endfor %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Resource</th>
+                                    <th>Access Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for resource, count in traffic_stats.resources.items() %}
+                                <tr>
+                                    <td>{{ resource }}</td>
+                                    <td>{{ count }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
