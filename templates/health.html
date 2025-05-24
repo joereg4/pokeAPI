@@ -72,7 +72,6 @@
                                 <tr>
                                     <th>Endpoint</th>
                                     <th>Total Calls</th>
-                                    <th>Resources</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -80,18 +79,6 @@
                                 <tr>
                                     <td><strong>{{ endpoint }}</strong></td>
                                     <td>{{ data.total_calls }}</td>
-                                    <td>
-                                        <table class="table table-sm mb-0">
-                                            <tbody>
-                                                {% for resource, count in data.resources.items() %}
-                                                <tr>
-                                                    <td>{{ resource }}</td>
-                                                    <td>{{ count }}</td>
-                                                </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

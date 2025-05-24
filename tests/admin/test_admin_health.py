@@ -201,7 +201,6 @@ def test_cache_health_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
     assert b"Time Period Statistics" in response.data
     assert b"Endpoint" in response.data
     assert b"Total Calls" in response.data
-    assert b"Resources" in response.data
 
 
 @patch("routes.health.redis_client")
