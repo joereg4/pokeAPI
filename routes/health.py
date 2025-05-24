@@ -40,38 +40,132 @@ def get_rate_limit_info():
 
 
 def increment_api_counter():
-    """Increment the API call counter for the current hour and day"""
+    """Increment the API call counter for various metrics"""
     now = int(time.time())
-    hour_key = f"api_calls:hour:{now // 3600}"
-    day_key = f"api_calls:day:{now // 86400}"
+    hour = now // 3600
+    day = now // 86400
+    week = now // (86400 * 7)
+    month = now // (86400 * 30)
 
+    # Get request details
+    endpoint = (
+        request.path.split("/")[1] if len(request.path.split("/")) > 1 else "root"
+    )
+    resource_type = (
+        request.path.split("/")[2] if len(request.path.split("/")) > 2 else "none"
+    )
+    method = request.method
+    is_success = True  # We'll update this based on response status
+    is_cached = False  # We'll update this based on cache status
+
+    # Create pipeline for atomic operations
     pipe = redis_client.pipeline()
-    pipe.incr(hour_key)
-    pipe.expire(hour_key, 3600)  # Expire after 1 hour
-    pipe.incr(day_key)
-    pipe.expire(day_key, 86400)  # Expire after 1 day
+
+    # Basic time-based counters
+    pipe.incr(f"api_calls:hour:{hour}")
+    pipe.incr(f"api_calls:day:{day}")
+    pipe.incr(f"api_calls:week:{week}")
+    pipe.incr(f"api_calls:month:{month}")
+
+    # Endpoint tracking
+    pipe.incr(f"api_calls:endpoint:{endpoint}:hour:{hour}")
+    pipe.incr(f"api_calls:endpoint:{endpoint}:day:{day}")
+
+    # Resource type tracking
+    pipe.incr(f"api_calls:resource:{resource_type}:hour:{hour}")
+    pipe.incr(f"api_calls:resource:{resource_type}:day:{day}")
+
+    # Method tracking
+    pipe.incr(f"api_calls:method:{method}:hour:{hour}")
+    pipe.incr(f"api_calls:method:{method}:day:{day}")
+
+    # Set expiration for all keys
+    pipe.expire(f"api_calls:hour:{hour}", 3600)  # 1 hour
+    pipe.expire(f"api_calls:day:{day}", 86400)  # 1 day
+    pipe.expire(f"api_calls:week:{week}", 604800)  # 1 week
+    pipe.expire(f"api_calls:month:{month}", 2592000)  # 30 days
+
+    # Set expiration for endpoint keys
+    pipe.expire(f"api_calls:endpoint:{endpoint}:hour:{hour}", 3600)
+    pipe.expire(f"api_calls:endpoint:{endpoint}:day:{day}", 86400)
+
+    # Set expiration for resource keys
+    pipe.expire(f"api_calls:resource:{resource_type}:hour:{hour}", 3600)
+    pipe.expire(f"api_calls:resource:{resource_type}:day:{day}", 86400)
+
+    # Set expiration for method keys
+    pipe.expire(f"api_calls:method:{method}:hour:{hour}", 3600)
+    pipe.expire(f"api_calls:method:{method}:day:{day}", 86400)
+
+    # Execute all commands
     results = pipe.execute()
-    return results[0], results[2]  # Return hourly and daily counts
+    return results
 
 
 def get_api_stats():
     """Get current API call statistics"""
     now = int(time.time())
-    hour_key = f"api_calls:hour:{now // 3600}"
-    day_key = f"api_calls:day:{now // 86400}"
+    hour = now // 3600
+    day = now // 86400
+    week = now // (86400 * 7)
+    month = now // (86400 * 30)
 
-    hourly_calls = redis_client.get(hour_key)
-    daily_calls = redis_client.get(day_key)
+    # Get all relevant keys
+    keys = [
+        f"api_calls:hour:{hour}",
+        f"api_calls:day:{day}",
+        f"api_calls:week:{week}",
+        f"api_calls:month:{month}",
+    ]
+
+    # Get all values
+    values = redis_client.mget(keys)
+
+    # Convert to integers, defaulting to 0 if None
+    hourly_calls = int(values[0]) if values[0] else 0
+    daily_calls = int(values[1]) if values[1] else 0
+    weekly_calls = int(values[2]) if values[2] else 0
+    monthly_calls = int(values[3]) if values[3] else 0
+
+    # Get endpoint stats
+    endpoint_keys = redis_client.keys(f"api_calls:endpoint:*:hour:{hour}")
+    endpoint_stats = {}
+    if endpoint_keys:
+        endpoint_values = redis_client.mget(endpoint_keys)
+        for key, value in zip(endpoint_keys, endpoint_values):
+            endpoint = key.decode("utf-8").split(":")[2]
+            endpoint_stats[endpoint] = int(value) if value else 0
+
+    # Get resource stats
+    resource_keys = redis_client.keys(f"api_calls:resource:*:hour:{hour}")
+    resource_stats = {}
+    if resource_keys:
+        resource_values = redis_client.mget(resource_keys)
+        for key, value in zip(resource_keys, resource_values):
+            resource = key.decode("utf-8").split(":")[2]
+            resource_stats[resource] = int(value) if value else 0
+
+    # Get method stats
+    method_keys = redis_client.keys(f"api_calls:method:*:hour:{hour}")
+    method_stats = {}
+    if method_keys:
+        method_values = redis_client.mget(method_keys)
+        for key, value in zip(method_keys, method_values):
+            method = key.decode("utf-8").split(":")[2]
+            method_stats[method] = int(value) if value else 0
 
     return {
-        "hourly_calls": int(hourly_calls) if hourly_calls else 0,
-        "daily_calls": int(daily_calls) if daily_calls else 0,
-        "current_hour": datetime.fromtimestamp(now // 3600 * 3600).strftime(
+        "hourly_calls": hourly_calls,
+        "daily_calls": daily_calls,
+        "weekly_calls": weekly_calls,
+        "monthly_calls": monthly_calls,
+        "current_hour": datetime.fromtimestamp(hour * 3600).strftime(
             "%Y-%m-%d %H:00:00"
         ),
-        "current_day": datetime.fromtimestamp(now // 86400 * 86400).strftime(
-            "%Y-%m-%d"
-        ),
+        "current_day": datetime.fromtimestamp(day * 86400).strftime("%Y-%m-%d"),
+        "endpoint_stats": endpoint_stats,
+        "resource_stats": resource_stats,
+        "method_stats": method_stats,
     }
 
 
@@ -107,6 +201,17 @@ def check_cache_health():
                         "stats": stats,
                         "rate_limits": rate_limits,
                         "api_calls": api_stats,
+                        "traffic_stats": {
+                            "endpoints": api_stats["endpoint_stats"],
+                            "resources": api_stats["resource_stats"],
+                            "methods": api_stats["method_stats"],
+                            "time_periods": {
+                                "hourly": api_stats["hourly_calls"],
+                                "daily": api_stats["daily_calls"],
+                                "weekly": api_stats["weekly_calls"],
+                                "monthly": api_stats["monthly_calls"],
+                            },
+                        },
                     }
                 )
             )
@@ -128,6 +233,17 @@ def check_cache_health():
             stats=stats,
             rate_limits=rate_limits,
             api_stats=api_stats,
+            traffic_stats={
+                "endpoints": api_stats["endpoint_stats"],
+                "resources": api_stats["resource_stats"],
+                "methods": api_stats["method_stats"],
+                "time_periods": {
+                    "hourly": api_stats["hourly_calls"],
+                    "daily": api_stats["daily_calls"],
+                    "weekly": api_stats["weekly_calls"],
+                    "monthly": api_stats["monthly_calls"],
+                },
+            },
             last_updated=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         )
 
