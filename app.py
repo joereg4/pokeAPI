@@ -48,6 +48,42 @@ def create_app(test_config=None):
         # This is just a placeholder - the actual route is in a blueprint
         pass
 
+    # Exempt more routes that are commonly accessed
+    @app.route("/ability/<path:path>")
+    @limiter.exempt
+    def exempt_ability_detail(path):
+        pass
+
+    @app.route("/move/<path:path>")
+    @limiter.exempt
+    def exempt_move_detail(path):
+        pass
+
+    @app.route("/item/<path:path>")
+    @limiter.exempt
+    def exempt_item_detail(path):
+        pass
+
+    @app.route("/pokemon-species/<path:path>")
+    @limiter.exempt
+    def exempt_pokemon_species(path):
+        pass
+
+    @app.route("/pokemon-color/<path:path>")
+    @limiter.exempt
+    def exempt_pokemon_color(path):
+        pass
+
+    @app.route("/pokemon-habitat/<path:path>")
+    @limiter.exempt
+    def exempt_pokemon_habitat(path):
+        pass
+
+    @app.route("/pokemon-shape/<path:path>")
+    @limiter.exempt
+    def exempt_pokemon_shape(path):
+        pass
+
     # Configure compression
     app.config["COMPRESS_MIMETYPES"] = [
         "text/html",
@@ -127,7 +163,8 @@ def create_app(test_config=None):
             "/health"
         ):
             try:
-                # Remove duplicate API call tracking since it's handled in APIResource.py
+                # Increment API call counter
+                increment_api_counter()
                 app.logger.info(f"Request tracked for: {request.path}")
             except Exception as e:
                 app.logger.error(f"Error tracking request: {e}")
