@@ -75,7 +75,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for endpoint, data in traffic_stats.endpoint_stats.items() %}
+                                {% for endpoint, data in traffic_stats.endpoint_stats.items()|sort(attribute='1.total_calls', reverse=true) %}
                                 <tr>
                                     <td><strong>{{ endpoint }}</strong></td>
                                     <td>{{ data.total_calls }}</td>
