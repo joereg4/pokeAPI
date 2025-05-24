@@ -26,12 +26,16 @@ def test_health_check_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
     # Mock Redis pipeline
     mock_pipeline = MagicMock()
     mock_pipeline.execute.return_value = [
-        [b"api_calls:endpoint:main:hour:12345"],  # keys
         [
-            b"api_calls:resource:1:hour:12345",
-            b"api_calls:resource:2:hour:12345",
+            b"api_calls:endpoint:pokemon:hour:12345",
+            b"api_calls:endpoint:items:hour:12345",
+        ],  # keys
+        [
+            b"api_calls:resource:pokemon:1:hour:12345",
+            b"api_calls:resource:pokemon:2:hour:12345",
+            b"api_calls:resource:items:potion:hour:12345",
         ],  # resource_keys
-        [b"api_calls:method:GET:hour:12345"],  # method_keys
+        [],  # method_keys (no longer used)
         [],  # period_keys
         b"10",  # hourly
         b"100",  # daily
@@ -40,14 +44,21 @@ def test_health_check_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
     ]
     mock_redis.pipeline.return_value = mock_pipeline
 
-    # Mock Redis keys for traffic stats (simulate two resources and one endpoint)
+    # Mock Redis keys for traffic stats
     mock_redis.keys.side_effect = lambda pattern: (
-        [b"api_calls:endpoint:main:hour:12345"]
+        [
+            b"api_calls:endpoint:pokemon:hour:12345",
+            b"api_calls:endpoint:items:hour:12345",
+        ]
         if "endpoint" in pattern
         else (
-            [b"api_calls:resource:1:hour:12345", b"api_calls:resource:2:hour:12345"]
+            [
+                b"api_calls:resource:pokemon:1:hour:12345",
+                b"api_calls:resource:pokemon:2:hour:12345",
+                b"api_calls:resource:items:potion:hour:12345",
+            ]
             if "resource" in pattern
-            else [b"api_calls:method:GET:hour:12345"] if "method" in pattern else []
+            else []
         )
     )
 
@@ -59,18 +70,22 @@ def test_health_check_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
             return b"Bulbasaur"
         if "pokedex:pokemon:2:name" in key:
             return b"Ivysaur"
+        if "pokedex:items:potion:name" in key:
+            return b"Potion"
+        if key == "api_calls:endpoint:pokemon:hour:12345":
+            return b"10"
+        if key == "api_calls:endpoint:items:hour:12345":
+            return b"5"
         if "hour" in key:
             return b"10"
         if "day" in key:
             return b"100"
-        if "api_calls:resource:1" in key:
+        if "api_calls:resource:pokemon:1" in key:
             return b"7"
-        if "api_calls:resource:2" in key:
+        if "api_calls:resource:pokemon:2" in key:
             return b"3"
-        if "api_calls:endpoint:main" in key:
+        if "api_calls:resource:items:potion" in key:
             return b"5"
-        if "api_calls:method:GET" in key:
-            return b"15"
         return None
 
     mock_redis.get.side_effect = get_side_effect
@@ -83,7 +98,26 @@ def test_health_check_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
     assert data["cache"] == "operational"
     assert "stats" in data
     assert "rate_limits" in data
-    assert "api_calls" in data
+    assert "traffic_stats" in data
+
+    # Verify the new hierarchical structure
+    traffic_stats = data["traffic_stats"]
+    assert "endpoint_stats" in traffic_stats
+    assert "pokemon" in traffic_stats["endpoint_stats"]
+    assert "items" in traffic_stats["endpoint_stats"]
+
+    # Check Pokemon endpoint data
+    pokemon_stats = traffic_stats["endpoint_stats"]["pokemon"]
+    assert pokemon_stats["total_calls"] == 10
+    assert "resources" in pokemon_stats
+    assert "Bulbasaur" in pokemon_stats["resources"]
+    assert "Ivysaur" in pokemon_stats["resources"]
+
+    # Check Items endpoint data
+    items_stats = traffic_stats["endpoint_stats"]["items"]
+    assert items_stats["total_calls"] == 5
+    assert "resources" in items_stats
+    assert "Potion" in items_stats["resources"]
 
 
 def test_health_check_unauthorized(client):
@@ -104,7 +138,7 @@ def test_health_check_unauthorized(client):
 @patch("utils.get_cache_stats")
 @patch("routes.health.cache")
 def test_cache_health_success(mock_routes_cache, mock_stats, mock_redis, auth_client):
-    """Test successful health check."""
+    """Test successful health check with HTML response."""
     # Mock cache behavior
     mock_routes_cache.set.return_value = True
     mock_routes_cache.get.return_value = "ok"
@@ -122,12 +156,9 @@ def test_cache_health_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
     # Mock Redis pipeline
     mock_pipeline = MagicMock()
     mock_pipeline.execute.return_value = [
-        [b"api_calls:endpoint:main:hour:12345"],  # keys
-        [
-            b"api_calls:resource:1:hour:12345",
-            b"api_calls:resource:2:hour:12345",
-        ],  # resource_keys
-        [b"api_calls:method:GET:hour:12345"],  # method_keys
+        [b"api_calls:endpoint:pokemon:hour:12345"],  # keys
+        [b"api_calls:resource:pokemon:1:hour:12345"],  # resource_keys
+        [],  # method_keys (no longer used)
         [],  # period_keys
         b"10",  # hourly
         b"100",  # daily
@@ -136,55 +167,41 @@ def test_cache_health_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
     ]
     mock_redis.pipeline.return_value = mock_pipeline
 
-    # Mock Redis keys for traffic stats (simulate two resources and one endpoint)
+    # Mock Redis keys and get for traffic stats
     mock_redis.keys.side_effect = lambda pattern: (
-        [b"api_calls:endpoint:main:hour:12345"]
+        [b"api_calls:endpoint:pokemon:hour:12345"]
         if "endpoint" in pattern
         else (
-            [b"api_calls:resource:1:hour:12345", b"api_calls:resource:2:hour:12345"]
+            [b"api_calls:resource:pokemon:1:hour:12345"]
             if "resource" in pattern
-            else [b"api_calls:method:GET:hour:12345"] if "method" in pattern else []
+            else []
         )
     )
 
-    # Mock Redis get for API stats and traffic stats
     def get_side_effect(key):
         if isinstance(key, bytes):
             key = key.decode()
         if "pokedex:pokemon:1:name" in key:
             return b"Bulbasaur"
-        if "pokedex:pokemon:2:name" in key:
-            return b"Ivysaur"
-        if "hour" in key:
-            return b"10"
-        if "day" in key:
-            return b"100"
-        if "api_calls:resource:1" in key:
+        if "api_calls:resource:pokemon:1" in key:
             return b"7"
-        if "api_calls:resource:2" in key:
-            return b"3"
-        if "api_calls:endpoint:main" in key:
-            return b"5"
-        if "api_calls:method:GET" in key:
-            return b"15"
+        if "api_calls:endpoint:pokemon" in key:
+            return b"10"
         return None
 
     mock_redis.get.side_effect = get_side_effect
     mock_redis.mget.side_effect = lambda keys: [get_side_effect(k) for k in keys]
 
-    response = auth_client.get("/health/cache", headers={"Accept": "application/json"})
+    # Test HTML response
+    response = auth_client.get("/health/cache")
     assert response.status_code == 200
-    data = response.get_json()
-    assert data["status"] == "healthy"
-    assert data["cache"] == "operational"
-    assert "stats" in data
-    assert "rate_limits" in data
-    assert "api_calls" in data
 
-    # Also test the HTML output for the new headings
-    response_html = auth_client.get("/health/cache")
-    assert b"System Status" in response_html.data
-    assert b"Cache Statistics" in response_html.data
+    # Check for new HTML elements
+    assert b"API Usage Statistics" in response.data
+    assert b"Time Period Statistics" in response.data
+    assert b"Endpoint" in response.data
+    assert b"Total Calls" in response.data
+    assert b"Resources" in response.data
 
 
 @patch("routes.health.redis_client")

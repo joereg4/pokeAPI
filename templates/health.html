@@ -63,33 +63,35 @@
 
             <div class="card mb-4">
                 <div class="card-header">
-                    <h2>Endpoint Statistics</h2>
-                </div>
-                <div class="card-body">
-                    {% for endpoint, count in traffic_stats.endpoints.items() %}
-                    <p><strong>{{ endpoint }}:</strong> {{ count }}</p>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h2>Resource Statistics</h2>
+                    <h2>API Usage Statistics</h2>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Resource</th>
-                                    <th>Access Count</th>
+                                    <th>Endpoint</th>
+                                    <th>Total Calls</th>
+                                    <th>Resources</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for resource, count in traffic_stats.resources.items() %}
+                                {% for endpoint, data in traffic_stats.endpoint_stats.items() %}
                                 <tr>
-                                    <td>{{ resource }}</td>
-                                    <td>{{ count }}</td>
+                                    <td><strong>{{ endpoint }}</strong></td>
+                                    <td>{{ data.total_calls }}</td>
+                                    <td>
+                                        <table class="table table-sm mb-0">
+                                            <tbody>
+                                                {% for resource, count in data.resources.items() %}
+                                                <tr>
+                                                    <td>{{ resource }}</td>
+                                                    <td>{{ count }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -100,12 +102,15 @@
 
             <div class="card mb-4">
                 <div class="card-header">
-                    <h2>Method Statistics</h2>
+                    <h2>Time Period Statistics</h2>
                 </div>
                 <div class="card-body">
-                    {% for method, count in traffic_stats.methods.items() %}
-                    <p><strong>{{ method }}:</strong> {{ count }}</p>
-                    {% endfor %}
+                    <p><strong>Current Hour:</strong> {{ traffic_stats.current_hour }}</p>
+                    <p><strong>Current Day:</strong> {{ traffic_stats.current_day }}</p>
+                    <p><strong>Hourly Calls:</strong> {{ traffic_stats.hourly_calls }}</p>
+                    <p><strong>Daily Calls:</strong> {{ traffic_stats.daily_calls }}</p>
+                    <p><strong>Weekly Calls:</strong> {{ traffic_stats.weekly_calls }}</p>
+                    <p><strong>Monthly Calls:</strong> {{ traffic_stats.monthly_calls }}</p>
                 </div>
             </div>
         </div>
