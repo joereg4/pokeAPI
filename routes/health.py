@@ -216,6 +216,10 @@ def get_traffic_stats():
             endpoint = parts[2]  # Get endpoint from key structure
             resource_id = parts[3]  # Get resource_id from key structure
 
+            # Skip if the resource_id is a time period or invalid
+            if resource_id in ["hour", "day", "week", "month"] or not resource_id:
+                continue
+
             count = int(redis_client.get(key) or 0)
 
             # Skip if it's not a numeric ID and not a named resource
