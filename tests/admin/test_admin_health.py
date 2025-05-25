@@ -35,8 +35,7 @@ def test_health_check_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
             b"api_calls:resource:pokemon:2:hour:12345",
             b"api_calls:resource:move:tackle:hour:12345",
         ],  # resource_keys
-        [],  # method_keys (no longer used)
-        [],  # period_keys
+        [],  # method_keys
         b"10",  # hourly
         b"100",  # daily
         b"50",  # weekly
@@ -119,6 +118,12 @@ def test_health_check_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
     assert "resources" in move_stats
     assert "Tackle" in move_stats["resources"]
 
+    # Check time period stats
+    assert traffic_stats["hourly_calls"] == 10
+    assert traffic_stats["daily_calls"] == 100
+    assert traffic_stats["weekly_calls"] == 50
+    assert traffic_stats["monthly_calls"] == 200
+
 
 def test_health_check_unauthorized(client):
     """Test health check requires authentication."""
@@ -158,8 +163,7 @@ def test_cache_health_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
     mock_pipeline.execute.return_value = [
         [b"api_calls:endpoint:pokemon:hour:12345"],  # keys
         [b"api_calls:resource:pokemon:1:hour:12345"],  # resource_keys
-        [],  # method_keys (no longer used)
-        [],  # period_keys
+        [],  # method_keys
         b"10",  # hourly
         b"100",  # daily
         b"50",  # weekly
@@ -187,6 +191,14 @@ def test_cache_health_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
             return b"7"
         if "api_calls:endpoint:pokemon" in key:
             return b"10"
+        if "hour" in key:
+            return b"10"
+        if "day" in key:
+            return b"100"
+        if "week" in key:
+            return b"50"
+        if "month" in key:
+            return b"200"
         return None
 
     mock_redis.get.side_effect = get_side_effect
