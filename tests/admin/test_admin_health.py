@@ -28,12 +28,12 @@ def test_health_check_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
     mock_pipeline.execute.return_value = [
         [
             b"api_calls:endpoint:pokemon:hour:12345",
-            b"api_calls:endpoint:items:hour:12345",
+            b"api_calls:endpoint:move:hour:12345",
         ],  # keys
         [
             b"api_calls:resource:pokemon:1:hour:12345",
             b"api_calls:resource:pokemon:2:hour:12345",
-            b"api_calls:resource:items:potion:hour:12345",
+            b"api_calls:resource:move:tackle:hour:12345",
         ],  # resource_keys
         [],  # method_keys (no longer used)
         [],  # period_keys
@@ -48,14 +48,14 @@ def test_health_check_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
     mock_redis.keys.side_effect = lambda pattern: (
         [
             b"api_calls:endpoint:pokemon:hour:12345",
-            b"api_calls:endpoint:items:hour:12345",
+            b"api_calls:endpoint:move:hour:12345",
         ]
         if "endpoint" in pattern
         else (
             [
                 b"api_calls:resource:pokemon:1:hour:12345",
                 b"api_calls:resource:pokemon:2:hour:12345",
-                b"api_calls:resource:items:potion:hour:12345",
+                b"api_calls:resource:move:tackle:hour:12345",
             ]
             if "resource" in pattern
             else []
@@ -70,11 +70,11 @@ def test_health_check_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
             return b"Bulbasaur"
         if "pokedex:pokemon:2:name" in key:
             return b"Ivysaur"
-        if "pokedex:items:potion:name" in key:
-            return b"Potion"
+        if "pokedex:move:tackle:name" in key:
+            return b"Tackle"
         if key == "api_calls:endpoint:pokemon:hour:12345":
             return b"10"
-        if key == "api_calls:endpoint:items:hour:12345":
+        if key == "api_calls:endpoint:move:hour:12345":
             return b"5"
         if "hour" in key:
             return b"10"
@@ -84,7 +84,7 @@ def test_health_check_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
             return b"7"
         if "api_calls:resource:pokemon:2" in key:
             return b"3"
-        if "api_calls:resource:items:potion" in key:
+        if "api_calls:resource:move:tackle" in key:
             return b"5"
         return None
 
@@ -104,7 +104,7 @@ def test_health_check_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
     traffic_stats = data["traffic_stats"]
     assert "endpoint_stats" in traffic_stats
     assert "pokemon" in traffic_stats["endpoint_stats"]
-    assert "items" in traffic_stats["endpoint_stats"]
+    assert "move" in traffic_stats["endpoint_stats"]
 
     # Check Pokemon endpoint data
     pokemon_stats = traffic_stats["endpoint_stats"]["pokemon"]
@@ -113,11 +113,11 @@ def test_health_check_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
     assert "Bulbasaur" in pokemon_stats["resources"]
     assert "Ivysaur" in pokemon_stats["resources"]
 
-    # Check Items endpoint data
-    items_stats = traffic_stats["endpoint_stats"]["items"]
-    assert items_stats["total_calls"] == 5
-    assert "resources" in items_stats
-    assert "Potion" in items_stats["resources"]
+    # Check Move endpoint data
+    move_stats = traffic_stats["endpoint_stats"]["move"]
+    assert move_stats["total_calls"] == 5
+    assert "resources" in move_stats
+    assert "Tackle" in move_stats["resources"]
 
 
 def test_health_check_unauthorized(client):

@@ -172,6 +172,63 @@ def get_api_stats():
 def get_traffic_stats():
     """Get detailed traffic statistics from Redis."""
     try:
+        # Define valid API endpoints we want to track
+        VALID_API_ENDPOINTS = {
+            # Pokemon Core
+            "pokemon",
+            "pokemon-species",
+            "pokemon-form",
+            "pokemon-color",
+            "pokemon-habitat",
+            "pokemon-shape",
+            "pokedex",
+            # Moves & Abilities
+            "move",
+            "move-ailment",
+            "move-battle-style",
+            "move-category",
+            "move-damage-class",
+            "move-learn-method",
+            "move-target",
+            "ability",
+            # Items
+            "item",
+            "item-attribute",
+            "item-category",
+            "item-fling-effect",
+            "item-pocket",
+            "machine",
+            # Locations & Regions
+            "location",
+            "location-area",
+            "pal-park-area",
+            "region",
+            # Characteristics & Stats
+            "characteristic",
+            "pokeathlon-stat",
+            "stat",
+            "type",
+            # Breeding
+            "egg-group",
+            "gender",
+            "growth-rate",
+            # Evolution
+            "evolution-chain",
+            "evolution-trigger",
+            "generation",
+            # Berries & Contests
+            "berry",
+            "berry-firmness",
+            "berry-flavor",
+            "contest-effect",
+            "contest-type",
+            "super-contest-effect",
+            # Nature
+            "nature",
+            # Artwork
+            "artwork",
+        }
+
         pipe = redis_client.pipeline()
 
         # Get all keys for different metrics
@@ -206,6 +263,11 @@ def get_traffic_stats():
             key_str = key.decode()
             parts = key_str.split(":")
             endpoint = parts[2]  # Get endpoint name from key structure
+
+            # Skip non-API endpoints
+            if endpoint not in VALID_API_ENDPOINTS:
+                continue
+
             count = int(redis_client.get(key) or 0)
             endpoint_stats[endpoint] = {"total_calls": count, "resources": {}}
 
@@ -214,6 +276,11 @@ def get_traffic_stats():
             key_str = key.decode()
             parts = key_str.split(":")
             endpoint = parts[2]  # Get endpoint from key structure
+
+            # Skip if endpoint is not in our valid list
+            if endpoint not in VALID_API_ENDPOINTS:
+                continue
+
             resource_id = parts[3]  # Get resource_id from key structure
 
             # Skip if the resource_id is a time period or invalid
