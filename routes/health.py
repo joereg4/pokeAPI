@@ -229,28 +229,30 @@ def get_traffic_stats():
             "artwork",
         }
 
+        now = int(time.time())
+        hour = now // 3600
+        day = now // 86400
+        week = now // (86400 * 7)
+        month = now // (86400 * 30)
+
         pipe = redis_client.pipeline()
 
         # Get all keys for different metrics
         pipe.keys("api_calls:endpoint:*")
         pipe.keys("api_calls:resource:*")
         pipe.keys("api_calls:method:*")
-        pipe.keys("api_calls:period:*")
 
-        # Get current hour and day counts
-        pipe.get("api_calls:period:hourly")
-        pipe.get("api_calls:period:daily")
-
-        # Get weekly and monthly counts
-        pipe.get("api_calls:period:weekly")
-        pipe.get("api_calls:period:monthly")
+        # Get current time period counts
+        pipe.get(f"api_calls:hour:{hour}")
+        pipe.get(f"api_calls:day:{day}")
+        pipe.get(f"api_calls:week:{week}")
+        pipe.get(f"api_calls:month:{month}")
 
         # Execute pipeline
         (
             keys,
             resource_keys,
             method_keys,
-            period_keys,
             hourly,
             daily,
             weekly,
@@ -323,18 +325,12 @@ def get_traffic_stats():
                 )
             )
 
-        # Process period stats
-        periods = {}
-        for key in period_keys:
-            period = key.decode().split(":")[-1]
-            count = int(redis_client.get(key) or 0)
-            periods[period] = count
-
         return {
             "endpoint_stats": endpoint_stats,  # Now contains hierarchical data
-            "periods": periods,
-            "current_hour": int(hourly or 0),
-            "current_day": int(daily or 0),
+            "current_hour": datetime.fromtimestamp(hour * 3600).strftime(
+                "%Y-%m-%d %H:00:00"
+            ),
+            "current_day": datetime.fromtimestamp(day * 86400).strftime("%Y-%m-%d"),
             "hourly_calls": int(hourly or 0),
             "daily_calls": int(daily or 0),
             "weekly_calls": int(weekly or 0),
