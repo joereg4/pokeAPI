@@ -38,8 +38,6 @@ def test_health_check_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
         [],  # method_keys
         b"10",  # hourly
         b"100",  # daily
-        b"50",  # weekly
-        b"200",  # monthly
     ]
     mock_redis.pipeline.return_value = mock_pipeline
 
@@ -121,8 +119,8 @@ def test_health_check_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
     # Check time period stats
     assert traffic_stats["hourly_calls"] == 10
     assert traffic_stats["daily_calls"] == 100
-    assert traffic_stats["weekly_calls"] == 50
-    assert traffic_stats["monthly_calls"] == 200
+    assert traffic_stats["weekly_calls"] == 700
+    assert traffic_stats["monthly_calls"] == 3000
 
 
 def test_health_check_unauthorized(client):
@@ -166,8 +164,6 @@ def test_cache_health_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
         [],  # method_keys
         b"10",  # hourly
         b"100",  # daily
-        b"50",  # weekly
-        b"200",  # monthly
     ]
     mock_redis.pipeline.return_value = mock_pipeline
 
@@ -213,6 +209,8 @@ def test_cache_health_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
     assert b"Time Period Statistics" in response.data
     assert b"Endpoint" in response.data
     assert b"Total Calls" in response.data
+    assert b"Rolling 7-Day Calls" in response.data
+    assert b"Rolling 30-Day Calls" in response.data
 
 
 @patch("routes.health.redis_client")
