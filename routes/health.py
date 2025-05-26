@@ -103,19 +103,15 @@ def increment_api_counter():
 
 
 def get_api_stats():
-    """Get current API call statistics"""
+    """Get current API call statistics with rolling 7-day and 30-day windows."""
     now = int(time.time())
     hour = now // 3600
     day = now // 86400
-    week = now // (86400 * 7)
-    month = now // (86400 * 30)
 
     # Get all relevant keys
     keys = [
         f"api_calls:hour:{hour}",
         f"api_calls:day:{day}",
-        f"api_calls:week:{week}",
-        f"api_calls:month:{month}",
     ]
 
     # Get all values
@@ -124,8 +120,14 @@ def get_api_stats():
     # Convert to integers, defaulting to 0 if None
     hourly_calls = int(values[0]) if values[0] else 0
     daily_calls = int(values[1]) if values[1] else 0
-    weekly_calls = int(values[2]) if values[2] else 0
-    monthly_calls = int(values[3]) if values[3] else 0
+
+    # Rolling 7-day and 30-day totals
+    last_7_days = [f"api_calls:day:{day - i}" for i in range(7)]
+    last_30_days = [f"api_calls:day:{day - i}" for i in range(30)]
+    last_7_counts = redis_client.mget(last_7_days)
+    last_30_counts = redis_client.mget(last_30_days)
+    weekly_calls = sum(int(x) if x else 0 for x in last_7_counts)
+    monthly_calls = sum(int(x) if x else 0 for x in last_30_counts)
 
     # Get endpoint stats
     endpoint_keys = redis_client.keys(f"api_calls:endpoint:*:hour:{hour}")
@@ -157,8 +159,8 @@ def get_api_stats():
     return {
         "hourly_calls": hourly_calls,
         "daily_calls": daily_calls,
-        "weekly_calls": weekly_calls,
-        "monthly_calls": monthly_calls,
+        "weekly_calls": weekly_calls,  # rolling 7-day
+        "monthly_calls": monthly_calls,  # rolling 30-day
         "current_hour": datetime.fromtimestamp(hour * 3600).strftime(
             "%Y-%m-%d %H:00:00"
         ),
@@ -170,7 +172,7 @@ def get_api_stats():
 
 
 def get_traffic_stats():
-    """Get detailed traffic statistics from Redis."""
+    """Get detailed traffic statistics from Redis, with rolling 7-day and 30-day windows."""
     try:
         # Define valid API endpoints we want to track
         VALID_API_ENDPOINTS = {
@@ -232,8 +234,6 @@ def get_traffic_stats():
         now = int(time.time())
         hour = now // 3600
         day = now // 86400
-        week = now // (86400 * 7)
-        month = now // (86400 * 30)
 
         pipe = redis_client.pipeline()
 
@@ -245,8 +245,7 @@ def get_traffic_stats():
         # Get current time period counts
         pipe.get(f"api_calls:hour:{hour}")
         pipe.get(f"api_calls:day:{day}")
-        pipe.get(f"api_calls:week:{week}")
-        pipe.get(f"api_calls:month:{month}")
+        # Remove week/month from pipeline, will use rolling logic below
 
         # Execute pipeline
         (
@@ -255,9 +254,15 @@ def get_traffic_stats():
             method_keys,
             hourly,
             daily,
-            weekly,
-            monthly,
         ) = pipe.execute()
+
+        # Rolling 7-day and 30-day totals
+        last_7_days = [f"api_calls:day:{day - i}" for i in range(7)]
+        last_30_days = [f"api_calls:day:{day - i}" for i in range(30)]
+        last_7_counts = redis_client.mget(last_7_days)
+        last_30_counts = redis_client.mget(last_30_days)
+        weekly_calls = sum(int(x) if x else 0 for x in last_7_counts)
+        monthly_calls = sum(int(x) if x else 0 for x in last_30_counts)
 
         # Process endpoint stats and organize resources by endpoint
         endpoint_stats = {}
@@ -333,8 +338,8 @@ def get_traffic_stats():
             "current_day": datetime.fromtimestamp(day * 86400).strftime("%Y-%m-%d"),
             "hourly_calls": int(hourly or 0),
             "daily_calls": int(daily or 0),
-            "weekly_calls": int(weekly or 0),
-            "monthly_calls": int(monthly or 0),
+            "weekly_calls": weekly_calls,  # rolling 7-day
+            "monthly_calls": monthly_calls,  # rolling 30-day
         }
     except Exception as e:
         print(f"ERROR in get_traffic_stats: {e}")
