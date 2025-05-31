@@ -81,21 +81,21 @@ def increment_api_counter():
 
     # Set expiration for all keys
     pipe.expire(f"api_calls:hour:{hour}", 3600)  # 1 hour
-    pipe.expire(f"api_calls:day:{day}", 86400)  # 1 day
+    pipe.expire(f"api_calls:day:{day}", 86400 * 31)  # 31 days
     pipe.expire(f"api_calls:week:{week}", 604800)  # 1 week
     pipe.expire(f"api_calls:month:{month}", 2592000)  # 30 days
 
     # Set expiration for endpoint keys
     pipe.expire(f"api_calls:endpoint:{endpoint}:hour:{hour}", 3600)
-    pipe.expire(f"api_calls:endpoint:{endpoint}:day:{day}", 86400)
+    pipe.expire(f"api_calls:endpoint:{endpoint}:day:{day}", 86400 * 31)
 
     # Set expiration for resource keys
     pipe.expire(f"api_calls:resource:{resource_type}:hour:{hour}", 3600)
-    pipe.expire(f"api_calls:resource:{resource_type}:day:{day}", 86400)
+    pipe.expire(f"api_calls:resource:{resource_type}:day:{day}", 86400 * 31)
 
     # Set expiration for method keys
     pipe.expire(f"api_calls:method:{method}:hour:{hour}", 3600)
-    pipe.expire(f"api_calls:method:{method}:day:{day}", 86400)
+    pipe.expire(f"api_calls:method:{method}:day:{day}", 86400 * 31)
 
     # Execute all commands
     results = pipe.execute()
