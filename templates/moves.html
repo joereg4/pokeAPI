@@ -17,10 +17,10 @@
         <nav aria-label="Page navigation">
     <ul class="pagination justify-content-center">
         <li class="page-item {% if current_page == 1 %}disabled{% endif %} ">
-            <a class="page-link" href="{{ url_for('pokemon.get_moves_list', page=current_page-1) }}">Previous</a>
+            <a class="page-link" href="{{ url_for('abilities_moves_items.get_moves_list', page=current_page-1) }}">Previous</a>
         </li>
         <li class="page-item">
-            <a class="page-link" href="{{ url_for('pokemon.get_moves_list', page=current_page+1) }}">Next</a>
+            <a class="page-link" href="{{ url_for('abilities_moves_items.get_moves_list', page=current_page+1) }}">Next</a>
         </li>
     </ul>
 </nav>
