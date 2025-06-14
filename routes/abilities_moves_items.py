@@ -308,8 +308,11 @@ def get_moves_list():
     endpoint = f"{BASE_URL}/move/?limit={per_page}&offset={offset}"
 
     response = requests.get(endpoint)
-    moves_list = response.json()
+    if response.status_code != 200:
+        logging.error(f"Error fetching moves: {response.status_code} - {response.text}")
+        abort(500, description="Failed to fetch moves from the API.")
 
+    moves_list = response.json()
     return render_template("moves.html", moves_list=moves_list, current_page=page)
 
 
