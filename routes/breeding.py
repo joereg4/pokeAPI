@@ -41,7 +41,7 @@ def get_egg_group(id_or_name):
                 abort(404, description=f"Egg Group '{id_or_name}' not found")
 
             # Use the create_pokemon_list function with the correct key
-            pokemon_list = create_pokemon_list(data)
+            pokemon_list = create_pokemon_list(data.get("pokemon_species", []))
 
             # Fetch Summary
             summary = get_summary(data["name"], "egg-group")

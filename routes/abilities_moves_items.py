@@ -53,7 +53,7 @@ def get_ability(id_or_name):
                 abort(404, description=f"Ability '{id_or_name}' not found")
 
             # Use the create_pokemon_list function to get Pokémon with this ability
-            pokemon_list = create_pokemon_list(data)
+            pokemon_list = create_pokemon_list(data.get("pokemon", []))
 
             # Fetch Summary
             summary = get_summary(data["name"], "ability")
@@ -97,7 +97,7 @@ def get_item(id_or_name):
                 abort(404, description=f"Item '{id_or_name}' not found")
 
             # Use the create_pokemon_list function with the correct key
-            pokemon_list = create_pokemon_list(data)
+            pokemon_list = create_pokemon_list(data.get("held_by_pokemon", []))
 
             # Fetch Summary
             summary = get_summary(data["name"], "item")
@@ -337,7 +337,7 @@ def get_move(id_or_name):
             if "name" not in data:
                 abort(404, description=f"Pokemon Move '{id_or_name}' not found")
 
-            pokemon_list = create_pokemon_list(data)
+            pokemon_list = create_pokemon_list(data.get("learned_by_pokemon", []))
 
             # Check if the category data exists and is not None
             category = None

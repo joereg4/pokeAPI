@@ -10,7 +10,9 @@ from pokedex.utils import Config
 
 BASE_URL = Config.BASE_URL
 
-evolution_growth_bp = Blueprint("evolution_growth", __name__, template_folder="templates", static_folder="static")
+evolution_growth_bp = Blueprint(
+    "evolution_growth", __name__, template_folder="templates", static_folder="static"
+)
 
 
 @evolution_growth_bp.route("/evolution-chain/<int:id_>")
@@ -77,9 +79,11 @@ def get_generation(id_or_name):
                 abort(404, description=f"Generation '{id_or_name}' not found")
 
             # Use the create_pokemon_list function with the correct key
-            pokemon_list = create_pokemon_list(data)
+            pokemon_list = create_pokemon_list(data.get("pokemon_species", []))
 
-            return render_template("generation_detail.html", data=data, pokemon_list=pokemon_list)
+            return render_template(
+                "generation_detail.html", data=data, pokemon_list=pokemon_list
+            )
         except ValueError as e:
             return str(e), 400  # Return the error message with a 400 Bad Request status
 

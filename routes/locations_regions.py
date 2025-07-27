@@ -62,7 +62,7 @@ def get_location_area(id_or_name):
         if "name" not in data:
             abort(404, description=f"Location Area '{id_or_name}' not found")
 
-        pokemon_list = create_pokemon_list(data)
+        pokemon_list = create_pokemon_list(data.get("pokemon_encounters", []))
 
         return render_template(
             "location_area_detail.html", data=data, pokemon_list=pokemon_list
