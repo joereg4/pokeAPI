@@ -119,7 +119,7 @@ def get_type(id_or_name):
                 abort(404, description=f"Pokemon type '{id_or_name}' not found")
 
             # Create pokemon list with cached sprites
-            pokemon_list = create_pokemon_list(data)
+            pokemon_list = create_pokemon_list(data.get("pokemon", []))
 
             # Get summary from database
             summary = get_summary(data["name"], "type")
