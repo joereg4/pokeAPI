@@ -2,15 +2,37 @@
 import logging
 import requests
 import os
+import signal
+from contextlib import contextmanager
 from flask import url_for, current_app
 from pokemontcgsdk import Card
 import pokedex
 from pokedex.utils import Config
 from models.model import Resource, db
 from pokedex.sprite import get_sprite_url
+import ssl
+import urllib.request
+import urllib.error
+import json
 
 VALID_SPRITES = Config.VALID_SPRITES
 TYPE_COLORS = Config.TYPE_COLORS
+
+
+@contextmanager
+def timeout_handler(seconds):
+    """Context manager to add timeout to operations"""
+
+    def timeout_signal(signum, frame):
+        raise TimeoutError(f"Operation timed out after {seconds} seconds")
+
+    old_handler = signal.signal(signal.SIGALRM, timeout_signal)
+    signal.alarm(seconds)
+    try:
+        yield
+    finally:
+        signal.alarm(0)
+        signal.signal(signal.SIGALRM, old_handler)
 
 
 def get_path(filename):
@@ -33,23 +55,105 @@ def get_summary(name, resource_type):
 
 
 def get_pokemon_cards(name):
+    """
+    Fetch Pokemon trading cards with improved error handling and timeout.
+    Uses Pokemon TCG API with optional API key authentication.
+    The Pokemon TCG API is often slow/unreliable, so we use aggressive timeouts.
+    """
     try:
-        # Attempt to fetch the cards using the API
-        data = pokedex.Card.where(q="name:{}".format(name))
+        # Check for API key in environment variables
+        api_key = os.getenv("POKEMONTCG_IO_API_KEY")
 
-        card_list = []
-        for card in data:
-            card_list.append(
-                {
-                    "id": card.id,
-                    "name": card.name,
-                    "artist": card.artist,
-                    "large_image": card.images.large,
-                    "set_name": card.set.name,
-                }
+        # Use aggressive timeout (2 seconds max) since Pokemon TCG API is very slow
+        with timeout_handler(2):
+            # Try exact name match first, then fallback to partial match
+            search_queries = [
+                f'name:"{name}"',  # Exact match with quotes
+                f"name:{name}",  # Simple match
+            ]
+
+            for query in search_queries:
+                try:
+                    url = f"https://api.pokemontcg.io/v2/cards?q={query}&pageSize=10"
+
+                    # Create SSL context that works on macOS
+                    ssl_context = ssl.create_default_context()
+                    ssl_context.check_hostname = False
+                    ssl_context.verify_mode = ssl.CERT_NONE
+
+                    # Create request with API key if available
+                    req = urllib.request.Request(url)
+                    if api_key:
+                        req.add_header("X-Api-Key", api_key)
+                        logging.debug(f"Pokemon TCG API configured with API key")
+                    else:
+                        logging.debug(
+                            "No Pokemon TCG API key found, using unauthenticated requests"
+                        )
+
+                    # Make the API call with aggressive timeout
+                    with urllib.request.urlopen(
+                        req, context=ssl_context, timeout=2
+                    ) as response:
+                        if response.status == 200:
+                            data = json.loads(response.read().decode())
+
+                            card_list = []
+                            for card in data.get("data", []):
+                                # Handle missing fields gracefully
+                                images = card.get("images", {})
+                                set_info = card.get("set", {})
+
+                                card_list.append(
+                                    {
+                                        "id": card.get("id", ""),
+                                        "name": card.get("name", ""),
+                                        "artist": card.get("artist", "Unknown"),
+                                        "large_image": images.get("large", ""),
+                                        "set_name": set_info.get("name", "Unknown Set"),
+                                    }
+                                )
+
+                            if card_list:
+                                logging.debug(
+                                    f"Found {len(card_list)} cards for {name} with query: {query}"
+                                )
+                                return card_list
+                            else:
+                                logging.debug(
+                                    f"No cards found for {name} with query: {query}, trying next query..."
+                                )
+                                continue
+                        else:
+                            logging.warning(
+                                f"Pokemon TCG API returned status {response.status} for {name}"
+                            )
+                            continue
+
+                except urllib.error.HTTPError as e:
+                    if e.code == 504:
+                        logging.warning(
+                            f"Pokemon TCG API gateway timeout for query: {query}"
+                        )
+                        continue
+                    else:
+                        logging.warning(
+                            f"Pokemon TCG API HTTP error {e.code} for query: {query}"
+                        )
+                        continue
+                except Exception as e:
+                    logging.warning(f"Pokemon TCG API error for query '{query}': {e}")
+                    continue
+
+            # If we get here, no queries succeeded
+            logging.info(
+                f"No Pokemon cards found for {name} after trying all search methods"
             )
-        return card_list
+            return []
 
+    except TimeoutError as e:
+        logging.warning(f"Pokemon TCG API timeout for {name}: {e}")
+        return []
     except Exception as e:
         # Log the exception for debugging purposes
         logging.error(f"Error fetching Pokémon cards for {name}: {e}")

@@ -440,8 +440,7 @@ def get_pokemon(id_or_name):
     )
 
     try:
-        # cards = get_pokemon_cards(data["name"])
-        cards = []  # Temporarily disable Pokemon card fetching
+        cards = get_pokemon_cards(data["name"])
     except Exception as e:
         # Log the exception and proceed with an empty list
         logging.debug(f"Error fetching cards for {data['name']}: {e}")
