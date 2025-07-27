@@ -111,7 +111,8 @@ def get_item(id_or_name):
             try:
                 name = '"{}"'.format(data["name"])
                 # Replace '-' with ' ' before calling get_pokemon_cards
-                cards = get_pokemon_cards(name.replace("-", " "))
+                # cards = get_pokemon_cards(name.replace("-", " "))
+                cards = []  # Temporarily disable Pokemon card fetching
             except Exception as e:
                 # Log the exception and proceed with an empty list
                 logging.debug(
