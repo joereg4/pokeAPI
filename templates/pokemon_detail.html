@@ -382,11 +382,11 @@
         </div>
     </section>
     <!-- Cards -->
-    <section>
-        <div class="container pt-5">
-            <h2>Cards</h2>
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-                {% if cards %}
+    {% if cards and cards|length > 0 %}
+        <section>
+            <div class="container pt-5">
+                <h2>Cards</h2>
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
                     {% for card in cards %}
                         <div class="col">
                             <div class="card h-100">
@@ -399,12 +399,8 @@
                             </div>
                         </div>
                     {% endfor %}
-                {% else %}
-                    <div class="col">
-                        No Data Available
-                    </div>
-                {% endif %}
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    {% endif %}
 {% endblock %}
