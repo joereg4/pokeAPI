@@ -40,106 +40,85 @@ def get_summary(name, resource_type):
 
 def get_pokemon_cards(name):
     """
-    Fetch Pokemon trading cards with improved error handling and timeout.
-    Uses Pokemon TCG API with optional API key authentication.
-    The Pokemon TCG API is often slow/unreliable, so we use aggressive timeouts.
+    Fetch Pokemon trading cards from local database.
+    Uses the imported TCG data for reliable, fast card lookups.
     """
     try:
-        # Check for API key in environment variables
-        api_key = os.getenv("POKEMONTCG_IO_API_KEY")
+        from models.tcg_card import TcgCard
 
-        # Use aggressive timeout (from config) since Pokemon TCG API is very slow
-        # Try exact name match first, then fallback to partial match
-        search_queries = [
-            f'name:"{name}"',  # Exact match with quotes
-            f"name:{name}",  # Simple match
-        ]
+        logging.info(f"Searching local database for Pokemon cards: {name}")
 
-        for query in search_queries:
-            try:
-                url = f"https://api.pokemontcg.io/v2/cards?q={query}&pageSize=10"
+        # Try multiple search strategies
+        cards = []
 
-                # Create SSL context that works on macOS
-                ssl_context = ssl.create_default_context()
-                ssl_context.check_hostname = False
-                ssl_context.verify_mode = ssl.CERT_NONE
+        # Strategy 1: Direct name match (most accurate)
+        cards = TcgCard.find_by_name(name)
+        if cards:
+            logging.info(f"Found {len(cards)} cards by name search for '{name}'")
 
-                # Create request with API key if available
-                req = urllib.request.Request(url)
-                if api_key:
-                    req.add_header("X-Api-Key", api_key)
-                    logging.debug(f"Pokemon TCG API configured with API key")
-                else:
-                    logging.debug(
-                        "No Pokemon TCG API key found, using unauthenticated requests"
+        # Strategy 2: If no results, try by Pokedex number for known Pokemon
+        if not cards:
+            pokemon_pokedex_map = {
+                "pikachu": 25,
+                "charizard": 6,
+                "blastoise": 9,
+                "venusaur": 3,
+                "mewtwo": 150,
+                "mew": 151,
+                "lugia": 249,
+                "ho-oh": 250,
+                "rayquaza": 384,
+                "arceus": 493,
+            }
+
+            if name.lower() in pokemon_pokedex_map:
+                pokedex_num = pokemon_pokedex_map[name.lower()]
+                cards = TcgCard.find_by_pokedex_number(pokedex_num)
+                if cards:
+                    logging.info(
+                        f"Found {len(cards)} cards by Pokedex number {pokedex_num} for '{name}'"
                     )
 
-                # Make the API call with aggressive timeout
-                with urllib.request.urlopen(
-                    req, context=ssl_context, timeout=TCG_API_TIMEOUT
-                ) as response:
-                    if response.status == 200:
-                        data = json.loads(response.read().decode())
+        # Strategy 3: If still no results, try by type for known Pokemon
+        if not cards:
+            type_map = {
+                "pikachu": "Lightning",
+                "charizard": "Fire",
+                "blastoise": "Water",
+                "venusaur": "Grass",
+            }
 
-                        card_list = []
-                        for card in data.get("data", []):
-                            # Handle missing fields gracefully
-                            images = card.get("images", {})
-                            set_info = card.get("set", {})
-
-                            card_list.append(
-                                {
-                                    "id": card.get("id", ""),
-                                    "name": card.get("name", ""),
-                                    "artist": card.get("artist", "Unknown"),
-                                    "large_image": images.get("large", ""),
-                                    "set_name": set_info.get("name", "Unknown Set"),
-                                }
-                            )
-
-                        if card_list:
-                            logging.debug(
-                                f"Found {len(card_list)} cards for {name} with query: {query}"
-                            )
-                            return card_list
-                        else:
-                            logging.debug(
-                                f"No cards found for {name} with query: {query}, trying next query..."
-                            )
-                            continue
-                    else:
-                        logging.warning(
-                            f"Pokemon TCG API returned status {response.status} for {name}"
-                        )
-                        continue
-
-            except urllib.error.HTTPError as e:
-                if e.code == 504:
-                    logging.warning(
-                        f"Pokemon TCG API gateway timeout for query: {query}"
+            if name.lower() in type_map:
+                pokemon_type = type_map[name.lower()]
+                cards = TcgCard.find_by_type(pokemon_type)
+                if cards:
+                    logging.info(
+                        f"Found {len(cards)} cards by type {pokemon_type} for '{name}'"
                     )
-                    continue
-                else:
-                    logging.warning(
-                        f"Pokemon TCG API HTTP error {e.code} for query: {query}"
-                    )
-                    continue
-            except Exception as e:
-                logging.warning(f"Pokemon TCG API error for query '{query}': {e}")
-                continue
 
-        # If we get here, no queries succeeded
-        logging.info(
-            f"No Pokemon cards found for {name} after trying all search methods"
-        )
-        return []
+        # Convert to the expected format
+        if cards:
+            card_list = []
+            for card in cards:
+                card_dict = card.to_dict()
+                card_list.append(card_dict)
 
-    except TimeoutError as e:
-        logging.warning(f"Pokemon TCG API timeout for {name}: {e}")
+            logging.info(
+                f"Returning {len(card_list)} cards for '{name}' from local database"
+            )
+            return card_list
+        else:
+            logging.info(f"No Pokemon cards found for '{name}' in local database")
+            return []
+
+    except ImportError:
+        logging.error("TcgCard model not available - database may not be set up")
         return []
     except Exception as e:
         # Log the exception for debugging purposes
-        logging.error(f"Error fetching Pokémon cards for {name}: {e}")
+        logging.error(
+            f"Error fetching Pokémon cards for {name} from database: {str(e)}"
+        )
         return []  # Return an empty list on error
 
 

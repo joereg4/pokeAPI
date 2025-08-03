@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import os
 import click
 from flask.cli import FlaskGroup
 from app import create_app
@@ -138,6 +139,40 @@ def clear_cache(resource_type, resource_name=None):
         print(f"Cleared {deleted_count} cache keys for all {resource_type}s")
 
     return 0
+
+
+@cli.command()
+def import_tcg_data():
+    """Import Pokemon TCG data from GitHub repository."""
+    import subprocess
+    import sys
+    
+    click.echo("Starting Pokemon TCG data import...")
+    result = subprocess.run(
+        [sys.executable, "scripts/import_tcg_data.py"],
+        cwd=os.path.dirname(os.path.abspath(__file__)),
+    )
+    if result.returncode == 0:
+        click.echo("✅ TCG data import completed successfully!")
+    else:
+        click.echo("❌ TCG data import failed!")
+
+
+@cli.command()
+def update_tcg_data():
+    """Update Pokemon TCG data from GitHub repository."""
+    import subprocess
+    import sys
+    
+    click.echo("Starting Pokemon TCG data update...")
+    result = subprocess.run(
+        [sys.executable, "scripts/update_tcg_data.py"],
+        cwd=os.path.dirname(os.path.abspath(__file__)),
+    )
+    if result.returncode == 0:
+        click.echo("✅ TCG data update completed successfully!")
+    else:
+        click.echo("❌ TCG data update failed!")
 
 
 if __name__ == "__main__":
