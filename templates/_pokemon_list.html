@@ -9,7 +9,12 @@
     {% else %}
         {% for pokemon in pokemon_list %}
             <div class="col">
-                <div class="card h-100">
+                <div class="card h-100 position-relative">
+                    {% if pokemon.is_variety %}
+                        <div class="position-absolute top-0 start-0 bg-primary text-dark px-2 py-1 rounded-bottom-end" style="z-index: 10; font-size: 0.75rem; font-weight: bold;">
+                            <i class="fas fa-star me-1"></i>Variety
+                        </div>
+                    {% endif %}
                     <a class="text-decoration-none"
                        href="{{ url_for('pokemon.get_pokemon', id_or_name=pokemon.name) }}">
                         {% if pokemon.official_artwork %}
@@ -29,6 +34,11 @@
                                 #{{ pokemon.entry_number }} 
                             {% endif %}
                             {{ pokemon.name | title }}
+                            {% if pokemon.is_variety and pokemon.variety_name %}
+                                <small class="text-muted d-block" style="font-size: 0.8rem;">
+                                    ({{ pokemon.variety_name | title }})
+                                </small>
+                            {% endif %}
                         </h5>
                         {% set type_names = [] %}
                         {% for type_entry in pokemon.types %}
