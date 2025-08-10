@@ -155,9 +155,47 @@ def create_pokemon_list(data):
                 continue
 
             if pokemon_name:
-                # Fetch the Pokémon data
-                pokemon = pokedex.APIResource.fetch_data("pokemon", pokemon_name)
-                if pokemon and "sprites" in pokemon:
+                # Try to fetch the Pokémon data first
+                pokemon = None
+                try:
+                    pokemon = pokedex.APIResource.fetch_data("pokemon", pokemon_name)
+
+                    # If Pokémon was found but has None ID, try species data fallback
+                    if pokemon and pokemon.get("id") is None:
+                        variety_name = get_default_variety_name(pokemon_name)
+                        if variety_name:
+                            try:
+                                variety_pokemon = pokedex.APIResource.fetch_data(
+                                    "pokemon", variety_name
+                                )
+                                if (
+                                    variety_pokemon
+                                    and variety_pokemon.get("id") is not None
+                                ):
+                                    pokemon = variety_pokemon
+                                else:
+                                    logging.warning(
+                                        f"Default variety '{variety_name}' also has None ID"
+                                    )
+                            except Exception as e:
+                                logging.warning(
+                                    f"Failed to fetch default variety '{variety_name}' for '{pokemon_name}': {e}"
+                                )
+
+                except ValueError as e:
+                    # Pokémon not found, try to get default variety
+                    variety_name = get_default_variety_name(pokemon_name)
+                    if variety_name:
+                        try:
+                            pokemon = pokedex.APIResource.fetch_data(
+                                "pokemon", variety_name
+                            )
+                        except Exception as e:
+                            logging.warning(
+                                f"Failed to fetch default variety '{variety_name}' for '{pokemon_name}': {e}"
+                            )
+
+                if pokemon:
                     # Get artwork URL
                     try:
                         if pokemon.get("id"):
@@ -173,22 +211,26 @@ def create_pokemon_list(data):
                         official_artwork = None
 
                     # Add to list
-                    pokemon_list.append(
-                        {
-                            "name": pokemon_name,
-                            "official_artwork": official_artwork,
-                            "id": pokemon.get("id"),
-                            "types": pokemon.get("types", []),
-                            "sprites": pokemon.get("sprites", {}),
-                        }
-                    )
+                    pokemon_data = {
+                        "name": pokemon_name,  # Keep original name for display
+                        "official_artwork": official_artwork,
+                        "id": pokemon.get("id"),
+                        "types": pokemon.get("types", []),
+                        "sprites": pokemon.get("sprites", {}),
+                    }
+                    pokemon_list.append(pokemon_data)
                 else:
-                    logging.warning(f"No sprite data found for {pokemon_name}")
+                    logging.warning(
+                        f"No data found for {pokemon_name} (including default variety)"
+                    )
         except Exception as e:
             logging.error(f"Error processing Pokémon {entry}: {e}")
             continue
 
-    return sorted(pokemon_list, key=lambda x: x.get("id", float("inf")))
+    return sorted(
+        pokemon_list,
+        key=lambda x: x.get("id") if x.get("id") is not None else float("inf"),
+    )
 
 
 def fetch_all_results(url):
@@ -199,3 +241,31 @@ def fetch_all_results(url):
         results.extend(data["results"])
         url = data.get("next")  # Get the next page URL, if it exists
     return results
+
+
+def get_default_variety_name(pokemon_name):
+    """
+    When a Pokémon name returns 404, try to get the default variety name from species data.
+    Assumes every species has an is_default=true variety.
+    Returns the variety name (e.g., 'wormadam-plant') or None if not found.
+    """
+    try:
+        # Fetch species data
+        species_data = pokedex.APIResource.fetch_data("pokemon-species", pokemon_name)
+
+        if species_data and "varieties" in species_data and species_data["varieties"]:
+            # Find the default variety (is_default=true)
+            for variety in species_data["varieties"]:
+                if variety.get("is_default", False):
+                    variety_name = variety["pokemon"]["name"]
+                    return variety_name
+
+            logging.warning(f"No default variety found for '{pokemon_name}'")
+        else:
+            logging.warning(f"No varieties found for '{pokemon_name}'")
+
+        return None
+
+    except Exception as e:
+        logging.warning(f"Error fetching species data for '{pokemon_name}': {e}")
+        return None
