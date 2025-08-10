@@ -217,6 +217,13 @@ def create_pokemon_list(data):
                         "id": pokemon.get("id"),
                         "types": pokemon.get("types", []),
                         "sprites": pokemon.get("sprites", {}),
+                        "is_variety": pokemon.get("name")
+                        != pokemon_name,  # True if we're using variety data
+                        "variety_name": (
+                            pokemon.get("name")
+                            if pokemon.get("name") != pokemon_name
+                            else None
+                        ),  # The actual variety name
                     }
                     pokemon_list.append(pokemon_data)
                 else:
