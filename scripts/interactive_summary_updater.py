@@ -222,7 +222,7 @@ def interactive_mode(resource_type, start_from=None):
             action = Prompt.ask(
                 "[S]kip, [U]pdate, [Q]uit",
                 choices=["s", "u", "q", "S", "U", "Q"],
-                default="s",
+                default="u",
             ).lower()
 
             if action == "q":
@@ -252,7 +252,7 @@ def interactive_mode(resource_type, start_from=None):
                 display_summary(new_summary, "New Summary")
 
                 # Ask for approval
-                if Confirm.ask("Accept this summary?"):
+                if Confirm.ask("Accept this summary?", default=True):
                     if update_resource_summary(resource, new_summary):
                         completed.add(resource.name)
                         save_progress(resource_type, list(completed))
