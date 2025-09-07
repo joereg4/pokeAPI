@@ -54,6 +54,7 @@ zipp = "==3.20.0"
 beautifulsoup4 = "==4.12.3"
 openai = ">=1.0.0"
 paramiko = "*"
+rich = "*"
 
 [dev-packages]
 pytest = "==7.4.0"

@@ -148,6 +148,7 @@ The application includes comprehensive database management scripts for syncing d
 
 - **`scripts/upload_pokemon_summaries.py`** - Upload specific resource types from local to production
 - **`scripts/backup_db.py`** - Create full database backups and restore functionality
+- **`scripts/interactive_summary_updater.py`** - Interactive tool for reviewing and updating summaries
 
 ### Key Features
 
@@ -156,6 +157,7 @@ The application includes comprehensive database management scripts for syncing d
 - **Dry-Run Mode**: Preview changes before applying them
 - **Rollback Capability**: Restore from any backup if needed
 - **SSH Tunnel Support**: Secure connections to production database
+- **Interactive Summary Updates**: Review and improve existing summaries with progress tracking
 
 ### Quick Start
 
@@ -190,4 +192,13 @@ The application includes comprehensive database management scripts for syncing d
      --password "your_password"
    ```
 
-For detailed documentation, see [Database Management Guide](docs/database_management.md).
+5. **Update Summaries Interactively**:
+   ```bash
+   # Review and update pokemon summaries
+   python3 scripts/interactive_summary_updater.py --resource pokemon
+   
+   # Update all remaining summaries automatically
+   python3 scripts/interactive_summary_updater.py --resource pokemon --update-all
+   ```
+
+For detailed documentation, see [Database Management Guide](docs/database_management.md) and [Interactive Summary Updater Guide](docs/interactive_summary_updater.md).
