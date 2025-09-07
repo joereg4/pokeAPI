@@ -52,9 +52,10 @@ This Flask-based web application provides a comprehensive Pokédex, offering det
 4. [Running the Application](#running-the-application)
 5. [Project Structure](#project-structure)
 6. [Caching System](#caching-system)
-7. [Testing](#testing)
-8. [Contributing](#contributing)
-9. [License](#license)
+7. [Database Management](#database-management)
+8. [Testing](#testing)
+9. [Contributing](#contributing)
+10. [License](#license)
 
 ---
 
@@ -134,3 +135,59 @@ For production, ensure you have a Redis instance available and set the `REDIS_UR
 ## Running the Application
 
 Execute the following command to start the Pokédex Web Application:
+
+```bash
+python app.py
+```
+
+## Database Management
+
+The application includes comprehensive database management scripts for syncing data between local development and production environments.
+
+### Available Scripts
+
+- **`scripts/upload_pokemon_summaries.py`** - Upload specific resource types from local to production
+- **`scripts/backup_db.py`** - Create full database backups and restore functionality
+
+### Key Features
+
+- **Automatic Backups**: All upload operations create backups before making changes
+- **Resource-Specific Uploads**: Upload only specific resource types (pokemon, ability, move, etc.)
+- **Dry-Run Mode**: Preview changes before applying them
+- **Rollback Capability**: Restore from any backup if needed
+- **SSH Tunnel Support**: Secure connections to production database
+
+### Quick Start
+
+1. **Install Dependencies**:
+   ```bash
+   pipenv install paramiko psycopg2-binary
+   ```
+
+2. **Establish SSH Tunnel**:
+   ```bash
+   ssh -L 5433:localhost:5432 root@149.28.243.132
+   ```
+
+3. **Upload Pokemon Summaries**:
+   ```bash
+   python3 scripts/upload_pokemon_summaries.py \
+     --resource pokemon \
+     --host localhost \
+     --port 5433 \
+     --database pokeapi \
+     --user pokeapi \
+     --password "your_password"
+   ```
+
+4. **Create Full Backup**:
+   ```bash
+   python3 scripts/backup_db.py \
+     --host localhost \
+     --port 5433 \
+     --database pokeapi \
+     --user pokeapi \
+     --password "your_password"
+   ```
+
+For detailed documentation, see [Database Management Guide](docs/database_management.md).
