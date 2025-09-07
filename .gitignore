@@ -166,3 +166,6 @@ backups/
 *.sql
 *.dump
 *.backup
+
+# Summary updater progress
+data/summary_progress.json
