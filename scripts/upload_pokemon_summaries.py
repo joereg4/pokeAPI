@@ -44,14 +44,21 @@ def create_production_backup(ssh_connection, backup_dir, database, user, passwor
 
     print(f"Creating backup: {os.path.basename(backup_file)}")
 
-    # Create backup via SSH
-    backup_cmd = f"pg_dump -U {user} -d {database} > {backup_file}"
+    # Create backup via SSH (use PGPASSWORD environment variable for authentication)
+    backup_cmd = f"PGPASSWORD='{password}' pg_dump -U {user} -d {database} > {backup_file} 2>/dev/null"
     stdin, stdout, stderr = ssh_connection.exec_command(backup_cmd)
     exit_status = stdout.channel.recv_exit_status()
 
     if exit_status != 0:
-        error_msg = stderr.read().decode()
-        raise Exception(f"Backup failed: {error_msg}")
+        # Try to get error message from stderr, but don't fail if empty
+        try:
+            error_msg = stderr.read().decode().strip()
+            if error_msg:
+                raise Exception(f"Backup failed: {error_msg}")
+            else:
+                raise Exception(f"Backup failed with exit code {exit_status}")
+        except:
+            raise Exception(f"Backup failed with exit code {exit_status}")
 
     # Verify backup was created and has content
     verify_cmd = f"test -s {backup_file} && echo 'OK' || echo 'EMPTY'"
@@ -152,17 +159,7 @@ def upload_resource_type(resource_type, prod_conn, local_app, dry_run=False):
 
             print(f"Found {len(local_resources)} {resource_type} resources locally")
 
-            if dry_run:
-                print(
-                    f"\nDRY RUN - Would upload {len(local_resources)} {resource_type} resources:"
-                )
-                for resource in local_resources[:5]:  # Show first 5
-                    print(f"  - {resource.name}: {len(resource.summary)} chars")
-                if len(local_resources) > 5:
-                    print(f"  ... and {len(local_resources) - 5} more")
-                return True
-
-            # Get production data for comparison
+            # Get production data for comparison (needed for both dry run and actual upload)
             prod_cursor = prod_conn.cursor()
             prod_cursor.execute(
                 """
@@ -178,6 +175,48 @@ def upload_resource_type(resource_type, prod_conn, local_app, dry_run=False):
             print(
                 f"Found {len(prod_summaries)} {resource_type} resources in production"
             )
+
+            if dry_run:
+                # Simulate the upload process to show actual changes
+                updated_count = 0
+                new_count = 0
+                unchanged_count = 0
+                changes_to_show = []
+
+                for local_resource in local_resources:
+                    pokemon_name = local_resource.name
+                    local_summary = local_resource.summary
+
+                    if pokemon_name in prod_summaries:
+                        if prod_summaries[pokemon_name] != local_summary:
+                            updated_count += 1
+                            if len(changes_to_show) < 5:
+                                changes_to_show.append(f"  - {pokemon_name}: UPDATE")
+                        else:
+                            unchanged_count += 1
+                    else:
+                        new_count += 1
+                        if len(changes_to_show) < 5:
+                            changes_to_show.append(f"  - {pokemon_name}: NEW")
+
+                print(
+                    f"\nDRY RUN - Analysis of {len(local_resources)} {resource_type} resources:"
+                )
+                print(f"  New resources: {new_count}")
+                print(f"  Updated resources: {updated_count}")
+                print(f"  Unchanged resources: {unchanged_count}")
+
+                if changes_to_show:
+                    print(f"\nSample changes that would be made:")
+                    for change in changes_to_show:
+                        print(change)
+                    if (new_count + updated_count) > 5:
+                        print(f"  ... and {new_count + updated_count - 5} more changes")
+                else:
+                    print(f"\n✓ No changes needed - databases are in sync!")
+
+                prod_cursor.close()
+                return True
 
             # Process each local resource
             updated_count = 0
