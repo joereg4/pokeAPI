@@ -169,171 +169,200 @@ def generate_new_summary(
         return None
 
 
-def update_resource_summary(resource, new_summary):
-    """Update the resource summary in the database."""
+def interactive_mode(resource_type, start_from=None):
+    """Run in interactive mode - ask for each resource."""
     app = create_app()
 
     with app.app_context():
-        try:
-            resource.summary = new_summary
-            db.session.commit()
-            return True
-        except Exception as e:
-            console.print(f"[red]Error updating database: {str(e)}[/red]")
-            db.session.rollback()
-            return False
+        resources, total_count = get_resources_to_process(resource_type, start_from)
 
+        if not resources:
+            console.print(
+                f"[green]✓ All {resource_type} resources have been processed![/green]"
+            )
+            return
 
-def interactive_mode(resource_type, start_from=None):
-    """Run in interactive mode - ask for each resource."""
-    resources, total_count = get_resources_to_process(resource_type, start_from)
+        progress = load_progress(resource_type)
+        completed = set(progress["completed"])
 
-    if not resources:
         console.print(
-            f"[green]✓ All {resource_type} resources have been processed![/green]"
+            f"\n[bold blue]=== {resource_type.title()} Summary Updater ===[/bold blue]"
         )
-        return
+        console.print(f"Mode: Interactive")
+        console.print(f"Total resources: {total_count}")
+        console.print(f"Already completed: {len(completed)}")
+        console.print(f"Remaining: {len(resources)}")
 
-    progress = load_progress(resource_type)
-    completed = set(progress["completed"])
+        if start_from:
+            console.print(f"Starting from: {start_from}")
 
-    console.print(
-        f"\n[bold blue]=== {resource_type.title()} Summary Updater ===[/bold blue]"
-    )
-    console.print(f"Mode: Interactive")
-    console.print(f"Total resources: {total_count}")
-    console.print(f"Already completed: {len(completed)}")
-    console.print(f"Remaining: {len(resources)}")
+        console.print()
 
-    if start_from:
-        console.print(f"Starting from: {start_from}")
+        for i, resource in enumerate(resources, 1):
+            console.print(f"\n[bold cyan]Progress: {i}/{len(resources)}[/bold cyan]")
+            console.print(f"[bold]Current: {resource.name}[/bold]")
 
-    console.print()
+            # Display current summary
+            display_summary(resource.summary, "Current Summary")
 
-    for i, resource in enumerate(resources, 1):
-        console.print(f"\n[bold cyan]Progress: {i}/{len(resources)}[/bold cyan]")
-        console.print(f"[bold]Current: {resource.name}[/bold]")
+            # Ask for action
+            while True:
+                action = Prompt.ask(
+                    "[S]kip, [U]pdate, [Q]uit",
+                    choices=["s", "u", "q", "S", "U", "Q"],
+                    default="u",
+                ).lower()
 
-        # Display current summary
-        display_summary(resource.summary, "Current Summary")
+                if action == "q":
+                    console.print("[yellow]Quitting... Progress saved.[/yellow]")
+                    return
 
-        # Ask for action
-        while True:
-            action = Prompt.ask(
-                "[S]kip, [U]pdate, [Q]uit",
-                choices=["s", "u", "q", "S", "U", "Q"],
-                default="u",
-            ).lower()
+                elif action == "s":
+                    # Skip this resource
+                    completed.add(resource.name)
+                    save_progress(resource_type, list(completed))
+                    console.print("[dim]Skipped[/dim]")
+                    break
 
-            if action == "q":
-                console.print("[yellow]Quitting... Progress saved.[/yellow]")
-                return
+                elif action == "u":
+                    # Generate new summary
+                    console.print("[yellow]Generating new summary...[/yellow]")
 
-            elif action == "s":
-                # Skip this resource
-                completed.add(resource.name)
-                save_progress(resource_type, list(completed))
-                console.print("[dim]Skipped[/dim]")
-                break
+                    new_summary = generate_new_summary(
+                        resource_type, resource.name, resource.summary
+                    )
 
-            elif action == "u":
+                    if not new_summary:
+                        console.print(
+                            "[red]Failed to generate summary. Try again.[/red]"
+                        )
+                        continue
+
+                    # Display new summary
+                    display_summary(new_summary, "New Summary")
+
+                    # Ask for approval
+                    if Confirm.ask("Accept this summary?", default=True):
+                        # Update the resource in the current database session
+                        try:
+                            # Query for the resource again to ensure it's in the current session
+                            current_resource = Resource.query.filter_by(
+                                resource=resource_type, name=resource.name
+                            ).first()
+                            if current_resource:
+                                current_resource.summary = new_summary
+                                db.session.commit()
+                                completed.add(resource.name)
+                                save_progress(resource_type, list(completed))
+                                console.print("[green]✓ Summary updated![/green]")
+                            else:
+                                console.print(
+                                    "[red]✗ Resource not found in database[/red]"
+                                )
+                        except Exception as e:
+                            console.print(
+                                f"[red]✗ Failed to update summary: {str(e)}[/red]"
+                            )
+                            db.session.rollback()
+                    else:
+                        console.print("[dim]Summary rejected[/dim]")
+
+                    break
+
+
+def batch_mode(resource_type, start_from=None, batch_size=None):
+    """Run in batch mode - update all resources automatically."""
+    app = create_app()
+
+    with app.app_context():
+        resources, total_count = get_resources_to_process(resource_type, start_from)
+
+        if not resources:
+            console.print(
+                f"[green]✓ All {resource_type} resources have been processed![/green]"
+            )
+            return
+
+        # Limit resources if batch_size is specified
+        if batch_size and len(resources) > batch_size:
+            resources = resources[:batch_size]
+            console.print(
+                f"[yellow]Limited to {batch_size} resources due to --batch-size parameter[/yellow]"
+            )
+
+        progress = load_progress(resource_type)
+        completed = set(progress["completed"])
+
+        console.print(
+            f"\n[bold blue]=== {resource_type.title()} Summary Updater ===[/bold blue]"
+        )
+        console.print(f"Mode: Batch (Update All)")
+        console.print(f"Total resources: {total_count}")
+        console.print(f"Already completed: {len(completed)}")
+        console.print(f"Remaining: {len(resources)}")
+
+        if start_from:
+            console.print(f"Starting from: {start_from}")
+
+        # Confirm before proceeding
+        if not Confirm.ask(f"\nProceed with updating {len(resources)} resources?"):
+            console.print("[yellow]Cancelled[/yellow]")
+            return
+
+        console.print()
+
+        # Process with progress bar
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            BarColumn(),
+            TaskProgressColumn(),
+            console=console,
+        ) as progress_bar:
+
+            task = progress_bar.add_task("Updating summaries...", total=len(resources))
+
+            for i, resource in enumerate(resources):
+                progress_bar.update(task, description=f"Processing {resource.name}")
+
                 # Generate new summary
-                console.print("[yellow]Generating new summary...[/yellow]")
-
                 new_summary = generate_new_summary(
                     resource_type, resource.name, resource.summary
                 )
 
-                if not new_summary:
-                    console.print("[red]Failed to generate summary. Try again.[/red]")
-                    continue
-
-                # Display new summary
-                display_summary(new_summary, "New Summary")
-
-                # Ask for approval
-                if Confirm.ask("Accept this summary?", default=True):
-                    if update_resource_summary(resource, new_summary):
-                        completed.add(resource.name)
-                        save_progress(resource_type, list(completed))
-                        console.print("[green]✓ Summary updated![/green]")
-                    else:
-                        console.print("[red]✗ Failed to update summary[/red]")
+                if new_summary:
+                    # Update the resource in the current database session
+                    try:
+                        # Query for the resource again to ensure it's in the current session
+                        current_resource = Resource.query.filter_by(
+                            resource=resource_type, name=resource.name
+                        ).first()
+                        if current_resource:
+                            current_resource.summary = new_summary
+                            db.session.commit()
+                            completed.add(resource.name)
+                            save_progress(resource_type, list(completed))
+                        else:
+                            console.print(
+                                f"[red]Resource {resource.name} not found in database[/red]"
+                            )
+                    except Exception as e:
+                        console.print(
+                            f"[red]Failed to update {resource.name}: {str(e)}[/red]"
+                        )
+                        db.session.rollback()
                 else:
-                    console.print("[dim]Summary rejected[/dim]")
+                    console.print(
+                        f"[red]Failed to generate summary for {resource.name}[/red]"
+                    )
 
-                break
+                # 1-second delay as requested
+                time.sleep(1)
 
+                progress_bar.advance(task)
 
-def batch_mode(resource_type, start_from=None):
-    """Run in batch mode - update all resources automatically."""
-    resources, total_count = get_resources_to_process(resource_type, start_from)
-
-    if not resources:
-        console.print(
-            f"[green]✓ All {resource_type} resources have been processed![/green]"
-        )
-        return
-
-    progress = load_progress(resource_type)
-    completed = set(progress["completed"])
-
-    console.print(
-        f"\n[bold blue]=== {resource_type.title()} Summary Updater ===[/bold blue]"
-    )
-    console.print(f"Mode: Batch (Update All)")
-    console.print(f"Total resources: {total_count}")
-    console.print(f"Already completed: {len(completed)}")
-    console.print(f"Remaining: {len(resources)}")
-
-    if start_from:
-        console.print(f"Starting from: {start_from}")
-
-    # Confirm before proceeding
-    if not Confirm.ask(f"\nProceed with updating {len(resources)} resources?"):
-        console.print("[yellow]Cancelled[/yellow]")
-        return
-
-    console.print()
-
-    # Process with progress bar
-    with Progress(
-        SpinnerColumn(),
-        TextColumn("[progress.description]{task.description}"),
-        BarColumn(),
-        TaskProgressColumn(),
-        console=console,
-    ) as progress_bar:
-
-        task = progress_bar.add_task("Updating summaries...", total=len(resources))
-
-        for i, resource in enumerate(resources):
-            progress_bar.update(task, description=f"Processing {resource.name}")
-
-            # Generate new summary
-            new_summary = generate_new_summary(
-                resource_type, resource.name, resource.summary
-            )
-
-            if new_summary:
-                # Update the resource
-                if update_resource_summary(resource, new_summary):
-                    completed.add(resource.name)
-                    save_progress(resource_type, list(completed))
-                else:
-                    console.print(f"[red]Failed to update {resource.name}[/red]")
-            else:
-                console.print(
-                    f"[red]Failed to generate summary for {resource.name}[/red]"
-                )
-
-            # 1-second delay as requested
-            time.sleep(1)
-
-            progress_bar.advance(task)
-
-    console.print(f"\n[green]✓ Batch update completed![/green]")
-    console.print(f"Processed: {len(resources)} resources")
+        console.print(f"\n[green]✓ Batch update completed![/green]")
+        console.print(f"Processed: {len(resources)} resources")
 
 
 def main():
@@ -345,10 +374,13 @@ def main():
 Examples:
   # Interactive mode
   python3 scripts/interactive_summary_updater.py --resource pokemon
-  
+ 
   # Batch mode (update all)
   python3 scripts/interactive_summary_updater.py --resource pokemon --update-all
-  
+ 
+  # Batch mode with limit (update 50 resources)
+  python3 scripts/interactive_summary_updater.py --resource pokemon --update-all --batch-size 50
+ 
   # Start from a specific resource
   python3 scripts/interactive_summary_updater.py --resource pokemon --start-from "charmander"
         """,
@@ -371,11 +403,17 @@ Examples:
         "--start-from", help="Start processing from this resource name (alphabetically)"
     )
 
+    parser.add_argument(
+        "--batch-size",
+        type=int,
+        help="Maximum number of resources to process in batch mode (default: unlimited)",
+    )
+
     args = parser.parse_args()
 
     try:
         if args.update_all:
-            batch_mode(args.resource, args.start_from)
+            batch_mode(args.resource, args.start_from, args.batch_size)
         else:
             interactive_mode(args.resource, args.start_from)
 
