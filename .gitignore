@@ -159,3 +159,10 @@ cython_debug/
 
 nohup.out
 newrelic.ini
+
+# Database backups
+backup/
+backups/
+*.sql
+*.dump
+*.backup
