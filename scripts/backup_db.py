@@ -39,18 +39,23 @@ def create_full_backup(ssh_connection, backup_dir, database, user, password):
     print(f"Creating full database backup: {os.path.basename(backup_file)}")
     print("This may take several minutes for large databases...")
 
-    # Create backup via SSH with verbose output
-    backup_cmd = (
-        f"pg_dump -U {user} -d {database} --verbose --no-password > {backup_file} 2>&1"
-    )
+    # Create backup via SSH (use PGPASSWORD environment variable for authentication)
+    backup_cmd = f"PGPASSWORD='{password}' pg_dump -U {user} -d {database} > {backup_file} 2>/dev/null"
     stdin, stdout, stderr = ssh_connection.exec_command(backup_cmd)
 
     # Wait for command to complete and get exit status
     exit_status = stdout.channel.recv_exit_status()
 
     if exit_status != 0:
-        error_msg = stderr.read().decode()
-        raise Exception(f"Backup failed: {error_msg}")
+        # Try to get error message from stderr, but don't fail if empty
+        try:
+            error_msg = stderr.read().decode().strip()
+            if error_msg:
+                raise Exception(f"Backup failed: {error_msg}")
+            else:
+                raise Exception(f"Backup failed with exit code {exit_status}")
+        except:
+            raise Exception(f"Backup failed with exit code {exit_status}")
 
     # Verify backup was created and has content
     verify_cmd = f"test -s {backup_file} && echo 'OK' || echo 'EMPTY'"
