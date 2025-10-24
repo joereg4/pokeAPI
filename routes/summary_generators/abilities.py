@@ -118,7 +118,6 @@ IMPORTANT INSTRUCTIONS:
                 {"role": "user", "content": prompt},
             ],
             max_completion_tokens=max_tokens,
-            temperature=0.7,
         )
 
         # Check if we have a valid content in the response
