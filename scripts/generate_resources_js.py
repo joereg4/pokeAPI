@@ -19,13 +19,20 @@ def generate_resources_js():
     app = create_app()
     
     with app.app_context():
-        # Use the same method as the context processor
-        from routes.pokemon import inject_resources
-        context_data = inject_resources()
-        resources_json = context_data['resources_json']
+        # Force load resources
+        from pokedex.utils import load_resources
+        load_resources()
+        
+        # Get resources directly from database
+        from models.model import Resource
+        all_resources = Resource.query.all()
+        resources_data = [
+            {"name": resource.name, "type": resource.resource}
+            for resource in all_resources
+        ]
         
         # Create the JavaScript content
-        js_content = f"const resources = {resources_json};"
+        js_content = f"const resources = {json.dumps(resources_data)};"
         
         # Write to static file
         static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static', 'js')
@@ -35,8 +42,6 @@ def generate_resources_js():
         with open(resources_file, 'w') as f:
             f.write(js_content)
         
-        # Parse the JSON to get the count
-        resources_data = json.loads(resources_json)
         print(f"Generated {resources_file} with {len(resources_data)} resources")
         return resources_file
 
