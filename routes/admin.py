@@ -285,8 +285,8 @@ def batch_refresh_summaries(resource_type):
                 initial_memory = process.memory_info().rss / 1024 / 1024  # MB
                 logging.info(f"Initial memory usage: {initial_memory:.2f} MB")
 
-            # Import the custom_generate_summary function
-            from routes.summary_review import custom_generate_summary
+            # Import the generate_summary function
+            from routes.summary_generators.generators import generate_summary
 
             # Process each batch
             for batch_num, batch in enumerate(batches, 1):
@@ -310,10 +310,11 @@ def batch_refresh_summaries(resource_type):
                         ).first()
 
                         # Generate a new summary
-                        new_summary = custom_generate_summary(
+                        new_summary = generate_summary(
                             resource_type=resource_type,
                             resource_name=resource_id,
                             base_summary="" if not resource else resource.summary,
+                            custom_instructions="",
                             max_tokens=2000,
                         )
 

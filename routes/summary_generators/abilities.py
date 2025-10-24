@@ -109,7 +109,7 @@ IMPORTANT INSTRUCTIONS:
         # Call OpenAI API with GPT-4o and web search capability
         client = get_openai_client()
         response = client.chat.completions.create(
-            model="gpt-4o",
+            model="gpt-5",
             messages=[
                 {
                     "role": "system",
@@ -117,7 +117,7 @@ IMPORTANT INSTRUCTIONS:
                 },
                 {"role": "user", "content": prompt},
             ],
-            max_tokens=max_tokens,
+            max_completion_tokens=max_tokens,
             temperature=0.7,
         )
 
