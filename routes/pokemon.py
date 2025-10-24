@@ -52,6 +52,20 @@ def inject_resources():
     return dict(resources_json=json.dumps(resources_dict))
 
 
+@pokemon_bp.route("/resources.js")
+@cache.cached(timeout=Config.CACHE_TIMEOUT)
+def serve_resources_js():
+    """Serve resources data as a JavaScript file for CSP compliance."""
+    from flask import make_response
+    # Use the same method as the context processor
+    context_data = inject_resources()
+    resources_json = context_data['resources_json']
+    js_content = f"const resources = {resources_json};"
+    response = make_response(js_content)
+    response.headers['Content-Type'] = 'application/javascript'
+    return response
+
+
 def fetch_count(endpoint):
     """Fetch count for a specific endpoint"""
     try:
