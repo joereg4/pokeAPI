@@ -11,6 +11,10 @@
     <link rel="stylesheet" href="{{ url_for('pokemon.static', filename='vendor/fontawesome/css/all.min.css') }}">
     <!-- Self-hosted jQuery -->
     <script src="{{ url_for('pokemon.static', filename='vendor/jquery/jquery-3.7.1.js') }}"></script>
+    <!-- Resources data for search -->
+    <script>
+        const resources = {{ resources_json | safe }};
+    </script>
     <!-- Icons -->
     <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='img/favicon-32x32.png') }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='img/favicon-16x16.png') }}">
@@ -90,9 +94,6 @@
             </div>
         </div>
     </div>
-    <script>
-        const resources = {{ resources_json | safe }};
-    </script>
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.js') }}"></script>
 </footer>
 </body>
