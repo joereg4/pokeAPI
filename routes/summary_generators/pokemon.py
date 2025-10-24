@@ -121,7 +121,7 @@ IMPORTANT INSTRUCTIONS:
                 },
                 {"role": "user", "content": prompt},
             ],
-            max_tokens=max_tokens,
+            max_completion_tokens=max_tokens,
             temperature=0.7,
         )
 

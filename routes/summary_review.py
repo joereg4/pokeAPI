@@ -121,7 +121,7 @@ Original summary for reference:
 """
             client = get_openai_client()
             response = client.chat.completions.create(
-                model="gpt-4",
+                model="gpt-5",
                 messages=[
                     {
                         "role": "system",
@@ -129,7 +129,7 @@ Original summary for reference:
                     },
                     {"role": "user", "content": prompt},
                 ],
-                max_tokens=max_tokens,
+                max_completion_tokens=max_tokens,
             )
 
             new_summary = response.choices[0].message.content.strip()
@@ -139,7 +139,7 @@ Original summary for reference:
             resource=resource_obj,
             new_summary=new_summary,
             return_to=request.args.get("return_to"),
-            max_tokens=max_tokens,
+            max_completion_tokens=max_tokens,
             custom_instructions=custom_instructions,
         )
 
@@ -168,7 +168,7 @@ Original summary for reference:
 """
         client = get_openai_client()
         response = client.chat.completions.create(
-            model="gpt-4o",
+            model="gpt-5",
             messages=[
                 {
                     "role": "system",
@@ -176,7 +176,7 @@ Original summary for reference:
                 },
                 {"role": "user", "content": prompt},
             ],
-            max_tokens=2000,
+            max_completion_tokens=2000,
         )
 
         corrected_summary = response.choices[0].message.content.strip()
@@ -301,7 +301,7 @@ def new_pokemon_summary(pokemon_name):
             pokemon_name,
             base_summary=current_summary,
             custom_instructions=custom_instructions,
-            max_tokens=max_tokens,
+            max_completion_tokens=max_tokens,
         )
 
         return render_template(
@@ -310,7 +310,7 @@ def new_pokemon_summary(pokemon_name):
             display_name=display_name,
             summary=new_summary,
             return_to=return_to,
-            max_tokens=max_tokens,
+            max_completion_tokens=max_tokens,
             custom_instructions=custom_instructions,
         )
 
