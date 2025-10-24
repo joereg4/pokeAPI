@@ -116,28 +116,71 @@ def get_csv_file_paths():
 
 
 def load_resources():
+    """
+    Load resources from PostgreSQL database with Redis caching.
+    
+    Cache timeout: 60 minutes (3600 seconds)
+    
+    This function queries the Resource table in PostgreSQL and caches the results
+    in Redis to reduce database load. The cache is shared across all app workers.
+    
+    Cache invalidation: Automatic after 60 minutes, or manually via invalidate_resource_cache()
+    """
     global resources_dict
-
-    # Get all CSV file paths
-    csv_file_paths = get_csv_file_paths()
-
-    # Clear the existing dictionary to avoid residual data
-    resources_dict.clear()
-
-    for csv_file_path in csv_file_paths:
-        try:
-            with open(csv_file_path, mode="r") as file:
-                reader = csv.reader(file)
-                next(reader)  # Skip the header row
-
-                # Populate the global resources_dict directly
-                for row in reader:
-                    resources_dict.append({"name": row[1], "type": row[0]})
-
-        except FileNotFoundError:
-            logging.error(f"File not found: {csv_file_path}")
-        except Exception as e:
-            logging.error(f"An error occurred while processing {csv_file_path}: {e}")
-
-    if not resources_dict:
+    
+    # Import here to avoid circular imports
+    from cache import cache
+    from models.model import Resource
+    
+    # Try to load from cache first
+    cached_resources = cache.get('all_resources')
+    if cached_resources:
+        resources_dict = cached_resources
+        logging.info(f"Loaded {len(resources_dict)} resources from Redis cache")
+        return
+    
+    # Cache miss - query database
+    try:
+        logging.info("Cache miss - querying PostgreSQL for resources")
+        all_resources = Resource.query.all()
+        
+        # Clear and populate the resources_dict
+        resources_dict = [
+            {"name": resource.name, "type": resource.resource}
+            for resource in all_resources
+        ]
+        
+        # Store in cache for 60 minutes (3600 seconds)
+        cache.set('all_resources', resources_dict, timeout=3600)
+        logging.info(f"Loaded {len(resources_dict)} resources from database and cached for 60 minutes")
+        
+    except Exception as e:
+        logging.error(f"Error loading resources from database: {e}")
         resources_dict = []
+
+
+def invalidate_resource_cache():
+    """
+    Manually invalidate the resource cache.
+    
+    Call this function after updating resources in the database to immediately
+    reflect changes in the JavaScript search without waiting for the 60-minute timeout.
+    
+    Example usage:
+        # After adding/updating resources
+        from pokedex.utils import invalidate_resource_cache
+        invalidate_resource_cache()
+        load_resources()  # Reload from database
+    
+    Returns:
+        bool: True if cache was deleted, False otherwise
+    """
+    from cache import cache
+    
+    try:
+        result = cache.delete('all_resources')
+        logging.info("Resource cache invalidated successfully")
+        return result
+    except Exception as e:
+        logging.error(f"Error invalidating resource cache: {e}")
+        return False
