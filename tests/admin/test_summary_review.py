@@ -87,15 +87,17 @@ def test_render_markdown_endpoint(auth_client):
     assert b"<p><strong>Bold</strong> text</p>" in response.data
 
 
-@patch("routes.summary_review.get_openai_client")
+@patch("routes.summary_generators.pokemon.get_openai_client")
+@patch("routes.summary_generators.utils.get_openai_client")
 def test_summary_update_with_custom_instructions(
-    mock_get_client, auth_client, app, mock_openai_response
+    mock_get_client_utils, mock_get_client_pokemon, auth_client, app, mock_openai_response
 ):
     """Test summary update with custom instructions and token limit"""
     # Set up mock OpenAI client
     mock_client = MagicMock()
     mock_client.chat.completions.create.return_value = mock_openai_response
-    mock_get_client.return_value = mock_client
+    mock_get_client_utils.return_value = mock_client
+    mock_get_client_pokemon.return_value = mock_client
 
     with app.app_context():
         # Create test resource using test db session
