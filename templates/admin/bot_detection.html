@@ -19,12 +19,6 @@
         </div>
     </div>
 
-    <!-- Privacy Notice -->
-    <div class="alert alert-info mb-4">
-        <i class="fas fa-shield-alt me-2"></i>
-        <strong>Privacy Notice:</strong> {{ report.privacy_note }}
-    </div>
-
     <!-- Summary Cards -->
     <div class="row mb-4">
         <div class="col-md-3">
@@ -283,11 +277,6 @@
             </h5>
         </div>
         <div class="card-body">
-            <div class="alert alert-secondary mb-3">
-                <i class="fas fa-lock me-2"></i>
-                IP addresses shown below are <strong>anonymized hashes</strong> (SHA-256). 
-                The original IP addresses are never stored or recoverable.
-            </div>
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
@@ -322,22 +311,5 @@
     </div>
     {% endif %}
 
-    <!-- Footer Info -->
-    <div class="card bg-light mb-4">
-        <div class="card-body">
-            <h6><i class="fas fa-info-circle me-2"></i>About This Report</h6>
-            <p class="mb-2">
-                This report analyzes traffic patterns to distinguish between human users and automated bots.
-                It helps identify:
-            </p>
-            <ul class="mb-0">
-                <li>Search engine crawlers (Google, Bing, etc.)</li>
-                <li>Social media preview bots (Facebook, Twitter, Discord)</li>
-                <li>AI/LLM agents (ChatGPT, Perplexity, etc.)</li>
-                <li>Developer tools and libraries (Python requests, curl, etc.)</li>
-                <li>Monitoring tools (UptimeRobot, Datadog, etc.)</li>
-            </ul>
-        </div>
-    </div>
 </div>
 {% endblock %}
