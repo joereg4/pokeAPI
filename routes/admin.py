@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template, redirect, url_for, request, flash, jsonify
 from flask_login import login_required, current_user
 from models.model import User, db, Resource
 from functools import wraps
@@ -6,6 +6,7 @@ from limiter import limiter
 import requests
 import logging
 from utils import invalidate_related_caches
+from bot_detection import get_bot_detection_report, get_bot_detection_stats
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
 
@@ -522,3 +523,49 @@ def batch_refresh_summaries(resource_type):
             missing_count=0,
             resource_type_display=resource_type.title(),
         )
+
+
+@admin_bp.route("/bot-detection")
+@login_required
+@admin_required
+@limiter.limit("60 per minute")
+def bot_detection_report():
+    """
+    Display bot detection report with traffic analysis.
+    
+    Shows a comprehensive breakdown of traffic by category (bot vs human),
+    specific bot types, browsers, operating systems, and devices.
+    
+    All data is privacy-preserving:
+    - No cookies or client-side tracking
+    - IP addresses are anonymized via SHA-256 hashing
+    - Data expires after 24 hours
+    """
+    try:
+        report = get_bot_detection_report()
+        return render_template(
+            "admin/bot_detection.html",
+            report=report,
+        )
+    except Exception as e:
+        logging.error(f"Error generating bot detection report: {e}")
+        flash(f"Error generating report: {str(e)}", "error")
+        return redirect(url_for("admin.dashboard"))
+
+
+@admin_bp.route("/bot-detection/json")
+@login_required
+@admin_required
+@limiter.limit("60 per minute")
+def bot_detection_json():
+    """
+    Return bot detection report as JSON.
+    
+    Useful for programmatic access or integration with monitoring tools.
+    """
+    try:
+        report = get_bot_detection_report()
+        return jsonify(report)
+    except Exception as e:
+        logging.error(f"Error generating bot detection report: {e}")
+        return jsonify({"error": str(e)}), 500
