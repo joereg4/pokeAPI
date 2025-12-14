@@ -81,11 +81,6 @@
             </ul>
 
             <h4 class="mb-3">Batch Summary Management</h4>
-            <div class="alert alert-info mb-3">
-                <i class="fas fa-info-circle me-2"></i>
-                <strong>New:</strong> Memory management features have been added to the batch processing system to prevent "Out of Memory" errors.
-                <a href="/docs/memory_management" class="alert-link">View documentation</a>.
-            </div>
             <ul class="list-group mb-4">
                 <li class="list-group-item">
                     <a href="{{ url_for('admin.batch_refresh_summaries', resource_type='pokemon') }}" class="btn btn-success">Batch Refresh Pokémon Summaries</a>
@@ -110,10 +105,9 @@
                     <a href="{{ url_for('health.check_cache_health') }}" class="btn btn-primary">Cache Health</a>
                 </li>
                 <li class="list-group-item">
-                    <a href="{{ url_for('admin.bot_detection_report') }}" class="btn btn-info">
+                    <a href="{{ url_for('admin.bot_detection_report') }}" class="btn btn-primary">
                         <i class="fas fa-robot me-2"></i>Bot Detection Report
                     </a>
-                    <span class="badge bg-secondary ms-2">Privacy-Focused</span>
                 </li>
                 <!-- Add more protected routes here as needed -->
             </ul>
