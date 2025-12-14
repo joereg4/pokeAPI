@@ -14,6 +14,7 @@ from flask_limiter.util import get_remote_address
 from flask_login import login_required
 import time
 from pokedex.redis_client import redis_client
+from bot_detection import track_request, get_bot_detection_stats, get_bot_detection_report
 
 health_bp = Blueprint("health", __name__)
 
@@ -40,7 +41,11 @@ def get_rate_limit_info():
 
 
 def increment_api_counter():
-    """Increment the API call counter for various metrics"""
+    """Increment the API call counter for various metrics.
+    
+    Also tracks bot detection metrics for traffic analysis.
+    All tracking is privacy-preserving (no cookies, anonymized IPs).
+    """
     now = int(time.time())
     hour = now // 3600
     day = now // 86400
@@ -99,6 +104,15 @@ def increment_api_counter():
 
     # Execute all commands
     results = pipe.execute()
+    
+    # Track bot detection metrics (privacy-preserving)
+    # This runs in a separate try block to not affect main tracking if it fails
+    try:
+        track_request(request)
+    except Exception as e:
+        # Log but don't fail the main request tracking
+        current_app.logger.debug(f"Bot detection tracking error: {e}")
+    
     return results
 
 
@@ -370,6 +384,9 @@ def check_cache_health():
 
         # Get traffic stats
         traffic_stats = get_traffic_stats()
+        
+        # Get bot detection stats
+        bot_stats = get_bot_detection_stats()
 
         # Return JSON if specifically requested
         if request.headers.get("Accept") == "application/json":
@@ -382,6 +399,7 @@ def check_cache_health():
                         "rate_limits": rate_limits,
                         "api_calls": api_stats,
                         "traffic_stats": traffic_stats,
+                        "bot_detection": bot_stats,
                     }
                 )
             )
@@ -404,6 +422,7 @@ def check_cache_health():
             rate_limits=rate_limits,
             api_stats=api_stats,
             traffic_stats=traffic_stats,
+            bot_stats=bot_stats,
             last_updated=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         )
 
@@ -441,6 +460,7 @@ def check_cache_health():
                 rate_limits=get_rate_limit_info(),
                 api_stats=get_api_stats(),
                 traffic_stats=get_traffic_stats(),
+                bot_stats={},
                 last_updated=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             ),
             500,
@@ -473,6 +493,9 @@ def health_cache_json():
 
         # Get traffic stats
         traffic_stats = get_traffic_stats()
+        
+        # Get bot detection stats
+        bot_stats = get_bot_detection_stats()
 
         response = make_response(
             jsonify(
@@ -482,6 +505,7 @@ def health_cache_json():
                     "rate_limits": rate_limits,
                     "api_calls": api_stats,
                     "traffic_stats": traffic_stats,
+                    "bot_detection": bot_stats,
                 }
             )
         )
