@@ -109,6 +109,12 @@
                 <li class="list-group-item">
                     <a href="{{ url_for('health.check_cache_health') }}" class="btn btn-primary">Cache Health</a>
                 </li>
+                <li class="list-group-item">
+                    <a href="{{ url_for('admin.bot_detection_report') }}" class="btn btn-info">
+                        <i class="fas fa-robot me-2"></i>Bot Detection Report
+                    </a>
+                    <span class="badge bg-secondary ms-2">Privacy-Focused</span>
+                </li>
                 <!-- Add more protected routes here as needed -->
             </ul>
         </div>

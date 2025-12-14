@@ -1,0 +1,343 @@
+{% extends "base.html" %}
+
+{% block title %}Bot Detection Report{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2><i class="fas fa-robot me-2"></i>Bot Detection Report</h2>
+            <p class="text-muted mb-0">Generated: {{ report.generated_at }}</p>
+        </div>
+        <div>
+            <a href="{{ url_for('admin.bot_detection_json') }}" class="btn btn-outline-secondary" target="_blank">
+                <i class="fas fa-code me-2"></i>View JSON
+            </a>
+            <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-primary ms-2">
+                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Privacy Notice -->
+    <div class="alert alert-info mb-4">
+        <i class="fas fa-shield-alt me-2"></i>
+        <strong>Privacy Notice:</strong> {{ report.privacy_note }}
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2">Total Requests Today</h6>
+                    <h2 class="card-title mb-0">{{ "{:,}".format(report.summary.total_requests_today) }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2">This Hour</h6>
+                    <h2 class="card-title mb-0">{{ "{:,}".format(report.summary.total_requests_this_hour) }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2">Bot Traffic</h6>
+                    <h2 class="card-title mb-0">{{ report.summary.bot_traffic_percentage }}%</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2">Human Traffic</h6>
+                    <h2 class="card-title mb-0">{{ report.summary.human_traffic_percentage }}%</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Traffic by Category -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Traffic by Category</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Hourly</th>
+                                    <th>Daily</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for category, data in report.traffic_by_category.items() %}
+                                <tr>
+                                    <td>
+                                        {% if category == 'bot' %}
+                                            <span class="badge bg-warning text-dark">
+                                                <i class="fas fa-robot me-1"></i>{{ category|title }}
+                                            </span>
+                                        {% elif category == 'browser' %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-globe me-1"></i>{{ category|title }}
+                                            </span>
+                                        {% elif category == 'suspicious' %}
+                                            <span class="badge bg-danger">
+                                                <i class="fas fa-exclamation-triangle me-1"></i>{{ category|title }}
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">
+                                                <i class="fas fa-question me-1"></i>{{ category|title }}
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ "{:,}".format(data.hourly) }}</td>
+                                    <td>{{ "{:,}".format(data.daily) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Bot Types -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-robot me-2"></i>Top Bot Types</h5>
+                </div>
+                <div class="card-body">
+                    {% if report.top_bot_types %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Bot Type</th>
+                                    <th>Requests</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for bot in report.top_bot_types %}
+                                <tr>
+                                    <td>
+                                        {% if 'google' in bot.type %}
+                                            <i class="fab fa-google me-2 text-primary"></i>
+                                        {% elif 'bing' in bot.type %}
+                                            <i class="fab fa-microsoft me-2 text-info"></i>
+                                        {% elif 'facebook' in bot.type %}
+                                            <i class="fab fa-facebook me-2 text-primary"></i>
+                                        {% elif 'twitter' in bot.type %}
+                                            <i class="fab fa-twitter me-2 text-info"></i>
+                                        {% elif 'python' in bot.type or 'curl' in bot.type %}
+                                            <i class="fas fa-code me-2 text-secondary"></i>
+                                        {% elif 'chatgpt' in bot.type or 'anthropic' in bot.type %}
+                                            <i class="fas fa-brain me-2 text-purple"></i>
+                                        {% else %}
+                                            <i class="fas fa-spider me-2 text-muted"></i>
+                                        {% endif %}
+                                        {{ bot.type.replace('_', ' ')|title }}
+                                    </td>
+                                    <td>{{ "{:,}".format(bot.count) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No bot traffic detected yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Top Browsers -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-globe me-2"></i>Top Browsers</h5>
+                </div>
+                <div class="card-body">
+                    {% if report.top_browsers %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Browser</th>
+                                    <th>Requests</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for browser in report.top_browsers %}
+                                <tr>
+                                    <td>
+                                        {% if 'chrome' in browser.type %}
+                                            <i class="fab fa-chrome me-2 text-success"></i>
+                                        {% elif 'firefox' in browser.type %}
+                                            <i class="fab fa-firefox me-2 text-warning"></i>
+                                        {% elif 'safari' in browser.type %}
+                                            <i class="fab fa-safari me-2 text-info"></i>
+                                        {% elif 'edge' in browser.type %}
+                                            <i class="fab fa-edge me-2 text-primary"></i>
+                                        {% else %}
+                                            <i class="fas fa-window-maximize me-2 text-muted"></i>
+                                        {% endif %}
+                                        {{ browser.type.replace('_', ' ')|title }}
+                                    </td>
+                                    <td>{{ "{:,}".format(browser.count) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No browser traffic detected yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- OS & Device Breakdown -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-desktop me-2"></i>Operating Systems & Devices</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <h6>Operating Systems</h6>
+                            {% if report.os_breakdown %}
+                            <ul class="list-group list-group-flush">
+                                {% for os, count in report.os_breakdown.items() %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center py-2">
+                                    {% if os == 'windows' %}
+                                        <span><i class="fab fa-windows me-2 text-info"></i>Windows</span>
+                                    {% elif os == 'macos' %}
+                                        <span><i class="fab fa-apple me-2 text-dark"></i>macOS</span>
+                                    {% elif os == 'linux' %}
+                                        <span><i class="fab fa-linux me-2 text-warning"></i>Linux</span>
+                                    {% elif os == 'android' %}
+                                        <span><i class="fab fa-android me-2 text-success"></i>Android</span>
+                                    {% elif os == 'ios' %}
+                                        <span><i class="fab fa-apple me-2 text-dark"></i>iOS</span>
+                                    {% else %}
+                                        <span><i class="fas fa-question me-2 text-muted"></i>{{ os|title }}</span>
+                                    {% endif %}
+                                    <span class="badge bg-primary rounded-pill">{{ "{:,}".format(count) }}</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                            <p class="text-muted">No data available.</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-6">
+                            <h6>Device Types</h6>
+                            {% if report.device_breakdown %}
+                            <ul class="list-group list-group-flush">
+                                {% for device, count in report.device_breakdown.items() %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center py-2">
+                                    {% if device == 'desktop' %}
+                                        <span><i class="fas fa-desktop me-2 text-primary"></i>Desktop</span>
+                                    {% elif device == 'mobile' %}
+                                        <span><i class="fas fa-mobile-alt me-2 text-success"></i>Mobile</span>
+                                    {% elif device == 'tablet' %}
+                                        <span><i class="fas fa-tablet-alt me-2 text-info"></i>Tablet</span>
+                                    {% else %}
+                                        <span><i class="fas fa-question me-2 text-muted"></i>{{ device|title }}</span>
+                                    {% endif %}
+                                    <span class="badge bg-secondary rounded-pill">{{ "{:,}".format(count) }}</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                            <p class="text-muted">No data available.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- High Volume Sources -->
+    {% if report.high_volume_sources %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fas fa-chart-bar me-2"></i>High Volume Sources
+                <small class="text-muted">(100+ requests today)</small>
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-secondary mb-3">
+                <i class="fas fa-lock me-2"></i>
+                IP addresses shown below are <strong>anonymized hashes</strong> (SHA-256). 
+                The original IP addresses are never stored or recoverable.
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Anonymized ID</th>
+                            <th>Request Count</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for source in report.high_volume_sources %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><code>{{ source.anon_ip }}</code></td>
+                            <td>{{ "{:,}".format(source.count) }}</td>
+                            <td>
+                                {% if source.count > 10000 %}
+                                    <span class="badge bg-danger">Very High</span>
+                                {% elif source.count > 1000 %}
+                                    <span class="badge bg-warning text-dark">High</span>
+                                {% else %}
+                                    <span class="badge bg-info">Moderate</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Footer Info -->
+    <div class="card bg-light mb-4">
+        <div class="card-body">
+            <h6><i class="fas fa-info-circle me-2"></i>About This Report</h6>
+            <p class="mb-2">
+                This report analyzes traffic patterns to distinguish between human users and automated bots.
+                It helps identify:
+            </p>
+            <ul class="mb-0">
+                <li>Search engine crawlers (Google, Bing, etc.)</li>
+                <li>Social media preview bots (Facebook, Twitter, Discord)</li>
+                <li>AI/LLM agents (ChatGPT, Perplexity, etc.)</li>
+                <li>Developer tools and libraries (Python requests, curl, etc.)</li>
+                <li>Monitoring tools (UptimeRobot, Datadog, etc.)</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
