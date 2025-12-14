@@ -169,3 +169,6 @@ backups/
 
 # Summary updater progress
 data/summary_progress.json
+
+# Local deployment notes
+DEPLOYMENT.md
