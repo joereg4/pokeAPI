@@ -4,6 +4,8 @@ import logging
 from .cache import get_sprite_path, load, load_sprite, save, save_sprite
 from .common import api_url_build, sprite_url_build
 
+logger = logging.getLogger(__name__)
+
 # Create a session object for connection pooling
 _session = requests.Session()
 _session.mount(
@@ -48,8 +50,25 @@ def get_data(endpoint, resource_id=None, subresource=None, **kwargs):
 
 
 def _call_sprite_api(sprite_type, sprite_id, **kwargs):
+    """Fetch sprite bytes from upstream. Return None on 404 to allow graceful fallbacks."""
     url = sprite_url_build(sprite_type, sprite_id, **kwargs)
-    response = _http_get(url)
+    try:
+        response = _http_get(url)
+    except requests.HTTPError as e:
+        # Treat 404s as expected-missing assets, not errors
+        if e.response is not None and e.response.status_code == 404:
+            logger.warning(
+                "Sprite not found upstream (404)",
+                extra={
+                    "sprite_type": sprite_type,
+                    "sprite_id": sprite_id,
+                    "url": url,
+                    "options": kwargs,
+                },
+            )
+            return None
+        # Re-raise other HTTP errors
+        raise
 
     abs_path = get_sprite_path(sprite_type, sprite_id, **kwargs)
     data = dict(img_data=response.content, path=abs_path)
@@ -57,7 +76,11 @@ def _call_sprite_api(sprite_type, sprite_id, **kwargs):
 
 
 def get_sprite(sprite_type, sprite_id, **kwargs):
-    """Get sprite data for a resource."""
+    """Get sprite data for a resource.
+
+    Returns None when the upstream asset is missing (404) so callers can 404 without
+    logging an internal error.
+    """
     force_lookup = kwargs.get("force_lookup", False)
 
     if not force_lookup:
@@ -67,6 +90,8 @@ def get_sprite(sprite_type, sprite_id, **kwargs):
             pass
 
     data = _call_sprite_api(sprite_type, sprite_id, **kwargs)
+    if data is None:
+        return None
     save_sprite(data, sprite_type, sprite_id, **kwargs)
     return data
 
