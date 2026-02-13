@@ -4,6 +4,7 @@
 from .interface import APIResource
 from .sprite import get_sprite_url
 from .api import get_sprite
+from .common import get_species_id_from_url
 import logging
 import requests
 
@@ -88,17 +89,27 @@ class PokemonList:
         if "sprites" in pokemon:
             try:
                 if pokemon.get("id"):
-                    # Try to get the sprite URL directly first
-                    official_artwork = get_sprite_url(pokemon["id"], is_artwork=True)
+                    # Official artwork upstream is keyed by species (National Dex) id,
+                    # not form id. Use species id to avoid 404s for forms/variants.
+                    species = pokemon.get("species") or {}
+                    species_url = species.get("url") if isinstance(species, dict) else None
+                    artwork_id = (
+                        get_species_id_from_url(species_url)
+                        if species_url
+                        else pokemon["id"]
+                    )
 
-                    # Ensure sprite is cached in the background
+                    # Try to get the sprite URL (use species id so /artwork/<id> works)
+                    official_artwork = get_sprite_url(artwork_id, is_artwork=True)
+
+                    # Ensure sprite is cached in the background (species id → no 404)
                     try:
                         get_sprite(
-                            "pokemon", pokemon["id"], other=True, official_artwork=True
+                            "pokemon", artwork_id, other=True, official_artwork=True
                         )
                     except Exception as e:
                         logging.debug(
-                            f"Background sprite caching failed for {pokemon_name} (ID: {pokemon['id']}): {e}"
+                            f"Background sprite caching failed for {pokemon_name} (artwork_id: {artwork_id}): {e}"
                         )
                         # Don't let caching failures affect the URL generation
                         pass
@@ -108,7 +119,14 @@ class PokemonList:
                 logging.warning(f"Error getting artwork URL for {pokemon_name}: {e}")
                 # Fallback to raw GitHub URL if sprite URL generation fails
                 if pokemon.get("id"):
-                    official_artwork = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokemon['id']}.png"
+                    species = pokemon.get("species") or {}
+                    species_url = species.get("url") if isinstance(species, dict) else None
+                    artwork_id = (
+                        get_species_id_from_url(species_url)
+                        if species_url
+                        else pokemon["id"]
+                    )
+                    official_artwork = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{artwork_id}.png"
                 else:
                     official_artwork = None
 
