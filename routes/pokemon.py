@@ -412,11 +412,18 @@ def get_pokemon(id_or_name):
     except Exception as e:
         logging.error(f"Error processing species data for {data['name']}: {e}")
 
-    # Get official artwork
+    # Get official artwork (use species id for forms so upstream asset exists)
     official_artwork = None
     try:
-        if data["id"]:  # If we have a valid Pokemon ID
-            official_artwork = get_sprite_url(data["id"], is_artwork=True)
+        if data["id"]:
+            species = data.get("species") or {}
+            species_url = species.get("url") if isinstance(species, dict) else None
+            artwork_id = (
+                pokedex.get_species_id_from_url(species_url)
+                if species_url
+                else data["id"]
+            )
+            official_artwork = get_sprite_url(artwork_id, is_artwork=True)
     except Exception as e:
         logging.warning(f"Error getting official artwork for {data['name']}: {e}")
 
