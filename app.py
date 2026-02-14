@@ -1,13 +1,12 @@
 import logging
 import os
-import json
 from flask import Flask, render_template, request, abort
 from flask_compress import Compress
 from flask_migrate import Migrate
 import pokedex
 from cache import cache, get_cache_config
 from routes import blueprints
-from pokedex.utils import load_resources, Config, resources_dict
+from pokedex.utils import Config
 from limiter import limiter
 from routes.health import increment_api_counter
 from models.model import db
@@ -141,7 +140,6 @@ def create_app(test_config=None):
     init_auth(app)
 
     with app.app_context():
-        load_resources()
         # Create database tables only in testing environment
         if test_config and test_config.get("TESTING", False):
             db.create_all()
@@ -149,11 +147,6 @@ def create_app(test_config=None):
     # Register blueprints (includes auth_bp and admin_bp from routes)
     for blueprint in blueprints:
         app.register_blueprint(blueprint)
-
-    @app.context_processor
-    def inject_resources():
-        """Make resources available to all templates."""
-        return dict(resources_json=json.dumps(resources_dict))
 
     @app.before_request
     def track_request():

@@ -1,44 +1,140 @@
+/**
+ * search.js – Navbar autocomplete powered by /api/search (PostgreSQL-backed).
+ *
+ * Features:
+ *   - Debounced input (150 ms) to avoid flooding the server
+ *   - Fetches from /api/search?q=<term>&limit=10
+ *   - Ranked results: prefix matches first, then substring matches
+ *   - Keyboard navigation (arrow keys + Enter)
+ *   - Escapes HTML to prevent XSS
+ *   - Graceful error handling (silently hides suggestions on failure)
+ */
 $(document).ready(function () {
-    $('#search-box').on('input', function () {
-        const query = $(this).val().toLowerCase();
-        const $suggestions = $('#suggestions');
-        $suggestions.empty(); // Clear previous suggestions
+    var debounceTimer = null;
+    var DEBOUNCE_MS = 150;
+    var highlightIndex = -1; // currently highlighted suggestion (-1 = none)
 
-        if (query.length > 0) {
-            const filteredResults = resources.filter(resource => resource.name.startsWith(query));
+    var $searchBox = $('#search-box');
+    var $suggestions = $('#suggestions');
 
-            if (filteredResults.length > 0) {
-                // Populate the suggestions dropdown
-                $.each(filteredResults, function (index, resource) {
-                    $suggestions.append(`<li><a class="dropdown-item" href="${generateUrl(resource.type, resource.name)}">${resource.name} (${resource.type})</a></li>`);
+    // ---- helpers ----
+
+    /**
+     * Escape HTML special characters to prevent XSS when rendering
+     * user-controlled or DB-sourced strings into the dropdown.
+     */
+    function escapeHtml(str) {
+        var div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+    }
+
+    function generateUrl(type, name) {
+        return '/' + encodeURIComponent(type) + '/' + encodeURIComponent(name);
+    }
+
+    function showDropdown() {
+        if (!$suggestions.hasClass('show')) {
+            $suggestions.addClass('show');
+            $searchBox.attr('aria-expanded', 'true');
+        }
+    }
+
+    function hideDropdown() {
+        $suggestions.removeClass('show');
+        $searchBox.attr('aria-expanded', 'false');
+        highlightIndex = -1;
+    }
+
+    function highlightItem(index) {
+        var $items = $suggestions.find('.dropdown-item');
+        $items.removeClass('active');
+        highlightIndex = index;
+        if (index >= 0 && index < $items.length) {
+            $items.eq(index).addClass('active');
+            // Scroll into view if needed
+            $items[index].scrollIntoView({ block: 'nearest' });
+        }
+    }
+
+    // ---- main search handler ----
+
+    function performSearch() {
+        var query = $searchBox.val().trim();
+        $suggestions.empty();
+        highlightIndex = -1;
+
+        if (query.length === 0) {
+            hideDropdown();
+            return;
+        }
+
+        $.ajax({
+            url: '/api/search',
+            data: { q: query, limit: 10 },
+            dataType: 'json',
+            timeout: 3000, // 3-second client timeout
+            success: function (results) {
+                $suggestions.empty();
+                highlightIndex = -1;
+
+                if (!results || results.length === 0) {
+                    hideDropdown();
+                    return;
+                }
+
+                $.each(results, function (_i, resource) {
+                    var safeName = escapeHtml(resource.name);
+                    var safeType = escapeHtml(resource.type);
+                    var href = generateUrl(resource.type, resource.name);
+                    $suggestions.append(
+                        '<li><a class="dropdown-item" href="' + href + '">' +
+                        safeName + ' <span class="text-muted">(' + safeType + ')</span></a></li>'
+                    );
                 });
 
-                // Manually add the show class to display the dropdown
-                if (!$suggestions.hasClass('show')) {
-                    $suggestions.addClass('show');
-                    $('#search-box').attr('aria-expanded', true);
-                }
-            } else {
-                // Hide dropdown if no results found
-                $suggestions.removeClass('show');
-                $('#search-box').attr('aria-expanded', false);
+                showDropdown();
+            },
+            error: function () {
+                // Silently hide on error – don't disrupt the user
+                hideDropdown();
             }
-        } else {
-            // Hide dropdown if input is empty
-            $suggestions.removeClass('show');
-            $('#search-box').attr('aria-expanded', false);
+        });
+    }
+
+    // ---- event bindings ----
+
+    // Debounced input handler
+    $searchBox.on('input', function () {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(performSearch, DEBOUNCE_MS);
+    });
+
+    // Keyboard navigation
+    $searchBox.on('keydown', function (e) {
+        var $items = $suggestions.find('.dropdown-item');
+        if ($items.length === 0) return;
+
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            highlightItem(Math.min(highlightIndex + 1, $items.length - 1));
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            highlightItem(Math.max(highlightIndex - 1, 0));
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (highlightIndex >= 0 && highlightIndex < $items.length) {
+                window.location.href = $items.eq(highlightIndex).attr('href');
+            }
+        } else if (e.key === 'Escape') {
+            hideDropdown();
         }
     });
 
     // Hide dropdown when clicking outside
-    $(document).click(function (e) {
+    $(document).on('click', function (e) {
         if (!$(e.target).closest('.dropdown').length) {
-            $('#suggestions').removeClass('show');
-            $('#search-box').attr('aria-expanded', false);
+            hideDropdown();
         }
     });
-
-    function generateUrl(resource, name) {
-        return `/${resource}/${name}`;
-    }
 });

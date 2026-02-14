@@ -11,8 +11,7 @@
     <link rel="stylesheet" href="{{ url_for('pokemon.static', filename='vendor/fontawesome/css/all.min.css') }}">
     <!-- Self-hosted jQuery -->
     <script src="{{ url_for('pokemon.static', filename='vendor/jquery/jquery-3.7.1.js') }}"></script>
-    <!-- Resources data for search (loaded from static file) -->
-    <script src="{{ url_for('pokemon.static', filename='js/resources.js') }}"></script>
+    <!-- Search is powered by the /api/search endpoint (PostgreSQL-backed) -->
     <!-- Icons -->
     <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='img/favicon-32x32.png') }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='img/favicon-16x16.png') }}">
