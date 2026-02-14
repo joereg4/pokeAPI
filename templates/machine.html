@@ -47,19 +47,19 @@
         <ul class="pagination justify-content-center">
             {% if page > 1 %}
             <li class="page-item">
-                <a class="page-link" href="{{ url_for('pokemon.get_machines', page=page-1) }}" aria-label="Previous">
+                <a class="page-link" href="{{ url_for('abilities_moves_items.get_machines', page=page-1) }}" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
             {% endif %}
             {% for p in range(1, total_pages + 1) %}
             <li class="page-item {% if p == page %}active{% endif %}">
-                <a class="page-link" href="{{ url_for('pokemon.get_machines', page=p) }}">{{ p }}</a>
+                <a class="page-link" href="{{ url_for('abilities_moves_items.get_machines', page=p) }}">{{ p }}</a>
             </li>
             {% endfor %}
             {% if page < total_pages %}
             <li class="page-item">
-                <a class="page-link" href="{{ url_for('pokemon.get_machines', page=page+1) }}" aria-label="Next">
+                <a class="page-link" href="{{ url_for('abilities_moves_items.get_machines', page=page+1) }}" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>

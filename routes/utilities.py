@@ -35,18 +35,25 @@ def get_endpoint_data(api_endpoint, id_or_name):
     try:
         # Check if the api_endpoint exists in pokedex.__all__
         if api_endpoint in pokedex.__all__:
-            # Dynamically fetch the function from the current module
-            func = getattr(sys.modules[__name__], api_endpoint)
-            data = func(id_or_name)
-            return render_template("generic.html", data=data)
+            # Prefer a dedicated view in this module if it exists (e.g. get_version, get_version_group)
+            try:
+                func = getattr(sys.modules[__name__], api_endpoint)
+                return func(id_or_name)
+            except AttributeError:
+                # No dedicated view (e.g. hyphenated names); serve via generic fetch + template
+                data = pokedex.APIResource.fetch_data(api_endpoint, id_or_name)
+                return render_template("generic.html", data=data)
         else:
             # If the endpoint is not found, abort with a 404 error
             logging.warning(f"No such endpoint: {api_endpoint}")
             abort(404, description=f"No such endpoint: {api_endpoint}")
     except ValueError as e:
-        # Handle ValueError and abort with a 400 Bad Request status
-        logging.error(f"ValueError: {str(e)}")
-        abort(400, description=str(e))
+        # API layer raises ValueError for 404; map "not found" to 404 for UX
+        msg = str(e)
+        if "not found" in msg.lower():
+            abort(404, description=msg)
+        logging.error(f"ValueError: {msg}")
+        abort(400, description=msg)
     except AttributeError:
         # Handle AttributeError in case the function is not found in the current module
         logging.error(f"Function for endpoint '{api_endpoint}' not found.")
@@ -58,46 +65,6 @@ def get_endpoint_data(api_endpoint, id_or_name):
         # Handle any other exceptions and abort with a 500 Internal Server Error
         logging.exception(f"An unexpected error occurred: {str(e)}")
         abort(500, description="An unexpected error occurred")
-
-
-@utilities_bp.route("/encounter-condition/<id_or_name>")
-@cache.cached(timeout=Config.CACHE_TIMEOUT)
-def get_encounter_condition(id_or_name):
-    # Check if id_or_name can be converted to an integer
-    try:
-        id_or_name = int(id_or_name)
-    except ValueError:
-        pass  # if the conversion fails, it remains a string
-    try:
-        data = pokedex.APIResource.fetch_data("encounter-condition", id_or_name)
-
-        if "name" not in data:
-            abort(404, description=f"Encounter Condition '{id_or_name}' not found")
-
-        return render_template("generic.html", data=data)
-    except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
-
-
-@utilities_bp.route("/encounter-condition_value/<id_or_name>")
-@cache.cached(timeout=Config.CACHE_TIMEOUT)
-def get_encounter_condition_value(id_or_name):
-    # Check if id_or_name can be converted to an integer
-    try:
-        id_or_name = int(id_or_name)
-    except ValueError:
-        pass  # if the conversion fails, it remains a string
-    try:
-        data = pokedex.APIResource.fetch_data("encounter-condition-value", id_or_name)
-
-        if "name" not in data:
-            abort(
-                404, description=f"Encounter Condition Value '{id_or_name}' not found"
-            )
-
-        return render_template("generic.html", data=data)
-    except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
 @utilities_bp.route("/encounter-method/<id_or_name>")
@@ -113,24 +80,6 @@ def get_encounter_method(id_or_name):
 
         if "name" not in data:
             abort(404, description=f"Encounter Method '{id_or_name}' not found")
-
-        return render_template("generic.html", data=data)
-    except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
-
-
-@utilities_bp.route("/language/<id_or_name>")
-@cache.cached(timeout=Config.CACHE_TIMEOUT)
-def get_language(id_or_name):
-    try:
-        id_or_name = int(id_or_name)
-    except ValueError:
-        pass  # if the conversion fails, it remains a string
-    try:
-        data = pokedex.APIResource.fetch_data("language", id_or_name)
-
-        if "name" not in data:
-            abort(404, description=f"Language '{id_or_name}' not found")
 
         return render_template("generic.html", data=data)
     except ValueError as e:

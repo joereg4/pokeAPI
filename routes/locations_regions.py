@@ -71,44 +71,6 @@ def get_location_area(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@locations_regions_bp.route("/nature/<id_or_name>")
-@cache.cached(timeout=Config.CACHE_TIMEOUT)
-def get_nature(id_or_name):
-    # Check if id_or_name can be converted to an integer
-    try:
-        id_or_name = int(id_or_name)
-    except ValueError:
-        pass  # if the conversion fails, it remains a string
-    try:
-        data = pokedex.APIResource.fetch_data("nature", id_or_name)
-
-        if "name" not in data:
-            abort(404, description=f"Nature '{id_or_name}' not found")
-
-        return render_template("generic.html", data=data)
-    except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
-
-
-@locations_regions_bp.route("/pal-park-area/<id_or_name>")
-@cache.cached(timeout=Config.CACHE_TIMEOUT)
-def get_pal_park_area(id_or_name):
-    # Check if id_or_name can be converted to an integer
-    try:
-        id_or_name = int(id_or_name)
-    except ValueError:
-        pass  # if the conversion fails, it remains a string
-    try:
-        data = pokedex.APIResource.fetch_data("pal-park-area", id_or_name)
-
-        if "name" not in data:
-            abort(404, description=f"Pal Park Area '{id_or_name}' not found")
-
-        return render_template("generic.html", data=data)
-    except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
-
-
 @locations_regions_bp.route("/region/", defaults={"id_or_name": None})
 @locations_regions_bp.route("/region/<id_or_name>")
 @cache.cached(timeout=Config.CACHE_TIMEOUT)
