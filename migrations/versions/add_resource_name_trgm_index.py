@@ -28,12 +28,19 @@ def upgrade():
     conn = op.get_bind()
 
     # Step 1: Try to enable pg_trgm. This requires CREATE privilege on the
-    # database, which the app user may not have. If it fails we log a
-    # warning and skip the GIN index (search still works, just slower).
+    # database, which the app user may not have.
+    #
+    # We wrap the attempt in a SAVEPOINT so that a permission error doesn't
+    # poison the whole Alembic transaction.  If the savepoint fails we roll
+    # back to it, log a warning, and let the migration complete without
+    # the index (search still works, just slower).
+    conn.execute(text("SAVEPOINT try_pg_trgm;"))
     try:
         conn.execute(text("CREATE EXTENSION IF NOT EXISTS pg_trgm;"))
+        conn.execute(text("RELEASE SAVEPOINT try_pg_trgm;"))
         logger.info("pg_trgm extension is available.")
     except Exception as e:
+        conn.execute(text("ROLLBACK TO SAVEPOINT try_pg_trgm;"))
         logger.warning(
             "Could not create pg_trgm extension (%s). "
             "Skipping trigram index – search will still work, "
