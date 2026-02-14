@@ -26,7 +26,7 @@ from pokedex.helper import (
     get_summary,
     get_pokemon_cards,
 )
-from pokedex.utils import Config, resources_dict
+from pokedex.utils import Config
 from pokedex import APIResource
 from pokedex.interface import name_id_convert
 from routes.utilities import get_endpoint_data
@@ -45,25 +45,6 @@ TYPE_COLORS = Config.TYPE_COLORS
 
 # Add type data cache at module level
 _type_cache = {}
-
-
-@pokemon_bp.context_processor
-def inject_resources():
-    return dict(resources_json=json.dumps(resources_dict))
-
-
-@pokemon_bp.route("/resources.js")
-@cache.cached(timeout=Config.CACHE_TIMEOUT)
-def serve_resources_js():
-    """Serve resources data as a JavaScript file for CSP compliance."""
-    from flask import make_response
-    # Use the same method as the context processor
-    context_data = inject_resources()
-    resources_json = context_data['resources_json']
-    js_content = f"const resources = {resources_json};"
-    response = make_response(js_content)
-    response.headers['Content-Type'] = 'application/javascript'
-    return response
 
 
 def fetch_count(endpoint):

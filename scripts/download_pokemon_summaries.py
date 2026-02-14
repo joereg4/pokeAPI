@@ -128,7 +128,7 @@ def import_from_production(host, database, user, password, local_port=5432):
             
             # Commit all changes
             db.session.commit()
-            
+
             print("\n" + "=" * 60)
             print("IMPORT COMPLETE!")
             print("=" * 60)

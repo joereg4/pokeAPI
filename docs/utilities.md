@@ -18,58 +18,16 @@ class Config:
 
 These configuration values are used throughout the application to maintain consistency and allow for easy adjustments.
 
-## Resource Loading
+## Search
 
-The `load_resources` function in `pokedex/utils.py` is responsible for loading resources from CSV files:
+The navbar autocomplete search is powered by the `/api/search` endpoint
+(`routes/search.py`), which queries the PostgreSQL `resources` table directly.
 
-```python
-def load_resources():
-    global resources_dict
-    resources_dict = {}
-    resource_dir = os.path.join(os.path.dirname(__file__), '..', 'static', 'resources')
-    
-    for filename in os.listdir(resource_dir):
-        if filename.endswith('.csv'):
-            resource_name = os.path.splitext(filename)[0]
-            file_path = os.path.join(resource_dir, filename)
-            
-            with open(file_path, 'r', encoding='utf-8') as file:
-                reader = csv.DictReader(file)
-                resources_dict[resource_name] = list(reader)
-    
-    logger.info(f"Loaded {len(resources_dict)} resource files")
-```
+- Results are ranked: prefix matches first, then substring matches.
+- A short per-query cache (10 seconds) reduces DB load without hiding new data.
+- A GIN trigram index (`pg_trgm`) on `resources.name` accelerates `ILIKE` queries.
 
-This function performs the following tasks:
-
-1. Initializes a global dictionary `resources_dict` to store the loaded resources.
-2. Defines the directory path where the CSV resource files are stored.
-3. Iterates through all files in the resource directory.
-4. For each CSV file:
-   - Extracts the resource name from the filename.
-   - Opens the file and reads its contents using `csv.DictReader`.
-   - Stores the contents as a list of dictionaries in `resources_dict`, keyed by the resource name.
-5. Logs the number of resource files loaded.
-
-### Usage
-
-The `load_resources` function is typically called during application initialization to ensure all necessary data is available for the application to use. Once loaded, the resources can be accessed through the global `resources_dict`.
-
-Example of accessing loaded resources:
-
-```python
-def get_pokemon_description(pokemon_name):
-    for entry in resources_dict.get('pokemon_descriptions', []):
-        if entry['name'].lower() == pokemon_name.lower():
-            return entry['description']
-    return "No description available."
-```
-
-### Note
-
-- Ensure that the CSV files are properly formatted and located in the correct directory.
-- The function assumes UTF-8 encoding for the CSV files.
-- Consider implementing error handling for cases where files might be missing or improperly formatted.
+No static file generation or in-memory resource list is required for search.
 
 ## Helper Functions
 
