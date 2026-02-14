@@ -67,6 +67,8 @@ def index():
         "pokemon": "pokemon_count",
         "type": "types_count",
         "ability": "abilities_count",
+        "move": "moves_count",
+        "item": "items_count",
         "pokemon-color": "color_count",
         "pokemon-habitat": "habitat_count",
         "pokemon-shape": "shape_count",
@@ -74,7 +76,7 @@ def index():
 
     counts = {}
     try:
-        with ThreadPoolExecutor(max_workers=6) as executor:
+        with ThreadPoolExecutor(max_workers=8) as executor:
             # Submit all requests concurrently
             future_to_endpoint = {
                 executor.submit(fetch_count, endpoint): endpoint
@@ -95,6 +97,8 @@ def index():
             pokemon_count=0,
             types_count=0,
             abilities_count=0,
+            moves_count=0,
+            items_count=0,
             color_count=0,
             habitat_count=0,
             shape_count=0,
@@ -501,37 +505,6 @@ def get_pokemon_color(id_or_name):
         return render_template(
             "color_detail.html", data=data, pokemon_list=pokemon_list
         )
-
-
-@pokemon_bp.route("/pokemon-form/<id_or_name>")
-def get_pokemon_form(id_or_name):
-    try:
-        id_or_name = int(id_or_name)
-    except ValueError:
-        pass
-
-    try:
-        data = pokedex.APIResource.fetch_data("pokemon-form", id_or_name)
-    except ValueError as e:
-        logging.error(f"ValueError in fetching form {id_or_name}: {e}")
-        abort(404, description=f"Pokemon form '{id_or_name}' not found")
-    except HTTPError as e:
-        if e.response.status_code == 404:
-            abort(404, description=f"Pokemon form '{id_or_name}' not found")
-        else:
-            logging.error(f"HTTP error occurred: {e}")
-            abort(500, description=str(e))
-    except Exception as e:
-        logging.exception(
-            f"Unexpected error occurred while fetching Pokemon form {id_or_name}: {e}"
-        )
-        abort(500, description="An unexpected error occurred")
-
-    if not data or "name" not in data:
-        logging.warning(f"No data found for Pokemon form: {id_or_name}")
-        abort(404, description=f"Pokemon form '{id_or_name}' not found")
-
-    return render_template("generic.html", data=data)
 
 
 @pokemon_bp.route("/pokemon-habitat/", defaults={"id_or_name": None})

@@ -4,7 +4,6 @@ import pandas as pd
 import markdown
 from flask import Blueprint, render_template, abort
 from markupsafe import Markup
-from requests.exceptions import HTTPError
 
 import pokedex
 from cache import cache
@@ -144,22 +143,3 @@ def get_contest_type(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@berries_contests_bp.route("/super-contest-effect/<int:id_>")
-def get_super_contest_effect(id_):
-    try:
-        data = pokedex.APIResource.fetch_data("super-contest-effect", id_)
-
-        if "id" not in data:
-            abort(404, description=f"Super Contest Effect '{id_}' not found")
-
-        return render_template("generic.html", data=data)
-    except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
-    except HTTPError as e:
-        # If the HTTP error is 404, raise a 404 Not Found
-        if e.response.status_code == 404:
-            abort(404, description=f"Super Contest Effect '{id_}' not found")
-        else:
-            # For other HTTP errors, you might want to log them or handle differently
-            logging.debug(f"HTTP error occurred: {e}")
-            return str(e), e.response.status_code

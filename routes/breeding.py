@@ -4,7 +4,6 @@ import markdown
 import pandas as pd
 from markupsafe import Markup
 from flask import Blueprint, render_template, abort
-from requests.exceptions import HTTPError
 
 import pokedex
 from cache import cache
@@ -62,27 +61,3 @@ def get_egg_group(id_or_name):
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@breeding_bp.route("/gender/<id_or_name>")
-@cache.cached(timeout=Config.CACHE_TIMEOUT)
-def get_gender(id_or_name):
-    # Check if id_or_name can be converted to an integer
-    try:
-        id_or_name = int(id_or_name)
-    except ValueError:
-        pass  # if the conversion fails, it remains a string
-    try:
-        data = pokedex.APIResource.fetch_data("gender", id_or_name)
-
-        if "name" not in data:
-            abort(404, description=f"Gender '{id_or_name}' not found")
-
-        return render_template("gender_detail.html", data=data)
-    except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
-    except HTTPError as e:
-        # Handle HTTP errors, specifically 404
-        if e.response.status_code == 404:
-            abort(404, description=f"Gender '{id_or_name}' not found")
-        else:
-            logging.debug(f"HTTP error occurred: {e}")
-            return str(e), e.response.status_code
