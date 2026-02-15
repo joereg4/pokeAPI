@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ data.name | capitalize }} - Contest Type{% endblock %}
+
+{% block content %}
+    <div class="container pt-5">
+        <h1>{{ data.name | capitalize }} Contest Type</h1>
+    </div>
+
+    {% if data.berry_flavor %}
+    <section>
+        <div class="container pt-3">
+            <h2>Berry Flavor</h2>
+            <p>
+                <a href="{{ url_for('berries_contests.get_berry_flavor', id_or_name=data.berry_flavor.name) }}">
+                    {{ data.berry_flavor.name | capitalize }}
+                </a>
+            </p>
+        </div>
+    </section>
+    {% endif %}
+
+    {% if data.names %}
+    <section>
+        <div class="container pt-3">
+            <h2>Name</h2>
+            {% for entry in data.names %}
+            <p class="mb-0">{{ entry.name }}{% if entry.color %} <span class="text-muted">({{ entry.color }})</span>{% endif %}</p>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+{% endblock %}

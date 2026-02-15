@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ data.name | capitalize }} - Stat{% endblock %}
+
+{% block content %}
+    <div class="container pt-5">
+        <h1>{{ data.name | capitalize }} Stat</h1>
+    </div>
+
+    <section>
+        <div class="container pt-3">
+            <h2>Details</h2>
+            <p><strong>Game index:</strong> {{ data.game_index }}</p>
+            <p><strong>Battle only:</strong> {{ 'Yes' if data.is_battle_only else 'No' }}</p>
+            {% if data.move_damage_class %}
+            <p><strong>Move damage class:</strong>
+                <a href="{{ url_for('utilities.get_endpoint_data', api_endpoint='move-damage-class', id_or_name=data.move_damage_class.name) }}">
+                    {{ data.move_damage_class.name | capitalize }}
+                </a>
+            </p>
+            {% endif %}
+        </div>
+    </section>
+
+    {% if data.names %}
+    <section>
+        <div class="container pt-3">
+            <h2>Name</h2>
+            {% for entry in data.names %}
+            <p class="mb-0">{{ entry.name }}</p>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    {% if data.characteristics %}
+    <section>
+        <div class="container pt-3">
+            <h2>Characteristics</h2>
+            <ul>
+                {% for c in data.characteristics %}
+                <li>
+                    <a href="{{ url_for('characteristics_stats.get_characteristic', id_=c.url.split('/')[-2]) }}">
+                        Characteristic #{{ c.url.split('/')[-2] }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+    {% endif %}
+
+    {% if data.affecting_natures and (data.affecting_natures.increase or data.affecting_natures.decrease) %}
+    <section>
+        <div class="container pt-3">
+            <h2>Affecting Natures</h2>
+            {% if data.affecting_natures.increase %}
+            <h3>Increase</h3>
+            <ul>
+                {% for n in data.affecting_natures.increase %}
+                <li><a href="{{ url_for('utilities.get_endpoint_data', api_endpoint='nature', id_or_name=n.name) }}">{{ n.name | capitalize }}</a></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% if data.affecting_natures.decrease %}
+            <h3>Decrease</h3>
+            <ul>
+                {% for n in data.affecting_natures.decrease %}
+                <li><a href="{{ url_for('utilities.get_endpoint_data', api_endpoint='nature', id_or_name=n.name) }}">{{ n.name | capitalize }}</a></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+    </section>
+    {% endif %}
+
+    {% if data.affecting_items %}
+    <section>
+        <div class="container pt-3">
+            <h2>Affecting Items</h2>
+            <ul>
+                {% for item in data.affecting_items %}
+                <li><a href="{{ url_for('abilities_moves_items.get_item', id_or_name=item.name) }}">{{ item.name | capitalize }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+    {% endif %}
+
+    {% if data.affecting_moves and (data.affecting_moves.increase or data.affecting_moves.decrease) %}
+    <section>
+        <div class="container pt-3">
+            <h2>Affecting Moves</h2>
+            {% if data.affecting_moves.increase %}
+            <h3>Increase</h3>
+            <ul>
+                {% for m in data.affecting_moves.increase %}
+                <li><a href="{{ url_for('abilities_moves_items.get_move', id_or_name=m.name) }}">{{ m.name | capitalize }}</a></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% if data.affecting_moves.decrease %}
+            <h3>Decrease</h3>
+            <ul>
+                {% for m in data.affecting_moves.decrease %}
+                <li><a href="{{ url_for('abilities_moves_items.get_move', id_or_name=m.name) }}">{{ m.name | capitalize }}</a></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+    </section>
+    {% endif %}
+{% endblock %}
