@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ data.name | capitalize }} - Encounter Method{% endblock %}
+
+{% block content %}
+    <div class="container pt-5">
+        <h1>{{ data.name | capitalize }} Encounter Method</h1>
+        <p class="text-muted">Order: {{ data.order }}</p>
+    </div>
+
+    {% if data.names %}
+    <section>
+        <div class="container pt-3">
+            <h2>Description</h2>
+            {% for entry in data.names %}
+            <p class="mb-0">{{ entry.name }}</p>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+{% endblock %}

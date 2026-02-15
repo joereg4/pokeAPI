@@ -42,7 +42,9 @@ def get_endpoint_data(api_endpoint, id_or_name):
             except AttributeError:
                 # No dedicated view (e.g. hyphenated names); serve via generic fetch + template
                 data = pokedex.APIResource.fetch_data(api_endpoint, id_or_name)
-                return render_template("generic.html", data=data)
+                return render_template(
+                    "generic.html", data=data, api_endpoint=api_endpoint
+                )
         else:
             # If the endpoint is not found, abort with a 404 error
             logging.warning(f"No such endpoint: {api_endpoint}")
@@ -81,7 +83,7 @@ def get_encounter_method(id_or_name):
         if "name" not in data:
             abort(404, description=f"Encounter Method '{id_or_name}' not found")
 
-        return render_template("generic.html", data=data)
+        return render_template("encounter_method_detail.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
