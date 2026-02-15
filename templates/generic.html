@@ -1,71 +1,102 @@
 {% extends 'base.html' %}
 
+{# Used only by the catch-all route (utilities.get_endpoint_data) for API
+   resources that have no dedicated template (e.g. evolution-chain, pokemon-form).
+   Shows structured data with an optional collapsible raw JSON section. #}
+
 {% block title %}
     {% if data.name %}
         {{ data.name | capitalize }}
+    {% elif api_endpoint %}
+        {{ api_endpoint | replace('-', ' ') | capitalize }} Resource
     {% else %}
-        Generic Template
+        API Resource
     {% endif %}
 {% endblock %}
 
 {% block content %}
-  <h1>
-    {% if data.name %}
-        {{ data.name | capitalize }}
-    {% else %}
-        Default Text
-    {% endif %}
-  </h1>
-
-  {% for key, value in data.items() %}
-    {% if value is string or value is number %}
-      <h2>{{ key | capitalize }}</h2>
-      {{ value }}
-    {% elif value is mapping %}
-      <h2>{{ key | capitalize }}</h2>
-      <ul>
-        {% for subkey, subvalue in value.items() %}
-          <li>{{ subkey }}:
-            {% if subvalue is string or subvalue is number %}
-            {{ subvalue }}
-            {% elif subvalue is mapping %}
-              <ul>
-                {% for key2, value2 in subvalue.items() %}
-                  <li>{{ key2 }}:  {{ value2 }}</li>
-                {% endfor %}
-              </ul>
+    <div class="container pt-5">
+        <h1>
+            {% if data.name %}
+                {{ data.name | capitalize }}
+            {% elif api_endpoint %}
+                {{ api_endpoint | replace('-', ' ') | capitalize }} Resource
+            {% else %}
+                API Resource
             {% endif %}
-          </li>
-        {% endfor %}
-      </ul>
-    {% elif value is iterable %}
-      <h2>{{ key | capitalize }}</h2>
-      <ul>
-        {% for item in value %}
-          {% if item is string or item is number %}
-            <li>{{ item }}</li>
-          {% elif item is mapping %}
-            <ul>
-              {% for subkey, subvalue in item.items() %}
-              <!-- Name: or URL: -->
-              <li>{{ subkey }}:
-                  {% if subvalue is string or subvalue is number %}
-                    {{ subvalue }}
-                  {% elif subvalue is mapping %}
-                    <ul>
-                      {% for key2, value2 in subvalue.items() %}
-                        <li>{{ key2 }}: {{ value2 }}</li>
-                      {% endfor %}
-                    </ul>
-                  {% endif %}
-                </li>
-              {% endfor %}
-            </ul>
-          {% endif %}
-        {% endfor %}
-      </ul>
-    {% endif %}
-  {% endfor %}
+        </h1>
+        {% if api_endpoint %}
+        <p class="text-muted">Resource type: {{ api_endpoint }}</p>
+        {% endif %}
+    </div>
 
-  <pre>{{ data | tojson(indent=4) }}</pre>
+    <div class="container pt-3">
+        {% for key, value in data.items() %}
+            {% if value is string or value is number %}
+                <section class="mb-4">
+                    <h2 class="h5 text-uppercase text-muted">{{ key | replace('_', ' ') | capitalize }}</h2>
+                    <p class="mb-0">{{ value }}</p>
+                </section>
+            {% elif value is mapping %}
+                <section class="mb-4">
+                    <h2 class="h5 text-uppercase text-muted">{{ key | replace('_', ' ') | capitalize }}</h2>
+                    <ul class="list-unstyled">
+                        {% for subkey, subvalue in value.items() %}
+                            <li class="mb-1">
+                                <strong>{{ subkey | replace('_', ' ') }}:</strong>
+                                {% if subvalue is string or subvalue is number %}
+                                    {{ subvalue }}
+                                {% elif subvalue is mapping %}
+                                    <ul class="list-unstyled ms-3">
+                                        {% for key2, value2 in subvalue.items() %}
+                                            <li><strong>{{ key2 }}:</strong> {{ value2 }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </section>
+            {% elif value is iterable and value is not string %}
+                <section class="mb-4">
+                    <h2 class="h5 text-uppercase text-muted">{{ key | replace('_', ' ') | capitalize }}</h2>
+                    <ul>
+                        {% for item in value %}
+                            {% if item is string or item is number %}
+                                <li>{{ item }}</li>
+                            {% elif item is mapping %}
+                                <li>
+                                    <ul class="list-unstyled ms-2">
+                                        {% for subkey, subvalue in item.items() %}
+                                            <li>
+                                                <strong>{{ subkey }}:</strong>
+                                                {% if subvalue is string or subvalue is number %}
+                                                    {{ subvalue }}
+                                                {% elif subvalue is mapping %}
+                                                    <ul class="list-unstyled ms-2">
+                                                        {% for key2, value2 in subvalue.items() %}
+                                                            <li>{{ key2 }}: {{ value2 }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                {% endif %}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </section>
+            {% endif %}
+        {% endfor %}
+
+        <section class="mt-4 pt-4 border-top">
+            <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#raw-json" aria-expanded="false" aria-controls="raw-json">
+                Show raw JSON
+            </button>
+            <div class="collapse mt-2" id="raw-json">
+                <pre class="bg-light p-3 rounded small overflow-auto" style="max-height: 24rem;"><code>{{ data | tojson(indent=2) }}</code></pre>
+            </div>
+        </section>
+    </div>
 {% endblock %}
