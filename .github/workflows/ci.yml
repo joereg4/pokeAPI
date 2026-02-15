@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main  # Run tests on pushes to the main branch
+  pull_request:
+    branches:
+      - main  # Run tests on PRs targeting main
   workflow_dispatch:  # Allow manually triggering the workflow
 
 jobs:
