@@ -58,25 +58,6 @@ def get_characteristic(id_):
                 return str(e), e.response.status_code
 
 
-@characteristics_stats_bp.route("/pokeathlon-stat/<id_or_name>")
-@cache.cached(timeout=Config.CACHE_TIMEOUT)
-def get_pokeathlon_stat(id_or_name):
-    # Check if id_or_name can be converted to an integer
-    try:
-        id_or_name = int(id_or_name)
-    except ValueError:
-        pass  # if the conversion fails, it remains a string
-    try:
-        data = pokedex.APIResource.fetch_data("pokeathlon-stat", id_or_name)
-
-        if "name" not in data:
-            abort(404, description=f"Pokeathlon '{id_or_name}' not found")
-
-        return render_template("generic.html", data=data)
-    except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
-
-
 @characteristics_stats_bp.route("/stat/<id_or_name>")
 @cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_stat(id_or_name):

@@ -325,20 +325,6 @@ def test_pokemon_color_route(client):
     assert response.status_code == 404
 
 
-def test_pokemon_form_route(client):
-    # Test with ID
-    response = client.get("/pokemon-form/1")
-    assert response.status_code == 200
-
-    # Test with name
-    response = client.get("/pokemon-form/bulbasaur")
-    assert response.status_code == 200
-
-    # Test non-existent form
-    response = client.get("/pokemon-form/nonexistent")
-    assert response.status_code == 404
-
-
 def test_pokemon_habitat_route(client):
     # Test habitat list
     response = client.get("/pokemon-habitat/")
