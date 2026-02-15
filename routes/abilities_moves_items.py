@@ -173,44 +173,6 @@ def get_item_category(id_or_name):
         return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@abilities_moves_items_bp.route("/item-fling_effect/<id_or_name>")
-@cache.cached(timeout=Config.CACHE_TIMEOUT)
-def get_item_fling_effect(id_or_name):
-    # Check if id_or_name can be converted to an integer
-    try:
-        id_or_name = int(id_or_name)
-    except ValueError:
-        pass  # if the conversion fails, it remains a string
-    try:
-        data = pokedex.APIResource.fetch_data("item-fling-effect", id_or_name)
-
-        if "name" not in data:
-            abort(404, description=f"Item Fling '{id_or_name}' not found")
-
-        return render_template("generic.html", data=data)
-    except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
-
-
-@abilities_moves_items_bp.route("/item-pocket/<id_or_name>")
-@cache.cached(timeout=Config.CACHE_TIMEOUT)
-def get_item_pocket(id_or_name):
-    # Check if id_or_name can be converted to an integer
-    try:
-        id_or_name = int(id_or_name)
-    except ValueError:
-        pass  # if the conversion fails, it remains a string
-    try:
-        data = pokedex.APIResource.fetch_data("item-pocket", id_or_name)
-
-        if "name" not in data:
-            abort(404, description=f"Item Pocket '{id_or_name}' not found")
-
-        return render_template("generic.html", data=data)
-    except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
-
-
 @abilities_moves_items_bp.route("/machine/<int:id_>")
 def get_machine(id_):
     try:
@@ -367,44 +329,6 @@ def get_move(id_or_name):
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@abilities_moves_items_bp.route("/move-ailment/<id_or_name>")
-@cache.cached(timeout=Config.CACHE_TIMEOUT)
-def get_move_ailment(id_or_name):
-    # Check if id_or_name can be converted to an integer
-    try:
-        id_or_name = int(id_or_name)
-    except ValueError:
-        pass  # if the conversion fails, it remains a string
-    try:
-        data = pokedex.APIResource.fetch_data("move-ailment", id_or_name)
-
-        if "name" not in data:
-            abort(404, description=f"Move Ailment '{id_or_name}' not found")
-
-        return render_template("generic.html", data=data)
-    except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
-
-
-@abilities_moves_items_bp.route("/move-battle_style/<id_or_name>")
-@cache.cached(timeout=Config.CACHE_TIMEOUT)
-def get_move_battle_style(id_or_name):
-    # Check if id_or_name can be converted to an integer
-    try:
-        id_or_name = int(id_or_name)
-    except ValueError:
-        pass  # if the conversion fails, it remains a string
-    try:
-        data = pokedex.APIResource.fetch_data("move-battle-style", id_or_name)
-
-        if "name" not in data:
-            abort(404, description=f"Move Battle Style '{id_or_name}' not found")
-
-        return render_template("generic.html", data=data)
-    except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
-
-
 @abilities_moves_items_bp.route("/move-category/", defaults={"id_or_name": None})
 @abilities_moves_items_bp.route("/move-category/<id_or_name>")
 @cache.cached(timeout=Config.CACHE_TIMEOUT)
@@ -493,20 +417,3 @@ def get_move_learn_method(id_or_name):
             return str(e), 400  # Return the error message with a 400 Bad Request status
 
 
-@abilities_moves_items_bp.route("/move-target/<id_or_name>")
-@cache.cached(timeout=Config.CACHE_TIMEOUT)
-def get_move_target(id_or_name):
-    # Check if id_or_name can be converted to an integer
-    try:
-        id_or_name = int(id_or_name)
-    except ValueError:
-        pass  # if the conversion fails, it remains a string
-    try:
-        data = pokedex.APIResource.fetch_data("move-target", id_or_name)
-
-        if "name" not in data:
-            abort(404, description=f"Move Target '{id_or_name}' not found")
-
-        return render_template("generic.html", data=data)
-    except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status

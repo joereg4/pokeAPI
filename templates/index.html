@@ -101,6 +101,26 @@
                 <div class="col">
                     <div class="card" style="width: 1fr;">
                         <div class="card-body">
+                            <h3 class="card-title">{{ moves_count }}</h3>
+                            <p class="card-text">Moves</p>
+                            <a href="{{ url_for('abilities_moves_items.get_moves_list') }}"
+                               class="btn btn-primary">View All Moves</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card" style="width: 1fr;">
+                        <div class="card-body">
+                            <h3 class="card-title">{{ items_count }}</h3>
+                            <p class="card-text">Items</p>
+                            <a href="{{ url_for('abilities_moves_items.get_item') }}"
+                               class="btn btn-primary">View All Items</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card" style="width: 1fr;">
+                        <div class="card-body">
                             <h3 class="card-title">{{ color_count }}</h3>
                             <p class="card-text">Colors</p>
                             <a href="{{ url_for('pokemon.get_pokemon_color') }}"
