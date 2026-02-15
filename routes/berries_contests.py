@@ -138,7 +138,7 @@ def get_contest_type(id_or_name):
         if "name" not in data:
             abort(404, description=f"Contest Type '{id_or_name}' not found")
 
-        return render_template("generic.html", data=data)
+        return render_template("contest_type_detail.html", data=data)
     except ValueError as e:
         return str(e), 400  # Return the error message with a 400 Bad Request status
 

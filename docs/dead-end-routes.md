@@ -44,7 +44,7 @@ Flask routes.  Their URLs are still served by the catch-all
 `utilities.get_endpoint_data` (route `/<api_endpoint>/<id_or_name>`): when
 `api_endpoint` is in `pokedex.__all__` and the utilities module has no
 dedicated view for it, the app fetches via `APIResource.fetch_data` and
-renders `generic.html`.  So:
+renders `generic.html` (catch-all only; stat, encounter-method, contest-type, and item-category have dedicated templates).  So:
 
 - **Search and direct URLs** (e.g. `/evolution-chain/1`, `/pokemon-form/bulbasaur`)
   still work.
