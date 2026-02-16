@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from models.model import User, db, Resource
 from functools import wraps
 from limiter import limiter
+from pokedex.utils import Config
 import requests
 import logging
 from utils import invalidate_related_caches
@@ -144,7 +145,8 @@ def list_pokemon_summaries():
         while True:
             try:
                 response = requests.get(
-                    f"https://pokeapi.co/api/v2/pokemon?limit={limit}&offset={offset}"
+                    f"https://pokeapi.co/api/v2/pokemon?limit={limit}&offset={offset}",
+                    timeout=Config.HTTP_TIMEOUT,
                 )
                 if response.status_code != 200:
                     break
@@ -413,7 +415,7 @@ def batch_refresh_summaries(resource_type):
         while True:
             try:
                 endpoint = f"https://pokeapi.co/api/v2/{resource_type}?limit={limit}&offset={offset}"
-                response = requests.get(endpoint)
+                response = requests.get(endpoint, timeout=Config.HTTP_TIMEOUT)
 
                 if response.status_code != 200:
                     break

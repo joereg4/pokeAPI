@@ -80,7 +80,7 @@ class TestEvolutionChainRoutes:
 
     def test_evolution_chain_not_found(self, client):
         response = client.get("/evolution-chain/99999")
-        assert response.status_code in (400, 404)
+        assert response.status_code == 404
 
 
 class TestEvolutionTriggerRoutes:
@@ -96,7 +96,7 @@ class TestEvolutionTriggerRoutes:
 
     def test_trigger_not_found(self, client):
         response = client.get("/evolution-trigger/nonexistent")
-        assert response.status_code in (400, 404)
+        assert response.status_code == 404
 
 
 class TestEggGroupRoutes:
@@ -114,4 +114,4 @@ class TestEggGroupRoutes:
 
     def test_egg_group_not_found(self, client):
         response = client.get("/egg-group/nonexistent")
-        assert response.status_code in (400, 404)
+        assert response.status_code == 404

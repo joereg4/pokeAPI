@@ -35,16 +35,22 @@ def setup_mocks(mock_api, mock_requests):
         "types": [{"type": {"name": "poison"}}],
     })
 
-    # Item -- template needs: name, effect_entries, cost, category.name
+    # Item -- template needs: name, effect_entries, cost, category.name,
+    #   flavor_text_entries[].version_group.name, game_indices, fling_power, fling_effect
     item_data = {
         "name": "master-ball", "id": 1,
         "cost": 0,
+        "fling_power": None,
+        "fling_effect": None,
         "effect_entries": [{"effect": "Catches any wild Pokemon.", "short_effect": "Catches any wild Pokemon.", "language": {"name": "en"}}],
-        "flavor_text_entries": [{"text": "The best ball.", "language": {"name": "en"}}],
+        "flavor_text_entries": [{"text": "The best ball.", "language": {"name": "en"}, "version_group": {"name": "red-blue", "url": "https://pokeapi.co/api/v2/version-group/1/"}}],
         "category": {"name": "standard-balls", "url": "https://pokeapi.co/api/v2/item-category/34/"},
         "held_by_pokemon": [],
+        "game_indices": [],
         "names": [{"name": "Master Ball", "language": {"name": "en"}}],
         "sprites": {"default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png"},
+        "attributes": [],
+        "baby_trigger_for": None,
     }
     mock_api.register("item", 1, item_data)
     mock_api.register("item", "master-ball", item_data)
@@ -63,16 +69,32 @@ def setup_mocks(mock_api, mock_requests):
         "pocket": {"name": "medicine"},
     })
 
-    # Move
+    # Move -- template needs: priority, contest_combos, contest_type, contest_effect,
+    #   super_contest_effect, flavor_text_entries, machines, past_values, stat_changes, target
     move_data = {
         "name": "pound", "id": 1, "power": 40, "pp": 35, "accuracy": 100,
+        "priority": 0,
         "type": {"name": "normal"},
         "damage_class": {"name": "physical"},
-        "meta": {"category": {"name": "damage", "url": "https://pokeapi.co/api/v2/move-category/0/"}},
+        "target": {"name": "selected-pokemon"},
+        "meta": {
+            "category": {"name": "damage", "url": "https://pokeapi.co/api/v2/move-category/0/"},
+            "ailment": {"name": "none"}, "ailment_chance": 0, "crit_rate": 0,
+            "drain": 0, "flinch_chance": 0, "healing": 0, "max_hits": None,
+            "max_turns": None, "min_hits": None, "min_turns": None, "stat_chance": 0,
+        },
         "effect_entries": [{"effect": "Does damage.", "short_effect": "Does damage.", "language": {"name": "en"}}],
+        "flavor_text_entries": [{"flavor_text": "Pounds with forelegs or tail.", "language": {"name": "en"}, "version_group": {"name": "red-blue"}}],
         "learned_by_pokemon": [],
         "names": [{"name": "Pound", "language": {"name": "en"}}],
         "generation": {"name": "generation-i"},
+        "machines": [],
+        "past_values": [],
+        "stat_changes": [],
+        "contest_combos": None,
+        "contest_type": None,
+        "contest_effect": None,
+        "super_contest_effect": None,
     }
     mock_api.register("move", 1, move_data)
     mock_api.register("move", "pound", move_data)
@@ -147,7 +169,7 @@ class TestAbilityRoutes:
 
     def test_ability_not_found(self, client):
         response = client.get("/ability/nonexistent")
-        assert response.status_code in (400, 404)
+        assert response.status_code == 404
 
 
 # ---------------------------------------------------------------------------
@@ -165,7 +187,7 @@ class TestItemRoutes:
 
     def test_item_not_found(self, client):
         response = client.get("/item/nonexistent")
-        assert response.status_code in (400, 404)
+        assert response.status_code == 404
 
     def test_item_attribute_by_id(self, client):
         response = client.get("/item-attribute/1")
@@ -191,7 +213,7 @@ class TestMoveRoutes:
 
     def test_move_not_found(self, client):
         response = client.get("/move/nonexistent")
-        assert response.status_code in (400, 404)
+        assert response.status_code == 404
 
     def test_move_category_by_id(self, client):
         response = client.get("/move-category/1")
@@ -199,7 +221,7 @@ class TestMoveRoutes:
 
     def test_move_category_not_found(self, client):
         response = client.get("/move-category/nonexistent")
-        assert response.status_code in (400, 404)
+        assert response.status_code == 404
 
     def test_move_damage_class_by_id(self, client):
         response = client.get("/move-damage-class/1")

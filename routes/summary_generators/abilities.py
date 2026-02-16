@@ -1,5 +1,6 @@
 import requests
 from flask import current_app
+from pokedex.utils import Config
 from .utils import get_openai_client, format_pokemon_summary
 
 
@@ -17,7 +18,8 @@ def generate_ability_summary(ability_name, custom_instructions="", max_tokens=20
         try:
             # Fetch from ability endpoint
             ability_response = requests.get(
-                f"https://pokeapi.co/api/v2/ability/{ability_name}"
+                f"https://pokeapi.co/api/v2/ability/{ability_name}",
+                timeout=Config.HTTP_TIMEOUT,
             )
             if ability_response.status_code == 200:
                 ability_data = ability_response.json()

@@ -48,7 +48,10 @@ def get_berry(id_or_name):
                 "berry_detail.html", data=data, summary_html=summary_html
             )
         except ValueError as e:
-            return str(e), 400  # Return the error message with a 400 Bad Request status
+            msg = str(e)
+            if "not found" in msg.lower():
+                abort(404, description=msg)
+            abort(400, description=msg)
 
 
 @berries_contests_bp.route("/berry-firmness/", defaults={"id_or_name": None})
@@ -71,7 +74,10 @@ def get_berry_firmness(id_or_name):
 
             return render_template("berry_firmness_detail.html", data=data)
         except ValueError as e:
-            return str(e), 400  # Return the error message with a 400 Bad Request status
+            msg = str(e)
+            if "not found" in msg.lower():
+                abort(404, description=msg)
+            abort(400, description=msg)
 
 
 @berries_contests_bp.route("/berry-flavor/", defaults={"id_or_name": None})
@@ -94,7 +100,10 @@ def get_berry_flavor(id_or_name):
 
             return render_template("berry_flavor_detail.html", data=data)
         except ValueError as e:
-            return str(e), 400  # Return the error message with a 400 Bad Request status
+            msg = str(e)
+            if "not found" in msg.lower():
+                abort(404, description=msg)
+            abort(400, description=msg)
 
 
 @berries_contests_bp.route("/contest-effect/", defaults={"id_": None})
@@ -121,7 +130,10 @@ def get_contest_effect(id_):
 
             return render_template("contest_effect_detail.html", data=data)
         except ValueError as e:
-            return str(e), 400  # Return the error message with a 400 Bad Request status
+            msg = str(e)
+            if "not found" in msg.lower():
+                abort(404, description=msg)
+            abort(400, description=msg)
 
 
 @berries_contests_bp.route("/contest-type/<id_or_name>")
@@ -140,6 +152,7 @@ def get_contest_type(id_or_name):
 
         return render_template("contest_type_detail.html", data=data)
     except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
-
-
+        msg = str(e)
+        if "not found" in msg.lower():
+            abort(404, description=msg)
+        abort(400, description=msg)

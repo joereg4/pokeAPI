@@ -128,7 +128,10 @@ def get_item(id_or_name):
                 cards=cards,
             )
         except ValueError as e:
-            return str(e), 400  # Return the error message with a 400 Bad Request status
+            msg = str(e)
+            if "not found" in msg.lower():
+                abort(404, description=msg)
+            abort(400, description=msg)
 
 
 @abilities_moves_items_bp.route("/item-attribute/<id_or_name>")
@@ -151,7 +154,10 @@ def get_item_attribute(id_or_name):
             "item_attribute_detail.html", data=data, items_list=items_list
         )
     except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
+        msg = str(e)
+        if "not found" in msg.lower():
+            abort(404, description=msg)
+        abort(400, description=msg)
 
 
 @abilities_moves_items_bp.route("/item-category/<id_or_name>")
@@ -170,7 +176,10 @@ def get_item_category(id_or_name):
 
         return render_template("item_category_detail.html", data=data)
     except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
+        msg = str(e)
+        if "not found" in msg.lower():
+            abort(404, description=msg)
+        abort(400, description=msg)
 
 
 @abilities_moves_items_bp.route("/machine/<int:id_>")
@@ -198,12 +207,13 @@ def get_machine(id_):
             version_group_data=version_group_data,
         )
     except (ValueError, HTTPError) as e:
-        # Handle HTTP errors or other exceptions
         if isinstance(e, HTTPError) and e.response.status_code == 404:
             abort(404, description=f"Machine '{id_}' not found")
+        elif isinstance(e, ValueError) and "not found" in str(e).lower():
+            abort(404, description=str(e))
         else:
             logging.debug(f"Error occurred: {e}")
-            return str(e), 500  # Internal Server Error for other issues
+            abort(500, description=str(e))
 
 
 @abilities_moves_items_bp.route("/machine/page/<int:page>")
@@ -214,7 +224,7 @@ def get_machines(page=1):
         offset = (page - 1) * per_page
         url = f"{BASE_URL}/machine?offset={offset}&limit={per_page}"
 
-        response = requests.get(url)
+        response = requests.get(url, timeout=Config.HTTP_TIMEOUT)
         if response.status_code != 200:
             abort(500, description="Failed to fetch machine data from the API")
 
@@ -255,12 +265,13 @@ def get_machines(page=1):
             "machine.html", data=complete_machines, page=page, total_pages=total_pages
         )
     except (ValueError, HTTPError) as e:
-        # Handle HTTP errors or other exceptions
         if isinstance(e, HTTPError) and e.response.status_code == 404:
-            abort(404, description=f"Machine endpoint failed")
+            abort(404, description="Machine endpoint failed")
+        elif isinstance(e, ValueError) and "not found" in str(e).lower():
+            abort(404, description=str(e))
         else:
             logging.debug(f"Error occurred: {e}")
-            return str(e), 500  # Internal Server Error for other issues
+            abort(500, description=str(e))
 
 
 @abilities_moves_items_bp.route("/move/")
@@ -270,7 +281,7 @@ def get_moves_list():
     offset = (page - 1) * per_page
     endpoint = f"{BASE_URL}/move/?limit={per_page}&offset={offset}"
 
-    response = requests.get(endpoint)
+    response = requests.get(endpoint, timeout=Config.HTTP_TIMEOUT)
     if response.status_code != 200:
         logging.error(f"Error fetching moves: {response.status_code} - {response.text}")
         abort(500, description="Failed to fetch moves from the API.")
@@ -282,51 +293,47 @@ def get_moves_list():
 @abilities_moves_items_bp.route("/move/<id_or_name>")
 @cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_move(id_or_name):
-    if id_or_name is None:
-        # Fetch all moves
-        url = f"{BASE_URL}/move"
-        data = fetch_all_results(url)
-        return render_template("moves.html", data=data)
-    else:
-        try:
-            # Fetch details for a specific move
-            id_or_name = int(id_or_name)
-        except ValueError:
-            pass  # If the conversion fails, it remains a string
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass  # If the conversion fails, it remains a string
 
-        try:
-            data = pokedex.APIResource.fetch_data("move", id_or_name)
+    try:
+        data = pokedex.APIResource.fetch_data("move", id_or_name)
 
-            if "name" not in data:
-                abort(404, description=f"Pokemon Move '{id_or_name}' not found")
+        if "name" not in data:
+            abort(404, description=f"Pokemon Move '{id_or_name}' not found")
 
-            pokemon_list = create_pokemon_list(data.get("learned_by_pokemon", []))
+        pokemon_list = create_pokemon_list(data.get("learned_by_pokemon", []))
 
-            # Check if the category data exists and is not None
-            category = None
-            if data.get("meta") and data["meta"].get("category"):
-                category_name = data["meta"]["category"]["name"]
-                category = pokedex.APIResource.fetch_data(
-                    "move-category", category_name
-                )
-            else:
-                logging.debug(f"No category found for move {data['name']}")
-
-            # Fetch Summary
-            summary = get_summary(data["name"], "move")
-
-            # Convert the markdown summary to HTML
-            summary_html = Markup(markdown.markdown(summary)) if summary else None
-
-            return render_template(
-                "move_detail.html",
-                data=data,
-                category=category,
-                pokemon_list=pokemon_list,
-                summary_html=summary_html,
+        # Check if the category data exists and is not None
+        category = None
+        if data.get("meta") and data["meta"].get("category"):
+            category_name = data["meta"]["category"]["name"]
+            category = pokedex.APIResource.fetch_data(
+                "move-category", category_name
             )
-        except ValueError as e:
-            return str(e), 400  # Return the error message with a 400 Bad Request status
+        else:
+            logging.debug(f"No category found for move {data['name']}")
+
+        # Fetch Summary
+        summary = get_summary(data["name"], "move")
+
+        # Convert the markdown summary to HTML
+        summary_html = Markup(markdown.markdown(summary)) if summary else None
+
+        return render_template(
+            "move_detail.html",
+            data=data,
+            category=category,
+            pokemon_list=pokemon_list,
+            summary_html=summary_html,
+        )
+    except ValueError as e:
+        msg = str(e)
+        if "not found" in msg.lower():
+            abort(404, description=msg)
+        abort(400, description=msg)
 
 
 @abilities_moves_items_bp.route("/move-category/", defaults={"id_or_name": None})
@@ -387,7 +394,10 @@ def get_move_damage_class(id_or_name):
             "move_damage_class_detail.html", damage_class=damage_class
         )
     except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
+        msg = str(e)
+        if "not found" in msg.lower():
+            abort(404, description=msg)
+        abort(400, description=msg)
 
 
 @abilities_moves_items_bp.route("/move-learn-method/", defaults={"id_or_name": None})
@@ -414,6 +424,7 @@ def get_move_learn_method(id_or_name):
 
             return render_template("move_learn_method_detail.html", data=data)
         except ValueError as e:
-            return str(e), 400  # Return the error message with a 400 Bad Request status
-
-
+            msg = str(e)
+            if "not found" in msg.lower():
+                abort(404, description=msg)
+            abort(400, description=msg)

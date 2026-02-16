@@ -41,12 +41,15 @@ def get_location(id_or_name):
 
             return render_template("location_detail.html", data=data)
         except ValueError as e:
-            return str(e), 400  # Return the error message with a 400 Bad Request status
+            msg = str(e)
+            if "not found" in msg.lower():
+                abort(404, description=msg)
+            abort(400, description=msg)
         except HTTPError as e:
             if e.response.status_code == 404:
                 abort(404, description=f"Location '{id_or_name}' not found")
             else:
-                return str(e), 500  # Internal Server Error for other issues
+                abort(500, description=str(e))
 
 
 @locations_regions_bp.route("/location-area/<id_or_name>")
@@ -68,7 +71,10 @@ def get_location_area(id_or_name):
             "location_area_detail.html", data=data, pokemon_list=pokemon_list
         )
     except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
+        msg = str(e)
+        if "not found" in msg.lower():
+            abort(404, description=msg)
+        abort(400, description=msg)
 
 
 @locations_regions_bp.route("/region/", defaults={"id_or_name": None})
@@ -102,4 +108,7 @@ def get_region(id_or_name):
                 "region_detail.html", data=data, summary_html=summary_html
             )
         except ValueError as e:
-            return str(e), 400  # Return the error message with a 400 Bad Request status
+            msg = str(e)
+            if "not found" in msg.lower():
+                abort(404, description=msg)
+            abort(400, description=msg)

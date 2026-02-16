@@ -243,7 +243,7 @@ def create_pokemon_list(data):
 def fetch_all_results(url):
     results = []
     while url:
-        response = requests.get(url)
+        response = requests.get(url, timeout=Config.HTTP_TIMEOUT)
         data = response.json()
         results.extend(data["results"])
         url = data.get("next")  # Get the next page URL, if it exists

@@ -1,5 +1,6 @@
 import requests
 from flask import current_app
+from pokedex.utils import Config
 from .utils import get_openai_client, format_pokemon_summary
 
 
@@ -15,7 +16,7 @@ def generate_type_summary(type_name, custom_instructions="", max_tokens=2000):
 
         try:
             # Fetch from type endpoint
-            type_response = requests.get(f"https://pokeapi.co/api/v2/type/{type_name}")
+            type_response = requests.get(f"https://pokeapi.co/api/v2/type/{type_name}", timeout=Config.HTTP_TIMEOUT)
             if type_response.status_code == 200:
                 type_data = type_response.json()
 

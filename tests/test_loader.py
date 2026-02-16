@@ -2,12 +2,7 @@
 Unit tests for pokedex.loaders module.
 
 Tests each loader function to ensure it delegates correctly to
-APIResource.fetch_data with the right endpoint name.
-
-Known bugs documented here (will be fixed in Phase 1):
-  - ability() uses endpoint "abilities" instead of "ability"
-  - Several loaders use APIResource() constructor instead of fetch_data()
-  - pokemon() has unreachable code after return
+APIResource.fetch_data with the right endpoint name and returns dicts.
 """
 
 import pytest
@@ -22,7 +17,7 @@ from pokedex.loaders import sprite
 
 @pytest.fixture
 def mock_pokemon_data():
-    """Mock data for a Pokémon."""
+    """Mock data for a Pokemon."""
     return {
         "name": "bulbasaur",
         "id": 1,
@@ -34,142 +29,75 @@ def mock_pokemon_data():
 
 
 # ---------------------------------------------------------------------------
-# Loaders that use fetch_data correctly (return dicts)
+# All loaders should use fetch_data and return dicts
 # ---------------------------------------------------------------------------
 
-class TestWorkingLoaders:
-    """Loaders that correctly use APIResource.fetch_data and return dicts."""
+class TestLoadersFetchData:
+    """Every loader should call APIResource.fetch_data with the correct
+    endpoint and return a dict."""
 
-    def test_pokemon_detail(self, mock_pokemon_data):
+    @pytest.mark.parametrize("loader_fn,endpoint,arg", [
+        (loaders.pokemon_detail, "pokemon", "bulbasaur"),
+        (loaders.berry, "berry", "cheri"),
+        (loaders.berry_firmness, "berry-firmness", "very-soft"),
+        (loaders.berry_flavor, "berry-flavor", "spicy"),
+        (loaders.contest_type, "contest-type", "cool"),
+        (loaders.contest_effect, "contest-effect", 1),
+        (loaders.super_contest_effect, "super-contest-effect", 1),
+        (loaders.encounter_method, "encounter-method", "walk"),
+        (loaders.encounter_condition, "encounter-condition", "swarm"),
+        (loaders.encounter_condition_value, "encounter-condition-value", "swarm-yes"),
+        (loaders.evolution_chain, "evolution-chain", 1),
+        (loaders.evolution_trigger, "evolution-trigger", "level-up"),
+        (loaders.generation, "generation", "generation-i"),
+        (loaders.pokedex, "pokedex", "national"),
+        (loaders.version, "version", "red"),
+        (loaders.version_group, "version-group", "red-blue"),
+        (loaders.item, "item", "master-ball"),
+        (loaders.item_attribute, "item-attribute", "countable"),
+        (loaders.item_category, "item-category", "stat-boosts"),
+        (loaders.item_fling_effect, "item-fling-effect", 1),
+        (loaders.item_pocket, "item-pocket", "misc"),
+        (loaders.machine, "machine", 1),
+        (loaders.move, "move", "tackle"),
+        (loaders.move_ailment, "move-ailment", "paralysis"),
+        (loaders.move_battle_style, "move-battle-style", "attack"),
+        (loaders.move_category, "move-category", "damage"),
+        (loaders.move_damage_class, "move-damage-class", "physical"),
+        (loaders.move_learn_method, "move-learn-method", "level-up"),
+        (loaders.move_target, "move-target", "selected-pokemon"),
+        (loaders.location, "location", 1),
+        (loaders.location_area, "location-area", 1),
+        (loaders.region, "region", "kanto"),
+        # Previously buggy loaders -- now fixed:
+        (loaders.ability, "ability", "stench"),
+        (loaders.pal_park_area, "pal-park-area", "forest"),
+        (loaders.characteristic, "characteristic", 1),
+        (loaders.egg_group, "egg-group", "monster"),
+        (loaders.gender, "gender", "female"),
+        (loaders.growth_rate, "growth-rate", "slow"),
+        (loaders.nature, "nature", "hardy"),
+        (loaders.pokeathlon_stat, "pokeathlon-stat", "speed"),
+        (loaders.pokemon, "pokemon", "bulbasaur"),
+        (loaders.pokemon_color, "pokemon-color", "black"),
+        (loaders.pokemon_form, "pokemon-form", "bulbasaur"),
+        (loaders.pokemon_habitat, "pokemon-habitat", "cave"),
+        (loaders.pokemon_shape, "pokemon-shape", "ball"),
+        (loaders.pokemon_species, "pokemon-species", "bulbasaur"),
+        (loaders.stat, "stat", "hp"),
+        (loaders.type_, "type", "fire"),
+        (loaders.language, "language", "en"),
+    ])
+    def test_loader_calls_fetch_data(self, loader_fn, endpoint, arg):
+        """Each loader should call fetch_data with the correct endpoint."""
+        expected = {"name": str(arg), "id": 1}
         with patch("pokedex.interface.APIResource.fetch_data") as mock_fetch:
-            mock_fetch.return_value = mock_pokemon_data
-            result = loaders.pokemon_detail("bulbasaur")
+            mock_fetch.return_value = expected
+            result = loader_fn(arg)
 
-        mock_fetch.assert_called_once_with("pokemon", "bulbasaur")
-        assert result["name"] == "bulbasaur"
-        assert result["id"] == 1
-
-    def test_berry(self):
-        berry_data = {"name": "cheri", "id": 1, "growth_time": 3}
-        with patch("pokedex.interface.APIResource.fetch_data") as mock_fetch:
-            mock_fetch.return_value = berry_data
-            result = loaders.berry("cheri")
-
-        mock_fetch.assert_called_once_with("berry", "cheri")
-        assert result["name"] == "cheri"
-
-    def test_move(self):
-        move_data = {"name": "tackle", "id": 1, "power": 40}
-        with patch("pokedex.interface.APIResource.fetch_data") as mock_fetch:
-            mock_fetch.return_value = move_data
-            result = loaders.move("tackle")
-
-        mock_fetch.assert_called_once_with("move", "tackle")
-        assert result["name"] == "tackle"
-
-    def test_item(self):
-        item_data = {"name": "master-ball", "id": 1}
-        with patch("pokedex.interface.APIResource.fetch_data") as mock_fetch:
-            mock_fetch.return_value = item_data
-            result = loaders.item("master-ball")
-
-        mock_fetch.assert_called_once_with("item", "master-ball")
-        assert result["name"] == "master-ball"
-
-    def test_region(self):
-        region_data = {"name": "kanto", "id": 1}
-        with patch("pokedex.interface.APIResource.fetch_data") as mock_fetch:
-            mock_fetch.return_value = region_data
-            result = loaders.region("kanto")
-
-        mock_fetch.assert_called_once_with("region", "kanto")
-        assert result["name"] == "kanto"
-
-    def test_evolution_chain(self):
-        chain_data = {"id": 1, "chain": {"species": {"name": "bulbasaur"}}}
-        with patch("pokedex.interface.APIResource.fetch_data") as mock_fetch:
-            mock_fetch.return_value = chain_data
-            result = loaders.evolution_chain(1)
-
-        mock_fetch.assert_called_once_with("evolution-chain", 1)
-        assert result["id"] == 1
-
-    def test_generation(self):
-        gen_data = {"name": "generation-i", "id": 1}
-        with patch("pokedex.interface.APIResource.fetch_data") as mock_fetch:
-            mock_fetch.return_value = gen_data
-            result = loaders.generation("generation-i")
-
-        mock_fetch.assert_called_once_with("generation", "generation-i")
-
-    def test_pokedex(self):
-        dex_data = {"name": "national", "id": 1}
-        with patch("pokedex.interface.APIResource.fetch_data") as mock_fetch:
-            mock_fetch.return_value = dex_data
-            result = loaders.pokedex("national")
-
-        mock_fetch.assert_called_once_with("pokedex", "national")
-
-    def test_version(self):
-        ver_data = {"name": "red", "id": 1}
-        with patch("pokedex.interface.APIResource.fetch_data") as mock_fetch:
-            mock_fetch.return_value = ver_data
-            result = loaders.version("red")
-
-        mock_fetch.assert_called_once_with("version", "red")
-
-
-# ---------------------------------------------------------------------------
-# Known bug: ability() uses wrong endpoint name
-# ---------------------------------------------------------------------------
-
-class TestAbilityBug:
-    """Documents the known bug where ability() uses 'abilities' instead of 'ability'."""
-
-    def test_ability_uses_wrong_endpoint(self):
-        """BUG: ability() passes 'abilities' to fetch_data, not 'ability'.
-
-        This test documents the current (broken) behavior. When we fix this
-        in Phase 1b, this test should be updated to assert 'ability' instead.
-        """
-        with patch("pokedex.interface.APIResource.fetch_data") as mock_fetch:
-            mock_fetch.return_value = {"name": "stench", "id": 1}
-            loaders.ability("stench")
-
-        # Current (incorrect) behavior -- uses "abilities" not "ability"
-        mock_fetch.assert_called_once_with("abilities", "stench")
-
-
-# ---------------------------------------------------------------------------
-# Known bug: loaders that return APIResource objects instead of dicts
-# ---------------------------------------------------------------------------
-
-class TestConstructorBug:
-    """Documents loaders that use APIResource() constructor instead of fetch_data().
-
-    These return APIResource objects (with lazy loading and attribute access)
-    instead of plain dicts. This is inconsistent with the rest of the loaders
-    and with how routes expect to use the results.
-
-    When fixed in Phase 1b, these tests should be updated to verify
-    they return dicts via fetch_data() instead.
-    """
-
-    def test_pokemon_loader_returns_object_not_dict(self):
-        """BUG: pokemon() uses APIResource() constructor, returns an object."""
-        with patch("pokedex.interface.APIResource.__init__", return_value=None) as mock_init:
-            with patch("pokedex.interface.name_id_convert", return_value=("bulbasaur", 1)):
-                result = loaders.pokemon("bulbasaur")
-
-        # It calls the constructor, not fetch_data
-        assert not isinstance(result, dict)
-
-    def test_pal_park_area_returns_object(self):
-        """BUG: pal_park_area() uses APIResource() constructor."""
-        with patch("pokedex.interface.APIResource.__init__", return_value=None):
-            with patch("pokedex.interface.name_id_convert", return_value=("forest", 1)):
-                result = loaders.pal_park_area("forest")
-        assert not isinstance(result, dict)
+        mock_fetch.assert_called_once_with(endpoint, arg)
+        assert isinstance(result, dict)
+        assert result == expected
 
 
 # ---------------------------------------------------------------------------

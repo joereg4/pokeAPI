@@ -17,7 +17,8 @@ _session.mount(
 
 
 def _http_get(url, **params):
-    response = _session.get(url, params=params)
+    from .utils import Config
+    response = _session.get(url, params=params, timeout=Config.HTTP_TIMEOUT)
     response.raise_for_status()
     return response
 

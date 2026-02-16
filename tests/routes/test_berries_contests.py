@@ -77,7 +77,7 @@ class TestBerryRoutes:
 
     def test_berry_not_found(self, client):
         response = client.get("/berry/nonexistent")
-        assert response.status_code in (400, 404)
+        assert response.status_code == 404
 
 
 class TestBerryFirmnessRoutes:
@@ -87,7 +87,7 @@ class TestBerryFirmnessRoutes:
 
     def test_firmness_not_found(self, client):
         response = client.get("/berry-firmness/nonexistent")
-        assert response.status_code in (400, 404)
+        assert response.status_code == 404
 
 
 class TestBerryFlavorRoutes:
@@ -97,7 +97,7 @@ class TestBerryFlavorRoutes:
 
     def test_flavor_not_found(self, client):
         response = client.get("/berry-flavor/nonexistent")
-        assert response.status_code in (400, 404)
+        assert response.status_code == 404
 
 
 class TestContestRoutes:

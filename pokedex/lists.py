@@ -5,6 +5,7 @@ from .interface import APIResource
 from .sprite import get_sprite_url
 from .api import get_sprite
 from .common import get_species_id_from_url
+from .utils import Config
 import logging
 import requests
 
@@ -15,7 +16,7 @@ def get_fallback_image(pokedex):
             url = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{pokedex}.png"
 
             # Perform a quick request to check if the image URL exists (status code 200)
-            response = requests.get(url)
+            response = requests.get(url, timeout=Config.HTTP_TIMEOUT)
             if response.status_code == 200:
                 return url
             else:

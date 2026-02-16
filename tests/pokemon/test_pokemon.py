@@ -284,7 +284,7 @@ def test_type_detail(client, mock_api):
 
 def test_type_not_found(client, mock_api):
     response = client.get("/type/nonexistent")
-    assert response.status_code in (400, 404)
+    assert response.status_code == 404
 
 
 # ---------------------------------------------------------------------------

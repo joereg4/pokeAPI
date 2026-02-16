@@ -16,12 +16,12 @@ BASE_URL = Config.BASE_URL
 utilities_bp = Blueprint("utilities", __name__, template_folder="templates")
 
 
-@utilities_bp.errorhandler(ValueError)
-def handle_value_error(error):
-    # Log the error if needed
-    logging.error(str(error))
-    # Return a custom error message and a 400 Bad Request status code
-    return str(error), 400
+def _handle_not_found(e):
+    """Map ValueError to 404 when the message indicates a missing resource."""
+    msg = str(e)
+    if "not found" in msg.lower():
+        abort(404, description=msg)
+    abort(400, description=msg)
 
 
 @utilities_bp.route("/<api_endpoint>/<id_or_name>")
@@ -50,12 +50,7 @@ def get_endpoint_data(api_endpoint, id_or_name):
             logging.warning(f"No such endpoint: {api_endpoint}")
             abort(404, description=f"No such endpoint: {api_endpoint}")
     except ValueError as e:
-        # API layer raises ValueError for 404; map "not found" to 404 for UX
-        msg = str(e)
-        if "not found" in msg.lower():
-            abort(404, description=msg)
-        logging.error(f"ValueError: {msg}")
-        abort(400, description=msg)
+        _handle_not_found(e)
     except AttributeError:
         # Handle AttributeError in case the function is not found in the current module
         logging.error(f"Function for endpoint '{api_endpoint}' not found.")
@@ -72,11 +67,10 @@ def get_endpoint_data(api_endpoint, id_or_name):
 @utilities_bp.route("/encounter-method/<id_or_name>")
 @cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_encounter_method(id_or_name):
-    # Check if id_or_name can be converted to an integer
     try:
         id_or_name = int(id_or_name)
     except ValueError:
-        pass  # if the conversion fails, it remains a string
+        pass
     try:
         data = pokedex.APIResource.fetch_data("encounter-method", id_or_name)
 
@@ -85,77 +79,51 @@ def get_encounter_method(id_or_name):
 
         return render_template("encounter_method_detail.html", data=data)
     except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
+        _handle_not_found(e)
 
 
 @utilities_bp.route("/version/<id_or_name>")
 @cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_version(id_or_name):
-    if id_or_name is None:
-        # No id_or_name provided, render the versions list
-        url = f"{BASE_URL}/version"
-        data = fetch_all_results(url)
-        return render_template("versions.html", data=data)
-    else:
-        # id_or_name is provided, render the version detail
-        try:
-            id_or_name = int(id_or_name)
-        except ValueError:
-            pass  # if the conversion fails, it remains a string
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass
 
-        try:
-            data = pokedex.APIResource.fetch_data("version", id_or_name)
+    try:
+        data = pokedex.APIResource.fetch_data("version", id_or_name)
 
-            if "name" not in data:
-                abort(404, description=f"Version '{id_or_name}' not found")
+        if "name" not in data:
+            abort(404, description=f"Version '{id_or_name}' not found")
 
-            # Fetch Summary
-            summary = get_summary(data["name"], "version")
+        summary = get_summary(data["name"], "version")
+        summary_html = Markup(markdown.markdown(summary)) if summary else None
 
-            # Convert the markdown summary to HTML
-            if summary:
-                summary_html = Markup(markdown.markdown(summary))
-            else:
-                summary_html = None
-
-            return render_template(
-                "version_detail.html", data=data, summary_html=summary_html
-            )
-        except ValueError as e:
-            return str(e), 400  # Return the error message with a 400 Bad Request status
+        return render_template(
+            "version_detail.html", data=data, summary_html=summary_html
+        )
+    except ValueError as e:
+        _handle_not_found(e)
 
 
 @utilities_bp.route("/version-group/<id_or_name>")
 @cache.cached(timeout=Config.CACHE_TIMEOUT)
 def get_version_group(id_or_name):
-    if id_or_name is None:
-        # No id_or_name provided, render the version groups list
-        url = f"{BASE_URL}/version-group"
-        data = fetch_all_results(url)
-        return render_template("version_groups.html", data=data)
-    else:
-        # id_or_name is provided, render the version group detail
-        try:
-            id_or_name = int(id_or_name)
-        except ValueError:
-            pass  # if the conversion fails, it remains a string
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass
 
-        try:
-            data = pokedex.APIResource.fetch_data("version-group", id_or_name)
-            if "name" not in data:
-                abort(404, description=f"Version Group '{id_or_name}' not found")
+    try:
+        data = pokedex.APIResource.fetch_data("version-group", id_or_name)
+        if "name" not in data:
+            abort(404, description=f"Version Group '{id_or_name}' not found")
 
-            # Fetch Summary
-            summary = get_summary(data["name"], "version-group")
+        summary = get_summary(data["name"], "version-group")
+        summary_html = Markup(markdown.markdown(summary)) if summary else None
 
-            # Convert the markdown summary to HTML
-            if summary:
-                summary_html = Markup(markdown.markdown(summary))
-            else:
-                summary_html = None
-
-            return render_template(
-                "version_group_detail.html", data=data, summary_html=summary_html
-            )
-        except ValueError as e:
-            return str(e), 400  # Return the error message with a 400 Bad Request status
+        return render_template(
+            "version_group_detail.html", data=data, summary_html=summary_html
+        )
+    except ValueError as e:
+        _handle_not_found(e)
