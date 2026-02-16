@@ -34,18 +34,21 @@ Usage:
     artwork_id = resolve_species_id_from_data(pokemon_dict)
 """
 
+from __future__ import annotations
+
 import logging
+from typing import Any, Iterable, Optional, Union
 
 from .redis_client import redis_client
 
 logger = logging.getLogger(__name__)
 
 # Form variants have pokemon IDs >= 10000; IDs below this are species IDs.
-_FORM_ID_THRESHOLD = 10000
+_FORM_ID_THRESHOLD: int = 10000
 
 # Redis key prefix and TTL for species_id mappings.
-_REDIS_KEY_PREFIX = "species_id:"
-_REDIS_TTL = 30 * 24 * 60 * 60  # 30 days
+_REDIS_KEY_PREFIX: str = "species_id:"
+_REDIS_TTL: int = 30 * 24 * 60 * 60  # 30 days
 
 
 # ---------------------------------------------------------------------------
@@ -53,7 +56,7 @@ _REDIS_TTL = 30 * 24 * 60 * 60  # 30 days
 # ---------------------------------------------------------------------------
 
 
-def resolve_species_id(pokemon_id):
+def resolve_species_id(pokemon_id: Union[int, str]) -> Union[int, str]:
     """Resolve a Pokemon ID to its species (National Dex) ID.
 
     - Names pass through unchanged (string input).
@@ -90,7 +93,7 @@ def resolve_species_id(pokemon_id):
     return numeric_id
 
 
-def resolve_species_id_from_data(pokemon_data):
+def resolve_species_id_from_data(pokemon_data: dict[str, Any]) -> Optional[int]:
     """Extract species ID from an already-fetched Pokemon dict.
 
     More efficient than resolve_species_id() when you already have the data.
@@ -123,7 +126,7 @@ def resolve_species_id_from_data(pokemon_data):
     return pokemon_data.get("id")
 
 
-def warm_cache(form_ids):
+def warm_cache(form_ids: Iterable[int]) -> dict[int, int]:
     """Pre-warm the Redis cache for a list of form Pokemon IDs.
 
     Intended to be called by deployment scripts (Phase 4c).
@@ -133,9 +136,9 @@ def warm_cache(form_ids):
                   and cache.
 
     Returns:
-        dict: {pokemon_id: species_id} for all resolved mappings.
+        Mapping of {pokemon_id: species_id} for all resolved mappings.
     """
-    results = {}
+    results: dict[int, int] = {}
     for pokemon_id in form_ids:
         species_id = resolve_species_id(pokemon_id)
         if species_id != pokemon_id:
@@ -151,7 +154,7 @@ def warm_cache(form_ids):
 # ---------------------------------------------------------------------------
 
 
-def _read_cache(numeric_id):
+def _read_cache(numeric_id: int) -> Optional[int]:
     """Read a cached species_id from Redis. Returns int or None."""
     redis_key = f"{_REDIS_KEY_PREFIX}{numeric_id}"
     try:
@@ -164,7 +167,7 @@ def _read_cache(numeric_id):
     return None
 
 
-def _write_cache(numeric_id, species_id):
+def _write_cache(numeric_id: int, species_id: int) -> None:
     """Write a species_id mapping to Redis."""
     redis_key = f"{_REDIS_KEY_PREFIX}{numeric_id}"
     try:
@@ -174,7 +177,7 @@ def _write_cache(numeric_id, species_id):
         logger.debug("Redis write failed for species_id cache: %s", e)
 
 
-def _fetch_species_id(pokemon_id):
+def _fetch_species_id(pokemon_id: int) -> Optional[int]:
     """Fetch species ID from the API for a form Pokemon.
 
     Makes a single API call to get the Pokemon resource, then extracts

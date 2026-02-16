@@ -23,8 +23,12 @@ Usage:
         return render_template("pokemon_detail.html", data=data)
 """
 
+from __future__ import annotations
+
 import logging
 from functools import wraps
+from typing import Any, Callable
+
 from flask import abort
 from requests.exceptions import HTTPError
 from werkzeug.exceptions import HTTPException
@@ -32,7 +36,7 @@ from werkzeug.exceptions import HTTPException
 logger = logging.getLogger(__name__)
 
 
-def handle_api_errors(resource_name):
+def handle_api_errors(resource_name: str) -> Callable[..., Any]:
     """Decorator that catches common API errors and returns HTTP responses.
 
     Handles three exception types consistently:
@@ -56,9 +60,9 @@ def handle_api_errors(resource_name):
         resource_name: Human-readable name for error messages
                        (e.g. "Pokemon", "Move", "Ability").
     """
-    def decorator(f):
+    def decorator(f: Callable[..., Any]) -> Callable[..., Any]:
         @wraps(f)
-        def wrapped(*args, **kwargs):
+        def wrapped(*args: Any, **kwargs: Any) -> Any:
             try:
                 return f(*args, **kwargs)
             except HTTPException:

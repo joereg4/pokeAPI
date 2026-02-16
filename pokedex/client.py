@@ -25,9 +25,14 @@ Usage:
     response = client.fetch_url("https://pokeapi.co/api/v2/pokemon/25")
 """
 
-import logging
+from __future__ import annotations
 
-from .api import _http_get, get_data, get_sprite
+import logging
+from typing import Any, Optional, Union
+
+import requests
+
+from .api import SpriteData, _http_get, get_data, get_sprite
 from .common import api_url_build
 
 logger = logging.getLogger(__name__)
@@ -48,7 +53,12 @@ class PokeAPIClient:
 
     # -- Single resource --------------------------------------------------
 
-    def fetch(self, endpoint, id_or_name=None, force_refresh=False):
+    def fetch(
+        self,
+        endpoint: str,
+        id_or_name: Optional[Union[int, str]] = None,
+        force_refresh: bool = False,
+    ) -> dict[str, Any]:
         """Fetch a single API resource by endpoint and identifier.
 
         Equivalent to ``APIResource.fetch_data()`` but without the OOP wrapper.
@@ -74,7 +84,9 @@ class PokeAPIClient:
 
     # -- Sprites -----------------------------------------------------------
 
-    def fetch_sprite(self, sprite_type, sprite_id, **kwargs):
+    def fetch_sprite(
+        self, sprite_type: str, sprite_id: Union[int, str], **kwargs: Any
+    ) -> Optional[SpriteData]:
         """Fetch sprite image data for a Pokemon or other resource.
 
         Returns a dict with ``img_data`` (bytes) and ``path`` (str) on success,
@@ -92,7 +104,12 @@ class PokeAPIClient:
 
     # -- Paginated lists ---------------------------------------------------
 
-    def fetch_list(self, endpoint, limit=None, offset=None):
+    def fetch_list(
+        self,
+        endpoint: str,
+        limit: Optional[int] = None,
+        offset: Optional[int] = None,
+    ) -> dict[str, Any]:
         """Fetch a paginated list from the API.
 
         This is the capability that was missing from the original api.py layer.
@@ -108,7 +125,7 @@ class PokeAPIClient:
             Dict with "count", "next", "previous", and "results" keys.
         """
         url = api_url_build(endpoint)
-        params = {}
+        params: dict[str, int] = {}
         if limit is not None:
             params["limit"] = limit
         if offset is not None:
@@ -117,7 +134,7 @@ class PokeAPIClient:
         response = _http_get(url, **params)
         return response.json()
 
-    def fetch_count(self, endpoint):
+    def fetch_count(self, endpoint: str) -> int:
         """Fetch just the total count for an endpoint.
 
         Lightweight call that requests only 1 result to minimize payload.
@@ -135,7 +152,7 @@ class PokeAPIClient:
 
     # -- Direct URL access -------------------------------------------------
 
-    def fetch_url(self, url, **params):
+    def fetch_url(self, url: str, **params: Any) -> requests.Response:
         """Fetch any URL using the shared HTTP session.
 
         Replaces direct requests.get() calls scattered across routes and
@@ -154,7 +171,7 @@ class PokeAPIClient:
         """
         return _http_get(url, **params)
 
-    def fetch_url_json(self, url, **params):
+    def fetch_url_json(self, url: str, **params: Any) -> dict[str, Any]:
         """Fetch a URL and return parsed JSON.
 
         Convenience wrapper around fetch_url() for the common case
@@ -172,7 +189,7 @@ class PokeAPIClient:
 
     # -- Pagination helpers ------------------------------------------------
 
-    def fetch_all_pages(self, url):
+    def fetch_all_pages(self, url: str) -> list[dict[str, Any]]:
         """Follow pagination links to collect all results.
 
         Replaces pokedex.helper.fetch_all_results() and similar patterns
@@ -184,12 +201,13 @@ class PokeAPIClient:
         Returns:
             List of all result dicts across all pages.
         """
-        all_results = []
-        while url:
-            response = _http_get(url)
+        all_results: list[dict[str, Any]] = []
+        current_url: Optional[str] = url
+        while current_url:
+            response = _http_get(current_url)
             data = response.json()
             all_results.extend(data.get("results", []))
-            url = data.get("next")
+            current_url = data.get("next")
         return all_results
 
 
