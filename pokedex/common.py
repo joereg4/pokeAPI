@@ -1,18 +1,22 @@
 # common.py
 # -*- coding: utf-8 -*-
 
+from __future__ import annotations
+
 import os
-import logging  # Add this import
+import logging
+from typing import Any, Optional, Union
 
 from .utils import Config
 
-BASE_URL = Config.BASE_URL
-SPRITE_URL = Config.SPRITE_URL
-ENDPOINTS = Config.ENDPOINTS
-SPRITE_EXT = Config.SPRITE_EXT
+BASE_URL: str = Config.BASE_URL
+SPRITE_URL: str = Config.SPRITE_URL
+ENDPOINTS: list[str] = Config.ENDPOINTS
+SPRITE_EXT: str = Config.SPRITE_EXT
 
 
-def get_chain(data, name):
+def get_chain(data: dict[str, Any], name: str) -> list[dict[str, Any]]:
+    """Walk an evolution chain and return a flat list of species dicts."""
     logging.debug(f"base_species: {name}")
 
     # Recursive function to find and return the full evolution chain with details
@@ -77,21 +81,26 @@ def get_chain(data, name):
     return traverse_chain(data["chain"])
 
 
-def get_species_id_from_url(url):
+def get_species_id_from_url(url: str) -> int:
+    """Extract the numeric species ID from a PokéAPI species URL."""
     return int(url.rstrip("/").split("/")[-1])
 
 
-def validate(endpoint, resource_id=None):
+def validate(endpoint: str, resource_id: Optional[int] = None) -> None:
+    """Validate endpoint name and optional numeric resource ID."""
     if endpoint not in ENDPOINTS:
         raise ValueError("Unknown API endpoint '{}'".format(endpoint))
 
     if resource_id is not None and not isinstance(resource_id, int):
         raise ValueError("Bad id '{}'".format(resource_id))
 
-    return None
 
-
-def api_url_build(endpoint, resource_id=None, subresource=None):
+def api_url_build(
+    endpoint: str,
+    resource_id: Optional[Union[int, str]] = None,
+    subresource: Optional[str] = None,
+) -> str:
+    """Build a full PokéAPI URL from endpoint components."""
     validate(endpoint, resource_id)
     if resource_id is not None:
         if subresource is not None:
@@ -102,7 +111,12 @@ def api_url_build(endpoint, resource_id=None, subresource=None):
     return "/".join([BASE_URL, endpoint, ""])
 
 
-def cache_uri_build(endpoint, resource_id=None, subresource=None):
+def cache_uri_build(
+    endpoint: str,
+    resource_id: Optional[Union[int, str]] = None,
+    subresource: Optional[str] = None,
+) -> str:
+    """Build a cache key URI from endpoint components."""
     validate(endpoint, resource_id)
 
     if resource_id is not None:
@@ -114,7 +128,10 @@ def cache_uri_build(endpoint, resource_id=None, subresource=None):
     return "/".join([endpoint, ""])
 
 
-def sprite_url_build(sprite_type, sprite_id, **kwargs):
+def sprite_url_build(
+    sprite_type: str, sprite_id: Union[int, str], **kwargs: Any
+) -> str:
+    """Build the upstream sprite URL for a given resource."""
     options = parse_sprite_options(sprite_type, **kwargs)
 
     filename = ".".join([str(sprite_id), SPRITE_EXT])
@@ -123,9 +140,10 @@ def sprite_url_build(sprite_type, sprite_id, **kwargs):
     return url
 
 
-def sprite_filepath_build(sprite_type, sprite_id, **kwargs):
-    """returns the filepath of the sprite *relative to SPRITE_CACHE*"""
-
+def sprite_filepath_build(
+    sprite_type: str, sprite_id: Union[int, str], **kwargs: Any
+) -> str:
+    """Build the local sprite filepath *relative to SPRITE_CACHE*."""
     options = parse_sprite_options(sprite_type, **kwargs)
 
     filename = ".".join([str(sprite_id), SPRITE_EXT])
@@ -134,8 +152,9 @@ def sprite_filepath_build(sprite_type, sprite_id, **kwargs):
     return filepath
 
 
-def parse_sprite_options(sprite_type, **kwargs):
-    options = []
+def parse_sprite_options(sprite_type: str, **kwargs: Any) -> list[str]:
+    """Convert sprite keyword arguments into URL path segments."""
+    options: list[str] = []
 
     if sprite_type == "pokemon":
         if kwargs.get("model", False):

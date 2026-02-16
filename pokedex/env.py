@@ -1,9 +1,13 @@
+from __future__ import annotations
+
 import os
+from typing import Optional
 
 from dotenv import load_dotenv
 
 
-def load_environment():
+def load_environment() -> None:
+    """Load .env and .flaskenv files and set sensible defaults."""
     load_dotenv(override=True)
     load_dotenv(".flaskenv", override=True)
 
@@ -17,7 +21,8 @@ def load_environment():
         os.environ["REDIS_URL"] = "redis://localhost:6379/0"
 
 
-def get_env_variable(var_name, default=None):
+def get_env_variable(var_name: str, default: Optional[str] = None) -> Optional[str]:
+    """Read an environment variable, optionally storing and returning a default."""
     value = os.environ.get(var_name)
     if value is None:
         if default is not None:

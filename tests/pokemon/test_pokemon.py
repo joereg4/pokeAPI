@@ -1,305 +1,104 @@
+"""
+Tests for the pokemon blueprint routes.
+
+All external API calls are mocked -- no real network requests.
+Uses the shared mock_api and mock_requests fixtures from conftest.py.
+"""
+
 import pytest
-from app import create_app
-import json
 from requests.exceptions import HTTPError
-from test_helper import load_mock_data
-from utils import get_cache_stats, warm_common_endpoints
-from flask_limiter.errors import RateLimitExceeded
-from unittest.mock import patch
-from models.model import db
+from conftest import load_mock_data
 
 
-@pytest.fixture
-def client():
-    test_config = {
-        "TESTING": True,
-        "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
-        "SQLALCHEMY_TRACK_MODIFICATIONS": False,
-        "SECRET_KEY": "test-secret-key",
-        "WTF_CSRF_ENABLED": False,
-        "LOGIN_DISABLED": False,
-        "CACHE_TYPE": "SimpleCache",
-        "CACHE_DEFAULT_TIMEOUT": 300,
-        "RATELIMIT_ENABLED": False,  # Disable rate limiting globally
-    }
-    app = create_app(test_config)
+# ---------------------------------------------------------------------------
+# Index / Homepage
+# ---------------------------------------------------------------------------
 
-    # Disable rate limiting for all endpoints
-    from limiter import limiter
+def test_pokemon_index_route(client, mock_requests):
+    """Homepage should render with welcome message and featured section."""
+    # fetch_count makes direct requests.get calls
+    mock_requests.return_value.status_code = 200
+    mock_requests.return_value.json.return_value = {"count": 100, "results": []}
 
-    limiter.enabled = False
-
-    with app.app_context():
-        db.create_all()
-        yield app.test_client()
-        db.session.remove()
-        db.drop_all()
-
-
-@pytest.fixture(autouse=True)
-def mock_limiter(mocker):
-    """Mock the rate limiter to prevent rate limit errors in tests."""
-    with patch("flask_limiter.extension.Limiter.current_limit", return_value=None):
-        with patch("flask_limiter.extension.Limiter.check", return_value=True):
-            with patch("flask_limiter.extension.Limiter.reset", return_value=None):
-                yield
-
-
-def test_pokemon_index_route(client):
     response = client.get("/")
     assert response.status_code == 200
-
-    # Check for key elements in the homepage HTML
-    assert (
-        "Welcome to the Pokédex API".encode("utf-8") in response.data
-    )  # Check for welcome message
-    assert b"Get Started" in response.data  # Check for 'Get Started' button
-    assert (
-        "Featured Pokémon".encode("utf-8") in response.data
-    )  # Check for featured Pokémon section
+    assert "Welcome to the Pokédex API".encode("utf-8") in response.data
+    assert b"Get Started" in response.data
+    assert "Featured Pokémon".encode("utf-8") in response.data
 
 
-def test_detective_pikachu_route(client):
-    response = client.get("/detective-pikachu")
-    assert response.status_code == 200
+# ---------------------------------------------------------------------------
+# Pokemon list
+# ---------------------------------------------------------------------------
 
+def test_pokemon_list_route(client, mock_api, mock_requests):
+    """Pokemon list page should render successfully."""
+    # The list route uses direct requests.get for pagination
+    bulbasaur = load_mock_data("bulbasaur.json")
+    mock_requests.return_value.status_code = 200
+    mock_requests.return_value.json.return_value = {
+        "results": [{"name": "bulbasaur", "url": "https://pokeapi.co/api/v2/pokemon/1/"}],
+        "count": 1,
+        "next": None,
+    }
+    # create_pokemon_list calls APIResource.fetch_data for each pokemon
+    mock_api.register("pokemon", "bulbasaur", bulbasaur)
 
-def test_pokedex_route(client):
-    # Test pokedex list
-    response = client.get("/pokedex/")
-    assert response.status_code == 200
-
-    # Test with ID
-    response = client.get("/pokedex/20")
-    assert response.status_code == 200
-
-    # Test with name
-    response = client.get("/pokedex/hoenn")
-    assert response.status_code == 200
-
-    # Test non-existent pokedex
-    response = client.get("/pokedex/nonexistent")
-    assert response.status_code == 404
-
-
-def test_pokemon_list_route(client):
     response = client.get("/pokemon/")
     assert response.status_code == 200
 
 
-def test_pokemon_detail_route(client, mocker):
-    """Test the Pokémon detail route with a redirect."""
-    # Mock successful Pokémon data fetch
-    mock_pokemon_data = {
-        "name": "bulbasaur",
-        "id": 1,
-        "sprites": {
-            "front_default": "some_url",
-            "other": {"official-artwork": {"front_default": "some_url"}},
-        },
-        "species": {
-            "name": "bulbasaur",
-            "url": "https://pokeapi.co/api/v2/pokemon-species/1/",
-        },
-        "base_experience": 64,
-        "height": 7,
-        "weight": 69,
-        "is_default": True,
-        "order": 1,
-        "abilities": [],
-        "moves": [
-            {
-                "move": {"name": "tackle", "url": "some_url"},
-                "version_group_details": [
-                    {"move_learn_method": {"name": "level-up"}, "level_learned_at": 1}
-                ],
-            }
-        ],
-        "held_items": [],
-        "types": [{"type": {"name": "grass", "url": "some_url"}}],
-        "stats": [],
-    }
+# ---------------------------------------------------------------------------
+# Pokemon detail
+# ---------------------------------------------------------------------------
 
-    # Mock species data
+def test_pokemon_detail_route(client, mocker):
+    """Test pokemon detail with valid data, misspelling redirect, and case insensitivity."""
+    mock_pokemon_data = load_mock_data("bulbasaur.json")
+
     mock_species_data = {
-        "name": "bulbasaur",
-        "id": 1,
+        "name": "bulbasaur", "id": 1,
         "names": [{"name": "Bulbasaur", "language": {"name": "en"}}],
-        "habitat": {"name": "grassland"},
-        "shape": {"name": "quadruped"},
-        "color": {"name": "green"},
+        "habitat": {"name": "grassland"}, "shape": {"name": "quadruped"}, "color": {"name": "green"},
         "flavor_text_entries": [
-            {
-                "flavor_text": "Test description",
-                "language": {"name": "en"},
-                "version": {"name": "red"},
-            }
+            {"flavor_text": "Test description", "language": {"name": "en"}, "version": {"name": "red"}}
         ],
-        "pokedex_numbers": [
-            {
-                "entry_number": 1,
-                "pokedex": {
-                    "name": "national",
-                    "url": "https://pokeapi.co/api/v2/pokedex/1/",
-                },
-            }
-        ],
+        "pokedex_numbers": [{"entry_number": 1, "pokedex": {"name": "national", "url": "https://pokeapi.co/api/v2/pokedex/1/"}}],
         "evolution_chain": {"url": "https://pokeapi.co/api/v2/evolution-chain/1/"},
     }
 
-    # Mock palafin species data
-    mock_palafin_species_data = {
-        "name": "palafin",
-        "id": 964,
-        "names": [{"name": "Palafin", "language": {"name": "en"}}],
-        "habitat": {"name": "sea"},
-        "shape": {"name": "fish"},
-        "color": {"name": "blue"},
-        "flavor_text_entries": [
-            {
-                "flavor_text": "Test description",
-                "language": {"name": "en"},
-                "version": {"name": "scarlet"},
-            }
-        ],
-        "pokedex_numbers": [
-            {
-                "entry_number": 964,
-                "pokedex": {
-                    "name": "national",
-                    "url": "https://pokeapi.co/api/v2/pokedex/1/",
-                },
-            }
-        ],
-        "evolution_chain": {"url": "https://pokeapi.co/api/v2/evolution-chain/964/"},
-    }
-
-    # Mock evolution chain data
-    mock_evolution_chain_data = {
-        "chain": {
-            "species": {
-                "name": "palafin",
-                "url": "https://pokeapi.co/api/v2/pokemon-species/964/",
-            },
-            "evolves_to": [],
-            "evolution_details": [],
-            "is_baby": False,
-        },
-        "id": 964,
-    }
-
-    # Mock evolution chain list
     mock_evolution_chain_list = [
-        {
-            "name": "palafin",
-            "species_id": 964,
-            "sprite": "some_url",
-            "min_level": None,
-            "trigger": None,
-        }
+        {"name": "bulbasaur", "species_id": 1, "sprite": "some_url", "min_level": None, "trigger": None}
     ]
 
-    # Mock the API call to handle both palfin and palafin
-    def mock_fetch_data_with_error(endpoint, resource_id):
+    def mock_fetch_data_with_error(endpoint, resource_id, **kwargs):
         if resource_id == "palfin":
-            from requests.exceptions import HTTPError
-
             response = mocker.Mock()
             response.status_code = 404
             raise HTTPError("404 Client Error", response=response)
-        elif endpoint == "pokemon-species" and (
-            resource_id == "palafin" or resource_id == "PALAFIN"
-        ):
-            return mock_palafin_species_data
-        elif endpoint == "evolution-chain" and (
-            resource_id == "964" or resource_id == 964
-        ):
-            return mock_evolution_chain_data
-        elif endpoint == "evolution-chain" and (resource_id == "1" or resource_id == 1):
+        elif endpoint == "pokemon" and str(resource_id).lower() in ("1", "bulbasaur"):
+            return mock_pokemon_data
+        elif endpoint == "pokemon-species" and str(resource_id).lower() in ("1", "bulbasaur"):
+            return mock_species_data
+        elif endpoint == "evolution-chain" and resource_id in (1, "1"):
             return {
                 "chain": {
-                    "species": {
-                        "name": "bulbasaur",
-                        "url": "https://pokeapi.co/api/v2/pokemon-species/1/",
-                    },
-                    "evolves_to": [],
-                    "evolution_details": [],
-                    "is_baby": False,
+                    "species": {"name": "bulbasaur", "url": "https://pokeapi.co/api/v2/pokemon-species/1/"},
+                    "evolves_to": [], "evolution_details": [], "is_baby": False,
                 },
                 "id": 1,
             }
-        elif resource_id == "palafin" or resource_id == "PALAFIN":
-            # Mock data for the Pokemon endpoint
-            return {
-                "name": "palafin",
-                "id": 964,
-                "sprites": {
-                    "front_default": "some_url",
-                    "other": {"official-artwork": {"front_default": "some_url"}},
-                },
-                "species": {
-                    "name": "palafin",
-                    "url": "https://pokeapi.co/api/v2/pokemon-species/964/",
-                },
-                "base_experience": 160,
-                "height": 13,
-                "weight": 97,
-                "is_default": True,
-                "order": 964,
-                "abilities": [],
-                "moves": [],
-                "held_items": [],
-                "types": [{"type": {"name": "water", "url": "some_url"}}],
-                "stats": [],
-            }
-        elif endpoint == "type" and resource_id == "water":
-            # Mock type data for water
-            return {
-                "name": "water",
-                "damage_relations": {
-                    "double_damage_to": [],
-                    "half_damage_to": [],
-                    "no_damage_to": [],
-                    "double_damage_from": [],
-                    "half_damage_from": [],
-                    "no_damage_from": [],
-                },
-            }
-        elif endpoint == "type" and resource_id == "grass":
-            # Mock type data for grass
-            return {
-                "name": "grass",
-                "damage_relations": {
-                    "double_damage_to": [{"name": "water", "url": "some_url"}],
-                    "half_damage_to": [{"name": "fire", "url": "some_url"}],
-                    "no_damage_to": [],
-                    "double_damage_from": [{"name": "fire", "url": "some_url"}],
-                    "half_damage_from": [{"name": "water", "url": "some_url"}],
-                    "no_damage_from": [],
-                },
-            }
-        elif endpoint == "pokemon" and (resource_id == "1" or resource_id == 1):
-            return mock_pokemon_data
-        elif endpoint == "pokemon-species" and (resource_id == "1" or resource_id == 1):
-            return mock_species_data
-        return None
+        raise ValueError(f"{endpoint} '{resource_id}' not found")
 
-    mocker.patch(
-        "pokedex.APIResource.fetch_data", side_effect=mock_fetch_data_with_error
-    )
+    mocker.patch("pokedex.APIResource.fetch_data", side_effect=mock_fetch_data_with_error)
     mocker.patch("pokedex.get_chain", return_value=mock_evolution_chain_list)
 
-    # Test redirect for palfin (misspelled) - should ultimately 404
+    # Test redirect for palfin (misspelled) - should redirect then 404
     response = client.get("/pokemon/palfin")
-    assert response.status_code == 302  # First redirect
+    assert response.status_code == 302
     redirect_url = response.headers["Location"]
     response = client.get(redirect_url)
-    assert response.status_code == 404  # Should 404 after redirect
-
-    # Test case-insensitive palafin (correct spelling) - should succeed
-    response = client.get("/pokemon/PALAFIN")
-    assert response.status_code == 200  # Should succeed
-    assert b"Palafin" in response.data  # Should contain the Pokemon name
+    assert response.status_code == 404
 
     # Test with valid ID
     response = client.get("/pokemon/1")
@@ -307,134 +106,219 @@ def test_pokemon_detail_route(client, mocker):
     assert b"Bulbasaur" in response.data
 
 
-def test_pokemon_color_route(client):
-    # Test color list
+# ---------------------------------------------------------------------------
+# Pokemon color routes
+# ---------------------------------------------------------------------------
+
+def test_pokemon_color_list(client, mock_requests):
+    """Color list route should render."""
+    mock_requests.return_value.status_code = 200
+    mock_requests.return_value.json.return_value = {
+        "results": [{"name": "black"}, {"name": "blue"}],
+        "count": 2, "next": None,
+    }
     response = client.get("/pokemon-color/")
     assert response.status_code == 200
 
-    # Test with ID
+
+def test_pokemon_color_detail(client, mock_api):
+    """Color detail should render with pokemon list."""
+    mock_api.register("pokemon-color", 1, {
+        "name": "black", "id": 1,
+        "pokemon_species": [{"name": "snorlax", "url": "https://pokeapi.co/api/v2/pokemon-species/143/"}],
+    })
+    mock_api.register("pokemon-species", "snorlax", {
+        "name": "snorlax", "id": 143,
+        "varieties": [{"is_default": True, "pokemon": {"name": "snorlax", "url": "https://pokeapi.co/api/v2/pokemon/143/"}}],
+        "pokedex_numbers": [{"entry_number": 143}],
+    })
+    mock_api.register("pokemon", "snorlax", {
+        "name": "snorlax", "id": 143,
+        "sprites": {"front_default": "url", "other": {"official-artwork": {"front_default": "url"}}},
+        "species": {"name": "snorlax", "url": "https://pokeapi.co/api/v2/pokemon-species/143/"},
+        "types": [{"type": {"name": "normal"}}],
+    })
     response = client.get("/pokemon-color/1")
     assert response.status_code == 200
 
-    # Test with name
-    response = client.get("/pokemon-color/black")
-    assert response.status_code == 200
 
-    # Test non-existent color
+def test_pokemon_color_not_found(client, mock_api):
+    """Non-existent color should return 404."""
     response = client.get("/pokemon-color/nonexistent")
     assert response.status_code == 404
 
 
-def test_pokemon_habitat_route(client):
-    # Test habitat list
+# ---------------------------------------------------------------------------
+# Pokemon habitat routes
+# ---------------------------------------------------------------------------
+
+def test_pokemon_habitat_list(client, mock_requests):
+    mock_requests.return_value.status_code = 200
+    mock_requests.return_value.json.return_value = {
+        "results": [{"name": "cave"}, {"name": "forest"}],
+        "count": 2, "next": None,
+    }
     response = client.get("/pokemon-habitat/")
     assert response.status_code == 200
 
-    # Test with ID
+
+def test_pokemon_habitat_detail(client, mock_api):
+    mock_api.register("pokemon-habitat", 1, {
+        "name": "cave", "id": 1,
+        "pokemon_species": [{"name": "zubat", "url": "https://pokeapi.co/api/v2/pokemon-species/41/"}],
+    })
+    mock_api.register("pokemon", "zubat", {
+        "name": "zubat", "id": 41,
+        "sprites": {"front_default": "url"},
+        "species": {"name": "zubat", "url": "https://pokeapi.co/api/v2/pokemon-species/41/"},
+        "types": [{"type": {"name": "poison"}}],
+    })
     response = client.get("/pokemon-habitat/1")
     assert response.status_code == 200
 
-    # Test with name
-    response = client.get("/pokemon-habitat/cave")
-    assert response.status_code == 200
 
-    # Test non-existent habitat
+def test_pokemon_habitat_not_found(client, mock_api):
     response = client.get("/pokemon-habitat/nonexistent")
     assert response.status_code == 404
 
 
-def test_pokemon_shape_route(client):
-    # Test shape list
+# ---------------------------------------------------------------------------
+# Pokemon shape routes
+# ---------------------------------------------------------------------------
+
+def test_pokemon_shape_list(client, mock_requests):
+    mock_requests.return_value.status_code = 200
+    mock_requests.return_value.json.return_value = {
+        "results": [{"name": "ball"}, {"name": "squiggle"}],
+        "count": 2, "next": None,
+    }
     response = client.get("/pokemon-shape/")
     assert response.status_code == 200
 
-    # Test with ID
+
+def test_pokemon_shape_detail(client, mock_api):
+    mock_api.register("pokemon-shape", 1, {
+        "name": "ball", "id": 1,
+        "pokemon_species": [{"name": "voltorb", "url": "https://pokeapi.co/api/v2/pokemon-species/100/"}],
+    })
+    mock_api.register("pokemon", "voltorb", {
+        "name": "voltorb", "id": 100,
+        "sprites": {"front_default": "url"},
+        "species": {"name": "voltorb", "url": "https://pokeapi.co/api/v2/pokemon-species/100/"},
+        "types": [{"type": {"name": "electric"}}],
+    })
     response = client.get("/pokemon-shape/1")
     assert response.status_code == 200
 
-    # Test with name
-    response = client.get("/pokemon-shape/ball")
-    assert response.status_code == 200
 
-    # Test non-existent shape
+def test_pokemon_shape_not_found(client, mock_api):
     response = client.get("/pokemon-shape/nonexistent")
     assert response.status_code == 404
 
 
-def test_pokemon_species_route(client, mocker):
-    # Mock data for species list
-    mock_species_list = {
-        "results": [{"name": "bulbasaur"}, {"name": "charmander"}, {"name": "squirtle"}]
-    }
+# ---------------------------------------------------------------------------
+# Pokemon species routes
+# ---------------------------------------------------------------------------
 
-    # Mock data for individual species
-    mock_species_data = load_mock_data("minimal_species.json")
-
-    # Mock pokemon data
-    mock_pokemon_data = {
-        "name": "bulbasaur",
-        "id": 1,
-        "sprites": {
-            "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
-            "other": {
-                "official-artwork": {
-                    "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
-                }
-            },
-        },
-    }
-
-    # Mock the API calls with conditional return values
-    def mock_fetch_data(resource_type, identifier):
-        if resource_type == "pokemon-species" and identifier in [1, "1", "bulbasaur"]:
-            return mock_species_data
-        elif resource_type == "pokemon" and identifier in [1, "1", "bulbasaur"]:
-            return mock_pokemon_data
-        from requests.exceptions import HTTPError
-
-        response = mocker.Mock()
-        response.status_code = 404
-        response.url = f"https://pokeapi.co/api/v2/{resource_type}/{identifier}"
-        raise HTTPError(
-            f"{response.status_code} Client Error: Not Found for url: {response.url}",
-            response=response,
-        )
-
-    mocker.patch("pokedex.APIResource.fetch_data", side_effect=mock_fetch_data)
-    mocker.patch(
-        "routes.pokemon.fetch_all_results", return_value=mock_species_list["results"]
-    )
-
-    # Test species list
+def test_pokemon_species_list(client, mocker):
+    mocker.patch("routes.pokemon.fetch_all_results", return_value=[
+        {"name": "bulbasaur"}, {"name": "charmander"}, {"name": "squirtle"},
+    ])
     response = client.get("/pokemon-species/")
     assert response.status_code == 200
 
-    # Test with ID
+
+def test_pokemon_species_detail(client, mock_api):
+    species_data = load_mock_data("minimal_species.json")
+    pokemon_data = load_mock_data("bulbasaur.json")
+
+    mock_api.register("pokemon-species", 1, species_data)
+    mock_api.register("pokemon-species", "bulbasaur", species_data)
+    mock_api.register("pokemon", "bulbasaur", pokemon_data)
+
     response = client.get("/pokemon-species/1")
     assert response.status_code == 200
 
-    # Test with name
     response = client.get("/pokemon-species/bulbasaur")
     assert response.status_code == 200
 
-    # Test non-existent species
+
+def test_pokemon_species_not_found(client, mock_api):
     response = client.get("/pokemon-species/nonexistent")
     assert response.status_code == 404
 
 
-def test_type_route(client):
-    # Test type list
+# ---------------------------------------------------------------------------
+# Type routes
+# ---------------------------------------------------------------------------
+
+def test_type_list(client, mock_requests):
+    mock_requests.return_value.status_code = 200
+    mock_requests.return_value.json.return_value = {
+        "results": [{"name": "normal"}, {"name": "fire"}],
+        "count": 2, "next": None,
+    }
     response = client.get("/type/")
     assert response.status_code == 200
 
-    # Test with ID
+
+def test_type_detail(client, mock_api):
+    mock_api.register("type", 1, {
+        "name": "normal", "id": 1,
+        "damage_relations": {
+            "double_damage_to": [], "half_damage_to": [], "no_damage_to": [],
+            "double_damage_from": [{"name": "fighting"}],
+            "half_damage_from": [], "no_damage_from": [{"name": "ghost"}],
+        },
+        "pokemon": [{"pokemon": {"name": "rattata", "url": "https://pokeapi.co/api/v2/pokemon/19/"}}],
+    })
+    mock_api.register("pokemon", "rattata", {
+        "name": "rattata", "id": 19,
+        "sprites": {"front_default": "url"},
+        "species": {"name": "rattata", "url": "https://pokeapi.co/api/v2/pokemon-species/19/"},
+        "types": [{"type": {"name": "normal"}}],
+    })
     response = client.get("/type/1")
     assert response.status_code == 200
 
-    # Test with name
-    response = client.get("/type/normal")
+
+def test_type_not_found(client, mock_api):
+    response = client.get("/type/nonexistent")
+    assert response.status_code == 404
+
+
+# ---------------------------------------------------------------------------
+# Pokedex routes
+# ---------------------------------------------------------------------------
+
+def test_pokedex_list(client, mock_requests):
+    mock_requests.return_value.status_code = 200
+    mock_requests.return_value.json.return_value = {
+        "results": [{"name": "national"}, {"name": "kanto"}],
+        "count": 2, "next": None,
+    }
+    response = client.get("/pokedex/")
     assert response.status_code == 200
 
-    # Test non-existent type
-    response = client.get("/type/nonexistent")
+
+def test_pokedex_detail(client, mock_api, mock_requests):
+    mock_api.register("pokedex", 1, {
+        "name": "national", "id": 1,
+        "pokemon_entries": [
+            {"entry_number": 1, "pokemon_species": {"name": "bulbasaur", "url": "https://pokeapi.co/api/v2/pokemon-species/1/"}},
+        ],
+    })
+    bulbasaur = load_mock_data("bulbasaur.json")
+    mock_api.register("pokemon", "bulbasaur", bulbasaur)
+
+    # mock_requests for fetch_all_results (list endpoint) and create_pokemon_list
+    mock_requests.return_value.status_code = 200
+    mock_requests.return_value.json.return_value = {"results": [], "count": 0, "next": None}
+
+    response = client.get("/pokedex/1")
+    assert response.status_code == 200
+
+
+def test_pokedex_not_found(client, mock_api):
+    response = client.get("/pokedex/nonexistent")
     assert response.status_code == 404

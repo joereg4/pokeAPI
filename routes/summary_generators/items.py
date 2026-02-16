@@ -1,5 +1,5 @@
-import requests
 from flask import current_app
+from pokedex.client import client as pokeapi
 from .utils import get_openai_client, format_pokemon_summary
 
 
@@ -16,10 +16,9 @@ def generate_item_summary(item_name, custom_instructions="", max_tokens=2000):
         cost = "Unknown"
 
         try:
-            # Fetch from item endpoint
-            item_response = requests.get(f"https://pokeapi.co/api/v2/item/{item_name}")
-            if item_response.status_code == 200:
-                item_data = item_response.json()
+            # Fetch from item endpoint via unified client
+            item_data = pokeapi.fetch_url_json(f"https://pokeapi.co/api/v2/item/{item_name}")
+            if item_data:
 
                 # Extract basic item information
                 if "effect_entries" in item_data:

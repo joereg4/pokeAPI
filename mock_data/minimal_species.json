@@ -5,26 +5,30 @@
         {
             "name": "Bulbasaur",
             "language": {
-                "name": "en"
+                "name": "en",
+                "url": "https://pokeapi.co/api/v2/language/9/"
             }
         }
     ],
     "flavor_text_entries": [
         {
-            "flavor_text": "A test description",
+            "flavor_text": "A strange seed was\nplanted on its\nback at birth.\fThe plant sprouts\nand grows with\nthis POK\u00e9MON.",
             "language": {
-                "name": "en"
+                "name": "en",
+                "url": "https://pokeapi.co/api/v2/language/9/"
             },
             "version": {
-                "name": "red"
+                "name": "red",
+                "url": "https://pokeapi.co/api/v2/version/1/"
             }
         }
     ],
     "genera": [
         {
-            "genus": "Seed Pokémon",
+            "genus": "Seed Pok\u00e9mon",
             "language": {
-                "name": "en"
+                "name": "en",
+                "url": "https://pokeapi.co/api/v2/language/9/"
             }
         }
     ],
@@ -32,13 +36,16 @@
         "url": "https://pokeapi.co/api/v2/evolution-chain/1/"
     },
     "habitat": {
-        "name": "grassland"
+        "name": "grassland",
+        "url": "https://pokeapi.co/api/v2/pokemon-habitat/3/"
     },
     "color": {
-        "name": "green"
+        "name": "green",
+        "url": "https://pokeapi.co/api/v2/pokemon-color/5/"
     },
     "shape": {
-        "name": "quadruped"
+        "name": "quadruped",
+        "url": "https://pokeapi.co/api/v2/pokemon-shape/8/"
     },
     "varieties": [
         {
@@ -50,14 +57,25 @@
         }
     ],
     "generation": {
-        "name": "generation-i"
+        "name": "generation-i",
+        "url": "https://pokeapi.co/api/v2/generation/1/"
     },
     "growth_rate": {
-        "name": "medium-slow"
+        "name": "medium-slow",
+        "url": "https://pokeapi.co/api/v2/growth-rate/4/"
     },
     "is_baby": false,
     "is_legendary": false,
     "is_mythical": false,
-    "base_happiness": 50,
-    "capture_rate": 45
-} 
+    "base_happiness": 70,
+    "capture_rate": 45,
+    "pokedex_numbers": [
+        {
+            "entry_number": 1,
+            "pokedex": {
+                "name": "national",
+                "url": "https://pokeapi.co/api/v2/pokedex/1/"
+            }
+        }
+    ]
+}

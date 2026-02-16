@@ -1,0 +1,22 @@
+[run]
+source = pokedex, routes, app.py, cache.py, limiter.py, request_logging.py
+omit =
+    tests/*
+    .venv/*
+    */migrations/*
+    manage.py
+    scripts/*
+
+[report]
+show_missing = true
+precision = 1
+fail_under = 60
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if __name__ == .__main__
+    raise NotImplementedError
+    pass
+
+[html]
+directory = htmlcov
