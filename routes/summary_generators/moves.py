@@ -1,6 +1,5 @@
-import requests
 from flask import current_app
-from pokedex.utils import Config
+from pokedex.client import client as pokeapi
 from .utils import get_openai_client, format_pokemon_summary
 
 
@@ -16,10 +15,9 @@ def generate_move_summary(move_name, custom_instructions="", max_tokens=2000):
         generation = "Unknown"
 
         try:
-            # Fetch from move endpoint
-            move_response = requests.get(f"https://pokeapi.co/api/v2/move/{move_name}", timeout=Config.HTTP_TIMEOUT)
-            if move_response.status_code == 200:
-                move_data = move_response.json()
+            # Fetch from move endpoint via unified client
+            move_data = pokeapi.fetch_url_json(f"https://pokeapi.co/api/v2/move/{move_name}")
+            if move_data:
 
                 # Extract basic move information
                 if "effect_entries" in move_data:

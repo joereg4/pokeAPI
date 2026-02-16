@@ -3,13 +3,13 @@ import logging
 import markdown
 import pandas as pd
 import re
-import requests
 from flask import Blueprint, render_template, abort, request
 from markupsafe import Markup
 from requests.exceptions import HTTPError
 
 import pokedex
 from cache import cache
+from pokedex.client import client as pokeapi
 from pokedex.helper import (
     fetch_all_results,
     get_summary,
@@ -222,13 +222,7 @@ def get_machines(page=1):
     try:
         per_page = ITEMS_PER_PAGE  # Number of machines to display per page
         offset = (page - 1) * per_page
-        url = f"{BASE_URL}/machine?offset={offset}&limit={per_page}"
-
-        response = requests.get(url, timeout=Config.HTTP_TIMEOUT)
-        if response.status_code != 200:
-            abort(500, description="Failed to fetch machine data from the API")
-
-        data = response.json()
+        data = pokeapi.fetch_list("machine", limit=per_page, offset=offset)
 
         complete_machines = []
 
@@ -279,14 +273,7 @@ def get_moves_list():
     page = request.args.get("page", 1, type=int)
     per_page = ITEMS_PER_PAGE
     offset = (page - 1) * per_page
-    endpoint = f"{BASE_URL}/move/?limit={per_page}&offset={offset}"
-
-    response = requests.get(endpoint, timeout=Config.HTTP_TIMEOUT)
-    if response.status_code != 200:
-        logging.error(f"Error fetching moves: {response.status_code} - {response.text}")
-        abort(500, description="Failed to fetch moves from the API.")
-
-    moves_list = response.json()
+    moves_list = pokeapi.fetch_list("move", limit=per_page, offset=offset)
     return render_template("moves.html", moves_list=moves_list, current_page=page)
 
 
