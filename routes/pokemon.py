@@ -22,6 +22,7 @@ from routes.utilities import get_endpoint_data
 from .sprite import get_sprite_url
 from pokedex.serializers import serialize_pokemon, serialize_pokemon_species
 from pokedex.services import build_pokemon_list, build_species_variety_list
+from pokedex.species_resolver import resolve_species_id_from_data
 from routes.decorators import handle_api_errors
 
 pokemon_bp = Blueprint(
@@ -360,13 +361,7 @@ def get_pokemon(id_or_name):
     official_artwork = None
     try:
         if data["id"]:
-            species = data.get("species") or {}
-            species_url = species.get("url") if isinstance(species, dict) else None
-            artwork_id = (
-                pokedex.get_species_id_from_url(species_url)
-                if species_url
-                else data["id"]
-            )
+            artwork_id = resolve_species_id_from_data(data)
             official_artwork = get_sprite_url(artwork_id, is_artwork=True)
     except Exception as e:
         logging.warning(f"Error getting official artwork for {data['name']}: {e}")
