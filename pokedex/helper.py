@@ -13,6 +13,8 @@ import urllib.request
 import urllib.error
 import json
 
+from pokedex.serializers import serialize_pokemon_list_entry
+
 VALID_SPRITES = Config.VALID_SPRITES
 TYPE_COLORS = Config.TYPE_COLORS
 TCG_API_TIMEOUT = Config.TCG_API_TIMEOUT
@@ -209,21 +211,20 @@ def create_pokemon_list(data):
                         )
                         official_artwork = None
 
-                    # Add to list
-                    pokemon_data = {
-                        "name": pokemon_name,  # Keep original name for display
+                    # Add to list (serialize to guarantee template safety)
+                    pokemon_data = serialize_pokemon_list_entry({
+                        "name": pokemon_name,
                         "official_artwork": official_artwork,
                         "id": pokemon.get("id"),
                         "types": pokemon.get("types", []),
                         "sprites": pokemon.get("sprites", {}),
-                        "is_variety": pokemon.get("name")
-                        != pokemon_name,  # True if we're using variety data
+                        "is_variety": pokemon.get("name") != pokemon_name,
                         "variety_name": (
                             pokemon.get("name")
                             if pokemon.get("name") != pokemon_name
                             else None
-                        ),  # The actual variety name
-                    }
+                        ),
+                    })
                     pokemon_list.append(pokemon_data)
                 else:
                     logging.warning(

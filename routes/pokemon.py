@@ -33,6 +33,7 @@ from pokedex.interface import name_id_convert
 from routes.utilities import get_endpoint_data
 from .sprite import get_sprite_url
 from pokedex.lists import PokemonList
+from pokedex.serializers import serialize_pokemon, serialize_pokemon_species
 
 pokemon_bp = Blueprint(
     "pokemon", __name__, template_folder="templates", static_folder="static"
@@ -449,8 +450,8 @@ def get_pokemon(id_or_name):
 
     return render_template(
         "pokemon_detail.html",
-        data=data,
-        species_data=species_data,
+        data=serialize_pokemon(data),
+        species_data=serialize_pokemon_species(species_data),
         sorted_sprites=sorted_sprites,
         evolution_chain=evolution_chain,
         type_effectiveness=type_effectiveness,
