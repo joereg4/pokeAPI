@@ -49,7 +49,7 @@ jobs:
           pytest tests/ -n 12 -m "not integration" --tb=short
 
       - name: Send webhook payload
-        if: success()  # Send webhook on successful tests
+        if: success() && github.event_name == 'push'  # Only deploy on merge to main, not on PRs
         run: |  
           payload='{}'
           signature=$(echo -n "$payload" | openssl dgst -sha256 -hmac "${{ secrets.WEBHOOK_SECRET }}" | sed 's/^.* //')
