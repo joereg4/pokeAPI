@@ -29,7 +29,7 @@ Usage:
 import logging
 
 from .interface import APIResource
-from .common import get_species_id_from_url
+from .species_resolver import resolve_species_id_from_data
 from .sprite import get_sprite_url
 from .serializers import serialize_pokemon_list_entry
 
@@ -254,19 +254,10 @@ def _get_default_variety(species_name):
 def _resolve_artwork_id(pokemon):
     """Determine the correct artwork ID for a Pokemon.
 
-    Uses the species ID from the species URL to avoid 404s for form Pokemon.
-    Falls back to the Pokemon's own ID if species URL is unavailable.
+    Delegates to the centralized species_resolver which caches results
+    in Redis.  Falls back to the Pokemon's own ID if resolution fails.
     """
-    species = pokemon.get("species") or {}
-    species_url = species.get("url") if isinstance(species, dict) else None
-
-    if species_url:
-        try:
-            return get_species_id_from_url(species_url)
-        except (ValueError, TypeError):
-            pass
-
-    return pokemon.get("id")
+    return resolve_species_id_from_data(pokemon)
 
 
 def _get_artwork_url(pokemon):
