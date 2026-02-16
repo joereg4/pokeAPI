@@ -1,5 +1,6 @@
 import requests
 from flask import current_app
+from pokedex.utils import Config
 from .utils import get_openai_client, format_pokemon_summary
 
 
@@ -17,7 +18,7 @@ def generate_item_summary(item_name, custom_instructions="", max_tokens=2000):
 
         try:
             # Fetch from item endpoint
-            item_response = requests.get(f"https://pokeapi.co/api/v2/item/{item_name}")
+            item_response = requests.get(f"https://pokeapi.co/api/v2/item/{item_name}", timeout=Config.HTTP_TIMEOUT)
             if item_response.status_code == 200:
                 item_data = item_response.json()
 

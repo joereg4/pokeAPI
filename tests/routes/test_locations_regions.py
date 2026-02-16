@@ -72,7 +72,7 @@ class TestLocationRoutes:
 
     def test_location_not_found(self, client):
         response = client.get("/location/nonexistent")
-        assert response.status_code in (400, 404)
+        assert response.status_code == 404
 
 
 class TestLocationAreaRoutes:
@@ -82,7 +82,7 @@ class TestLocationAreaRoutes:
 
     def test_location_area_not_found(self, client):
         response = client.get("/location-area/99999")
-        assert response.status_code in (400, 404)
+        assert response.status_code == 404
 
 
 class TestRegionRoutes:
@@ -100,7 +100,7 @@ class TestRegionRoutes:
 
     def test_region_not_found(self, client):
         response = client.get("/region/nonexistent")
-        assert response.status_code in (400, 404)
+        assert response.status_code == 404
 
 
 class TestPalParkAreaRoutes:
@@ -116,4 +116,4 @@ class TestPalParkAreaRoutes:
 
     def test_pal_park_not_found(self, client):
         response = client.get("/pal-park-area/nonexistent")
-        assert response.status_code in (400, 404)
+        assert response.status_code == 404

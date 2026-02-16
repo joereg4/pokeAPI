@@ -47,15 +47,16 @@ def get_characteristic(id_):
 
             return render_template("characteristic_detail.html", data=data)
         except ValueError as e:
-            return str(e), 400  # Return the error message with a 400 Bad Request status
+            msg = str(e)
+            if "not found" in msg.lower():
+                abort(404, description=msg)
+            abort(400, description=msg)
         except HTTPError as e:
-            # If the HTTP error is 404, raise a 404 Not Found
             if e.response.status_code == 404:
                 abort(404, description=f"Characteristic '{id_}' not found")
             else:
-                # For other HTTP errors, you might want to log them or handle differently
                 logging.debug(f"HTTP error occurred: {e}")
-                return str(e), e.response.status_code
+                abort(500, description=str(e))
 
 
 @characteristics_stats_bp.route("/stat/<id_or_name>")
@@ -74,7 +75,10 @@ def get_stat(id_or_name):
 
         return render_template("stat_detail.html", data=data)
     except ValueError as e:
-        return str(e), 400  # Return the error message with a 400 Bad Request status
+        msg = str(e)
+        if "not found" in msg.lower():
+            abort(404, description=msg)
+        abort(400, description=msg)
 
 
 @characteristics_stats_bp.route("/type/", defaults={"id_or_name": None})
@@ -119,7 +123,10 @@ def get_type(id_or_name):
                 summary_html=summary_html,
             )
         except ValueError as e:
-            return str(e), 400  # Return the error message with a 400 Bad Request status
+            msg = str(e)
+            if "not found" in msg.lower():
+                abort(404, description=msg)
+            abort(400, description=msg)
         except HTTPError as e:
             if e.response.status_code == 404:
                 abort(404, description=f"Pokemon type '{id_or_name}' not found")
@@ -127,7 +134,6 @@ def get_type(id_or_name):
                 logging.error(f"HTTP error occurred: {e}")
                 abort(500, description=str(e))
         except werkzeug.exceptions.NotFound:
-            # Re-raise NotFound (404) exceptions
             raise
         except Exception as e:
             logging.error(f"Unexpected error: {str(e)}", exc_info=True)

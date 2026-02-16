@@ -75,7 +75,7 @@ class TestGenerationRoutes:
 
     def test_generation_not_found(self, client):
         response = client.get("/generation/nonexistent")
-        assert response.status_code in (400, 404)
+        assert response.status_code == 404
 
 
 class TestGrowthRateRoutes:
@@ -91,7 +91,7 @@ class TestGrowthRateRoutes:
 
     def test_growth_rate_not_found(self, client):
         response = client.get("/growth-rate/nonexistent")
-        assert response.status_code in (400, 404)
+        assert response.status_code == 404
 
 
 class TestGenderRoutes:
@@ -107,4 +107,4 @@ class TestGenderRoutes:
 
     def test_gender_not_found(self, client):
         response = client.get("/gender/nonexistent")
-        assert response.status_code in (400, 404)
+        assert response.status_code == 404

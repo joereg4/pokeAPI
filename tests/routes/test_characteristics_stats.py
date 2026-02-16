@@ -68,7 +68,7 @@ class TestCharacteristicRoutes:
 
     def test_characteristic_not_found(self, client):
         response = client.get("/characteristic/99999")
-        assert response.status_code in (400, 404)
+        assert response.status_code == 404
 
 
 class TestStatRoutes:
@@ -84,7 +84,7 @@ class TestStatRoutes:
 
     def test_stat_not_found(self, client):
         response = client.get("/stat/nonexistent")
-        assert response.status_code in (400, 404)
+        assert response.status_code == 404
 
 
 class TestNatureRoutes:
@@ -101,4 +101,4 @@ class TestNatureRoutes:
 
     def test_nature_not_found(self, client):
         response = client.get("/nature/nonexistent")
-        assert response.status_code in (400, 404)
+        assert response.status_code == 404

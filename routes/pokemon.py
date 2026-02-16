@@ -50,7 +50,7 @@ _type_cache = {}
 def fetch_count(endpoint):
     """Fetch count for a specific endpoint"""
     try:
-        response = requests.get(f"{BASE_URL}/{endpoint}?limit=1")
+        response = requests.get(f"{BASE_URL}/{endpoint}?limit=1", timeout=Config.HTTP_TIMEOUT)
         if response.status_code == 200:
             return endpoint, response.json()["count"]
         logging.error(f"Error fetching {endpoint} count: Status {response.status_code}")
@@ -251,7 +251,7 @@ def get_pokemon_list():
     offset = (page - 1) * per_page
     endpoint = f"{BASE_URL}/pokemon/?limit={per_page}&offset={offset}"
 
-    response = requests.get(endpoint)
+    response = requests.get(endpoint, timeout=Config.HTTP_TIMEOUT)
     data = response.json()
 
     # Create pokemon list using the helper function

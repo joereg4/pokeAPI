@@ -103,6 +103,8 @@ class Config:
     ]
     # Set the timeout for the TCG API to 2 seconds by default
     TCG_API_TIMEOUT = int(get_env_variable("TCG_API_TIMEOUT", 2))
+    # Default HTTP timeout in seconds for all outbound requests.get() calls
+    HTTP_TIMEOUT = int(get_env_variable("HTTP_TIMEOUT", 10))
 
 
 def get_csv_file_paths():

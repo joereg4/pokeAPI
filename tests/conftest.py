@@ -76,7 +76,15 @@ def app():
         "CACHE_DEFAULT_TIMEOUT": 300,
     }
 
-    with patch.dict("os.environ", {"DATABASE_URL": "sqlite:///:memory:"}):
+    # Patch the cache config BEFORE create_app so the Redis backend is never
+    # initialized.  This prevents stale Redis entries from leaking into tests.
+    simple_cache_config = {
+        "CACHE_TYPE": "SimpleCache",
+        "CACHE_DEFAULT_TIMEOUT": 0,
+    }
+
+    with patch.dict("os.environ", {"DATABASE_URL": "sqlite:///:memory:"}), \
+         patch("cache.get_cache_config", return_value=simple_cache_config):
         app = create_app(test_config)
 
         with app.app_context():
@@ -86,9 +94,6 @@ def app():
                     "Test attempted to connect to non-SQLite database! "
                     "This is a safety check to prevent tests from modifying production data."
                 )
-
-            from cache import cache
-            cache.init_app(app)
 
             import limiter as limiter_module
             limiter_module.limiter.enabled = False

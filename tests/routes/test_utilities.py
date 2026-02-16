@@ -63,7 +63,7 @@ class TestLanguageRoutes:
 
     def test_language_not_found(self, client):
         response = client.get("/language/nonexistent")
-        assert response.status_code in (400, 404)
+        assert response.status_code == 404
 
 
 class TestVersionRoutes:
@@ -79,7 +79,7 @@ class TestVersionRoutes:
 
     def test_version_not_found(self, client):
         response = client.get("/version/nonexistent")
-        assert response.status_code in (400, 404)
+        assert response.status_code == 404
 
 
 class TestVersionGroupRoutes:
@@ -95,4 +95,4 @@ class TestVersionGroupRoutes:
 
     def test_version_group_not_found(self, client):
         response = client.get("/version-group/nonexistent")
-        assert response.status_code in (400, 404)
+        assert response.status_code == 404

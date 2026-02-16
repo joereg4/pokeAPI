@@ -43,6 +43,9 @@ def get_generation(id_or_name):
                 "generation_detail.html", data=data, pokemon_list=pokemon_list
             )
         except ValueError as e:
-            return str(e), 400  # Return the error message with a 400 Bad Request status
+            msg = str(e)
+            if "not found" in msg.lower():
+                abort(404, description=msg)
+            abort(400, description=msg)
 
 
