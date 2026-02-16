@@ -22,66 +22,29 @@ def create_app(test_config=None):
     # Initialize rate limiter
     limiter.init_app(app)
 
-    # Exempt specific routes from rate limiting
-    @app.route("/sprite/artwork/<path:path>")
-    @limiter.exempt
-    def exempt_artwork(path):
-        # This is just a placeholder - the actual route is in a blueprint
-        pass
+    # Exempt commonly accessed routes from rate limiting using a request filter.
+    # These paths serve sprites, Pokemon data, and other high-traffic endpoints
+    # that should not count toward per-IP rate limits.
+    RATE_LIMIT_EXEMPT_PREFIXES = (
+        "/sprite/",
+        "/pokemon",
+        "/type/",
+        "/pokedex/",
+        "/ability/",
+        "/move/",
+        "/item/",
+        "/pokemon-species/",
+        "/pokemon-color/",
+        "/pokemon-habitat/",
+        "/pokemon-shape/",
+        "/static/",
+        "/health",
+    )
 
-    @app.route("/pokemon")
-    @limiter.exempt
-    def exempt_pokemon_list():
-        # This is just a placeholder - the actual route is in a blueprint
-        pass
-
-    @app.route("/type/<path:path>")
-    @limiter.exempt
-    def exempt_type_pokemon_list(path):
-        # This is just a placeholder - the actual route is in a blueprint
-        pass
-
-    @app.route("/pokedex/<path:path>")
-    @limiter.exempt
-    def exempt_pokedex_detail(path):
-        # This is just a placeholder - the actual route is in a blueprint
-        pass
-
-    # Exempt more routes that are commonly accessed
-    @app.route("/ability/<path:path>")
-    @limiter.exempt
-    def exempt_ability_detail(path):
-        pass
-
-    @app.route("/move/<path:path>")
-    @limiter.exempt
-    def exempt_move_detail(path):
-        pass
-
-    @app.route("/item/<path:path>")
-    @limiter.exempt
-    def exempt_item_detail(path):
-        pass
-
-    @app.route("/pokemon-species/<path:path>")
-    @limiter.exempt
-    def exempt_pokemon_species(path):
-        pass
-
-    @app.route("/pokemon-color/<path:path>")
-    @limiter.exempt
-    def exempt_pokemon_color(path):
-        pass
-
-    @app.route("/pokemon-habitat/<path:path>")
-    @limiter.exempt
-    def exempt_pokemon_habitat(path):
-        pass
-
-    @app.route("/pokemon-shape/<path:path>")
-    @limiter.exempt
-    def exempt_pokemon_shape(path):
-        pass
+    @limiter.request_filter
+    def _exempt_common_routes():
+        """Return True to exempt the current request from rate limiting."""
+        return request.path.startswith(RATE_LIMIT_EXEMPT_PREFIXES)
 
     # Configure compression
     app.config["COMPRESS_MIMETYPES"] = [

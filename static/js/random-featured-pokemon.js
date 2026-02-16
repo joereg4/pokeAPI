@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(response => response.json())
             .then(data => {
                 // Use the correct artwork endpoint URL
-                const artworkUrl = `/artwork/${id}`;
+                const artworkUrl = `/sprite/artwork/${id}`;
                 
                 // First check if the artwork exists
                 return fetch(artworkUrl)
