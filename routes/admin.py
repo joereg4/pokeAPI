@@ -3,7 +3,8 @@ from flask_login import login_required, current_user
 from models.model import User, db, Resource
 from functools import wraps
 from limiter import limiter
-import requests
+from pokedex.utils import Config
+from pokedex.client import client as pokeapi
 import logging
 from utils import invalidate_related_caches
 from bot_detection import get_bot_detection_report, get_bot_detection_stats
@@ -143,13 +144,8 @@ def list_pokemon_summaries():
         # Keep fetching until we have all Pokemon
         while True:
             try:
-                response = requests.get(
-                    f"https://pokeapi.co/api/v2/pokemon?limit={limit}&offset={offset}"
-                )
-                if response.status_code != 200:
-                    break
+                data = pokeapi.fetch_list("pokemon", limit=limit, offset=offset)
 
-                data = response.json()
                 if total_count is None:
                     total_count = data["count"]
 
@@ -412,13 +408,7 @@ def batch_refresh_summaries(resource_type):
         # Keep fetching until we have all resources
         while True:
             try:
-                endpoint = f"https://pokeapi.co/api/v2/{resource_type}?limit={limit}&offset={offset}"
-                response = requests.get(endpoint)
-
-                if response.status_code != 200:
-                    break
-
-                data = response.json()
+                data = pokeapi.fetch_list(resource_type, limit=limit, offset=offset)
                 results = data.get("results", [])
 
                 if not results:

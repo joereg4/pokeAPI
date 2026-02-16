@@ -1,5 +1,5 @@
-import requests
 from flask import current_app
+from pokedex.client import client as pokeapi
 from .utils import get_openai_client, format_pokemon_summary
 
 
@@ -14,10 +14,9 @@ def generate_type_summary(type_name, custom_instructions="", max_tokens=2000):
         generation = "Unknown"
 
         try:
-            # Fetch from type endpoint
-            type_response = requests.get(f"https://pokeapi.co/api/v2/type/{type_name}")
-            if type_response.status_code == 200:
-                type_data = type_response.json()
+            # Fetch from type endpoint via unified client
+            type_data = pokeapi.fetch_url_json(f"https://pokeapi.co/api/v2/type/{type_name}")
+            if type_data:
 
                 # Get generation information
                 if "generation" in type_data and "name" in type_data["generation"]:

@@ -385,7 +385,7 @@ def pal_park_area(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("pal-park-area", id_or_name, **kwargs)
+    return APIResource.fetch_data("pal-park-area", id_or_name, **kwargs)
 
 
 def region(id_or_name, **kwargs):
@@ -409,7 +409,7 @@ def ability(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource.fetch_data("abilities", id_or_name, **kwargs)
+    return APIResource.fetch_data("ability", id_or_name, **kwargs)
 
 
 def characteristic(id_, **kwargs):
@@ -421,7 +421,7 @@ def characteristic(id_, **kwargs):
     :param id_: id of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("characteristic", id_, **kwargs)
+    return APIResource.fetch_data("characteristic", id_, **kwargs)
 
 
 def egg_group(id_or_name, **kwargs):
@@ -433,7 +433,7 @@ def egg_group(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("egg-group", id_or_name, **kwargs)
+    return APIResource.fetch_data("egg-group", id_or_name, **kwargs)
 
 
 def gender(id_or_name, **kwargs):
@@ -445,7 +445,7 @@ def gender(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("gender", id_or_name, **kwargs)
+    return APIResource.fetch_data("gender", id_or_name, **kwargs)
 
 
 def growth_rate(id_or_name, **kwargs):
@@ -457,7 +457,7 @@ def growth_rate(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("growth-rate", id_or_name, **kwargs)
+    return APIResource.fetch_data("growth-rate", id_or_name, **kwargs)
 
 
 def nature(id_or_name, **kwargs):
@@ -469,7 +469,7 @@ def nature(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("nature", id_or_name, **kwargs)
+    return APIResource.fetch_data("nature", id_or_name, **kwargs)
 
 
 def pokeathlon_stat(id_or_name, **kwargs):
@@ -481,7 +481,7 @@ def pokeathlon_stat(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("pokeathlon-stat", id_or_name, **kwargs)
+    return APIResource.fetch_data("pokeathlon-stat", id_or_name, **kwargs)
 
 
 def pokemon(id_or_name, **kwargs):
@@ -493,19 +493,7 @@ def pokemon(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("pokemon", id_or_name, **kwargs)
-
-    def get_location_area_encounters(val):
-        params = val.split("/")[-3:]
-        params[1] = int(params[1])
-        return params
-
-    return APIResource(
-        "pokemon",
-        id_or_name,
-        custom={"location_area_encounters": get_location_area_encounters},
-        **kwargs
-    )
+    return APIResource.fetch_data("pokemon", id_or_name, **kwargs)
 
 
 def pokemon_color(id_or_name, **kwargs):
@@ -517,7 +505,7 @@ def pokemon_color(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("pokemon-color", id_or_name, **kwargs)
+    return APIResource.fetch_data("pokemon-color", id_or_name, **kwargs)
 
 
 def pokemon_form(id_or_name, **kwargs):
@@ -529,7 +517,7 @@ def pokemon_form(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("pokemon-form", id_or_name, **kwargs)
+    return APIResource.fetch_data("pokemon-form", id_or_name, **kwargs)
 
 
 def pokemon_habitat(id_or_name, **kwargs):
@@ -541,7 +529,7 @@ def pokemon_habitat(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("pokemon-habitat", id_or_name, **kwargs)
+    return APIResource.fetch_data("pokemon-habitat", id_or_name, **kwargs)
 
 
 def pokemon_shape(id_or_name, **kwargs):
@@ -553,7 +541,7 @@ def pokemon_shape(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("pokemon-shape", id_or_name, **kwargs)
+    return APIResource.fetch_data("pokemon-shape", id_or_name, **kwargs)
 
 
 def pokemon_species(id_or_name, **kwargs):
@@ -565,7 +553,7 @@ def pokemon_species(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("pokemon-species", id_or_name, **kwargs)
+    return APIResource.fetch_data("pokemon-species", id_or_name, **kwargs)
 
 
 def stat(id_or_name, **kwargs):
@@ -577,7 +565,7 @@ def stat(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("stat", id_or_name, **kwargs)
+    return APIResource.fetch_data("stat", id_or_name, **kwargs)
 
 
 def type_(id_or_name, **kwargs):
@@ -589,7 +577,7 @@ def type_(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("type", id_or_name, **kwargs)
+    return APIResource.fetch_data("type", id_or_name, **kwargs)
 
 
 def language(id_or_name, **kwargs):
@@ -601,7 +589,7 @@ def language(id_or_name, **kwargs):
     :param id_or_name: id or name of the resource to lookup
     :return: NamedAPIResource with the appropriate data
     """
-    return APIResource("language", id_or_name, **kwargs)
+    return APIResource.fetch_data("language", id_or_name, **kwargs)
 
 
 def sprite(sprite_type, sprite_id, **kwargs):

@@ -1,0 +1,105 @@
+{
+    "name": "tackle",
+    "id": 33,
+    "accuracy": 100,
+    "power": 40,
+    "pp": 35,
+    "priority": 0,
+    "damage_class": {
+        "name": "physical",
+        "url": "https://pokeapi.co/api/v2/move-damage-class/2/"
+    },
+    "type": {
+        "name": "normal",
+        "url": "https://pokeapi.co/api/v2/type/1/"
+    },
+    "effect_entries": [
+        {
+            "effect": "Inflicts regular damage.",
+            "language": {
+                "name": "en",
+                "url": "https://pokeapi.co/api/v2/language/9/"
+            },
+            "short_effect": "Inflicts regular damage with no additional effect."
+        }
+    ],
+    "flavor_text_entries": [
+        {
+            "flavor_text": "A full-body charge\nattack.",
+            "language": {
+                "name": "en",
+                "url": "https://pokeapi.co/api/v2/language/9/"
+            },
+            "version_group": {
+                "name": "gold-silver",
+                "url": "https://pokeapi.co/api/v2/version-group/3/"
+            }
+        },
+        {
+            "flavor_text": "A full-body charge\nattack.",
+            "language": {
+                "name": "en",
+                "url": "https://pokeapi.co/api/v2/language/9/"
+            },
+            "version_group": {
+                "name": "crystal",
+                "url": "https://pokeapi.co/api/v2/version-group/4/"
+            }
+        }
+    ],
+    "names": [
+        {
+            "language": {
+                "name": "en",
+                "url": "https://pokeapi.co/api/v2/language/9/"
+            },
+            "name": "Tackle"
+        }
+    ],
+    "meta": {
+        "ailment": {
+            "name": "none",
+            "url": "https://pokeapi.co/api/v2/move-ailment/0/"
+        },
+        "ailment_chance": 0,
+        "category": {
+            "name": "damage",
+            "url": "https://pokeapi.co/api/v2/move-category/0/"
+        },
+        "crit_rate": 0,
+        "drain": 0,
+        "flinch_chance": 0,
+        "healing": 0,
+        "max_hits": null,
+        "max_turns": null,
+        "min_hits": null,
+        "min_turns": null,
+        "stat_chance": 0
+    },
+    "generation": {
+        "name": "generation-i",
+        "url": "https://pokeapi.co/api/v2/generation/1/"
+    },
+    "learned_by_pokemon": [
+        {
+            "name": "bulbasaur",
+            "url": "https://pokeapi.co/api/v2/pokemon/1/"
+        },
+        {
+            "name": "ivysaur",
+            "url": "https://pokeapi.co/api/v2/pokemon/2/"
+        },
+        {
+            "name": "venusaur",
+            "url": "https://pokeapi.co/api/v2/pokemon/3/"
+        },
+        {
+            "name": "squirtle",
+            "url": "https://pokeapi.co/api/v2/pokemon/7/"
+        },
+        {
+            "name": "wartortle",
+            "url": "https://pokeapi.co/api/v2/pokemon/8/"
+        }
+    ]
+}

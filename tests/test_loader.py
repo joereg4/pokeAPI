@@ -1,113 +1,119 @@
-from unittest.mock import patch
+"""
+Unit tests for pokedex.loaders module.
 
-from pytest import fixture
+Tests each loader function to ensure it delegates correctly to
+APIResource.fetch_data with the right endpoint name and returns dicts.
+"""
 
+import pytest
+from unittest.mock import patch, MagicMock
 from pokedex import loaders
 from pokedex.loaders import sprite
 
 
-@fixture
+# ---------------------------------------------------------------------------
+# Fixtures
+# ---------------------------------------------------------------------------
+
+@pytest.fixture
 def mock_pokemon_data():
-    """Mock data for a Pokémon"""
+    """Mock data for a Pokemon."""
     return {
         "name": "bulbasaur",
         "id": 1,
         "height": 7,
         "weight": 69,
         "base_experience": 64,
-        "types": [{"type": {"name": "grass"}}]
+        "types": [{"type": {"name": "grass"}}],
     }
 
 
-def test_pokemon_detail_loader(mock_pokemon_data):
-    """Test the pokemon_detail function to ensure it loads the correct data."""
-    with patch('pokedex.interface.APIResource.fetch_data') as mock_fetch_data:
-        mock_fetch_data.return_value = mock_pokemon_data
+# ---------------------------------------------------------------------------
+# All loaders should use fetch_data and return dicts
+# ---------------------------------------------------------------------------
 
-        # Call the loader
-        result = loaders.pokemon_detail("bulbasaur")
+class TestLoadersFetchData:
+    """Every loader should call APIResource.fetch_data with the correct
+    endpoint and return a dict."""
 
-        # Check if the API was called correctly
-        mock_fetch_data.assert_called_once_with("pokemon", "bulbasaur")
+    @pytest.mark.parametrize("loader_fn,endpoint,arg", [
+        (loaders.pokemon_detail, "pokemon", "bulbasaur"),
+        (loaders.berry, "berry", "cheri"),
+        (loaders.berry_firmness, "berry-firmness", "very-soft"),
+        (loaders.berry_flavor, "berry-flavor", "spicy"),
+        (loaders.contest_type, "contest-type", "cool"),
+        (loaders.contest_effect, "contest-effect", 1),
+        (loaders.super_contest_effect, "super-contest-effect", 1),
+        (loaders.encounter_method, "encounter-method", "walk"),
+        (loaders.encounter_condition, "encounter-condition", "swarm"),
+        (loaders.encounter_condition_value, "encounter-condition-value", "swarm-yes"),
+        (loaders.evolution_chain, "evolution-chain", 1),
+        (loaders.evolution_trigger, "evolution-trigger", "level-up"),
+        (loaders.generation, "generation", "generation-i"),
+        (loaders.pokedex, "pokedex", "national"),
+        (loaders.version, "version", "red"),
+        (loaders.version_group, "version-group", "red-blue"),
+        (loaders.item, "item", "master-ball"),
+        (loaders.item_attribute, "item-attribute", "countable"),
+        (loaders.item_category, "item-category", "stat-boosts"),
+        (loaders.item_fling_effect, "item-fling-effect", 1),
+        (loaders.item_pocket, "item-pocket", "misc"),
+        (loaders.machine, "machine", 1),
+        (loaders.move, "move", "tackle"),
+        (loaders.move_ailment, "move-ailment", "paralysis"),
+        (loaders.move_battle_style, "move-battle-style", "attack"),
+        (loaders.move_category, "move-category", "damage"),
+        (loaders.move_damage_class, "move-damage-class", "physical"),
+        (loaders.move_learn_method, "move-learn-method", "level-up"),
+        (loaders.move_target, "move-target", "selected-pokemon"),
+        (loaders.location, "location", 1),
+        (loaders.location_area, "location-area", 1),
+        (loaders.region, "region", "kanto"),
+        # Previously buggy loaders -- now fixed:
+        (loaders.ability, "ability", "stench"),
+        (loaders.pal_park_area, "pal-park-area", "forest"),
+        (loaders.characteristic, "characteristic", 1),
+        (loaders.egg_group, "egg-group", "monster"),
+        (loaders.gender, "gender", "female"),
+        (loaders.growth_rate, "growth-rate", "slow"),
+        (loaders.nature, "nature", "hardy"),
+        (loaders.pokeathlon_stat, "pokeathlon-stat", "speed"),
+        (loaders.pokemon, "pokemon", "bulbasaur"),
+        (loaders.pokemon_color, "pokemon-color", "black"),
+        (loaders.pokemon_form, "pokemon-form", "bulbasaur"),
+        (loaders.pokemon_habitat, "pokemon-habitat", "cave"),
+        (loaders.pokemon_shape, "pokemon-shape", "ball"),
+        (loaders.pokemon_species, "pokemon-species", "bulbasaur"),
+        (loaders.stat, "stat", "hp"),
+        (loaders.type_, "type", "fire"),
+        (loaders.language, "language", "en"),
+    ])
+    def test_loader_calls_fetch_data(self, loader_fn, endpoint, arg):
+        """Each loader should call fetch_data with the correct endpoint."""
+        expected = {"name": str(arg), "id": 1}
+        with patch("pokedex.interface.APIResource.fetch_data") as mock_fetch:
+            mock_fetch.return_value = expected
+            result = loader_fn(arg)
 
-        # Validate the returned data
-        assert result["name"] == "bulbasaur"
-        assert result["id"] == 1
-        assert result["height"] == 7
-        assert result["types"][0]["type"]["name"] == "grass"
+        mock_fetch.assert_called_once_with(endpoint, arg)
+        assert isinstance(result, dict)
+        assert result == expected
 
 
-def test_berry_loader():
-    """Test the berry loader to ensure it loads the correct data."""
-    berry_data = {
-        "name": "cheri",
-        "id": 1,
-        "growth_time": 3,
-        "max_harvest": 5
-    }
+# ---------------------------------------------------------------------------
+# Sprite loader
+# ---------------------------------------------------------------------------
 
-    with patch('pokedex.interface.APIResource.fetch_data') as mock_fetch_data:
-        mock_fetch_data.return_value = berry_data
+class TestSpriteLoader:
+    def test_sprite_loader_creates_resource(self):
+        """sprite() should create a SpriteResource and return it."""
+        sprite_data = {"path": "sprites/pokemon/1.png", "img_data": b"binary"}
 
-        # Call the loader
-        result = loaders.berry("cheri")
+        with patch("pokedex.interface.SpriteResource._load") as mock_load:
+            mock_load.return_value = None
+            result = sprite("pokemon", 1)
+            result.__dict__.update(sprite_data)
 
-        # Check if the API was called correctly
-        mock_fetch_data.assert_called_once_with("berry", "cheri")
-
-        # Validate the returned data
-        assert result["name"] == "cheri"
-        assert result["id"] == 1
-        assert result["growth_time"] == 3
-        assert result["max_harvest"] == 5
-
-
-def test_move_loader():
-    """Test the move loader to ensure it loads the correct data."""
-    move_data = {
-        "name": "tackle",
-        "id": 1,
-        "power": 40,
-        "pp": 35,
-        "type": {"name": "normal"}
-    }
-
-    with patch('pokedex.interface.APIResource.fetch_data') as mock_fetch_data:
-        mock_fetch_data.return_value = move_data
-
-        # Call the loader
-        result = loaders.move("tackle")
-
-        # Check if the API was called correctly
-        mock_fetch_data.assert_called_once_with("move", "tackle")
-
-        # Validate the returned data
-        assert result["name"] == "tackle"
-        assert result["id"] == 1
-        assert result["power"] == 40
-        assert result["pp"] == 35
-        assert result["type"]["name"] == "normal"
-
-
-def test_sprite_loader():
-    """Test the sprite loader to ensure it loads sprite data correctly."""
-    sprite_data = {
-        "path": "sprites/pokemon/1.png",
-        "img_data": b"binary image data"
-    }
-
-    # Patch the _load method of SpriteResource from pokedex.loaders
-    with patch('pokedex.interface.SpriteResource._load') as mock_load:
-        # Simulate that the _load method doesn't return anything (it modifies the instance directly)
-        mock_load.return_value = None
-
-        # Call the sprite loader, which creates a SpriteResource instance
-        result = sprite("pokemon", 1)
-
-        # Manually update the attributes of the result object to simulate loading
-        result.__dict__.update(sprite_data)
-
-        # Assert that the sprite loader returns the correct data
         assert result.path == sprite_data["path"]
         assert result.img_data == sprite_data["img_data"]
         mock_load.assert_called_once()

@@ -1,5 +1,5 @@
-import requests
 from flask import current_app
+from pokedex.client import client as pokeapi
 from .utils import get_openai_client, format_pokemon_summary, format_generation
 
 
@@ -14,26 +14,22 @@ def generate_pokemon_summary(pokemon_name, custom_instructions="", max_tokens=20
         generation = "Unknown"
 
         try:
-            # Directly fetch from pokemon endpoint only
-            pokemon_response = requests.get(
+            # Fetch from pokemon endpoint via unified client
+            pokemon_data = pokeapi.fetch_url_json(
                 f"https://pokeapi.co/api/v2/pokemon/{pokemon_name}"
             )
-            if pokemon_response.status_code == 200:
-                pokemon_data = pokemon_response.json()
 
-                # Try to extract generation (might not be available)
-                try:
-                    species_url = pokemon_data.get("species", {}).get("url")
-                    if species_url:
-                        species_response = requests.get(species_url)
-                        if species_response.status_code == 200:
-                            species_data = species_response.json()
-                            if "generation" in species_data:
-                                generation = format_generation(
-                                    species_data["generation"]["name"]
-                                )
-                except Exception as e:
-                    current_app.logger.error(f"Error fetching species data: {e}")
+            # Try to extract generation from species data
+            try:
+                species_url = pokemon_data.get("species", {}).get("url")
+                if species_url:
+                    species_data = pokeapi.fetch_url_json(species_url)
+                    if "generation" in species_data:
+                        generation = format_generation(
+                            species_data["generation"]["name"]
+                        )
+            except Exception as e:
+                current_app.logger.error(f"Error fetching species data: {e}")
 
         except Exception as e:
             current_app.logger.error(f"Error fetching Pokemon data: {e}")
