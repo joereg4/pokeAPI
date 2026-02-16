@@ -18,6 +18,7 @@ from pokedex.helper import (
     get_pokemon_cards,
 )
 from pokedex.utils import Config
+from pokedex.serializers import serialize_ability, serialize_move, serialize_item
 
 abilities_moves_items_bp = Blueprint(
     "abilities_moves_items",
@@ -66,7 +67,7 @@ def get_ability(id_or_name):
 
             return render_template(
                 "ability_detail.html",
-                data=data,
+                data=serialize_ability(data),
                 pokemon_list=pokemon_list,
                 summary_html=summary_html,
             )
@@ -122,7 +123,7 @@ def get_item(id_or_name):
 
             return render_template(
                 "item_detail.html",
-                data=data,
+                data=serialize_item(data),
                 pokemon_list=pokemon_list,
                 summary_html=summary_html,
                 cards=cards,
@@ -311,7 +312,7 @@ def get_move(id_or_name):
 
         return render_template(
             "move_detail.html",
-            data=data,
+            data=serialize_move(data),
             category=category,
             pokemon_list=pokemon_list,
             summary_html=summary_html,
