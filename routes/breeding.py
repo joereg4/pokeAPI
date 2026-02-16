@@ -7,7 +7,8 @@ from flask import Blueprint, render_template, abort
 
 import pokedex
 from cache import cache
-from pokedex.helper import fetch_all_results, create_pokemon_list, get_summary, get_path
+from pokedex.helper import fetch_all_results, get_summary, get_path
+from pokedex.services import build_pokemon_list
 from pokedex.utils import Config
 
 BASE_URL = Config.BASE_URL
@@ -39,8 +40,7 @@ def get_egg_group(id_or_name):
             if "name" not in data:
                 abort(404, description=f"Egg Group '{id_or_name}' not found")
 
-            # Use the create_pokemon_list function with the correct key
-            pokemon_list = create_pokemon_list(data.get("pokemon_species", []))
+            pokemon_list = build_pokemon_list(data.get("pokemon_species", []))
 
             # Fetch Summary
             summary = get_summary(data["name"], "egg-group")

@@ -4,7 +4,8 @@ from flask import Blueprint, render_template, abort
 
 import pokedex
 from cache import cache
-from pokedex.helper import fetch_all_results, create_pokemon_list
+from pokedex.helper import fetch_all_results
+from pokedex.services import build_pokemon_list
 from pokedex.utils import Config
 
 BASE_URL = Config.BASE_URL
@@ -36,8 +37,7 @@ def get_generation(id_or_name):
             if "name" not in data:
                 abort(404, description=f"Generation '{id_or_name}' not found")
 
-            # Use the create_pokemon_list function with the correct key
-            pokemon_list = create_pokemon_list(data.get("pokemon_species", []))
+            pokemon_list = build_pokemon_list(data.get("pokemon_species", []))
 
             return render_template(
                 "generation_detail.html", data=data, pokemon_list=pokemon_list

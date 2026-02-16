@@ -23,7 +23,6 @@ from cache import cache
 from pokedex.client import client as pokeapi
 from pokedex.helper import (
     fetch_all_results,
-    create_pokemon_list,
     get_summary,
     get_pokemon_cards,
 )
@@ -32,8 +31,8 @@ from pokedex import APIResource
 from pokedex.interface import name_id_convert
 from routes.utilities import get_endpoint_data
 from .sprite import get_sprite_url
-from pokedex.lists import PokemonList
 from pokedex.serializers import serialize_pokemon, serialize_pokemon_species
+from pokedex.services import build_pokemon_list, build_species_variety_list
 
 pokemon_bp = Blueprint(
     "pokemon", __name__, template_folder="templates", static_folder="static"
@@ -155,11 +154,8 @@ def get_detective_pikachu_pokemon():
         "braviary",
     ]
 
-    # Transform the list into the expected format for create_pokemon_list
-    pokemon_list = [{"name": name} for name in detective_pikachu_pokemon]
-
-    # Create the Pokémon list with sprites
-    pokemon_list = create_pokemon_list(pokemon_list)
+    # Build the Pokémon list with sprites using the unified service
+    pokemon_list = build_pokemon_list([{"name": name} for name in detective_pikachu_pokemon])
 
     # Render a template for the Detective Pikachu Pokémon
     return render_template("detective_pikachu.html", pokemon_list=pokemon_list)
@@ -223,7 +219,7 @@ def get_pokedex(id_or_name):
 
             for i in range(0, total_entries, batch_size):
                 batch = pokemon_requests[i : i + batch_size]
-                batch_pokemon_list = create_pokemon_list(batch)
+                batch_pokemon_list = build_pokemon_list(batch)
 
                 # Add entry_number to each Pokémon in the list
                 for j, pokemon in enumerate(batch_pokemon_list):
@@ -250,8 +246,8 @@ def get_pokemon_list():
     offset = (page - 1) * per_page
     data = pokeapi.fetch_list("pokemon", limit=per_page, offset=offset)
 
-    # Create pokemon list using the helper function
-    pokemon_list = create_pokemon_list(data["results"])
+    # Build pokemon list using the unified service
+    pokemon_list = build_pokemon_list(data["results"])
 
     return render_template(
         "pokemon_list.html", pokemon_list=pokemon_list, current_page=page
@@ -497,7 +493,7 @@ def get_pokemon_color(id_or_name):
             logging.warning(f"No data found for Pokemon color: {id_or_name}")
             abort(404, description=f"Pokemon color '{id_or_name}' not found")
 
-        pokemon_list = pokedex.PokemonList(data).create_pokemon_list()
+        pokemon_list = build_pokemon_list(data.get("pokemon_species", []))
         return render_template(
             "color_detail.html", data=data, pokemon_list=pokemon_list
         )
@@ -538,7 +534,7 @@ def get_pokemon_habitat(id_or_name):
             logging.warning(f"No data found for Pokemon habitat: {id_or_name}")
             abort(404, description=f"Pokemon habitat '{id_or_name}' not found")
 
-        pokemon_list = create_pokemon_list(data)
+        pokemon_list = build_pokemon_list(data)
         return render_template(
             "habitat_detail.html", data=data, pokemon_list=pokemon_list
         )
@@ -579,7 +575,7 @@ def get_pokemon_shape(id_or_name):
             logging.warning(f"No data found for Pokemon shape: {id_or_name}")
             abort(404, description=f"Pokemon shape '{id_or_name}' not found")
 
-        pokemon_list = create_pokemon_list(data)
+        pokemon_list = build_pokemon_list(data)
         return render_template(
             "shape_detail.html", data=data, pokemon_list=pokemon_list
         )
@@ -620,8 +616,7 @@ def get_pokemon_species(id_or_name):
             abort(404, description=f"Pokemon species '{id_or_name}' not found")
 
         try:
-            simplified_data = {"pokemon_species": [{"name": data.get("name")}]}
-            pokemon_list = pokedex.PokemonList(simplified_data).create_pokemon_list()
+            pokemon_list = build_species_variety_list([data.get("name")])
             return render_template(
                 "pokemon_species_detail.html", data=data, pokemon_list=pokemon_list
             )
