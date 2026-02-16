@@ -2,10 +2,6 @@
 Tests for the characteristics_stats blueprint routes.
 
 All external API calls are mocked.
-
-NOTE: nature has no dedicated route -- it would be served by the generic
-handler in utilities.py, but the sprite route intercepts it. This is a
-known bug tracked for Phase 1.
 """
 
 import pytest
@@ -39,6 +35,16 @@ def setup_mocks(mock_api, mock_requests):
         "characteristics": [],
     })
     mock_api.register("stat", "hp", mock_api.responses[("stat", "1")])
+
+    # Nature -- served by generic route, uses generic.html
+    mock_api.register("nature", 1, {
+        "name": "hardy", "id": 1,
+        "decreased_stat": None,
+        "increased_stat": None,
+        "likes_flavor": None,
+        "hates_flavor": None,
+    })
+    mock_api.register("nature", "hardy", mock_api.responses[("nature", "1")])
 
     # Characteristic list needs URL-based items for the list route
     mock_requests.return_value.status_code = 200
@@ -81,13 +87,18 @@ class TestStatRoutes:
         assert response.status_code in (400, 404)
 
 
-class TestSpriteRouteConflict:
-    """Verify that nature URLs are intercepted by the sprite blueprint.
-    Nature has no dedicated route.
+class TestNatureRoutes:
+    """Nature is served by the generic route handler in utilities.py.
+    Now reachable after sprite blueprint got url_prefix=/sprite."""
 
-    This documents a known bug -- see Phase 1 plan.
-    """
-
-    def test_nature_intercepted_by_sprite_route(self, client):
+    def test_nature_detail_by_id(self, client):
         response = client.get("/nature/1")
-        assert response.status_code == 400
+        assert response.status_code == 200
+
+    def test_nature_detail_by_name(self, client):
+        response = client.get("/nature/hardy")
+        assert response.status_code == 200
+
+    def test_nature_not_found(self, client):
+        response = client.get("/nature/nonexistent")
+        assert response.status_code in (400, 404)

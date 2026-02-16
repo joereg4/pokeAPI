@@ -2,6 +2,9 @@
 Tests for the sprite blueprint routes.
 
 All sprite fetching is mocked -- no real filesystem or upstream calls.
+
+Note: The sprite blueprint is registered at /sprite/ to avoid conflicts
+with the generic utilities route handler.
 """
 
 import pytest
@@ -31,21 +34,21 @@ class TestArtworkRoute:
     def test_artwork_returns_image(self, client, sprite_file):
         sprite_data = {"img_data": b"bytes", "path": sprite_file}
         with patch("routes.sprite.get_sprite", return_value=sprite_data):
-            response = client.get("/artwork/25")
+            response = client.get("/sprite/artwork/25")
         assert response.status_code == 200
         assert response.content_type == "image/png"
         assert "Cache-Control" in response.headers
 
     def test_artwork_returns_404_when_missing(self, client):
         with patch("routes.sprite.get_sprite", return_value=None):
-            response = client.get("/artwork/99999")
+            response = client.get("/sprite/artwork/99999")
         assert response.status_code == 404
         data = response.get_json()
         assert "error" in data
 
     def test_artwork_returns_404_when_no_path(self, client):
         with patch("routes.sprite.get_sprite", return_value={"img_data": b"bytes"}):
-            response = client.get("/artwork/25")
+            response = client.get("/sprite/artwork/25")
         assert response.status_code == 404
 
 
@@ -53,13 +56,13 @@ class TestDefaultSpriteRoute:
     def test_default_sprite_returns_image(self, client, sprite_file):
         sprite_data = {"img_data": b"bytes", "path": sprite_file}
         with patch("routes.sprite.get_sprite", return_value=sprite_data):
-            response = client.get("/default/25")
+            response = client.get("/sprite/default/25")
         assert response.status_code == 200
         assert response.content_type == "image/png"
 
     def test_default_sprite_returns_404_when_missing(self, client):
         with patch("routes.sprite.get_sprite", return_value=None):
-            response = client.get("/default/99999")
+            response = client.get("/sprite/default/99999")
         assert response.status_code == 404
 
 
@@ -67,18 +70,18 @@ class TestSpecificSpriteRoute:
     def test_specific_sprite_returns_image(self, client, sprite_file):
         sprite_data = {"img_data": b"bytes", "path": sprite_file}
         with patch("routes.sprite.get_sprite", return_value=sprite_data):
-            response = client.get("/25/front_shiny")
+            response = client.get("/sprite/25/front_shiny")
         assert response.status_code == 200
 
     def test_invalid_sprite_type_returns_400(self, client):
-        response = client.get("/25/not_a_real_sprite_type")
+        response = client.get("/sprite/25/not_a_real_sprite_type")
         assert response.status_code == 400
         data = response.get_json()
         assert data["error"] == "Invalid sprite type"
 
     def test_specific_sprite_returns_404_when_missing(self, client):
         with patch("routes.sprite.get_sprite", return_value=None):
-            response = client.get("/25/front_default")
+            response = client.get("/sprite/25/front_default")
         assert response.status_code == 404
 
 
@@ -88,10 +91,10 @@ class TestSpriteUrlHelper:
         from routes.sprite import get_sprite_url
         with app.test_request_context():
             url = get_sprite_url(25, is_artwork=True)
-        assert "/artwork/25" in url
+        assert "/sprite/artwork/25" in url
 
     def test_default_url(self, app):
         from routes.sprite import get_sprite_url
         with app.test_request_context():
             url = get_sprite_url(25)
-        assert "/default/25" in url
+        assert "/sprite/default/25" in url

@@ -1,15 +1,49 @@
 from flask import Blueprint, jsonify, send_file, url_for, make_response
 from pokedex.api import get_sprite
-from pokedex.common import sprite_url_build
+from pokedex.common import sprite_url_build, get_species_id_from_url
 from pokedex.utils import Config
 from limiter import limiter
 import logging
 import os
 from datetime import datetime, timedelta
 
-sprite_bp = Blueprint("sprite", __name__)
+sprite_bp = Blueprint("sprite", __name__, url_prefix="/sprite")
 
 VALID_SPRITES = Config.VALID_SPRITES
+
+# Form variants have pokemon IDs >= 10000; official artwork only exists
+# for species (National Dex) IDs.  We resolve the species ID when needed.
+_FORM_ID_THRESHOLD = 10000
+
+
+def _resolve_artwork_id(pokemon_id):
+    """Return the species ID to use for official artwork.
+
+    Official artwork sprites are keyed by species (National Dex) ID, not
+    the pokemon form ID.  For IDs below the form threshold we assume the
+    ID *is* the species ID.  For form IDs (>= 10000) we fetch the pokemon
+    resource to discover the species URL, then extract the species ID.
+    """
+    try:
+        numeric_id = int(pokemon_id)
+    except (ValueError, TypeError):
+        return pokemon_id  # name-based lookup, pass through
+
+    if numeric_id < _FORM_ID_THRESHOLD:
+        return pokemon_id
+
+    # Fetch minimal pokemon data to get the species URL
+    try:
+        import pokedex
+        data = pokedex.APIResource.fetch_data("pokemon", numeric_id)
+        species = data.get("species") or {}
+        species_url = species.get("url") if isinstance(species, dict) else None
+        if species_url:
+            return get_species_id_from_url(species_url)
+    except Exception as e:
+        logging.warning(f"Could not resolve species ID for form {pokemon_id}: {e}")
+
+    return pokemon_id
 
 
 def add_cache_headers(response):
@@ -24,10 +58,14 @@ def add_cache_headers(response):
 @sprite_bp.route("/artwork/<pokemon_id>")
 @limiter.exempt
 def get_artwork(pokemon_id):
-    """Get the official artwork for a Pokémon."""
+    """Get the official artwork for a Pokémon.
+
+    Resolves form IDs (>= 10000) to their species ID so artwork does not 404.
+    """
     try:
+        artwork_id = _resolve_artwork_id(pokemon_id)
         sprite_data = get_sprite(
-            "pokemon", pokemon_id, other=True, official_artwork=True
+            "pokemon", artwork_id, other=True, official_artwork=True
         )
         if not sprite_data or "path" not in sprite_data:
             return jsonify({"error": "Artwork not found"}), 404
