@@ -20,6 +20,7 @@ from limiter import limiter
 
 import pokedex
 from cache import cache
+from pokedex.client import client as pokeapi
 from pokedex.helper import (
     fetch_all_results,
     create_pokemon_list,
@@ -48,13 +49,10 @@ _type_cache = {}
 
 
 def fetch_count(endpoint):
-    """Fetch count for a specific endpoint"""
+    """Fetch count for a specific endpoint using the unified client."""
     try:
-        response = requests.get(f"{BASE_URL}/{endpoint}?limit=1", timeout=Config.HTTP_TIMEOUT)
-        if response.status_code == 200:
-            return endpoint, response.json()["count"]
-        logging.error(f"Error fetching {endpoint} count: Status {response.status_code}")
-        return endpoint, 0
+        count = pokeapi.fetch_count(endpoint)
+        return endpoint, count
     except Exception as e:
         logging.error(f"Error fetching count for {endpoint}: {e}")
         return endpoint, 0
@@ -249,10 +247,7 @@ def get_pokemon_list():
     page = request.args.get("page", 1, type=int)
     per_page = POKEMON_PER_PAGE
     offset = (page - 1) * per_page
-    endpoint = f"{BASE_URL}/pokemon/?limit={per_page}&offset={offset}"
-
-    response = requests.get(endpoint, timeout=Config.HTTP_TIMEOUT)
-    data = response.json()
+    data = pokeapi.fetch_list("pokemon", limit=per_page, offset=offset)
 
     # Create pokemon list using the helper function
     pokemon_list = create_pokemon_list(data["results"])

@@ -1,6 +1,5 @@
 # pokedex/helper.py
 import logging
-import requests
 import os
 
 from flask import url_for, current_app
@@ -241,13 +240,9 @@ def create_pokemon_list(data):
 
 
 def fetch_all_results(url):
-    results = []
-    while url:
-        response = requests.get(url, timeout=Config.HTTP_TIMEOUT)
-        data = response.json()
-        results.extend(data["results"])
-        url = data.get("next")  # Get the next page URL, if it exists
-    return results
+    """Follow pagination links to collect all results from a PokéAPI list."""
+    from .client import client
+    return client.fetch_all_pages(url)
 
 
 def get_default_variety_name(pokemon_name):
