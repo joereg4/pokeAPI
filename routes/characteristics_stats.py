@@ -9,7 +9,8 @@ import werkzeug.exceptions
 
 import pokedex
 from cache import cache
-from pokedex.helper import fetch_all_results, create_pokemon_list, get_path, get_summary
+from pokedex.helper import fetch_all_results, get_path, get_summary
+from pokedex.services import build_pokemon_list
 from pokedex.utils import Config
 
 BASE_URL = Config.BASE_URL
@@ -103,8 +104,7 @@ def get_type(id_or_name):
             if "name" not in data:
                 abort(404, description=f"Pokemon type '{id_or_name}' not found")
 
-            # Create pokemon list with cached sprites
-            pokemon_list = create_pokemon_list(data.get("pokemon", []))
+            pokemon_list = build_pokemon_list(data.get("pokemon", []))
 
             # Get summary from database
             summary = get_summary(data["name"], "type")

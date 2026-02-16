@@ -7,7 +7,8 @@ from requests.exceptions import HTTPError
 
 import pokedex
 from cache import cache
-from pokedex.helper import fetch_all_results, get_summary, get_path, create_pokemon_list
+from pokedex.helper import fetch_all_results, get_summary, get_path
+from pokedex.services import build_pokemon_list
 from pokedex.utils import Config
 
 BASE_URL = Config.BASE_URL
@@ -65,7 +66,7 @@ def get_location_area(id_or_name):
         if "name" not in data:
             abort(404, description=f"Location Area '{id_or_name}' not found")
 
-        pokemon_list = create_pokemon_list(data.get("pokemon_encounters", []))
+        pokemon_list = build_pokemon_list(data.get("pokemon_encounters", []))
 
         return render_template(
             "location_area_detail.html", data=data, pokemon_list=pokemon_list
