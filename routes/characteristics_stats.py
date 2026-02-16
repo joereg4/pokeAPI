@@ -1,17 +1,15 @@
 # routes/characteristics_stats.py
-import logging
 import markdown
 import pandas as pd
 from flask import Blueprint, render_template, abort
 from markupsafe import Markup
-from requests.exceptions import HTTPError
-import werkzeug.exceptions
 
 import pokedex
 from cache import cache
 from pokedex.helper import fetch_all_results, get_path, get_summary
 from pokedex.services import build_pokemon_list
 from pokedex.utils import Config
+from routes.decorators import handle_api_errors
 
 BASE_URL = Config.BASE_URL
 TYPE_COLORS = Config.TYPE_COLORS
@@ -27,114 +25,70 @@ characteristics_stats_bp = Blueprint(
 @characteristics_stats_bp.route("/characteristic/", defaults={"id_": None})
 @characteristics_stats_bp.route("/characteristic/<int:id_>")
 @cache.cached(timeout=Config.CACHE_TIMEOUT)
+@handle_api_errors("Characteristic")
 def get_characteristic(id_):
     if id_ is None:
-        # Fetch and display a list of all characteristics
         url = f"{BASE_URL}/characteristic"
         data = fetch_all_results(url)
 
-        # Extract the ID from the URL for each characteristic
         for characteristic in data:
             characteristic["id"] = int(characteristic["url"].split("/")[-2])
 
         return render_template("characteristics.html", data=data)
-    else:
-        # Fetch and display details for a specific characteristic
-        try:
-            data = pokedex.APIResource.fetch_data("characteristic", id_)
 
-            if "id" not in data:
-                abort(404, description=f"Characteristic '{id_}' not found")
+    data = pokedex.APIResource.fetch_data("characteristic", id_)
 
-            return render_template("characteristic_detail.html", data=data)
-        except ValueError as e:
-            msg = str(e)
-            if "not found" in msg.lower():
-                abort(404, description=msg)
-            abort(400, description=msg)
-        except HTTPError as e:
-            if e.response.status_code == 404:
-                abort(404, description=f"Characteristic '{id_}' not found")
-            else:
-                logging.debug(f"HTTP error occurred: {e}")
-                abort(500, description=str(e))
+    if "id" not in data:
+        abort(404, description=f"Characteristic '{id_}' not found")
+
+    return render_template("characteristic_detail.html", data=data)
 
 
 @characteristics_stats_bp.route("/stat/<id_or_name>")
 @cache.cached(timeout=Config.CACHE_TIMEOUT)
+@handle_api_errors("Stat")
 def get_stat(id_or_name):
-    # Check if id_or_name can be converted to an integer
     try:
         id_or_name = int(id_or_name)
     except ValueError:
-        pass  # if the conversion fails, it remains a string
-    try:
-        data = pokedex.APIResource.fetch_data("stat", id_or_name)
+        pass
 
-        if "name" not in data:
-            abort(404, description=f"Stat '{id_or_name}' not found")
+    data = pokedex.APIResource.fetch_data("stat", id_or_name)
 
-        return render_template("stat_detail.html", data=data)
-    except ValueError as e:
-        msg = str(e)
-        if "not found" in msg.lower():
-            abort(404, description=msg)
-        abort(400, description=msg)
+    if "name" not in data:
+        abort(404, description=f"Stat '{id_or_name}' not found")
+
+    return render_template("stat_detail.html", data=data)
 
 
 @characteristics_stats_bp.route("/type/", defaults={"id_or_name": None})
 @characteristics_stats_bp.route("/type/<id_or_name>")
 @cache.cached(timeout=Config.CACHE_TIMEOUT)
+@handle_api_errors("Pokemon Type")
 def get_type(id_or_name):
     if id_or_name is None:
-        # No id_or_name provided, render the types list
         url = f"{BASE_URL}/type"
         types = fetch_all_results(url)
         return render_template("types.html", types=types)
-    else:
-        # id_or_name is provided, render the type detail
-        try:
-            id_or_name = int(id_or_name)
-        except ValueError:
-            pass  # if the conversion fails, it remains a string
 
-        try:
-            data = pokedex.APIResource.fetch_data("type", id_or_name)
+    try:
+        id_or_name = int(id_or_name)
+    except ValueError:
+        pass
 
-            if "name" not in data:
-                abort(404, description=f"Pokemon type '{id_or_name}' not found")
+    data = pokedex.APIResource.fetch_data("type", id_or_name)
 
-            pokemon_list = build_pokemon_list(data.get("pokemon", []))
+    if "name" not in data:
+        abort(404, description=f"Pokemon type '{id_or_name}' not found")
 
-            # Get summary from database
-            summary = get_summary(data["name"], "type")
+    pokemon_list = build_pokemon_list(data.get("pokemon", []))
+    summary = get_summary(data["name"], "type")
+    summary_html = Markup(markdown.markdown(str(summary))) if summary else None
 
-            # Convert the markdown summary to HTML
-            if summary:
-                summary_html = Markup(markdown.markdown(str(summary)))
-            else:
-                summary_html = None
-
-            return render_template(
-                "type_detail.html",
-                type_effectiveness=data,
-                pokemon_list=pokemon_list,
-                type_colors=TYPE_COLORS,
-                summary_html=summary_html,
-            )
-        except ValueError as e:
-            msg = str(e)
-            if "not found" in msg.lower():
-                abort(404, description=msg)
-            abort(400, description=msg)
-        except HTTPError as e:
-            if e.response.status_code == 404:
-                abort(404, description=f"Pokemon type '{id_or_name}' not found")
-            else:
-                logging.error(f"HTTP error occurred: {e}")
-                abort(500, description=str(e))
-        except werkzeug.exceptions.NotFound:
-            raise
-        except Exception as e:
-            logging.error(f"Unexpected error: {str(e)}", exc_info=True)
-            abort(500, description=str(e))
+    return render_template(
+        "type_detail.html",
+        type_effectiveness=data,
+        pokemon_list=pokemon_list,
+        type_colors=TYPE_COLORS,
+        summary_html=summary_html,
+    )
