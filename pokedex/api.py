@@ -1,10 +1,17 @@
-import requests
+from __future__ import annotations
+
 import logging
+from typing import Any, Optional, Union
+
+import requests
 
 from .cache import get_sprite_path, load, load_sprite, save, save_sprite
 from .common import api_url_build, sprite_url_build
 
 logger = logging.getLogger(__name__)
+
+# Type alias for the sprite data dict returned by get_sprite / _call_sprite_api.
+SpriteData = dict[str, Any]  # {"img_data": bytes, "path": str}
 
 # Create a session object for connection pooling
 _session = requests.Session()
@@ -16,14 +23,20 @@ _session.mount(
 )
 
 
-def _http_get(url, **params):
+def _http_get(url: str, **params: Any) -> requests.Response:
+    """Execute an HTTP GET using the shared session with configured timeout."""
     from .utils import Config
     response = _session.get(url, params=params, timeout=Config.HTTP_TIMEOUT)
     response.raise_for_status()
     return response
 
 
-def _call_api(endpoint, resource_id=None, subresource=None):
+def _call_api(
+    endpoint: str,
+    resource_id: Optional[Union[int, str]] = None,
+    subresource: Optional[str] = None,
+) -> dict[str, Any]:
+    """Fetch and filter API data for an endpoint, auto-paginating full lists."""
     url = api_url_build(endpoint, resource_id, subresource)
     get_endpoint_list = resource_id is None
     response = _http_get(url)
@@ -37,8 +50,26 @@ def _call_api(endpoint, resource_id=None, subresource=None):
     return data
 
 
-def get_data(endpoint, resource_id=None, subresource=None, **kwargs):
-    force_lookup = kwargs.get("force_lookup", False)
+def get_data(
+    endpoint: str,
+    resource_id: Optional[Union[int, str]] = None,
+    subresource: Optional[str] = None,
+    **kwargs: Any,
+) -> dict[str, Any]:
+    """Fetch resource data with Redis caching.
+
+    Checks the cache first; on miss, fetches from the API and stores the result.
+
+    Args:
+        endpoint: PokéAPI endpoint name.
+        resource_id: Resource identifier (int ID or string name).
+        subresource: Optional subresource path.
+        **kwargs: Pass ``force_lookup=True`` to bypass the cache.
+
+    Returns:
+        Parsed JSON dict (English-filtered for text fields).
+    """
+    force_lookup: bool = kwargs.get("force_lookup", False)
 
     if not force_lookup:
         try:
@@ -50,7 +81,9 @@ def get_data(endpoint, resource_id=None, subresource=None, **kwargs):
     return data
 
 
-def _call_sprite_api(sprite_type, sprite_id, **kwargs):
+def _call_sprite_api(
+    sprite_type: str, sprite_id: Union[int, str], **kwargs: Any
+) -> Optional[SpriteData]:
     """Fetch sprite bytes from upstream. Return None on 404 to allow graceful fallbacks."""
     url = sprite_url_build(sprite_type, sprite_id, **kwargs)
     try:
@@ -72,17 +105,19 @@ def _call_sprite_api(sprite_type, sprite_id, **kwargs):
         raise
 
     abs_path = get_sprite_path(sprite_type, sprite_id, **kwargs)
-    data = dict(img_data=response.content, path=abs_path)
+    data: SpriteData = dict(img_data=response.content, path=abs_path)
     return data
 
 
-def get_sprite(sprite_type, sprite_id, **kwargs):
+def get_sprite(
+    sprite_type: str, sprite_id: Union[int, str], **kwargs: Any
+) -> Optional[SpriteData]:
     """Get sprite data for a resource.
 
-    Returns None when the upstream asset is missing (404) so callers can 404 without
-    logging an internal error.
+    Returns None when the upstream asset is missing (404) so callers can
+    serve a placeholder instead of raising an internal error.
     """
-    force_lookup = kwargs.get("force_lookup", False)
+    force_lookup: bool = kwargs.get("force_lookup", False)
 
     if not force_lookup:
         try:
@@ -97,7 +132,8 @@ def get_sprite(sprite_type, sprite_id, **kwargs):
     return data
 
 
-def filter_english_data(data):
+def filter_english_data(data: dict[str, Any]) -> dict[str, Any]:
+    """Filter multilingual list fields to English-only entries."""
     filtered_data = data.copy()
     fields_to_filter = [
         "names",

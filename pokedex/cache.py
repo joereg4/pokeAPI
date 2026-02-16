@@ -1,26 +1,34 @@
 # cache.py
 # -*- coding: utf-8 -*-
 
-import os
-import logging
-import time
+from __future__ import annotations
+
 import json
+import logging
+import os
+from typing import Any, Optional, Union
+
 import redis
-import socket
 
 from .common import cache_uri_build, sprite_filepath_build
 from .redis_client import redis_client
 
 # Cache locations will be set at the end of this file.
-CACHE_DIR = None
-API_CACHE = None
-SPRITE_CACHE = None
-CACHE_EXPIRATION_DAYS = 7
+CACHE_DIR: Optional[str] = None
+API_CACHE: Optional[str] = None
+SPRITE_CACHE: Optional[str] = None
+CACHE_EXPIRATION_DAYS: int = 7
 
 logger = logging.getLogger(__name__)
 
 
-def save(data, endpoint, resource_id=None, subresource=None):
+def save(
+    data: Union[dict[str, Any], list[Any]],
+    endpoint: str,
+    resource_id: Optional[Union[int, str]] = None,
+    subresource: Optional[str] = None,
+) -> None:
+    """Persist API response data to Redis with an expiration TTL."""
     if data == dict():  # No point in saving empty data.
         return None
 
@@ -30,24 +38,23 @@ def save(data, endpoint, resource_id=None, subresource=None):
     uri = cache_uri_build(endpoint, resource_id, subresource)
 
     try:
-        # Compress and set the data in Redis
         compressed_data = json.dumps(data).encode("utf-8")
         redis_client.set(
             uri,
             compressed_data,
-            ex=(
-                CACHE_EXPIRATION_DAYS * 24 * 60 * 60
-            ),  # Use ex parameter for expiration
+            ex=CACHE_EXPIRATION_DAYS * 24 * 60 * 60,
         )
     except (redis.RedisError, Exception) as error:
         logging.warning(f"Redis error, skipping save: {error}")
         return None
 
 
-def save_sprite(data, sprite_type, sprite_id, **kwargs):
-    abs_path = data["path"]
+def save_sprite(
+    data: dict[str, Any], sprite_type: str, sprite_id: Union[int, str], **kwargs: Any
+) -> None:
+    """Write sprite image bytes to the filesystem cache."""
+    abs_path: str = data["path"]
 
-    # Make intermediate directories; this line removes the file+extension.
     dirs = abs_path.rpartition(os.path.sep)[0]
     safe_make_dirs(dirs)
 
@@ -55,10 +62,18 @@ def save_sprite(data, sprite_type, sprite_id, **kwargs):
         img_file.write(data["img_data"])
 
     logger.debug(f"Sprite saved successfully: {os.path.exists(abs_path)}")
-    return None
 
 
-def load(endpoint, resource_id=None, subresource=None):
+def load(
+    endpoint: str,
+    resource_id: Optional[Union[int, str]] = None,
+    subresource: Optional[str] = None,
+) -> dict[str, Any]:
+    """Load cached API response data from Redis.
+
+    Raises:
+        KeyError: If the data is not in the cache or Redis is unreachable.
+    """
     uri = cache_uri_build(endpoint, resource_id, subresource)
 
     try:
@@ -71,7 +86,14 @@ def load(endpoint, resource_id=None, subresource=None):
         raise KeyError("Cache could not be accessed.")
 
 
-def load_sprite(sprite_type, sprite_id, **kwargs):
+def load_sprite(
+    sprite_type: str, sprite_id: Union[int, str], **kwargs: Any
+) -> dict[str, Any]:
+    """Load cached sprite image from the filesystem.
+
+    Raises:
+        FileNotFoundError: If the sprite has not been cached yet.
+    """
     abs_path = get_sprite_path(sprite_type, sprite_id, **kwargs)
 
     with open(abs_path, "rb") as img_file:
@@ -80,15 +102,11 @@ def load_sprite(sprite_type, sprite_id, **kwargs):
     return dict(img_data=img_data, path=abs_path)
 
 
-def safe_make_dirs(path, mode=0o777):
+def safe_make_dirs(path: str, mode: int = 0o777) -> str:
     """Create a leaf directory and all intermediate ones in a safe way.
 
-    A wrapper to os.makedirs() that handles existing leaf directories while
-    avoiding os.path.exists() race conditions.
-
-    :param path: relative or absolute directory tree to create
-    :param mode: directory permissions in octal
-    :return: The newly-created path
+    Handles existing leaf directories while avoiding os.path.exists() race
+    conditions.
     """
     try:
         os.makedirs(path, mode)
@@ -99,41 +117,34 @@ def safe_make_dirs(path, mode=0o777):
     return path
 
 
-def get_default_cache():
-    """Get the default cache location.
-
-    Returns a path for the cache directory, adapting to dev or prod environments.
-
-    :return: the default cache directory absolute path
-    """
-    # Check if we're in a production-like environment
+def get_default_cache() -> str:
+    """Get the default cache location, adapting to dev or prod environments."""
     if os.path.exists("/var/www/pokeAPI"):
         project_root = "/var/www/pokeAPI"
     else:
-        # Assume we're in development
         project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-    # Define the cache directory
     cache_dir = os.path.join(project_root, ".cache", "Pokedex")
-
     return cache_dir
 
 
-def get_sprite_path(sprite_type, sprite_id, **kwargs):
+def get_sprite_path(
+    sprite_type: str, sprite_id: Union[int, str], **kwargs: Any
+) -> str:
+    """Build the absolute filesystem path for a cached sprite."""
     rel_filepath = sprite_filepath_build(sprite_type, sprite_id, **kwargs)
     abs_path = os.path.join(SPRITE_CACHE, rel_filepath)
     return abs_path
 
 
-def set_cache(new_path=None):
-    """Simple function to change the cache location.
+def set_cache(new_path: Optional[str] = None) -> str:
+    """Set up the sprite cache directory tree.
 
-    This function now only sets up the sprite cache directory.
-    Redis connection is established globally.
+    Args:
+        new_path: Desired cache root. Uses the default if None.
 
-    :param new_path: relative or absolute path to the desired new cache
-    directory for sprites
-    :return: str
+    Returns:
+        Absolute path to the cache root directory.
     """
     global CACHE_DIR, API_CACHE, SPRITE_CACHE
 
@@ -151,7 +162,8 @@ def set_cache(new_path=None):
     return CACHE_DIR
 
 
-def initialize_cache():
+def initialize_cache() -> str:
+    """Initialize the cache directory tree using defaults."""
     global CACHE_DIR, API_CACHE, SPRITE_CACHE
     CACHE_DIR = set_cache()
     return CACHE_DIR

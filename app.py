@@ -5,6 +5,7 @@ from flask_compress import Compress
 from flask_migrate import Migrate
 import pokedex
 from cache import cache, get_cache_config
+from request_logging import init_request_logging
 from routes import blueprints
 from pokedex.utils import Config
 from limiter import limiter
@@ -66,17 +67,19 @@ def create_app(test_config=None):
     if env not in ["development", "production", "testing"]:
         env = "production"  # Default to production if invalid
 
-    # Set up logging based on environment
+    # Set up structured logging with request IDs.
     if env == "development":
-        logging.basicConfig(level=logging.INFO)
+        log_level = logging.INFO
+        logging.basicConfig(level=log_level)
         logging.getLogger("urllib3").setLevel(logging.WARNING)
-        logging.getLogger("pokedex").setLevel(
-            logging.INFO
-        )  # Ensure pokedex logs are visible
+        logging.getLogger("pokedex").setLevel(logging.INFO)
         app.logger.setLevel(logging.DEBUG)
     else:
-        logging.basicConfig(level=logging.WARNING)
+        log_level = logging.WARNING
+        logging.basicConfig(level=log_level)
         app.logger.setLevel(logging.WARNING)
+
+    init_request_logging(app, level=log_level)
 
     # Configure Redis cache with enhanced settings
     cache.init_app(app, config=get_cache_config())

@@ -26,7 +26,10 @@ Usage:
     pokemon_list = build_species_variety_list(["pikachu", "charizard"])
 """
 
+from __future__ import annotations
+
 import logging
+from typing import Any, Iterable, Optional, Union
 
 from .interface import APIResource
 from .species_resolver import resolve_species_id_from_data
@@ -36,7 +39,7 @@ from .serializers import serialize_pokemon_list_entry
 logger = logging.getLogger(__name__)
 
 # Keys that may hold Pokemon entries in API response dicts, checked in order.
-_ENTRY_KEYS = (
+_ENTRY_KEYS: tuple[str, ...] = (
     "results",
     "pokemon",
     "pokemon_species",
@@ -53,7 +56,9 @@ _ENTRY_KEYS = (
 # ---------------------------------------------------------------------------
 
 
-def build_pokemon_list(data):
+def build_pokemon_list(
+    data: Optional[Union[list[dict[str, Any]], dict[str, Any]]],
+) -> list[dict[str, Any]]:
     """Build a serialized Pokemon list from flexible input.
 
     Accepts:
@@ -78,7 +83,9 @@ def build_pokemon_list(data):
     )
 
 
-def build_species_variety_list(species_names):
+def build_species_variety_list(
+    species_names: Iterable[str],
+) -> list[dict[str, Any]]:
     """Build a Pokemon list by expanding species into their varieties.
 
     For each species name, fetches species data, then creates entries for
@@ -133,7 +140,9 @@ def build_species_variety_list(species_names):
 # ---------------------------------------------------------------------------
 
 
-def _extract_entries(data):
+def _extract_entries(
+    data: Optional[Union[list[dict[str, Any]], dict[str, Any]]],
+) -> list[dict[str, Any]]:
     """Extract Pokemon entries from various input formats.
 
     Returns a flat list of dicts, each expected to have a 'name' key
@@ -157,7 +166,7 @@ def _extract_entries(data):
     return []
 
 
-def _extract_pokemon_name(entry):
+def _extract_pokemon_name(entry: Any) -> Optional[str]:
     """Pull the Pokemon name from an entry dict.
 
     Handles:
@@ -184,7 +193,7 @@ def _extract_pokemon_name(entry):
 # ---------------------------------------------------------------------------
 
 
-def _fetch_with_variety_fallback(name):
+def _fetch_with_variety_fallback(name: str) -> Optional[dict[str, Any]]:
     """Fetch Pokemon data by name, falling back to the default variety.
 
     When a species name (e.g. 'wormadam') does not match a Pokemon endpoint,
@@ -216,7 +225,7 @@ def _fetch_with_variety_fallback(name):
     return None
 
 
-def _get_default_variety(species_name):
+def _get_default_variety(species_name: str) -> Optional[dict[str, Any]]:
     """Fetch the default variety for a species.
 
     Returns the Pokemon dict for the default variety, or None.
@@ -251,7 +260,7 @@ def _get_default_variety(species_name):
 # ---------------------------------------------------------------------------
 
 
-def _resolve_artwork_id(pokemon):
+def _resolve_artwork_id(pokemon: dict[str, Any]) -> Optional[int]:
     """Determine the correct artwork ID for a Pokemon.
 
     Delegates to the centralized species_resolver which caches results
@@ -260,7 +269,7 @@ def _resolve_artwork_id(pokemon):
     return resolve_species_id_from_data(pokemon)
 
 
-def _get_artwork_url(pokemon):
+def _get_artwork_url(pokemon: dict[str, Any]) -> Optional[str]:
     """Generate the artwork URL for a Pokemon using species ID resolution."""
     artwork_id = _resolve_artwork_id(pokemon)
     if artwork_id:
@@ -271,7 +280,7 @@ def _get_artwork_url(pokemon):
     return None
 
 
-def _build_entry(name, pokemon):
+def _build_entry(name: str, pokemon: dict[str, Any]) -> dict[str, Any]:
     """Build a single serialized Pokemon list entry.
 
     Combines the Pokemon name with fetched data to create a template-safe
@@ -294,7 +303,7 @@ def _build_entry(name, pokemon):
     })
 
 
-def _get_entry_number(species_data):
+def _get_entry_number(species_data: dict[str, Any]) -> Optional[int]:
     """Extract the first entry number from species pokedex_numbers."""
     for entry in species_data.get("pokedex_numbers", []):
         if "entry_number" in entry:
@@ -307,7 +316,7 @@ def _get_entry_number(species_data):
 # ---------------------------------------------------------------------------
 
 
-def _process_entry(entry):
+def _process_entry(entry: dict[str, Any]) -> Optional[dict[str, Any]]:
     """Process a single entry into a serialized Pokemon list item.
 
     Returns None if the entry cannot be processed.

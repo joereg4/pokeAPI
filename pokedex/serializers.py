@@ -22,7 +22,10 @@ Usage:
     return render_template("pokemon_detail.html", data=safe_data, ...)
 """
 
+from __future__ import annotations
+
 import logging
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +34,7 @@ logger = logging.getLogger(__name__)
 # Helpers
 # ---------------------------------------------------------------------------
 
-def _safe_nested(data, *keys, default=None):
+def _safe_nested(data: dict[str, Any], *keys: str, default: Any = None) -> Any:
     """Safely traverse nested dicts/lists.  Returns *default* if any key
     along the path is missing or the wrong type.
 
@@ -51,7 +54,7 @@ def _safe_nested(data, *keys, default=None):
     return current
 
 
-def _ensure_list(data, key):
+def _ensure_list(data: dict[str, Any], key: str) -> list[Any]:
     """Return data[key] if it is a list, otherwise return []."""
     val = data.get(key)
     return val if isinstance(val, list) else []
@@ -61,7 +64,7 @@ def _ensure_list(data, key):
 # Pokemon  (pokemon_detail.html)
 # ---------------------------------------------------------------------------
 
-def serialize_pokemon(data):
+def serialize_pokemon(data: Optional[dict[str, Any]]) -> dict[str, Any]:
     """Ensure pokemon data has every field that pokemon_detail.html accesses.
 
     Required (no template conditional):
@@ -103,7 +106,7 @@ def serialize_pokemon(data):
 # Pokemon Species  (pokemon_detail.html, conditional section)
 # ---------------------------------------------------------------------------
 
-def serialize_pokemon_species(data):
+def serialize_pokemon_species(data: Optional[dict[str, Any]]) -> Optional[dict[str, Any]]:
     """Ensure species data has every field that the species section of
     pokemon_detail.html accesses.
 
@@ -138,7 +141,7 @@ def serialize_pokemon_species(data):
 # Move  (move_detail.html)
 # ---------------------------------------------------------------------------
 
-def serialize_move(data):
+def serialize_move(data: Optional[dict[str, Any]]) -> dict[str, Any]:
     """Ensure move data has every field that move_detail.html accesses.
 
     Required (no template conditional):
@@ -193,7 +196,7 @@ def serialize_move(data):
 # Item  (item_detail.html)
 # ---------------------------------------------------------------------------
 
-def serialize_item(data):
+def serialize_item(data: Optional[dict[str, Any]]) -> dict[str, Any]:
     """Ensure item data has every field that item_detail.html accesses.
 
     Required: data.name, data.cost, data.attributes
@@ -229,7 +232,7 @@ def serialize_item(data):
 # Ability  (ability_detail.html)
 # ---------------------------------------------------------------------------
 
-def serialize_ability(data):
+def serialize_ability(data: Optional[dict[str, Any]]) -> dict[str, Any]:
     """Ensure ability data has every field that ability_detail.html accesses.
 
     Required (accessed without guards):
@@ -256,7 +259,7 @@ def serialize_ability(data):
 # Pokemon list entry  (_pokemon_list.html)
 # ---------------------------------------------------------------------------
 
-def serialize_pokemon_list_entry(entry):
+def serialize_pokemon_list_entry(entry: Optional[dict[str, Any]]) -> dict[str, Any]:
     """Ensure a single pokemon list entry has every field that
     _pokemon_list.html accesses.
 
@@ -281,7 +284,7 @@ def serialize_pokemon_list_entry(entry):
     }
 
 
-def serialize_pokemon_list(entries):
+def serialize_pokemon_list(entries: Optional[list[dict[str, Any]]]) -> list[dict[str, Any]]:
     """Serialize a list of pokemon entries for _pokemon_list.html."""
     if not entries or not isinstance(entries, list):
         return []
