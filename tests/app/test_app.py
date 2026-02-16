@@ -1,13 +1,6 @@
-from pytest import fixture
+import pytest
 from flask import url_for
-
-from tests.test_helper import get_test_client, assert_response_status
-from utils import get_cache_stats, warm_common_endpoints
-
-
-@fixture
-def client():
-    return get_test_client()
+from conftest import assert_response_status
 
 
 def test_app_creation(client):

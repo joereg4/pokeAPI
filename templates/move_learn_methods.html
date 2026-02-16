@@ -10,7 +10,7 @@
         <ul>
             {% for method in data %}
                 <li>
-                    <a href="{{ url_for('pokemon.get_move_learn_method', id_or_name=method.name) }}">{{ method.name | capitalize }}</a>
+                    <a href="{{ url_for('abilities_moves_items.get_move_learn_method', id_or_name=method.name) }}">{{ method.name | capitalize }}</a>
                 </li>
             {% endfor %}
         </ul>

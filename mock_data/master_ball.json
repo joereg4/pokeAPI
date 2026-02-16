@@ -1,0 +1,58 @@
+{
+    "name": "master-ball",
+    "id": 1,
+    "cost": 0,
+    "fling_power": null,
+    "fling_effect": null,
+    "category": {
+        "name": "standard-balls",
+        "url": "https://pokeapi.co/api/v2/item-category/34/"
+    },
+    "effect_entries": [
+        {
+            "effect": "Used in battle\n:   Catches a wild Pok\u00e9mon without fail.\n\n    If used in a trainer battle, nothing happens and the ball is lost.",
+            "language": {
+                "name": "en",
+                "url": "https://pokeapi.co/api/v2/language/9/"
+            },
+            "short_effect": "Catches a wild Pok\u00e9mon every time."
+        }
+    ],
+    "flavor_text_entries": [
+        {
+            "language": {
+                "name": "en",
+                "url": "https://pokeapi.co/api/v2/language/9/"
+            },
+            "text": "The best BALL that\ncatches a POK\u00e9MON\nwithout fail.",
+            "version_group": {
+                "name": "ruby-sapphire",
+                "url": "https://pokeapi.co/api/v2/version-group/5/"
+            }
+        },
+        {
+            "language": {
+                "name": "en",
+                "url": "https://pokeapi.co/api/v2/language/9/"
+            },
+            "text": "The best BALL that\ncatches a POK\u00e9MON\nwithout fail.",
+            "version_group": {
+                "name": "emerald",
+                "url": "https://pokeapi.co/api/v2/version-group/6/"
+            }
+        }
+    ],
+    "names": [
+        {
+            "language": {
+                "name": "en",
+                "url": "https://pokeapi.co/api/v2/language/9/"
+            },
+            "name": "Master Ball"
+        }
+    ],
+    "held_by_pokemon": [],
+    "sprites": {
+        "default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png"
+    }
+}

@@ -1,7 +1,6 @@
 import pytest
 from flask import url_for
 from models.model import User, db
-from app import create_app
 
 
 def test_admin_dashboard_access(auth_client):

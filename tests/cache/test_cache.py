@@ -1,40 +1,13 @@
 """Tests for Flask-Caching implementation"""
 
 import pytest
-from unittest.mock import patch
-from test_helper import get_test_client, assert_json_response, assert_response_status
 from cache import cache
-from utils import get_cache_stats, warm_common_endpoints
-from flask import current_app
-from app import create_app
-from models.model import db
-
-
-@pytest.fixture
-def client():
-    """Create a test client."""
-    test_config = {
-        "TESTING": True,
-        "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
-        "SQLALCHEMY_TRACK_MODIFICATIONS": False,
-        "SECRET_KEY": "test-secret-key",
-        "WTF_CSRF_ENABLED": False,
-        "LOGIN_DISABLED": False,
-        "CACHE_TYPE": "SimpleCache",
-        "CACHE_DEFAULT_TIMEOUT": 300,
-    }
-    app = create_app(test_config)
-
-    with app.app_context():
-        db.create_all()
-        yield app.test_client()
-        db.session.remove()
-        db.drop_all()
+from conftest import assert_response_status
 
 
 @pytest.fixture
 def app_context(client):
-    """Provide Flask application context for tests"""
+    """Provide Flask application context for tests."""
     with client.application.app_context():
         yield
 
