@@ -3,9 +3,8 @@ Tests for location and region routes.
 
 All external API calls are mocked.
 
-NOTE: pal-park-area has no dedicated route -- it would be served by the
-generic handler in utilities.py, but the sprite route intercepts it.
-This is a known bug tracked for Phase 1.
+pal-park-area is served by the generic handler in utilities.py
+(now reachable after sprite prefix fix).
 """
 
 import pytest
@@ -43,6 +42,14 @@ def setup_mocks(mock_api, mock_requests):
         "names": [{"name": "Kanto", "language": {"name": "en"}}],
     })
     mock_api.register("region", "kanto", mock_api.responses[("region", "1")])
+
+    # Pal Park area -- served by generic route
+    mock_api.register("pal-park-area", 1, {
+        "name": "forest", "id": 1,
+        "pokemon_encounters": [{"base_score": 30, "pokemon_species": {"name": "caterpie"}}],
+        "names": [{"name": "Forest", "language": {"name": "en"}}],
+    })
+    mock_api.register("pal-park-area", "forest", mock_api.responses[("pal-park-area", "1")])
 
     mock_requests.return_value.status_code = 200
     mock_requests.return_value.json.return_value = {
@@ -96,13 +103,17 @@ class TestRegionRoutes:
         assert response.status_code in (400, 404)
 
 
-class TestSpriteRouteConflict:
-    """Verify that pal-park-area URLs are intercepted by the sprite blueprint.
-    pal-park-area has no dedicated route.
+class TestPalParkAreaRoutes:
+    """Pal park area served by generic route."""
 
-    This documents a known bug -- see Phase 1 plan.
-    """
-
-    def test_pal_park_area_intercepted_by_sprite_route(self, client):
+    def test_pal_park_detail_by_id(self, client):
         response = client.get("/pal-park-area/1")
-        assert response.status_code == 400
+        assert response.status_code == 200
+
+    def test_pal_park_detail_by_name(self, client):
+        response = client.get("/pal-park-area/forest")
+        assert response.status_code == 200
+
+    def test_pal_park_not_found(self, client):
+        response = client.get("/pal-park-area/nonexistent")
+        assert response.status_code in (400, 404)

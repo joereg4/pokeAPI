@@ -3,10 +3,8 @@ Tests for the evolution_growth blueprint routes.
 
 All external API calls are mocked.
 
-NOTE: growth-rate and gender have no dedicated routes. They would be
-served by the generic handler in utilities.py, but the sprite route
-`/<pokemon_id>/<sprite_type>` intercepts them. This is a known bug
-tracked for Phase 1.
+growth-rate and gender are served by the generic handler in utilities.py
+(now reachable after sprite prefix fix).
 """
 
 import pytest
@@ -14,7 +12,7 @@ import pytest
 
 @pytest.fixture(autouse=True)
 def setup_mocks(mock_api, mock_requests):
-    """Register mock responses for generation endpoint."""
+    """Register mock responses for generation, growth-rate, and gender."""
     # Generation -- template needs: name, main_region.name, abilities[],
     #   moves[], types[], version_groups[], pokemon_species[]
     mock_api.register("generation", 1, {
@@ -28,6 +26,25 @@ def setup_mocks(mock_api, mock_requests):
         "names": [{"name": "Generation I", "language": {"name": "en"}}],
     })
     mock_api.register("generation", "generation-i", mock_api.responses[("generation", "1")])
+
+    # Growth rate -- served by generic route
+    mock_api.register("growth-rate", 1, {
+        "name": "slow", "id": 1,
+        "formula": "\\frac{5x^3}{4}",
+        "pokemon_species": [{"name": "bulbasaur"}],
+        "levels": [{"level": 1, "experience": 0}, {"level": 100, "experience": 1250000}],
+        "descriptions": [{"description": "slow", "language": {"name": "en"}}],
+    })
+    mock_api.register("growth-rate", "slow", mock_api.responses[("growth-rate", "1")])
+
+    # Gender -- served by generic route
+    mock_api.register("gender", 1, {
+        "name": "female", "id": 1,
+        "pokemon_species_details": [
+            {"rate": 1, "pokemon_species": {"name": "bulbasaur"}}
+        ],
+    })
+    mock_api.register("gender", "female", mock_api.responses[("gender", "1")])
 
     # Pokemon data for species lists
     mock_api.register("pokemon", "bulbasaur", {
@@ -61,17 +78,33 @@ class TestGenerationRoutes:
         assert response.status_code in (400, 404)
 
 
-class TestSpriteRouteConflict:
-    """Verify that growth-rate and gender URLs are intercepted by the
-    sprite blueprint. These endpoints have no dedicated routes.
+class TestGrowthRateRoutes:
+    """Growth rate served by generic route."""
 
-    This documents a known bug -- see Phase 1 plan.
-    """
-
-    def test_growth_rate_intercepted_by_sprite_route(self, client):
+    def test_growth_rate_detail_by_id(self, client):
         response = client.get("/growth-rate/1")
-        assert response.status_code == 400
+        assert response.status_code == 200
 
-    def test_gender_intercepted_by_sprite_route(self, client):
+    def test_growth_rate_detail_by_name(self, client):
+        response = client.get("/growth-rate/slow")
+        assert response.status_code == 200
+
+    def test_growth_rate_not_found(self, client):
+        response = client.get("/growth-rate/nonexistent")
+        assert response.status_code in (400, 404)
+
+
+class TestGenderRoutes:
+    """Gender served by generic route."""
+
+    def test_gender_detail_by_id(self, client):
         response = client.get("/gender/1")
-        assert response.status_code == 400
+        assert response.status_code == 200
+
+    def test_gender_detail_by_name(self, client):
+        response = client.get("/gender/female")
+        assert response.status_code == 200
+
+    def test_gender_not_found(self, client):
+        response = client.get("/gender/nonexistent")
+        assert response.status_code in (400, 404)

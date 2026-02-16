@@ -23,7 +23,7 @@ def create_app(test_config=None):
     limiter.init_app(app)
 
     # Exempt specific routes from rate limiting
-    @app.route("/artwork/<path:path>")
+    @app.route("/sprite/artwork/<path:path>")
     @limiter.exempt
     def exempt_artwork(path):
         # This is just a placeholder - the actual route is in a blueprint

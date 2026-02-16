@@ -1,11 +1,10 @@
 """
-Tests for the utilities blueprint routes (versions, version-groups).
+Tests for the utilities blueprint routes (languages, versions, etc.).
 
 All external API calls are mocked.
 
-NOTE: language has no dedicated route -- it would be served by the generic
-handler in utilities.py, but the sprite route intercepts it. This is a
-known bug tracked for Phase 1.
+language is served by the generic handler in utilities.py
+(now reachable after sprite prefix fix).
 """
 
 import pytest
@@ -14,6 +13,22 @@ import pytest
 @pytest.fixture(autouse=True)
 def setup_mocks(mock_api, mock_requests):
     """Register mock responses for utility endpoints."""
+    # Language -- served by generic route
+    mock_api.register("language", 1, {
+        "name": "ja-Hrkt", "id": 1,
+        "official": True,
+        "iso639": "ja",
+        "iso3166": "jp",
+        "names": [{"name": "Japanese", "language": {"name": "en"}}],
+    })
+    mock_api.register("language", "en", {
+        "name": "en", "id": 9,
+        "official": True,
+        "iso639": "en",
+        "iso3166": "us",
+        "names": [{"name": "English", "language": {"name": "en"}}],
+    })
+
     # Version -- template needs: name, version_group.name
     mock_api.register("version", 1, {
         "name": "red", "id": 1,
@@ -33,6 +48,22 @@ def setup_mocks(mock_api, mock_requests):
         "move_learn_methods": [{"name": "level-up"}],
     })
     mock_api.register("version-group", "red-blue", mock_api.responses[("version-group", "1")])
+
+
+class TestLanguageRoutes:
+    """Language served by generic route."""
+
+    def test_language_detail_by_id(self, client):
+        response = client.get("/language/1")
+        assert response.status_code == 200
+
+    def test_language_detail_by_name(self, client):
+        response = client.get("/language/en")
+        assert response.status_code == 200
+
+    def test_language_not_found(self, client):
+        response = client.get("/language/nonexistent")
+        assert response.status_code in (400, 404)
 
 
 class TestVersionRoutes:
@@ -65,15 +96,3 @@ class TestVersionGroupRoutes:
     def test_version_group_not_found(self, client):
         response = client.get("/version-group/nonexistent")
         assert response.status_code in (400, 404)
-
-
-class TestSpriteRouteConflict:
-    """Verify that language URLs are intercepted by the sprite blueprint.
-    Language has no dedicated route.
-
-    This documents a known bug -- see Phase 1 plan.
-    """
-
-    def test_language_intercepted_by_sprite_route(self, client):
-        response = client.get("/language/1")
-        assert response.status_code == 400
