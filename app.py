@@ -98,6 +98,23 @@ def create_app(test_config=None):
         app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
         app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev")
 
+    # Google Analytics: expose to templates and resolve credentials path.
+    # Relative GOOGLE_APPLICATION_CREDENTIALS is resolved from app root (works for prod at e.g. /var/www/pokeAPI).
+    app.config["GOOGLE_ANALYTICS_MEASUREMENT_ID"] = os.environ.get(
+        "GOOGLE_ANALYTICS_MEASUREMENT_ID"
+    )
+    app.config["GOOGLE_ANALYTICS_PROPERTY_ID"] = os.environ.get(
+        "GOOGLE_ANALYTICS_PROPERTY_ID"
+    )
+    creds_path = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+    if creds_path and not os.path.isabs(creds_path):
+        resolved = os.path.join(app.root_path, creds_path)
+        if os.path.isfile(resolved):
+            os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.abspath(resolved)
+    app.config["GOOGLE_APPLICATION_CREDENTIALS"] = os.environ.get(
+        "GOOGLE_APPLICATION_CREDENTIALS"
+    )
+
     # Initialize SQLAlchemy and Migrate
     db.init_app(app)
     migrate = Migrate(app, db)
