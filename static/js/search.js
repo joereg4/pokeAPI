@@ -83,12 +83,14 @@ $(document).ready(function () {
                     return;
                 }
 
+                var query = $searchBox.val().trim();
                 $.each(results, function (_i, resource) {
                     var safeName = escapeHtml(resource.name);
                     var safeType = escapeHtml(resource.type);
                     var href = generateUrl(resource.type, resource.name);
+                    var safeQuery = escapeHtml(query);
                     $suggestions.append(
-                        '<li><a class="dropdown-item" href="' + href + '">' +
+                        '<li><a class="dropdown-item" data-search-query="' + safeQuery + '" href="' + href + '">' +
                         safeName + ' <span class="text-muted">(' + safeType + ')</span></a></li>'
                     );
                 });
@@ -124,10 +126,23 @@ $(document).ready(function () {
         } else if (e.key === 'Enter') {
             e.preventDefault();
             if (highlightIndex >= 0 && highlightIndex < $items.length) {
-                window.location.href = $items.eq(highlightIndex).attr('href');
+                var $selected = $items.eq(highlightIndex);
+                var q = $selected.attr('data-search-query') || $searchBox.val().trim();
+                if (typeof gtag === 'function' && q) {
+                    gtag('event', 'search', { search_term: q });
+                }
+                window.location.href = $selected.attr('href');
             }
         } else if (e.key === 'Escape') {
             hideDropdown();
+        }
+    });
+
+    // GA4 search event when user selects a result (click or Enter)
+    $suggestions.on('click', '.dropdown-item', function (e) {
+        var q = $(this).attr('data-search-query') || $searchBox.val().trim();
+        if (typeof gtag === 'function' && q) {
+            gtag('event', 'search', { search_term: q });
         }
     });
 

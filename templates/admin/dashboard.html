@@ -352,4 +352,11 @@
         </div>
     </div>
 </div>
+{% if fire_login_event and config.GOOGLE_ANALYTICS_MEASUREMENT_ID %}
+<script>
+  if (typeof gtag === 'function') {
+    gtag('event', 'login', { method: 'admin' });
+  }
+</script>
+{% endif %}
 {% endblock %} 
