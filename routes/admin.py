@@ -1,4 +1,4 @@
-from flask import Blueprint, current_app, render_template, redirect, url_for, request, flash, jsonify
+from flask import Blueprint, current_app, render_template, redirect, url_for, request, flash, jsonify, session
 from flask_login import login_required, current_user
 from models.model import User, db, Resource
 from functools import wraps
@@ -78,12 +78,15 @@ def dashboard():
             if ga_analytics is not None:
                 cache.set(cache_key, ga_analytics, timeout=900)
 
+    fire_login_event = session.pop("ga_fire_login_event", False)
+
     return render_template(
         "admin/dashboard.html",
         users=users,
         summary_coverage=summary_coverage,
         bot_summary=bot_summary,
         ga_analytics=ga_analytics,
+        fire_login_event=fire_login_event,
     )
 
 

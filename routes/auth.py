@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash, jsonify
+from flask import Blueprint, render_template, redirect, url_for, request, flash, jsonify, session
 from flask_login import (
     LoginManager,
     login_user,
@@ -27,6 +27,7 @@ def login():
             login_user(user)
             user.last_login = datetime.utcnow()
             db.session.commit()
+            session["ga_fire_login_event"] = True
             flash("Logged in successfully!", "success")
             return redirect(url_for("admin.dashboard"))
 
