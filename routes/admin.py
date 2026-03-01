@@ -1,13 +1,15 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash, jsonify
+from flask import Blueprint, current_app, render_template, redirect, url_for, request, flash, jsonify
 from flask_login import login_required, current_user
 from models.model import User, db, Resource
 from functools import wraps
 from limiter import limiter
+from cache import cache
 from pokedex.utils import Config
 from pokedex.client import client as pokeapi
 import logging
 from utils import invalidate_related_caches
 from bot_detection import get_bot_detection_report, get_bot_detection_stats
+from ga_analytics import get_ga_dashboard_data
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
 
@@ -29,7 +31,60 @@ def admin_required(f):
 @limiter.limit("60 per minute")  # Allow 1 request per second for dashboard
 def dashboard():
     users = User.query.all()
-    return render_template("admin/dashboard.html", users=users)
+
+    # Summary coverage: total (from API) vs with summary (from DB) per resource type
+    resource_types = ["pokemon", "ability", "move", "item", "type"]
+    summary_coverage = []
+    for resource_type in resource_types:
+        try:
+            total = pokeapi.fetch_count(resource_type)
+        except Exception as e:
+            logging.warning(f"Dashboard: could not fetch count for {resource_type}: {e}")
+            total = 0
+        with_summary = Resource.query.filter(
+            Resource.resource == resource_type,
+            Resource.summary.isnot(None),
+            Resource.summary != "",
+            Resource.summary != "NaN",
+        ).count()
+        missing = max(0, total - with_summary)
+        summary_coverage.append({
+            "resource_type": resource_type,
+            "total": total,
+            "with_summary": with_summary,
+            "missing": missing,
+        })
+
+    # Bot detection summary for dashboard card (full report linked separately)
+    try:
+        bot_stats = get_bot_detection_stats()
+        bot_summary = {
+            "bot_pct": bot_stats.get("bot_percentage", 0),
+            "human_pct": round(100 - bot_stats.get("bot_percentage", 0), 2),
+            "total_today": bot_stats.get("totals", {}).get("daily", 0),
+        }
+    except Exception as e:
+        logging.warning(f"Dashboard: could not load bot stats: {e}")
+        bot_summary = {"bot_pct": 0, "human_pct": 0, "total_today": 0}
+
+    # Google Analytics Data API: cached 15 min for dashboard Visitor analytics
+    ga_analytics = None
+    property_id = current_app.config.get("GOOGLE_ANALYTICS_PROPERTY_ID")
+    if property_id:
+        cache_key = "admin:ga_dashboard"
+        ga_analytics = cache.get(cache_key)
+        if ga_analytics is None:
+            ga_analytics = get_ga_dashboard_data(property_id)
+            if ga_analytics is not None:
+                cache.set(cache_key, ga_analytics, timeout=900)
+
+    return render_template(
+        "admin/dashboard.html",
+        users=users,
+        summary_coverage=summary_coverage,
+        bot_summary=bot_summary,
+        ga_analytics=ga_analytics,
+    )
 
 
 @admin_bp.route("/users/add", methods=["GET", "POST"])
