@@ -67,6 +67,96 @@
 
     <div class="card mt-4">
         <div class="card-header">
+            <h3>Summary Coverage</h3>
+        </div>
+        <div class="card-body">
+            <p class="text-muted">Count of resources with summaries vs missing. Drill down to see which are missing.</p>
+            <div class="table-responsive">
+                <table class="table table-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th>Resource</th>
+                            <th>Total</th>
+                            <th>With Summary</th>
+                            <th>Missing</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in summary_coverage %}
+                        <tr>
+                            <td>{{ row.resource_type|title }}</td>
+                            <td>{{ "{:,}".format(row.total) }}</td>
+                            <td>{{ "{:,}".format(row.with_summary) }}</td>
+                            <td>{{ "{:,}".format(row.missing) }}</td>
+                            <td>
+                                {% if row.resource_type == 'pokemon' %}
+                                <a href="{{ url_for('admin.list_pokemon_summaries', missing_only='true') }}" class="btn btn-sm btn-outline-primary">View missing</a>
+                                {% else %}
+                                <a href="{{ url_for('admin.batch_refresh_summaries', resource_type=row.resource_type) }}" class="btn btn-sm btn-outline-primary">View / refresh</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% if ga_analytics %}
+    <div class="card mt-4">
+        <div class="card-header">
+            <h3 class="mb-0"><i class="fas fa-chart-line me-2"></i>Visitor Analytics (GA4)</h3>
+        </div>
+        <div class="card-body">
+            <p class="text-muted mb-2">Data from Google Analytics Data API (cached 15 min).</p>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <strong>Active users (7 days):</strong> {{ "{:,}".format(ga_analytics.active_users_7d) }}
+                </div>
+                <div class="col-md-4">
+                    <strong>Active users (24h):</strong> {{ "{:,}".format(ga_analytics.active_users_1d) }}
+                </div>
+            </div>
+            {% if ga_analytics.top_pages %}
+            <h6>Top pages (7 days)</h6>
+            <ul class="list-group list-group-flush">
+                {% for page in ga_analytics.top_pages %}
+                <li class="list-group-item d-flex justify-content-between py-2">
+                    <code class="small">{{ page.path }}</code>
+                    <span class="badge bg-primary">{{ "{:,}".format(page.views) }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="card mt-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="mb-0"><i class="fas fa-robot me-2"></i>Traffic Summary</h3>
+            <a href="{{ url_for('admin.bot_detection_report') }}" class="btn btn-sm btn-primary">Full report</a>
+        </div>
+        <div class="card-body">
+            <p class="text-muted mb-2">Bot vs human traffic (last 24h). IPs anonymized; data expires after 24 hours.</p>
+            <div class="row">
+                <div class="col-md-4">
+                    <span class="badge bg-warning text-dark me-2">Bot</span> {{ bot_summary.bot_pct }}%
+                </div>
+                <div class="col-md-4">
+                    <span class="badge bg-success me-2">Human</span> {{ bot_summary.human_pct }}%
+                </div>
+                <div class="col-md-4">
+                    <strong>Requests today:</strong> {{ "{:,}".format(bot_summary.total_today) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
             <h3>Protected Routes</h3>
         </div>
         <div class="card-body">

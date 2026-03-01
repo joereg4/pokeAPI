@@ -51,3 +51,4 @@ openai>=1.0.0
 paramiko>=3.0.0
 rich>=13.0.0
 brotli>=1.2.0
+google-analytics-data>=0.18.0
