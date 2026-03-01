@@ -110,26 +110,165 @@
             <h3 class="mb-0"><i class="fas fa-chart-line me-2"></i>Visitor Analytics (GA4)</h3>
         </div>
         <div class="card-body">
-            <p class="text-muted mb-2">Data from Google Analytics Data API (cached 15 min).</p>
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <strong>Active users (7 days):</strong> {{ "{:,}".format(ga_analytics.active_users_7d) }}
+            <p class="text-muted mb-3">Data from Google Analytics Data API (cached 15 min, last 7 days).</p>
+
+            <h6 class="text-uppercase text-muted mb-2">Overview</h6>
+            <div class="row mb-4">
+                <div class="col-md-2">
+                    <div class="border rounded p-2 text-center">
+                        <div class="text-muted small">Users (7d)</div>
+                        <div class="fw-bold fs-5">{{ "{:,}".format(ga_analytics.active_users_7d) }}</div>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <strong>Active users (24h):</strong> {{ "{:,}".format(ga_analytics.active_users_1d) }}
+                <div class="col-md-2">
+                    <div class="border rounded p-2 text-center">
+                        <div class="text-muted small">Users (24h)</div>
+                        <div class="fw-bold fs-5">{{ "{:,}".format(ga_analytics.active_users_1d) }}</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="border rounded p-2 text-center">
+                        <div class="text-muted small">Sessions</div>
+                        <div class="fw-bold fs-5">{{ "{:,}".format(ga_analytics.sessions) }}</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="border rounded p-2 text-center">
+                        <div class="text-muted small">Engaged</div>
+                        <div class="fw-bold fs-5">{{ "{:,}".format(ga_analytics.engaged_sessions) }}</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="border rounded p-2 text-center">
+                        <div class="text-muted small">Avg Duration</div>
+                        {% set dur = ga_analytics.average_session_duration_seconds|int %}
+                        <div class="fw-bold fs-5">{{ (dur // 60) }}m {{ (dur % 60) }}s</div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="border rounded p-2 text-center">
+                        <div class="text-muted small">Bounce Rate</div>
+                        <div class="fw-bold fs-5">{{ ga_analytics.bounce_rate }}%</div>
+                    </div>
                 </div>
             </div>
-            {% if ga_analytics.top_pages %}
-            <h6>Top pages (7 days)</h6>
-            <ul class="list-group list-group-flush">
-                {% for page in ga_analytics.top_pages %}
-                <li class="list-group-item d-flex justify-content-between py-2">
-                    <code class="small">{{ page.path }}</code>
-                    <span class="badge bg-primary">{{ "{:,}".format(page.views) }}</span>
-                </li>
-                {% endfor %}
-            </ul>
-            {% endif %}
+
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h6 class="text-uppercase text-muted mb-2">Acquisition</h6>
+                    {% if ga_analytics.traffic_sources %}
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped mb-0">
+                            <thead><tr><th>Channel</th><th>Sessions</th><th>New Users</th></tr></thead>
+                            <tbody>
+                                {% for src in ga_analytics.traffic_sources %}
+                                <tr>
+                                    <td>{{ src.channel }}</td>
+                                    <td>{{ "{:,}".format(src.sessions) }}</td>
+                                    <td>{{ "{:,}".format(src.new_users) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted small">No acquisition data available.</p>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-6">
+                    <h6 class="text-uppercase text-muted mb-2">Audience</h6>
+                    <div class="row">
+                        <div class="col-6">
+                            <strong class="small">Devices</strong>
+                            {% if ga_analytics.devices %}
+                            <ul class="list-group list-group-flush mt-1">
+                                {% for d in ga_analytics.devices %}
+                                <li class="list-group-item d-flex justify-content-between py-1 px-0">
+                                    <span class="small">
+                                        {% if d.device == 'Desktop' %}<i class="fas fa-desktop me-1"></i>
+                                        {% elif d.device == 'Mobile' %}<i class="fas fa-mobile-alt me-1"></i>
+                                        {% elif d.device == 'Tablet' %}<i class="fas fa-tablet-alt me-1"></i>
+                                        {% else %}<i class="fas fa-question me-1"></i>{% endif %}
+                                        {{ d.device }}
+                                    </span>
+                                    <span class="badge bg-secondary">{{ "{:,}".format(d.sessions) }}</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                            <p class="text-muted small mt-1">No device data.</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-6">
+                            <strong class="small">Top Countries</strong>
+                            {% if ga_analytics.countries %}
+                            <ul class="list-group list-group-flush mt-1">
+                                {% for c in ga_analytics.countries %}
+                                <li class="list-group-item d-flex justify-content-between py-1 px-0">
+                                    <span class="small">{{ c.country }}</span>
+                                    <span class="badge bg-secondary">{{ "{:,}".format(c.sessions) }}</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                            <p class="text-muted small mt-1">No country data.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h6 class="text-uppercase text-muted mb-2">Content</h6>
+                    {% if ga_analytics.top_pages %}
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped mb-0">
+                            <thead><tr><th>Page</th><th>Views</th></tr></thead>
+                            <tbody>
+                                {% for page in ga_analytics.top_pages %}
+                                <tr>
+                                    <td>
+                                        <span class="small">{{ page.title }}</span>
+                                        {% if page.title != page.path %}
+                                        <br><code class="text-muted" style="font-size:0.75em;">{{ page.path }}</code>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ "{:,}".format(page.views) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted small">No page data available.</p>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-6">
+                    <h6 class="text-uppercase text-muted mb-2">Events</h6>
+                    {% if ga_analytics.top_events %}
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped mb-0">
+                            <thead><tr><th>Event</th><th>Count</th></tr></thead>
+                            <tbody>
+                                {% for ev in ga_analytics.top_events %}
+                                <tr>
+                                    <td><code class="small">{{ ev.event_name }}</code></td>
+                                    <td>{{ "{:,}".format(ev.count) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted small mb-1">No events tracked yet.</p>
+                    <p class="text-muted small">Add custom events via <code>gtag('event', ...)</code> to see them here.</p>
+                    {% endif %}
+                </div>
+            </div>
+
         </div>
     </div>
     {% endif %}
