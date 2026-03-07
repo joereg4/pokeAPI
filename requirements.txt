@@ -19,7 +19,7 @@ importlib_metadata==8.2.0
 iniconfig==2.0.0
 itsdangerous==2.2.0
 Jinja2>=3.1.6
-Markdown==3.6
+Markdown==3.8.1
 MarkupSafe==2.1.5
 numpy==2.0.1
 packaging==24.1

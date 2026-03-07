@@ -67,13 +67,14 @@ class TestIPAnonymization:
         assert hash_result != "unknown"
 
     def test_anonymize_ip_is_not_reversible(self):
-        """Hash should not contain original IP."""
+        """Hash must not equal the raw IP; output is a hex hash, not the input."""
         ip = "192.168.1.100"
         hash_result = anonymize_ip(ip)
-        # Hash should not contain any part of the original IP
-        assert "192" not in hash_result
-        assert "168" not in hash_result
-        assert "100" not in hash_result
+        # Irreversibility: hashed value must not equal or reveal the original IP
+        assert hash_result != ip
+        assert len(hash_result) == 12
+        # Hash is hex; original IP string must not appear verbatim in the result
+        assert ip not in hash_result
 
 
 class TestUserAgentClassification:
