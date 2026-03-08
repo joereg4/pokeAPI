@@ -87,9 +87,53 @@ Tests use SQLite in-memory (never PostgreSQL) and `SimpleCache` (never Redis). T
 
 Mock JSON data for tests lives in `mock_data/`.
 
-## Production Deployment
-The app deploys via GitHub webhook (see `routes/webhook.py`). It runs under Gunicorn. Database access to production requires an SSH tunnel:
+## Development Workflow
+
+This is the required workflow for all changes. Follow every step in order.
+
+### 1. Create a feature branch
+Never commit directly to `main`.
 ```bash
-ssh -L 5433:localhost:5432 root@149.28.243.132
+git checkout -b your-feature-name
 ```
-See `DEPLOYMENT.md` for full deployment procedures.
+
+### 2. Run tests in the venv before committing
+```bash
+source .venv/bin/activate
+pytest tests/
+```
+All tests must pass before proceeding. Fix any failures first.
+
+### 3. Commit and push
+```bash
+git add <files>
+git commit -m "type: short description"
+git push -u origin your-feature-name
+```
+
+### 4. Open a Pull Request and watch CI
+```bash
+gh pr create --title "..." --body "..."
+gh run watch <run-id> --exit-status
+```
+Wait for CI to go green. Fix failures before merging — never merge a failing PR.
+
+### 5. Merge into main and watch CI again
+```bash
+gh pr merge <pr-number> --merge --delete-branch
+gh run watch <run-id> --exit-status
+```
+Get the new run ID with `gh run list --branch main --limit 3`. CI must pass on `main` before deploying.
+
+### 6. Deploy to production
+**Standard deploy (no dependency changes):**
+```bash
+ssh root@149.28.243.132 "cd /var/www/pokeAPI && git pull && sudo systemctl restart gunicorn"
+```
+
+**If `requirements.txt` changed in this update:**
+```bash
+ssh root@149.28.243.132 "cd /var/www/pokeAPI && git pull && source .venv/bin/activate && pip install -r requirements.txt && sudo systemctl restart gunicorn"
+```
+
+The CI webhook step on `main` pushes automatically, so `git pull` may already be up to date — but always run it to confirm. Gunicorn must be restarted regardless.
