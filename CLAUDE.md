@@ -91,9 +91,10 @@ Mock JSON data for tests lives in `mock_data/`.
 
 This is the required workflow for all changes. Follow every step in order.
 
-### 1. Create a feature branch
-Never commit directly to `main`.
+### 1. Update local main and create a feature branch
+Always start from an up-to-date local main. Never commit directly to `main`.
 ```bash
+git checkout main && git pull origin main
 git checkout -b your-feature-name
 ```
 
@@ -133,7 +134,7 @@ ssh root@149.28.243.132 "cd /var/www/pokeAPI && git pull && sudo systemctl resta
 
 **If `requirements.txt` changed in this update:**
 ```bash
-ssh root@149.28.243.132 "cd /var/www/pokeAPI && git pull && source .venv/bin/activate && pip install -r requirements.txt && sudo systemctl restart gunicorn"
+ssh root@149.28.243.132 "cd /var/www/pokeAPI && git pull && source venv/bin/activate && pip install -r requirements.txt && sudo systemctl restart gunicorn"
 ```
 
 The CI webhook step on `main` pushes automatically, so `git pull` may already be up to date — but always run it to confirm. Gunicorn must be restarted regardless.
