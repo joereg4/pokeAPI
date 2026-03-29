@@ -45,7 +45,7 @@ This tool addresses the need to improve existing summaries that may have been ge
 Install the required Python packages:
 
 ```bash
-pipenv install rich
+.venv/bin/pip install -r requirements.txt
 ```
 
 ### Database Setup
@@ -239,7 +239,7 @@ The tool uses the same summary generation functions as the web interface:
 
 **"No module named 'rich'"**
 ```bash
-pipenv install rich
+.venv/bin/pip install -r requirements.txt
 ```
 
 **"Database connection error"**
