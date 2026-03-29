@@ -163,7 +163,7 @@ The application includes comprehensive database management scripts for syncing d
 
 1. **Install Dependencies**:
    ```bash
-   pipenv install paramiko psycopg2-binary
+   .venv/bin/pip install -r requirements.txt
    ```
 
 2. **Establish SSH Tunnel**:

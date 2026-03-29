@@ -18,7 +18,7 @@ Both scripts include automatic backup creation and cleanup to ensure data safety
 Install the required Python packages:
 
 ```bash
-pipenv install paramiko psycopg2-binary
+.venv/bin/pip install -r requirements.txt
 ```
 
 ### SSH Tunnel Setup
@@ -395,7 +395,7 @@ ssh -L 5433:localhost:5432 root@149.28.243.132
 ```bash
 # Error: No module named 'paramiko'
 # Solution: Install required packages
-pipenv install paramiko psycopg2-binary
+.venv/bin/pip install -r requirements.txt
 ```
 
 #### Backup Failures
