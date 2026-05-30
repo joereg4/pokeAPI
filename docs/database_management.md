@@ -23,10 +23,10 @@ Install the required Python packages:
 
 ### SSH Tunnel Setup
 
-For secure connections to production, establish an SSH tunnel:
+For secure connections to production, establish an SSH tunnel (operator-only — set `PROD_SSH_HOST` in your private `.env`; not required for local/Docker use):
 
 ```bash
-ssh -L 5433:localhost:5432 root@149.28.243.132
+ssh -L 5433:localhost:5432 ${PROD_SSH_USER:-root}@${PROD_SSH_HOST:?set PROD_SSH_HOST in .env}
 ```
 
 Keep this tunnel active while running the scripts.
@@ -384,7 +384,7 @@ Both scripts automatically manage backup storage:
 ```bash
 # Error: Connection refused
 # Solution: Ensure SSH tunnel is active
-ssh -L 5433:localhost:5432 root@149.28.243.132
+ssh -L 5433:localhost:5432 ${PROD_SSH_USER:-root}@${PROD_SSH_HOST:?set PROD_SSH_HOST in .env}
 
 # Error: Authentication failed
 # Solution: Check SSH key setup or password
@@ -402,17 +402,16 @@ ssh -L 5433:localhost:5432 root@149.28.243.132
 
 ```bash
 # Error: Backup failed
-# Solution: Check disk space and permissions
-# Check production server disk space
-ssh root@149.28.243.132 "df -h /var/www/pokeAPI/backups"
+# Solution: Check disk space and permissions on the production server (via SSH using PROD_SSH_HOST)
+ssh ${PROD_SSH_USER:-root}@${PROD_SSH_HOST:?set PROD_SSH_HOST in .env} "df -h \$DEPLOY_APP_DIR/backups"
 ```
 
 #### Permission Issues
 
 ```bash
 # Error: Permission denied
-# Solution: Check backup directory permissions
-ssh root@149.28.243.132 "ls -la /var/www/pokeAPI/backups"
+# Solution: Check backup directory permissions on the production server
+ssh ${PROD_SSH_USER:-root}@${PROD_SSH_HOST:?set PROD_SSH_HOST in .env} "ls -la \$DEPLOY_APP_DIR/backups"
 ```
 
 ### Log Files

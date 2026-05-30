@@ -96,7 +96,10 @@ def create_app(test_config=None):
             "DATABASE_URL", "postgresql://localhost/pokeapi"
         )
         app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-        app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev")
+        secret = os.environ.get("SECRET_KEY")
+        if env == "production" and not secret:
+            raise RuntimeError("SECRET_KEY must be set when FLASK_ENV=production")
+        app.config["SECRET_KEY"] = secret or "dev"
 
     # Google Analytics: expose to templates and resolve credentials path.
     # Relative GOOGLE_APPLICATION_CREDENTIALS is resolved from app root (works for prod at e.g. /var/www/pokeAPI).

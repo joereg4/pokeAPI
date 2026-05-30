@@ -126,15 +126,8 @@ gh run watch <run-id> --exit-status
 ```
 Get the new run ID with `gh run list --branch main --limit 3`. CI must pass on `main` before deploying.
 
-### 6. Deploy to production
-**Standard deploy (no dependency changes):**
-```bash
-ssh root@149.28.243.132 "cd /var/www/pokeAPI && git pull && sudo systemctl restart gunicorn"
-```
+### 6. Deploy (operator — private notes)
 
-**If `requirements.txt` changed in this update:**
-```bash
-ssh root@149.28.243.132 "cd /var/www/pokeAPI && git pull && source venv/bin/activate && pip install -r requirements.txt && sudo systemctl restart gunicorn"
-```
+See [DEPLOYMENT.md](DEPLOYMENT.md) for self-hosted deployment. Never commit server IPs, SSH keys, or secrets.
 
-The CI webhook step on `main` pushes automatically, so `git pull` may already be up to date — but always run it to confirm. Gunicorn must be restarted regardless.
+The CI webhook step on `main` triggers production deploy when configured; see `CONTRIBUTING.md` for required GitHub secrets.

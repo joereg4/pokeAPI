@@ -160,7 +160,6 @@ cython_debug/
 .idea/
 
 nohup.out
-newrelic.ini
 
 # Database backups
 backup/
@@ -168,9 +167,13 @@ backups/
 *.sql
 *.dump
 *.backup
+!docker/db/seed.sql
 
 # Summary updater progress
 data/summary_progress.json
 
 # Local deployment notes
-DEPLOYMENT.md
+!.env.example
+
+# Operator-only (real IPs, production paths)
+DEPLOYMENT.private.md

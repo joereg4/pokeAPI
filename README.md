@@ -1,44 +1,38 @@
-# Pokémon API Web Application UI Improvements
-
-## Summary of Changes
-
-### Item Display Enhancements
-- Fixed sprite rendering in item_detail.html by adjusting image dimensions to 96px
-- Improved container styling with proper shadows and padding
-- Fixed alignment issues by removing the p-4 class and adding proper centering
-- Reorganized item detail header to place name, sprite, and edit icon in a horizontal row
-
-### Move Category Improvements
-- Created a reusable formatter for category names to handle special characters
-- Replaced custom styling with Bootstrap badges
-- Added error handling for missing data
-- Fixed description duplication issue
-
-### New Move Damage Class Template
-- Created move_damage_class_detail.html to display physical, special, and status moves
-- Implemented proper descriptions from the API
-- Used grid layout for move listings
-- Maintained consistent styling with other pages
-
-### Move Detail Enhancements
-- Made damage class badges link to the move-damage-class route
-- Removed duplicate damage class information
-- Improved spacing in the header section
-
-### Type Display Standardization
-- Replaced type image nameplates with colored badges across:
-  - type_detail.html
-  - pokemon_detail.html
-
-### Overall Improvements
-- Maintained consistent color scheme for type badges
-- Ensured proper formatting of text elements (like uppercase Roman numerals for generation names)
-
 # Pokédex Web Application
 
-## Overview
+A Flask-based Pokédex that surfaces Pokémon, moves, items, locations, and more from [PokéAPI](https://pokeapi.co/), with Redis and shelve caching and optional AI-generated summaries.
 
-This Flask-based web application provides a comprehensive Pokédex, offering detailed information about Pokémon, their characteristics, locations, and more. It utilizes the PokéAPI as its primary data source and implements efficient caching mechanisms to improve performance.
+## Quick Start (Docker)
+
+```bash
+git clone https://github.com/joereg4/pokeAPI.git
+cd pokeAPI
+cp .env.example .env
+# Edit .env: set SECRET_KEY
+docker compose up --build
+```
+
+Open **http://localhost:8080**. See [DEPLOYMENT.md](DEPLOYMENT.md) and [docker/README.md](docker/README.md).
+
+Create an admin user after first start:
+
+```bash
+docker compose run --rm app python manage.py create_user
+```
+
+## Quick Start (local Python)
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+cp .env.example .env
+# Start Postgres + Redis; set DATABASE_URL and REDIS_URL in .env
+.venv/bin/flask db upgrade
+.venv/bin/python manage.py create_user
+.venv/bin/python app.py
+```
+
+Open **http://127.0.0.1:5000**.
 
 ---
 
@@ -47,8 +41,6 @@ This Flask-based web application provides a comprehensive Pokédex, offering det
 1. [Features](#features)
 2. [Technology Stack](#technology-stack)
 3. [Setup](#setup)
-    - [Prerequisites](#prerequisites)
-    - [Installation](#installation)
 4. [Running the Application](#running-the-application)
 5. [Project Structure](#project-structure)
 6. [Caching System](#caching-system)
@@ -74,104 +66,85 @@ This Flask-based web application provides a comprehensive Pokédex, offering det
 - PokéAPI: Primary data source
 - Flask-Caching: High-level caching for route responses
 - Shelve: Low-level caching for Pokédex-specific data
-- Pandas: Data manipulation and analysis
+- PostgreSQL + Redis: Persistence and route cache (production and Docker)
 - Markdown: Text-to-HTML conversion for summaries
 
 ## Setup
 
 ### Prerequisites
 
-- Python 3.9+
-- pip (Python package manager)
-- Virtualenv (recommended)
+- **Docker path:** Docker and Docker Compose
+- **Local path:** Python 3.9+, PostgreSQL, Redis
 
 ### Installation
 
-1. **Clone the Repository**
-    ```bash
-    git clone <repository_url>
-    cd pokeAPI
-    ```
-
-2. **Set Up a Virtual Environment**
-    ```bash
-    python -m venv venv
-    ```
-
-3. **Activate the Virtual Environment**
-    - macOS/Linux:
-        ```bash
-        source venv/bin/activate
-        ```
-    - Windows:
-        ```bash
-        .\venv\Scripts\activate
-        ```
-
-4. **Install Required Packages**
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-5. **Configure Environment Variables**
-    Create a `.env` file in the project root and add necessary environment variables (refer to `pokedex/utils.py` for required variables).
-
-## Redis Setup
-
-This application uses Redis for caching. To set up Redis:
-
-1. Install Redis on your local machine
-2. Start the Redis server:
-   ```
-   redis-server
-   ```
-3. Set the `REDIS_URL` environment variable or add it to your `.env` file:
-   ```
-   REDIS_URL=redis://localhost:6379/0
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/joereg4/pokeAPI.git
+   cd pokeAPI
    ```
 
-For production, ensure you have a Redis instance available and set the `REDIS_URL` environment variable accordingly.
+2. **Configure environment**
+   ```bash
+   cp .env.example .env
+   # Edit .env — set SECRET_KEY at minimum
+   ```
+
+3. **Choose a run mode**
+   - **Docker (recommended):** `docker compose up --build` — see [docker/README.md](docker/README.md)
+   - **Local Python:**
+     ```bash
+     python3 -m venv .venv
+     source .venv/bin/activate   # Windows: .venv\Scripts\activate
+     .venv/bin/pip install -r requirements.txt
+     .venv/bin/flask db upgrade
+     ```
+
+### Redis
+
+Set `REDIS_URL` in `.env` (default `redis://localhost:6379/0`). Docker Compose provides Redis automatically.
 
 ## Running the Application
 
-Execute the following command to start the Pokédex Web Application:
+**Docker:** http://localhost:8080 after `docker compose up`
 
+**Flask dev server:**
 ```bash
-python app.py
+.venv/bin/python app.py
 ```
+
+## Project Structure
+
+See repository layout: `routes/` (blueprints), `pokedex/` (API client and cache), `models/`, `templates/`, `tests/`.
+
+## Caching System
+
+- **High-level:** Flask-Caching with Redis for route responses
+- **Low-level:** Shelve filesystem cache for raw PokéAPI payloads
 
 ## Database Management
 
-The application includes comprehensive database management scripts for syncing data between local development and production environments.
+> **Operator tools** — require `PROD_SSH_HOST` and production DB access. Not needed to run a local Pokédex.
 
-### Available Scripts
+The application includes scripts for syncing data between local development and production:
 
-- **`scripts/upload_pokemon_summaries.py`** - Upload specific resource types from local to production
-- **`scripts/backup_db.py`** - Create full database backups and restore functionality
-- **`scripts/interactive_summary_updater.py`** - Interactive tool for reviewing and updating summaries
+- **`scripts/upload_pokemon_summaries.py`** — Upload resource summaries to production
+- **`scripts/backup_db.py`** — Full database backup and restore
+- **`scripts/interactive_summary_updater.py`** — Review and update summaries
 
-### Key Features
+### Quick Start (operators)
 
-- **Automatic Backups**: All upload operations create backups before making changes
-- **Resource-Specific Uploads**: Upload only specific resource types (pokemon, ability, move, etc.)
-- **Dry-Run Mode**: Preview changes before applying them
-- **Rollback Capability**: Restore from any backup if needed
-- **SSH Tunnel Support**: Secure connections to production database
-- **Interactive Summary Updates**: Review and improve existing summaries with progress tracking
-
-### Quick Start
-
-1. **Install Dependencies**:
+1. **Install dependencies**
    ```bash
    .venv/bin/pip install -r requirements.txt
    ```
 
-2. **Establish SSH Tunnel**:
+2. **Establish SSH tunnel** (set `PROD_SSH_HOST` in `.env` first)
    ```bash
-   ssh -L 5433:localhost:5432 root@149.28.243.132
+   ssh -L 5433:localhost:5432 ${PROD_SSH_USER:-root}@${PROD_SSH_HOST:?set PROD_SSH_HOST in .env}
    ```
 
-3. **Upload Pokemon Summaries**:
+3. **Upload summaries (example)**
    ```bash
    python3 scripts/upload_pokemon_summaries.py \
      --resource pokemon \
@@ -182,23 +155,22 @@ The application includes comprehensive database management scripts for syncing d
      --password "your_password"
    ```
 
-4. **Create Full Backup**:
-   ```bash
-   python3 scripts/backup_db.py \
-     --host localhost \
-     --port 5433 \
-     --database pokeapi \
-     --user pokeapi \
-     --password "your_password"
-   ```
+For details, see [Database Management Guide](docs/database_management.md) and [Interactive Summary Updater Guide](docs/interactive_summary_updater.md).
 
-5. **Update Summaries Interactively**:
-   ```bash
-   # Review and update pokemon summaries
-   python3 scripts/interactive_summary_updater.py --resource pokemon
-   
-   # Update all remaining summaries automatically
-   python3 scripts/interactive_summary_updater.py --resource pokemon --update-all
-   ```
+Historical UI notes: [docs/CHANGELOG-ui.md](docs/CHANGELOG-ui.md).
 
-For detailed documentation, see [Database Management Guide](docs/database_management.md) and [Interactive Summary Updater Guide](docs/interactive_summary_updater.md).
+## Testing
+
+```bash
+.venv/bin/pytest tests/ -q -m "not integration"
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for CI and PR guidelines.
+
+## Contributing
+
+Contributions welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+MIT — see [LICENSE](LICENSE). Security reports: [SECURITY.md](SECURITY.md).

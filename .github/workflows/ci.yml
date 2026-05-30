@@ -29,7 +29,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.9'
+          python-version: '3.11'
           cache: 'pip'  # Enable pip caching
 
       - name: Install dependencies
@@ -49,11 +49,18 @@ jobs:
           pytest tests/ -n 12 -m "not integration" --tb=short
 
       - name: Send webhook payload
-        if: success() && github.event_name == 'push'  # Only deploy on merge to main, not on PRs
-        run: |  
+        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          DEPLOY_WEBHOOK_URL: ${{ secrets.DEPLOY_WEBHOOK_URL }}
+          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
+        run: |
+          if [ -z "$DEPLOY_WEBHOOK_URL" ]; then
+            echo "Skipping deploy webhook (DEPLOY_WEBHOOK_URL not set)"
+            exit 0
+          fi
           payload='{}'
-          signature=$(echo -n "$payload" | openssl dgst -sha256 -hmac "${{ secrets.WEBHOOK_SECRET }}" | sed 's/^.* //')
+          signature=$(echo -n "$payload" | openssl dgst -sha256 -hmac "$WEBHOOK_SECRET" | sed 's/^.* //')
           curl -X POST -H "Content-Type: application/json" \
             -H "X-Hub-Signature-256: sha256=$signature" \
             -d "$payload" \
-            https://pokedexapi.com/webhook/
+            "$DEPLOY_WEBHOOK_URL"
