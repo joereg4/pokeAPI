@@ -1,159 +1,756 @@
-resource,name,summary
-pokemon-species,deoxys,"**Deoxys** is a Psychic-type Mythical Pokémon known for its extraterrestrial origins and ability to change forms. Deoxys was first introduced in Pokémon Ruby and Sapphire and has since become a standout Pokémon due to its unique design and versatile battle capabilities.
-
-**Type:** Psychic
-
-**Forms and Abilities:**
-Deoxys is notable for having four distinct forms, each with different stats and abilities tailored for various battle strategies. 
-1. **Normal Forme:** Balanced stats and a well-rounded move set.
-    - **Ability:** Pressure - Doubles the opposing Pokémon's usage of PP (Power Points) for moves targeting Deoxys.
-2. **Attack Forme:** Emphasizes high attack stats at the expense of its defenses.
-    - **Ability:** Pressure
-3. **Defense Forme:** Prioritizes high defense and special defense while sacrificing attack stats.
-    - **Ability:** Pressure
-4. **Speed Forme:** Specializes in exceptionally high speed stats,"
-pokemon-species,wormadam,"**Wormadam** is a unique Bug-type Pokémon that can have different secondary types depending on the cloak it is in. It evolves from a female Burmy starting at level 20. The specific form Wormadam takes after evolving is determined by the environment where Burmy last battled and changes according to the type of cloak it has.
-
-**Types:**
-- **Plant Cloak Wormadam:** Bug/Grass
-- **Sandy Cloak Wormadam:** Bug/Ground
-- **Trash Cloak Wormadam:** Bug/Steel
-
-**Abilities:**
-- **Anticipation:** This ability allows Wormadam to shiver upon sensing the opponent's dangerous moves, providing an early warning in battle.
-- **Hidden Ability (Overcoat):** This ability protects Wormadam from damage caused by weather effects and powder moves like Spore and Sleep Powder.
-
-**Interesting Facts:**
-- Wormadam's appearance and type are determined by its cloak, which is influenced by the last battle location of Burmy"
-pokemon-species,giratina,"**Giratina** is a Legendary Ghost/Dragon-type Pokémon known for its connection to the Distortion World, an alternate dimension in the Pokémon universe. Recognized for its formidable appearance and unique lore, Giratina plays a central role in Pokémon mythology, particularly in the fourth generation of games.
-
-**Type:** Ghost/Dragon
-
-**Forms:**
-- **Altered Forme:** This is the standard form of Giratina. In this form, Giratina is depicted with six short legs and a dragon-like appearance.
-- **Origin Forme:** Exclusive to the Distortion World or when holding the Griseous Orb, Giratina transforms into this form, gaining a more serpentine appearance with six long, ribbon-like extensions.
-
-**Abilities:**
-- **Altered Forme (Levitate):** This ability grants Giratina immunity to Ground-type moves, making it unaffected by moves such as Earthquake.
-- **Origin Forme (Levitate):** Similarly, this ability provides Giratina with"
-pokemon-species,shaymin,"**Shaymin** is a unique Pokémon known for its ability to change forms and its vibrant connection to nature. Introduced in Generation IV, Shaymin is a mythical Pokémon that is highly revered within the Pokémon universe.
-
-**Type:**
-- **Land Forme:** Grass
-- **Sky Forme:** Grass/Flying
-
-**Forms and Transformation:**
-- **Land Forme:** Shaymin's original form, resembling a small hedgehog with green grass-like fur on its back.
-- **Sky Forme:** Shaymin transforms into this form when exposed to the Gracidea Flower during the daytime, except at night or when frozen. In its Sky Forme, Shaymin resembles a small, flying deer with a sleek, aerodynamic body and flaps on the sides of its head that look like wings.
-
-**Abilities:**
-- **Land Forme:** 
-  - **Natural Cure:** This ability allows Shaymin to heal from any status conditions upon switching out of battle.
-- **"
-pokemon-species,basculin,"**Basculin** is a Water-type Pokémon known for its aggressive temperament and ferocious nature. It is a fish Pokémon characterized by its differences in form, known as the Red-Striped and Blue-Striped forms, which have variations in their appearance and may differ based on the region they're found in the Pokémon universe.
-
-**Type:** Water
-
-**Abilities:**
-- **Reckless:** This ability boosts the power of moves that have recoil damage by 20%, making Basculin's already high offensive potential even more formidable.
-- **Adaptability:** Adaptability increases the STAB (Same Type Attack Bonus) from the usual 50% to 100%, enhancing the power of Basculin's Water-type moves.
-- **Hidden Ability (Mold Breaker):** This ability allows Basculin to use its moves without being affected by the target's abilities that could potentially alter the move's effects.
-
-**Interesting Facts:**
-- **Form Variations:** Basculin"
-pokemon-species,darmanitan,"**Darmanitan** is a Fire-type Pokémon known for its immense strength and unique forms. It evolves from Darumaka starting at level 35. Darmanitan is distinguished by its large size, red and white fur, and a fierce demeanor that embodies its fiery nature. In addition to its standard form, Darmanitan has an alternate Zen Mode and a Galarian Form that changes its type and abilities.
-
-**Type:**
-- Galarian Form: Ice
-- Standard Form: Fire
-- Zen Mode (Standard Form): Fire/Psychic
-- Zen Mode (Galarian Form): Ice/Fire
-
-**Abilities:**
-- **Standard Form:**
-  - **Sheer Force:** This ability increases the power of Darmanitan's moves by 30% but removes any additional effects those moves might have.
-  - **Hidden Ability (Zen Mode):** When Darmanitan's HP drops below 50%, it changes into Zen Mode, altering its appearance and"
-pokemon-species,tornadus,"**Tornadus** is a Legendary Pokémon introduced in Generation V, belonging to the Forces of Nature trio alongside Thundurus and Landorus. Tornadus is uniquely a pure Flying-type Pokémon and is known for its distinctive appearances in both its Incarnate Forme and Therian Forme.
-
-**Type:** Flying
-
-**Abilities:**
-- **Incarnate Forme:**
-  - **Prankster:** This ability gives Tornadus' status moves priority, allowing them to go first regardless of its Speed stat.
-  - **Hidden Ability (Defiant):** When any of Tornadus' stats are lowered by an opponent, its Attack stat increases by two stages.
-
-- **Therian Forme:**
-  - **Regenerator:** This ability heals Tornadus for a third of its maximum HP when it switches out of battle.
-
-**Interesting Facts:**
-- **Incarnate Forme Appearance:** In its Incarnate Forme, Tornadus resembles"
-pokemon-species,thundurus,"**Thundurus** is a dual Electric/Flying-type Legendary Pokémon introduced in Generation V. It is a member of the Forces of Nature trio along with Tornadus and Landorus. Thundurus is known for its immense power and its association with thunderstorms and lightning.
-
-**Type:** Electric/Flying
-
-**Forms:**
-- **Incarnate Forme:** This is Thundurus' default form, characterized by its blue, muscular human-like body with cloud-like formations at its back and a tail that resembles a lightning bolt.
-- **Therian Forme:** Introduced in Pokémon Black 2 and White 2, Thundurus' Therian Forme resembles a large, fierce dragon or bird-like creature, with substantial changes to its stats and abilities.
-
-**Abilities:**
-- **Incarnate Forme:**
-  - **Prankster:** This ability allows Thundurus to give priority to its status moves, making it a potent user of moves like Thunder Wave and"
-pokemon-species,landorus,"**Landorus** is a Ground/Flying-type Legendary Pokémon introduced in Generation V. Known as the ""Abundance Pokémon,"" Landorus is part of the Forces of Nature trio along with Tornadus and Thundurus. It is revered in the Pokémon lore for its ability to bring fertility to the lands and improve the soil's richness.
-
-**Type:** Ground/Flying
-
-**Formes:** 
-- **Incarnate Forme:** This is the default form of Landorus, characterized by its humanoid figure, orange and white coloration, and a genie-like appearance. It stands on a cloud and has a long tail covered in rocky protrusions.
-- **Therian Forme:** This form is obtained by using the Reveal Glass item. In this form, Landorus resembles a large, muscular feline creature with a tail that has spiked rocks. Therian Forme enhances its physical attributes.
-
-**Abilities:**
-
-- **Incarnate Forme:**
-  - **Sand Force:** This"
-pokemon-species,keldeo,"**Keldeo** is a unique and powerful Water/Fighting-type Pokémon, known for its distinct appearance and noble background in the Pokémon series. It is a member of the Swords of Justice, a group of Legendary Pokémon that also includes Cobalion, Terrakion, and Virizion. Keldeo is particularly notable for its significance in various Pokémon media, including games and movies.
-
-**Type:** Water/Fighting
-
-**Abilities:**
-- **Justified:** This ability raises Keldeo's Attack stat by one stage for each Dark-type move it is hit by. Despite being a special attacker, this ability can still be useful in various situations, allowing Keldeo to potentially gain a tactical advantage.
-
-**Forms:**
-- **Ordinary Form:** The default form Keldeo is typically encountered in.
-- **Resolute Form:** Keldeo can change into its Resolute Form when it learns the move Secret Sword. This form visually transforms Keldeo by giving it a"
-pokemon-species,meloetta,"**Meloetta** is a dual-type Mythical Pokémon known for its musical themes and graceful appearance. It has two Formes: Aria Forme and Pirouette Forme, which change its typing, stats, and abilities.
-
-**Type:**
-- **Aria Forme:** Normal/Psychic
-- **Pirouette Forme:** Normal/Fighting
-
-**Abilities:** 
-- **Serene Grace:** This ability increases the chances of Meloetta's moves' secondary effects occurring. For example, moves that may cause flinching or stat changes will have an enhanced chance to do so with Serene Grace.
-
-**Forms and Transformation:**
-- Meloetta has a unique move called **Relic Song**. When it uses Relic Song in battle, it changes between its two forms:
-  - **Aria Forme:** This is Meloetta’s default form when it is first encountered. It has a melodic, elegant design symbolizing its Normal/Psychic typing."
-pokemon-species,meowstic,"**Meowstic** is a Psychic-type Pokémon introduced in Generation VI. It is known for its dual-gender forms (male and female), each of which has a distinct appearance and slightly different sets of stats and abilities. The design and behavior of Meowstic emphasize its psychic powers and feline-like characteristics.
-
-**Type:** Psychic
-
-**Forms:**
-- **Male Meowstic:** Blue-and-white coloration, generally more offensive in its stats.
-- **Female Meowstic:** White-and-blue coloration, generally more defensive in its stats.
-
-**Abilities:**
-- **Infiltrator:** This ability allows Meowstic to bypass the opponent’s Light Screen, Reflect, Safeguard, Substitute, and Aurora Veil, affecting them as if these barriers were not in place.
-- **Keen Eye:** This ability prevents Meowstic from having its accuracy lowered, and it also ignores any opponent's evasion boosts.
-- **Hidden Ability (Prank"
-pokemon-species,aegislash,"**Aegislash** is a unique Steel/Ghost-type Pokémon known for its dual forms and regal appearance. It is the final evolution in its line, evolving from Doublade when exposed to a Dusk Stone, which itself evolves from Honedge starting at level 35.
-
-**Type:** Steel/Ghost
-
-**Abilities:**
-- **Stance Change:** This is Aegislash's unique and signature ability. It allows Aegislash to switch between two forms: Shield Forme and Blade Forme. In Shield Forme, Aegislash has high defenses, while in Blade Forme, it has high offensive stats. The change occurs when Aegislash uses specific moves like King's Shield (to shift to Shield Forme) or an attacking move (to shift to Blade Forme).
-
-**Interesting Facts:**
-- **Dual Forms:** Aegislash's defining characteristic is its ability to shift between Shield Forme and Blade Forme. When in Shield Forme"
-pokemon-species,pumpkaboo,"**Pumpkaboo** is a uniquely designed Pokémon inspired by Halloween and pumpkins. It is a dual-type Ghost/Grass Pokémon introduced in Generation VI. Its appearance resembles a jack-o'-lantern with a ghostly upper body, featuring glowing yellow eyes and a small mouth. Its lower body is pumpkin-shaped with orange and brown hues. Pumpkaboo comes in four different sizes: Small, Average, Large, and Super, with each size having slight variations in stats and appearance.
+"resource","name","summary"
+"pokemon-species","pupitar",""
+"pokemon-species","tyranitar",""
+"pokemon-species","lugia",""
+"pokemon-species","ho-oh",""
+"pokemon-species","celebi",""
+"pokemon-species","treecko",""
+"pokemon-species","grovyle",""
+"pokemon-species","sceptile",""
+"pokemon-species","torchic",""
+"pokemon-species","combusken",""
+"pokemon-species","blaziken",""
+"pokemon-species","mudkip",""
+"pokemon-species","marshtomp",""
+"pokemon-species","swampert",""
+"pokemon-species","poochyena",""
+"pokemon-species","mightyena",""
+"pokemon-species","zigzagoon",""
+"pokemon-species","linoone",""
+"pokemon-species","wurmple",""
+"pokemon-species","silcoon",""
+"pokemon-species","beautifly",""
+"pokemon-species","cascoon",""
+"pokemon-species","dustox",""
+"pokemon-species","lotad",""
+"pokemon-species","lombre",""
+"pokemon-species","ludicolo",""
+"pokemon-species","seedot",""
+"pokemon-species","nuzleaf",""
+"pokemon-species","shiftry",""
+"pokemon-species","taillow",""
+"pokemon-species","swellow",""
+"pokemon-species","wingull",""
+"pokemon-species","pelipper",""
+"pokemon-species","ralts",""
+"pokemon-species","kirlia",""
+"pokemon-species","gardevoir",""
+"pokemon-species","surskit",""
+"pokemon-species","masquerain",""
+"pokemon-species","shroomish",""
+"pokemon-species","breloom",""
+"pokemon-species","slakoth",""
+"pokemon-species","vigoroth",""
+"pokemon-species","slaking",""
+"pokemon-species","nincada",""
+"pokemon-species","ninjask",""
+"pokemon-species","shedinja",""
+"pokemon-species","whismur",""
+"pokemon-species","loudred",""
+"pokemon-species","exploud",""
+"pokemon-species","makuhita",""
+"pokemon-species","hariyama",""
+"pokemon-species","azurill",""
+"pokemon-species","nosepass",""
+"pokemon-species","skitty",""
+"pokemon-species","delcatty",""
+"pokemon-species","sableye",""
+"pokemon-species","mawile",""
+"pokemon-species","aron",""
+"pokemon-species","lairon",""
+"pokemon-species","aggron",""
+"pokemon-species","meditite",""
+"pokemon-species","medicham",""
+"pokemon-species","electrike",""
+"pokemon-species","manectric",""
+"pokemon-species","plusle",""
+"pokemon-species","minun",""
+"pokemon-species","volbeat",""
+"pokemon-species","illumise",""
+"pokemon-species","roselia",""
+"pokemon-species","gulpin",""
+"pokemon-species","swalot",""
+"pokemon-species","carvanha",""
+"pokemon-species","sharpedo",""
+"pokemon-species","wailmer",""
+"pokemon-species","wailord",""
+"pokemon-species","numel",""
+"pokemon-species","camerupt",""
+"pokemon-species","torkoal",""
+"pokemon-species","spoink",""
+"pokemon-species","grumpig",""
+"pokemon-species","spinda",""
+"pokemon-species","trapinch",""
+"pokemon-species","vibrava",""
+"pokemon-species","flygon",""
+"pokemon-species","cacnea",""
+"pokemon-species","cacturne",""
+"pokemon-species","swablu",""
+"pokemon-species","altaria",""
+"pokemon-species","zangoose",""
+"pokemon-species","seviper",""
+"pokemon-species","lunatone",""
+"pokemon-species","solrock",""
+"pokemon-species","barboach",""
+"pokemon-species","whiscash",""
+"pokemon-species","corphish",""
+"pokemon-species","crawdaunt",""
+"pokemon-species","baltoy",""
+"pokemon-species","claydol",""
+"pokemon-species","lileep",""
+"pokemon-species","cradily",""
+"pokemon-species","anorith",""
+"pokemon-species","armaldo",""
+"pokemon-species","feebas",""
+"pokemon-species","milotic",""
+"pokemon-species","castform",""
+"pokemon-species","kecleon",""
+"pokemon-species","shuppet",""
+"pokemon-species","banette",""
+"pokemon-species","duskull",""
+"pokemon-species","dusclops",""
+"pokemon-species","tropius",""
+"pokemon-species","chimecho",""
+"pokemon-species","absol",""
+"pokemon-species","wynaut",""
+"pokemon-species","snorunt",""
+"pokemon-species","glalie",""
+"pokemon-species","spheal",""
+"pokemon-species","sealeo",""
+"pokemon-species","walrein",""
+"pokemon-species","clamperl",""
+"pokemon-species","huntail",""
+"pokemon-species","gorebyss",""
+"pokemon-species","relicanth",""
+"pokemon-species","luvdisc",""
+"pokemon-species","bagon",""
+"pokemon-species","shelgon",""
+"pokemon-species","salamence",""
+"pokemon-species","beldum",""
+"pokemon-species","metang",""
+"pokemon-species","metagross",""
+"pokemon-species","regirock",""
+"pokemon-species","regice",""
+"pokemon-species","registeel",""
+"pokemon-species","latias",""
+"pokemon-species","latios",""
+"pokemon-species","kyogre",""
+"pokemon-species","groudon",""
+"pokemon-species","rayquaza",""
+"pokemon-species","jirachi",""
+"pokemon-species","turtwig",""
+"pokemon-species","grotle",""
+"pokemon-species","torterra",""
+"pokemon-species","chimchar",""
+"pokemon-species","monferno",""
+"pokemon-species","infernape",""
+"pokemon-species","piplup",""
+"pokemon-species","prinplup",""
+"pokemon-species","empoleon",""
+"pokemon-species","starly",""
+"pokemon-species","staravia",""
+"pokemon-species","staraptor",""
+"pokemon-species","bidoof",""
+"pokemon-species","bibarel",""
+"pokemon-species","kricketot",""
+"pokemon-species","kricketune",""
+"pokemon-species","shinx",""
+"pokemon-species","luxio",""
+"pokemon-species","luxray",""
+"pokemon-species","budew",""
+"pokemon-species","roserade",""
+"pokemon-species","cranidos",""
+"pokemon-species","rampardos",""
+"pokemon-species","shieldon",""
+"pokemon-species","bastiodon",""
+"pokemon-species","burmy",""
+"pokemon-species","mothim",""
+"pokemon-species","combee",""
+"pokemon-species","vespiquen",""
+"pokemon-species","pachirisu",""
+"pokemon-species","buizel",""
+"pokemon-species","floatzel",""
+"pokemon-species","cherubi",""
+"pokemon-species","cherrim",""
+"pokemon-species","shellos",""
+"pokemon-species","gastrodon",""
+"pokemon-species","ambipom",""
+"pokemon-species","drifloon",""
+"pokemon-species","drifblim",""
+"pokemon-species","buneary",""
+"pokemon-species","lopunny",""
+"pokemon-species","mismagius",""
+"pokemon-species","honchkrow",""
+"pokemon-species","glameow",""
+"pokemon-species","purugly",""
+"pokemon-species","chingling",""
+"pokemon-species","stunky",""
+"pokemon-species","skuntank",""
+"pokemon-species","bronzor",""
+"pokemon-species","bronzong",""
+"pokemon-species","bonsly",""
+"pokemon-species","mime-jr",""
+"pokemon-species","happiny",""
+"pokemon-species","chatot",""
+"pokemon-species","spiritomb",""
+"pokemon-species","gible",""
+"pokemon-species","gabite",""
+"pokemon-species","garchomp",""
+"pokemon-species","munchlax",""
+"pokemon-species","riolu",""
+"pokemon-species","lucario",""
+"pokemon-species","hippopotas",""
+"pokemon-species","hippowdon",""
+"pokemon-species","skorupi",""
+"pokemon-species","drapion",""
+"pokemon-species","croagunk",""
+"pokemon-species","toxicroak",""
+"pokemon-species","carnivine",""
+"pokemon-species","finneon",""
+"pokemon-species","lumineon",""
+"pokemon-species","mantyke",""
+"pokemon-species","snover",""
+"pokemon-species","abomasnow",""
+"pokemon-species","weavile",""
+"pokemon-species","magnezone",""
+"pokemon-species","lickilicky",""
+"pokemon-species","rhyperior",""
+"pokemon-species","tangrowth",""
+"pokemon-species","electivire",""
+"pokemon-species","magmortar",""
+"pokemon-species","togekiss",""
+"pokemon-species","yanmega",""
+"pokemon-species","leafeon",""
+"pokemon-species","glaceon",""
+"pokemon-species","gliscor",""
+"pokemon-species","mamoswine",""
+"pokemon-species","porygon-z",""
+"pokemon-species","gallade",""
+"pokemon-species","probopass",""
+"pokemon-species","dusknoir",""
+"pokemon-species","froslass",""
+"pokemon-species","rotom",""
+"pokemon-species","uxie",""
+"pokemon-species","mesprit",""
+"pokemon-species","azelf",""
+"pokemon-species","dialga",""
+"pokemon-species","palkia",""
+"pokemon-species","heatran",""
+"pokemon-species","regigigas",""
+"pokemon-species","cresselia",""
+"pokemon-species","phione",""
+"pokemon-species","manaphy",""
+"pokemon-species","darkrai",""
+"pokemon-species","arceus",""
+"pokemon-species","victini",""
+"pokemon-species","snivy",""
+"pokemon-species","servine",""
+"pokemon-species","serperior",""
+"pokemon-species","tepig",""
+"pokemon-species","pignite",""
+"pokemon-species","emboar",""
+"pokemon-species","oshawott",""
+"pokemon-species","dewott",""
+"pokemon-species","samurott",""
+"pokemon-species","patrat",""
+"pokemon-species","watchog",""
+"pokemon-species","lillipup",""
+"pokemon-species","herdier",""
+"pokemon-species","stoutland",""
+"pokemon-species","purrloin",""
+"pokemon-species","liepard",""
+"pokemon-species","pansage",""
+"pokemon-species","simisage",""
+"pokemon-species","pansear",""
+"pokemon-species","simisear",""
+"pokemon-species","panpour",""
+"pokemon-species","simipour",""
+"pokemon-species","munna",""
+"pokemon-species","musharna",""
+"pokemon-species","pidove",""
+"pokemon-species","tranquill",""
+"pokemon-species","unfezant",""
+"pokemon-species","blitzle",""
+"pokemon-species","zebstrika",""
+"pokemon-species","roggenrola",""
+"pokemon-species","boldore",""
+"pokemon-species","gigalith",""
+"pokemon-species","woobat",""
+"pokemon-species","swoobat",""
+"pokemon-species","drilbur",""
+"pokemon-species","excadrill",""
+"pokemon-species","audino",""
+"pokemon-species","timburr",""
+"pokemon-species","gurdurr",""
+"pokemon-species","conkeldurr",""
+"pokemon-species","tympole",""
+"pokemon-species","palpitoad",""
+"pokemon-species","seismitoad",""
+"pokemon-species","throh",""
+"pokemon-species","sawk",""
+"pokemon-species","sewaddle",""
+"pokemon-species","swadloon",""
+"pokemon-species","leavanny",""
+"pokemon-species","venipede",""
+"pokemon-species","whirlipede",""
+"pokemon-species","scolipede",""
+"pokemon-species","cottonee",""
+"pokemon-species","whimsicott",""
+"pokemon-species","petilil",""
+"pokemon-species","lilligant",""
+"pokemon-species","sandile",""
+"pokemon-species","krokorok",""
+"pokemon-species","krookodile",""
+"pokemon-species","darumaka",""
+"pokemon-species","maractus",""
+"pokemon-species","dwebble",""
+"pokemon-species","crustle",""
+"pokemon-species","scraggy",""
+"pokemon-species","scrafty",""
+"pokemon-species","sigilyph",""
+"pokemon-species","yamask",""
+"pokemon-species","cofagrigus",""
+"pokemon-species","tirtouga",""
+"pokemon-species","carracosta",""
+"pokemon-species","archen",""
+"pokemon-species","archeops",""
+"pokemon-species","trubbish",""
+"pokemon-species","garbodor",""
+"pokemon-species","zorua",""
+"pokemon-species","zoroark",""
+"pokemon-species","minccino",""
+"pokemon-species","cinccino",""
+"pokemon-species","gothita",""
+"pokemon-species","gothorita",""
+"pokemon-species","gothitelle",""
+"pokemon-species","solosis",""
+"pokemon-species","duosion",""
+"pokemon-species","reuniclus",""
+"pokemon-species","ducklett",""
+"pokemon-species","swanna",""
+"pokemon-species","vanillite",""
+"pokemon-species","vanillish",""
+"pokemon-species","vanilluxe",""
+"pokemon-species","deerling",""
+"pokemon-species","sawsbuck",""
+"pokemon-species","emolga",""
+"pokemon-species","karrablast",""
+"pokemon-species","escavalier",""
+"pokemon-species","foongus",""
+"pokemon-species","amoonguss",""
+"pokemon-species","frillish",""
+"pokemon-species","jellicent",""
+"pokemon-species","alomomola",""
+"pokemon-species","joltik",""
+"pokemon-species","galvantula",""
+"pokemon-species","ferroseed",""
+"pokemon-species","ferrothorn",""
+"pokemon-species","klink",""
+"pokemon-species","klang",""
+"pokemon-species","klinklang",""
+"pokemon-species","tynamo",""
+"pokemon-species","eelektrik",""
+"pokemon-species","eelektross",""
+"pokemon-species","elgyem",""
+"pokemon-species","beheeyem",""
+"pokemon-species","litwick",""
+"pokemon-species","lampent",""
+"pokemon-species","chandelure",""
+"pokemon-species","axew",""
+"pokemon-species","fraxure",""
+"pokemon-species","haxorus",""
+"pokemon-species","cubchoo",""
+"pokemon-species","beartic",""
+"pokemon-species","cryogonal",""
+"pokemon-species","shelmet",""
+"pokemon-species","accelgor",""
+"pokemon-species","stunfisk",""
+"pokemon-species","mienfoo",""
+"pokemon-species","mienshao",""
+"pokemon-species","druddigon",""
+"pokemon-species","golett",""
+"pokemon-species","golurk",""
+"pokemon-species","pawniard",""
+"pokemon-species","bisharp",""
+"pokemon-species","bouffalant",""
+"pokemon-species","rufflet",""
+"pokemon-species","braviary",""
+"pokemon-species","vullaby",""
+"pokemon-species","mandibuzz",""
+"pokemon-species","heatmor",""
+"pokemon-species","durant",""
+"pokemon-species","deino",""
+"pokemon-species","zweilous",""
+"pokemon-species","hydreigon",""
+"pokemon-species","larvesta",""
+"pokemon-species","volcarona",""
+"pokemon-species","cobalion",""
+"pokemon-species","terrakion",""
+"pokemon-species","virizion",""
+"pokemon-species","reshiram",""
+"pokemon-species","zekrom",""
+"pokemon-species","kyurem",""
+"pokemon-species","genesect",""
+"pokemon-species","chespin",""
+"pokemon-species","quilladin",""
+"pokemon-species","chesnaught",""
+"pokemon-species","fennekin",""
+"pokemon-species","braixen",""
+"pokemon-species","delphox",""
+"pokemon-species","froakie",""
+"pokemon-species","frogadier",""
+"pokemon-species","greninja",""
+"pokemon-species","bunnelby",""
+"pokemon-species","diggersby",""
+"pokemon-species","fletchling",""
+"pokemon-species","fletchinder",""
+"pokemon-species","talonflame",""
+"pokemon-species","scatterbug",""
+"pokemon-species","spewpa",""
+"pokemon-species","vivillon",""
+"pokemon-species","litleo",""
+"pokemon-species","pyroar",""
+"pokemon-species","flabebe",""
+"pokemon-species","floette",""
+"pokemon-species","florges",""
+"pokemon-species","skiddo",""
+"pokemon-species","gogoat",""
+"pokemon-species","pancham",""
+"pokemon-species","pangoro",""
+"pokemon-species","furfrou",""
+"pokemon-species","espurr",""
+"pokemon-species","honedge",""
+"pokemon-species","doublade",""
+"pokemon-species","spritzee",""
+"pokemon-species","aromatisse",""
+"pokemon-species","swirlix",""
+"pokemon-species","slurpuff",""
+"pokemon-species","inkay",""
+"pokemon-species","malamar",""
+"pokemon-species","binacle",""
+"pokemon-species","barbaracle",""
+"pokemon-species","skrelp",""
+"pokemon-species","dragalge",""
+"pokemon-species","clauncher",""
+"pokemon-species","clawitzer",""
+"pokemon-species","helioptile",""
+"pokemon-species","heliolisk",""
+"pokemon-species","tyrunt",""
+"pokemon-species","tyrantrum",""
+"pokemon-species","amaura",""
+"pokemon-species","aurorus",""
+"pokemon-species","sylveon",""
+"pokemon-species","hawlucha",""
+"pokemon-species","dedenne",""
+"pokemon-species","carbink",""
+"pokemon-species","goomy",""
+"pokemon-species","sliggoo",""
+"pokemon-species","goodra",""
+"pokemon-species","klefki",""
+"pokemon-species","phantump",""
+"pokemon-species","trevenant",""
+"pokemon-species","bergmite",""
+"pokemon-species","avalugg",""
+"pokemon-species","noibat",""
+"pokemon-species","noivern",""
+"pokemon-species","xerneas",""
+"pokemon-species","yveltal",""
+"pokemon-species","diancie",""
+"pokemon-species","hoopa",""
+"pokemon-species","volcanion",""
+"pokemon-species","rowlet",""
+"pokemon-species","dartrix",""
+"pokemon-species","decidueye",""
+"pokemon-species","litten",""
+"pokemon-species","torracat",""
+"pokemon-species","incineroar",""
+"pokemon-species","popplio",""
+"pokemon-species","brionne",""
+"pokemon-species","primarina",""
+"pokemon-species","pikipek",""
+"pokemon-species","trumbeak",""
+"pokemon-species","toucannon",""
+"pokemon-species","yungoos",""
+"pokemon-species","gumshoos",""
+"pokemon-species","grubbin",""
+"pokemon-species","charjabug",""
+"pokemon-species","vikavolt",""
+"pokemon-species","crabrawler",""
+"pokemon-species","crabominable",""
+"pokemon-species","cutiefly",""
+"pokemon-species","ribombee",""
+"pokemon-species","rockruff",""
+"pokemon-species","mareanie",""
+"pokemon-species","toxapex",""
+"pokemon-species","mudbray",""
+"pokemon-species","mudsdale",""
+"pokemon-species","dewpider",""
+"pokemon-species","araquanid",""
+"pokemon-species","fomantis",""
+"pokemon-species","lurantis",""
+"pokemon-species","morelull",""
+"pokemon-species","shiinotic",""
+"pokemon-species","salandit",""
+"pokemon-species","salazzle",""
+"pokemon-species","stufful",""
+"pokemon-species","bewear",""
+"pokemon-species","bounsweet",""
+"pokemon-species","steenee",""
+"pokemon-species","tsareena",""
+"pokemon-species","comfey",""
+"pokemon-species","oranguru",""
+"pokemon-species","passimian",""
+"pokemon-species","wimpod",""
+"pokemon-species","golisopod",""
+"pokemon-species","sandygast",""
+"pokemon-species","palossand",""
+"pokemon-species","pyukumuku",""
+"pokemon-species","type-null",""
+"pokemon-species","silvally",""
+"pokemon-species","komala",""
+"pokemon-species","turtonator",""
+"pokemon-species","togedemaru",""
+"pokemon-species","bruxish",""
+"pokemon-species","drampa",""
+"pokemon-species","dhelmise",""
+"pokemon-species","jangmo-o",""
+"pokemon-species","hakamo-o",""
+"pokemon-species","kommo-o",""
+"pokemon-species","tapu-koko",""
+"pokemon-species","tapu-lele",""
+"pokemon-species","tapu-bulu",""
+"pokemon-species","tapu-fini",""
+"pokemon-species","cosmog",""
+"pokemon-species","cosmoem",""
+"pokemon-species","solgaleo",""
+"pokemon-species","lunala",""
+"pokemon-species","nihilego",""
+"pokemon-species","buzzwole",""
+"pokemon-species","pheromosa",""
+"pokemon-species","xurkitree",""
+"pokemon-species","celesteela",""
+"pokemon-species","kartana",""
+"pokemon-species","guzzlord",""
+"pokemon-species","necrozma",""
+"pokemon-species","magearna",""
+"pokemon-species","marshadow",""
+"pokemon-species","poipole",""
+"pokemon-species","naganadel",""
+"pokemon-species","stakataka",""
+"pokemon-species","blacephalon",""
+"pokemon-species","zeraora",""
+"pokemon-species","meltan",""
+"pokemon-species","melmetal",""
+"pokemon-species","grookey",""
+"pokemon-species","thwackey",""
+"pokemon-species","rillaboom",""
+"pokemon-species","scorbunny",""
+"pokemon-species","raboot",""
+"pokemon-species","cinderace",""
+"pokemon-species","sobble",""
+"pokemon-species","drizzile",""
+"pokemon-species","inteleon",""
+"pokemon-species","skwovet",""
+"pokemon-species","greedent",""
+"pokemon-species","rookidee",""
+"pokemon-species","corvisquire",""
+"pokemon-species","corviknight",""
+"pokemon-species","blipbug",""
+"pokemon-species","dottler",""
+"pokemon-species","orbeetle",""
+"pokemon-species","nickit",""
+"pokemon-species","thievul",""
+"pokemon-species","gossifleur",""
+"pokemon-species","eldegoss",""
+"pokemon-species","wooloo",""
+"pokemon-species","dubwool",""
+"pokemon-species","chewtle",""
+"pokemon-species","drednaw",""
+"pokemon-species","yamper",""
+"pokemon-species","boltund",""
+"pokemon-species","rolycoly",""
+"pokemon-species","carkol",""
+"pokemon-species","coalossal",""
+"pokemon-species","applin",""
+"pokemon-species","flapple",""
+"pokemon-species","appletun",""
+"pokemon-species","silicobra",""
+"pokemon-species","sandaconda",""
+"pokemon-species","cramorant",""
+"pokemon-species","arrokuda",""
+"pokemon-species","barraskewda",""
+"pokemon-species","toxel",""
+"pokemon-species","sizzlipede",""
+"pokemon-species","centiskorch",""
+"pokemon-species","clobbopus",""
+"pokemon-species","grapploct",""
+"pokemon-species","sinistea",""
+"pokemon-species","polteageist",""
+"pokemon-species","hatenna",""
+"pokemon-species","hattrem",""
+"pokemon-species","hatterene",""
+"pokemon-species","impidimp",""
+"pokemon-species","morgrem",""
+"pokemon-species","grimmsnarl",""
+"pokemon-species","obstagoon",""
+"pokemon-species","perrserker",""
+"pokemon-species","cursola",""
+"pokemon-species","sirfetchd",""
+"pokemon-species","mr-rime",""
+"pokemon-species","runerigus",""
+"pokemon-species","milcery",""
+"pokemon-species","alcremie",""
+"pokemon-species","falinks",""
+"pokemon-species","pincurchin",""
+"pokemon-species","snom",""
+"pokemon-species","frosmoth",""
+"pokemon-species","stonjourner",""
+"pokemon-species","cufant",""
+"pokemon-species","copperajah",""
+"pokemon-species","dracozolt",""
+"pokemon-species","arctozolt",""
+"pokemon-species","dracovish",""
+"pokemon-species","arctovish",""
+"pokemon-species","duraludon",""
+"pokemon-species","dreepy",""
+"pokemon-species","drakloak",""
+"pokemon-species","dragapult",""
+"pokemon-species","zacian",""
+"pokemon-species","zamazenta",""
+"pokemon-species","eternatus",""
+"pokemon-species","kubfu",""
+"pokemon-species","zarude",""
+"pokemon-species","regieleki",""
+"pokemon-species","regidrago",""
+"pokemon-species","glastrier",""
+"pokemon-species","spectrier",""
+"pokemon-species","calyrex",""
+"pokemon-species","wyrdeer",""
+"pokemon-species","kleavor",""
+"pokemon-species","ursaluna",""
+"pokemon-species","sneasler",""
+"pokemon-species","overqwil",""
+"pokemon-species","sprigatito",""
+"pokemon-species","floragato",""
+"pokemon-species","meowscarada",""
+"pokemon-species","fuecoco",""
+"pokemon-species","crocalor",""
+"pokemon-species","skeledirge",""
+"pokemon-species","quaxly",""
+"pokemon-species","quaxwell",""
+"pokemon-species","quaquaval",""
+"pokemon-species","lechonk",""
+"pokemon-species","oinkologne",""
+"pokemon-species","tarountula",""
+"pokemon-species","spidops",""
+"pokemon-species","nymble",""
+"pokemon-species","lokix",""
+"pokemon-species","pawmi",""
+"pokemon-species","pawmo",""
+"pokemon-species","pawmot",""
+"pokemon-species","tandemaus",""
+"pokemon-species","maushold",""
+"pokemon-species","fidough",""
+"pokemon-species","dachsbun",""
+"pokemon-species","smoliv",""
+"pokemon-species","dolliv",""
+"pokemon-species","arboliva",""
+"pokemon-species","squawkabilly",""
+"pokemon-species","nacli",""
+"pokemon-species","naclstack",""
+"pokemon-species","garganacl",""
+"pokemon-species","charcadet",""
+"pokemon-species","armarouge",""
+"pokemon-species","ceruledge",""
+"pokemon-species","tadbulb",""
+"pokemon-species","bellibolt",""
+"pokemon-species","wattrel",""
+"pokemon-species","kilowattrel",""
+"pokemon-species","maschiff",""
+"pokemon-species","mabosstiff",""
+"pokemon-species","shroodle",""
+"pokemon-species","grafaiai",""
+"pokemon-species","bramblin",""
+"pokemon-species","brambleghast",""
+"pokemon-species","toedscool",""
+"pokemon-species","toedscruel",""
+"pokemon-species","klawf",""
+"pokemon-species","capsakid",""
+"pokemon-species","scovillain",""
+"pokemon-species","rellor",""
+"pokemon-species","rabsca",""
+"pokemon-species","flittle",""
+"pokemon-species","espathra",""
+"pokemon-species","tinkatink",""
+"pokemon-species","tinkatuff",""
+"pokemon-species","tinkaton",""
+"pokemon-species","wiglett",""
+"pokemon-species","wugtrio",""
+"pokemon-species","bombirdier",""
+"pokemon-species","finizen",""
+"pokemon-species","palafin",""
+"pokemon-species","varoom",""
+"pokemon-species","revavroom",""
+"pokemon-species","cyclizar",""
+"pokemon-species","orthworm",""
+"pokemon-species","glimmet",""
+"pokemon-species","glimmora",""
+"pokemon-species","greavard",""
+"pokemon-species","houndstone",""
+"pokemon-species","flamigo",""
+"pokemon-species","cetoddle",""
+"pokemon-species","cetitan",""
+"pokemon-species","veluza",""
+"pokemon-species","dondozo",""
+"pokemon-species","tatsugiri",""
+"pokemon-species","annihilape",""
+"pokemon-species","clodsire",""
+"pokemon-species","farigiraf",""
+"pokemon-species","dudunsparce",""
+"pokemon-species","kingambit",""
+"pokemon-species","great-tusk",""
+"pokemon-species","scream-tail",""
+"pokemon-species","brute-bonnet",""
+"pokemon-species","flutter-mane",""
+"pokemon-species","slither-wing",""
+"pokemon-species","sandy-shocks",""
+"pokemon-species","iron-treads",""
+"pokemon-species","iron-bundle",""
+"pokemon-species","iron-hands",""
+"pokemon-species","iron-jugulis",""
+"pokemon-species","iron-moth",""
+"pokemon-species","iron-thorns",""
+"pokemon-species","frigibax",""
+"pokemon-species","arctibax",""
+"pokemon-species","baxcalibur",""
+"pokemon-species","gimmighoul",""
+"pokemon-species","gholdengo",""
+"pokemon-species","wo-chien",""
+"pokemon-species","chien-pao",""
+"pokemon-species","ting-lu",""
+"pokemon-species","chi-yu",""
+"pokemon-species","roaring-moon",""
+"pokemon-species","iron-valiant",""
+"pokemon-species","koraidon",""
+"pokemon-species","miraidon",""
+"pokemon-species","walking-wake",""
+"pokemon-species","iron-leaves",""
+"pokemon-species","dipplin",""
+"pokemon-species","poltchageist",""
+"pokemon-species","sinistcha",""
+"pokemon-species","okidogi",""
+"pokemon-species","munkidori",""
+"pokemon-species","fezandipiti",""
+"pokemon-species","ogerpon",""
+"pokemon-species","archaludon",""
+"pokemon-species","hydrapple",""
+"pokemon-species","gouging-fire",""
+"pokemon-species","raging-bolt",""
+"pokemon-species","iron-boulder",""
+"pokemon-species","iron-crown",""
+"pokemon-species","terapagos",""
+"pokemon-species","pecharunt",""
+"pokemon-species","pumpkaboo","**Pumpkaboo** is a uniquely designed Pokémon inspired by Halloween and pumpkins. It is a dual-type Ghost/Grass Pokémon introduced in Generation VI. Its appearance resembles a jack-o'-lantern with a ghostly upper body, featuring glowing yellow eyes and a small mouth. Its lower body is pumpkin-shaped with orange and brown hues. Pumpkaboo comes in four different sizes: Small, Average, Large, and Super, with each size having slight variations in stats and appearance.
 
 **Type:** Ghost/Grass
 
@@ -164,7 +761,7 @@ pokemon-species,pumpkaboo,"**Pumpkaboo** is a uniquely designed Pokémon inspire
 
 **Interesting Facts:**
 - **Unique Size Forms:** Pumpkaboo is notable for having four"
-pokemon-species,gourgeist,"**Gourgeist** is a dual-type Ghost/Grass Pokémon known for its association with Halloween due to its pumpkin-like appearance and ghostly attributes. Gourgeist evolves from Pumpkaboo when traded.
+"pokemon-species","gourgeist","**Gourgeist** is a dual-type Ghost/Grass Pokémon known for its association with Halloween due to its pumpkin-like appearance and ghostly attributes. Gourgeist evolves from Pumpkaboo when traded.
 
 **Type:** Ghost/Grass
 
@@ -178,14 +775,14 @@ Gourgeist is unique in that it comes in different size variants, each with its o
 - **Small Size Gourgeist:** Has higher Speed but lower HP.
 - **Average Size Gourgeist:** Balanced stats overall.
 - **Large"
-pokemon-species,zygarde,"**Zygarde** is a complex Pokémon known for its unique cellular structure and role as the guardian of the ecosystem. It is a Dragon/Ground-type Legendary Pokémon, first introduced in the sixth generation of Pokémon games (Pokémon X and Pokémon Y). Zygarde is not just a singular entity but can exist in several different forms, each representing a different percentage of its total power.
+"pokemon-species","zygarde","**Zygarde** is a complex Pokémon known for its unique cellular structure and role as the guardian of the ecosystem. It is a Dragon/Ground-type Legendary Pokémon, first introduced in the sixth generation of Pokémon games (Pokémon X and Pokémon Y). Zygarde is not just a singular entity but can exist in several different forms, each representing a different percentage of its total power.
 
 **Forms and Cells:**
 - **Zygarde Core:** The Core is the brain of Zygarde and appears as a small, green amoeba-like creature. It is the central command and monitors the ecosystem.
 - **Zygarde Cell:** Scattered throughout the region, these cells are inactive on their own and are essential for forming the other Zygarde forms.
 - **Zygarde 10% Forme:** This form takes on a dog-like appearance and constitutes 10% of Zygarde’s total power. It possesses notable speed and agility.
 - **Zygarde 50"
-pokemon-species,oricorio,"**Oricorio** is a unique and versatile Pokémon introduced in the Generation VII games, Pokémon Sun and Moon. It is known for its distinctive appearance and its ability to change both its type and form based on the Nectar it consumes.
+"pokemon-species","oricorio","**Oricorio** is a unique and versatile Pokémon introduced in the Generation VII games, Pokémon Sun and Moon. It is known for its distinctive appearance and its ability to change both its type and form based on the Nectar it consumes.
 
 **Basic Information:**
 - **Species:** Dancing Pokémon
@@ -203,7 +800,7 @@ Oricorio has four different forms, each corresponding to a different type. The f
 
 **Form-Specific Nectars:**
 - **Red Nectar:** Transforms Oricorio"
-pokemon-species,lycanroc,"**Lycanroc** is a Rock-type Pokémon introduced in the seventh generation of Pokémon games, appearing prominently in ""Pokémon Sun and Moon"" and their subsequent versions. Lycanroc is notable for having three distinct forms that depend on the time of day and the version of the game it evolves in. These forms are Midday Form, Midnight Form, and Dusk Form. Lycanroc evolves from Rockruff starting at level 25, with each form requiring specific conditions to be met.
+"pokemon-species","lycanroc","**Lycanroc** is a Rock-type Pokémon introduced in the seventh generation of Pokémon games, appearing prominently in ""Pokémon Sun and Moon"" and their subsequent versions. Lycanroc is notable for having three distinct forms that depend on the time of day and the version of the game it evolves in. These forms are Midday Form, Midnight Form, and Dusk Form. Lycanroc evolves from Rockruff starting at level 25, with each form requiring specific conditions to be met.
 
 **Type:** Rock
 
@@ -213,7 +810,7 @@ pokemon-species,lycanroc,"**Lycanroc** is a Rock-type Pokémon introduced in the
    - **Abilities:**
      - **Keen Eye:** Prevents Lycanroc from having its accuracy lowered.
      - **Sand Rush"
-pokemon-species,wishiwashi,"**Wishiwashi** is a unique Water-type Pokémon introduced in Generation VII. Known for its contrasting forms, Wishiwashi can change its appearance based on its health, switching between its Solo and School forms, which dramatically affect its stats and performance in battle.
+"pokemon-species","wishiwashi","**Wishiwashi** is a unique Water-type Pokémon introduced in Generation VII. Known for its contrasting forms, Wishiwashi can change its appearance based on its health, switching between its Solo and School forms, which dramatically affect its stats and performance in battle.
 
 **Type:** Water
 
@@ -222,7 +819,7 @@ pokemon-species,wishiwashi,"**Wishiwashi** is a unique Water-type Pokémon intro
 
 **Interesting Facts:**
 - **Forms and Appearance:** In its Solo Form, Wishiwashi is a small, somewhat pitiful-looking fish Pokémon with watery eyes and a trembling fin. However, when it transitions into its School Form, it becomes an intimidating, massive fish composed of many smaller Wishiwashi, forming"
-pokemon-species,minior,"**Minior** is a unique dual-type Rock/Flying Pokémon introduced in Generation VII. It is known for its dual forms: its Meteor Form and Core Form, which differ in both appearance and function.
+"pokemon-species","minior","**Minior** is a unique dual-type Rock/Flying Pokémon introduced in Generation VII. It is known for its dual forms: its Meteor Form and Core Form, which differ in both appearance and function.
 
 **Type:** Rock/Flying
 
@@ -235,7 +832,402 @@ pokemon-species,minior,"**Minior** is a unique dual-type Rock/Flying Pokémon in
 
 **Core Form:**
 - **Appearance:** After Shields Down activates, Minior sheds its"
-pokemon-species,mimikyu,"**Mimikyu** is a unique and enigmatic Pokémon, introduced in Generation VII and known for its eerie appearance and mysterious nature. It is classified as a Ghost/Fairy-type Pokémon, making it one of the few Pokémon with this dual typing.
+"pokemon-species","charizard",""
+"pokemon-species","squirtle",""
+"pokemon-species","wartortle",""
+"pokemon-species","blastoise",""
+"pokemon-species","caterpie",""
+"pokemon-species","metapod",""
+"pokemon-species","butterfree",""
+"pokemon-species","weedle",""
+"pokemon-species","kakuna",""
+"pokemon-species","beedrill",""
+"pokemon-species","pidgey",""
+"pokemon-species","pidgeotto",""
+"pokemon-species","pidgeot",""
+"pokemon-species","rattata",""
+"pokemon-species","raticate",""
+"pokemon-species","spearow",""
+"pokemon-species","fearow",""
+"pokemon-species","ekans",""
+"pokemon-species","arbok",""
+"pokemon-species","pikachu",""
+"pokemon-species","raichu",""
+"pokemon-species","sandshrew",""
+"pokemon-species","sandslash",""
+"pokemon-species","nidoran-f",""
+"pokemon-species","nidorina",""
+"pokemon-species","nidoqueen",""
+"pokemon-species","nidoran-m",""
+"pokemon-species","nidorino",""
+"pokemon-species","nidoking",""
+"pokemon-species","clefairy",""
+"pokemon-species","clefable",""
+"pokemon-species","vulpix",""
+"pokemon-species","ninetales",""
+"pokemon-species","jigglypuff",""
+"pokemon-species","giratina","**Giratina** is a Legendary Ghost/Dragon-type Pokémon known for its connection to the Distortion World, an alternate dimension in the Pokémon universe. Recognized for its formidable appearance and unique lore, Giratina plays a central role in Pokémon mythology, particularly in the fourth generation of games.
+
+**Type:** Ghost/Dragon
+
+**Forms:**
+- **Altered Forme:** This is the standard form of Giratina. In this form, Giratina is depicted with six short legs and a dragon-like appearance.
+- **Origin Forme:** Exclusive to the Distortion World or when holding the Griseous Orb, Giratina transforms into this form, gaining a more serpentine appearance with six long, ribbon-like extensions.
+
+**Abilities:**
+- **Altered Forme (Levitate):** This ability grants Giratina immunity to Ground-type moves, making it unaffected by moves such as Earthquake.
+- **Origin Forme (Levitate):** Similarly, this ability provides Giratina with"
+"pokemon-species","wigglytuff",""
+"pokemon-species","zubat",""
+"pokemon-species","golbat",""
+"pokemon-species","oddish",""
+"pokemon-species","gloom",""
+"pokemon-species","vileplume",""
+"pokemon-species","paras",""
+"pokemon-species","parasect",""
+"pokemon-species","venonat",""
+"pokemon-species","venomoth",""
+"pokemon-species","diglett",""
+"pokemon-species","dugtrio",""
+"pokemon-species","meowth",""
+"pokemon-species","persian",""
+"pokemon-species","psyduck",""
+"pokemon-species","golduck",""
+"pokemon-species","mankey",""
+"pokemon-species","primeape",""
+"pokemon-species","growlithe",""
+"pokemon-species","arcanine",""
+"pokemon-species","poliwag",""
+"pokemon-species","poliwhirl",""
+"pokemon-species","poliwrath",""
+"pokemon-species","abra",""
+"pokemon-species","kadabra",""
+"pokemon-species","alakazam",""
+"pokemon-species","machop",""
+"pokemon-species","machoke",""
+"pokemon-species","machamp",""
+"pokemon-species","bellsprout",""
+"pokemon-species","weepinbell",""
+"pokemon-species","victreebel",""
+"pokemon-species","tentacool",""
+"pokemon-species","tentacruel",""
+"pokemon-species","geodude",""
+"pokemon-species","shaymin","**Shaymin** is a unique Pokémon known for its ability to change forms and its vibrant connection to nature. Introduced in Generation IV, Shaymin is a mythical Pokémon that is highly revered within the Pokémon universe.
+
+**Type:**
+- **Land Forme:** Grass
+- **Sky Forme:** Grass/Flying
+
+**Forms and Transformation:**
+- **Land Forme:** Shaymin's original form, resembling a small hedgehog with green grass-like fur on its back.
+- **Sky Forme:** Shaymin transforms into this form when exposed to the Gracidea Flower during the daytime, except at night or when frozen. In its Sky Forme, Shaymin resembles a small, flying deer with a sleek, aerodynamic body and flaps on the sides of its head that look like wings.
+
+**Abilities:**
+- **Land Forme:** 
+  - **Natural Cure:** This ability allows Shaymin to heal from any status conditions upon switching out of battle.
+- **"
+"pokemon-species","graveler",""
+"pokemon-species","golem",""
+"pokemon-species","ponyta",""
+"pokemon-species","rapidash",""
+"pokemon-species","basculin","**Basculin** is a Water-type Pokémon known for its aggressive temperament and ferocious nature. It is a fish Pokémon characterized by its differences in form, known as the Red-Striped and Blue-Striped forms, which have variations in their appearance and may differ based on the region they're found in the Pokémon universe.
+
+**Type:** Water
+
+**Abilities:**
+- **Reckless:** This ability boosts the power of moves that have recoil damage by 20%, making Basculin's already high offensive potential even more formidable.
+- **Adaptability:** Adaptability increases the STAB (Same Type Attack Bonus) from the usual 50% to 100%, enhancing the power of Basculin's Water-type moves.
+- **Hidden Ability (Mold Breaker):** This ability allows Basculin to use its moves without being affected by the target's abilities that could potentially alter the move's effects.
+
+**Interesting Facts:**
+- **Form Variations:** Basculin"
+"pokemon-species","slowpoke",""
+"pokemon-species","slowbro",""
+"pokemon-species","magnemite",""
+"pokemon-species","magneton",""
+"pokemon-species","farfetchd",""
+"pokemon-species","doduo",""
+"pokemon-species","dodrio",""
+"pokemon-species","seel",""
+"pokemon-species","dewgong",""
+"pokemon-species","grimer",""
+"pokemon-species","muk",""
+"pokemon-species","shellder",""
+"pokemon-species","cloyster",""
+"pokemon-species","gastly",""
+"pokemon-species","haunter",""
+"pokemon-species","gengar",""
+"pokemon-species","onix",""
+"pokemon-species","drowzee",""
+"pokemon-species","hypno",""
+"pokemon-species","krabby",""
+"pokemon-species","kingler",""
+"pokemon-species","voltorb",""
+"pokemon-species","electrode",""
+"pokemon-species","exeggcute",""
+"pokemon-species","exeggutor",""
+"pokemon-species","cubone",""
+"pokemon-species","marowak",""
+"pokemon-species","hitmonlee",""
+"pokemon-species","hitmonchan",""
+"pokemon-species","lickitung",""
+"pokemon-species","koffing",""
+"pokemon-species","weezing",""
+"pokemon-species","rhyhorn",""
+"pokemon-species","rhydon",""
+"pokemon-species","chansey",""
+"pokemon-species","tangela",""
+"pokemon-species","kangaskhan",""
+"pokemon-species","horsea",""
+"pokemon-species","seadra",""
+"pokemon-species","goldeen",""
+"pokemon-species","seaking",""
+"pokemon-species","staryu",""
+"pokemon-species","starmie",""
+"pokemon-species","darmanitan","**Darmanitan** is a Fire-type Pokémon known for its immense strength and unique forms. It evolves from Darumaka starting at level 35. Darmanitan is distinguished by its large size, red and white fur, and a fierce demeanor that embodies its fiery nature. In addition to its standard form, Darmanitan has an alternate Zen Mode and a Galarian Form that changes its type and abilities.
+
+**Type:**
+- Galarian Form: Ice
+- Standard Form: Fire
+- Zen Mode (Standard Form): Fire/Psychic
+- Zen Mode (Galarian Form): Ice/Fire
+
+**Abilities:**
+- **Standard Form:**
+  - **Sheer Force:** This ability increases the power of Darmanitan's moves by 30% but removes any additional effects those moves might have.
+  - **Hidden Ability (Zen Mode):** When Darmanitan's HP drops below 50%, it changes into Zen Mode, altering its appearance and"
+"pokemon-species","mr-mime",""
+"pokemon-species","scyther",""
+"pokemon-species","jynx",""
+"pokemon-species","electabuzz",""
+"pokemon-species","magmar",""
+"pokemon-species","pinsir",""
+"pokemon-species","tauros",""
+"pokemon-species","magikarp",""
+"pokemon-species","gyarados",""
+"pokemon-species","lapras",""
+"pokemon-species","ditto",""
+"pokemon-species","eevee",""
+"pokemon-species","vaporeon",""
+"pokemon-species","jolteon",""
+"pokemon-species","flareon",""
+"pokemon-species","porygon",""
+"pokemon-species","omanyte",""
+"pokemon-species","omastar",""
+"pokemon-species","kabuto",""
+"pokemon-species","kabutops",""
+"pokemon-species","aerodactyl",""
+"pokemon-species","snorlax",""
+"pokemon-species","articuno",""
+"pokemon-species","zapdos",""
+"pokemon-species","moltres",""
+"pokemon-species","dratini",""
+"pokemon-species","dragonair",""
+"pokemon-species","dragonite",""
+"pokemon-species","mewtwo",""
+"pokemon-species","tornadus","**Tornadus** is a Legendary Pokémon introduced in Generation V, belonging to the Forces of Nature trio alongside Thundurus and Landorus. Tornadus is uniquely a pure Flying-type Pokémon and is known for its distinctive appearances in both its Incarnate Forme and Therian Forme.
+
+**Type:** Flying
+
+**Abilities:**
+- **Incarnate Forme:**
+  - **Prankster:** This ability gives Tornadus' status moves priority, allowing them to go first regardless of its Speed stat.
+  - **Hidden Ability (Defiant):** When any of Tornadus' stats are lowered by an opponent, its Attack stat increases by two stages.
+
+- **Therian Forme:**
+  - **Regenerator:** This ability heals Tornadus for a third of its maximum HP when it switches out of battle.
+
+**Interesting Facts:**
+- **Incarnate Forme Appearance:** In its Incarnate Forme, Tornadus resembles"
+"pokemon-species","mew",""
+"pokemon-species","thundurus","**Thundurus** is a dual Electric/Flying-type Legendary Pokémon introduced in Generation V. It is a member of the Forces of Nature trio along with Tornadus and Landorus. Thundurus is known for its immense power and its association with thunderstorms and lightning.
+
+**Type:** Electric/Flying
+
+**Forms:**
+- **Incarnate Forme:** This is Thundurus' default form, characterized by its blue, muscular human-like body with cloud-like formations at its back and a tail that resembles a lightning bolt.
+- **Therian Forme:** Introduced in Pokémon Black 2 and White 2, Thundurus' Therian Forme resembles a large, fierce dragon or bird-like creature, with substantial changes to its stats and abilities.
+
+**Abilities:**
+- **Incarnate Forme:**
+  - **Prankster:** This ability allows Thundurus to give priority to its status moves, making it a potent user of moves like Thunder Wave and"
+"pokemon-species","chikorita",""
+"pokemon-species","bayleef",""
+"pokemon-species","meganium",""
+"pokemon-species","cyndaquil",""
+"pokemon-species","quilava",""
+"pokemon-species","typhlosion",""
+"pokemon-species","totodile",""
+"pokemon-species","croconaw",""
+"pokemon-species","feraligatr",""
+"pokemon-species","sentret",""
+"pokemon-species","furret",""
+"pokemon-species","hoothoot",""
+"pokemon-species","noctowl",""
+"pokemon-species","ledyba",""
+"pokemon-species","landorus","**Landorus** is a Ground/Flying-type Legendary Pokémon introduced in Generation V. Known as the ""Abundance Pokémon,"" Landorus is part of the Forces of Nature trio along with Tornadus and Thundurus. It is revered in the Pokémon lore for its ability to bring fertility to the lands and improve the soil's richness.
+
+**Type:** Ground/Flying
+
+**Formes:** 
+- **Incarnate Forme:** This is the default form of Landorus, characterized by its humanoid figure, orange and white coloration, and a genie-like appearance. It stands on a cloud and has a long tail covered in rocky protrusions.
+- **Therian Forme:** This form is obtained by using the Reveal Glass item. In this form, Landorus resembles a large, muscular feline creature with a tail that has spiked rocks. Therian Forme enhances its physical attributes.
+
+**Abilities:**
+
+- **Incarnate Forme:**
+  - **Sand Force:** This"
+"pokemon-species","ledian",""
+"pokemon-species","spinarak",""
+"pokemon-species","ariados",""
+"pokemon-species","crobat",""
+"pokemon-species","chinchou",""
+"pokemon-species","lanturn",""
+"pokemon-species","pichu",""
+"pokemon-species","cleffa",""
+"pokemon-species","igglybuff",""
+"pokemon-species","togepi",""
+"pokemon-species","togetic",""
+"pokemon-species","natu",""
+"pokemon-species","xatu",""
+"pokemon-species","mareep",""
+"pokemon-species","flaaffy",""
+"pokemon-species","ampharos",""
+"pokemon-species","bellossom",""
+"pokemon-species","marill",""
+"pokemon-species","azumarill",""
+"pokemon-species","sudowoodo",""
+"pokemon-species","politoed",""
+"pokemon-species","hoppip",""
+"pokemon-species","skiploom",""
+"pokemon-species","jumpluff",""
+"pokemon-species","aipom",""
+"pokemon-species","sunkern",""
+"pokemon-species","sunflora",""
+"pokemon-species","keldeo","**Keldeo** is a unique and powerful Water/Fighting-type Pokémon, known for its distinct appearance and noble background in the Pokémon series. It is a member of the Swords of Justice, a group of Legendary Pokémon that also includes Cobalion, Terrakion, and Virizion. Keldeo is particularly notable for its significance in various Pokémon media, including games and movies.
+
+**Type:** Water/Fighting
+
+**Abilities:**
+- **Justified:** This ability raises Keldeo's Attack stat by one stage for each Dark-type move it is hit by. Despite being a special attacker, this ability can still be useful in various situations, allowing Keldeo to potentially gain a tactical advantage.
+
+**Forms:**
+- **Ordinary Form:** The default form Keldeo is typically encountered in.
+- **Resolute Form:** Keldeo can change into its Resolute Form when it learns the move Secret Sword. This form visually transforms Keldeo by giving it a"
+"pokemon-species","meloetta","**Meloetta** is a dual-type Mythical Pokémon known for its musical themes and graceful appearance. It has two Formes: Aria Forme and Pirouette Forme, which change its typing, stats, and abilities.
+
+**Type:**
+- **Aria Forme:** Normal/Psychic
+- **Pirouette Forme:** Normal/Fighting
+
+**Abilities:** 
+- **Serene Grace:** This ability increases the chances of Meloetta's moves' secondary effects occurring. For example, moves that may cause flinching or stat changes will have an enhanced chance to do so with Serene Grace.
+
+**Forms and Transformation:**
+- Meloetta has a unique move called **Relic Song**. When it uses Relic Song in battle, it changes between its two forms:
+  - **Aria Forme:** This is Meloetta’s default form when it is first encountered. It has a melodic, elegant design symbolizing its Normal/Psychic typing."
+"pokemon-species","yanma",""
+"pokemon-species","wooper",""
+"pokemon-species","quagsire",""
+"pokemon-species","espeon",""
+"pokemon-species","umbreon",""
+"pokemon-species","murkrow",""
+"pokemon-species","slowking",""
+"pokemon-species","misdreavus",""
+"pokemon-species","unown",""
+"pokemon-species","wobbuffet",""
+"pokemon-species","girafarig",""
+"pokemon-species","pineco",""
+"pokemon-species","forretress",""
+"pokemon-species","dunsparce",""
+"pokemon-species","gligar",""
+"pokemon-species","steelix",""
+"pokemon-species","snubbull",""
+"pokemon-species","granbull",""
+"pokemon-species","qwilfish",""
+"pokemon-species","scizor",""
+"pokemon-species","shuckle",""
+"pokemon-species","heracross",""
+"pokemon-species","sneasel",""
+"pokemon-species","teddiursa",""
+"pokemon-species","ursaring",""
+"pokemon-species","slugma",""
+"pokemon-species","magcargo",""
+"pokemon-species","swinub",""
+"pokemon-species","piloswine",""
+"pokemon-species","corsola",""
+"pokemon-species","remoraid",""
+"pokemon-species","octillery",""
+"pokemon-species","delibird",""
+"pokemon-species","mantine",""
+"pokemon-species","skarmory",""
+"pokemon-species","houndour",""
+"pokemon-species","houndoom",""
+"pokemon-species","kingdra",""
+"pokemon-species","meowstic","**Meowstic** is a Psychic-type Pokémon introduced in Generation VI. It is known for its dual-gender forms (male and female), each of which has a distinct appearance and slightly different sets of stats and abilities. The design and behavior of Meowstic emphasize its psychic powers and feline-like characteristics.
+
+**Type:** Psychic
+
+**Forms:**
+- **Male Meowstic:** Blue-and-white coloration, generally more offensive in its stats.
+- **Female Meowstic:** White-and-blue coloration, generally more defensive in its stats.
+
+**Abilities:**
+- **Infiltrator:** This ability allows Meowstic to bypass the opponent’s Light Screen, Reflect, Safeguard, Substitute, and Aurora Veil, affecting them as if these barriers were not in place.
+- **Keen Eye:** This ability prevents Meowstic from having its accuracy lowered, and it also ignores any opponent's evasion boosts.
+- **Hidden Ability (Prank"
+"pokemon-species","phanpy",""
+"pokemon-species","donphan",""
+"pokemon-species","porygon2",""
+"pokemon-species","stantler",""
+"pokemon-species","smeargle",""
+"pokemon-species","tyrogue",""
+"pokemon-species","hitmontop",""
+"pokemon-species","smoochum",""
+"pokemon-species","elekid",""
+"pokemon-species","magby",""
+"pokemon-species","miltank",""
+"pokemon-species","blissey",""
+"pokemon-species","raikou",""
+"pokemon-species","entei",""
+"pokemon-species","suicune",""
+"pokemon-species","larvitar",""
+"pokemon-species","aegislash","**Aegislash** is a unique Steel/Ghost-type Pokémon known for its dual forms and regal appearance. It is the final evolution in its line, evolving from Doublade when exposed to a Dusk Stone, which itself evolves from Honedge starting at level 35.
+
+**Type:** Steel/Ghost
+
+**Abilities:**
+- **Stance Change:** This is Aegislash's unique and signature ability. It allows Aegislash to switch between two forms: Shield Forme and Blade Forme. In Shield Forme, Aegislash has high defenses, while in Blade Forme, it has high offensive stats. The change occurs when Aegislash uses specific moves like King's Shield (to shift to Shield Forme) or an attacking move (to shift to Blade Forme).
+
+**Interesting Facts:**
+- **Dual Forms:** Aegislash's defining characteristic is its ability to shift between Shield Forme and Blade Forme. When in Shield Forme"
+"pokemon-species","deoxys","**Deoxys** is a Psychic-type Mythical Pokémon known for its extraterrestrial origins and ability to change forms. Deoxys was first introduced in Pokémon Ruby and Sapphire and has since become a standout Pokémon due to its unique design and versatile battle capabilities.
+
+**Type:** Psychic
+
+**Forms and Abilities:**
+Deoxys is notable for having four distinct forms, each with different stats and abilities tailored for various battle strategies. 
+1. **Normal Forme:** Balanced stats and a well-rounded move set.
+    - **Ability:** Pressure - Doubles the opposing Pokémon's usage of PP (Power Points) for moves targeting Deoxys.
+2. **Attack Forme:** Emphasizes high attack stats at the expense of its defenses.
+    - **Ability:** Pressure
+3. **Defense Forme:** Prioritizes high defense and special defense while sacrificing attack stats.
+    - **Ability:** Pressure
+4. **Speed Forme:** Specializes in exceptionally high speed stats,"
+"pokemon-species","wormadam","**Wormadam** is a unique Bug-type Pokémon that can have different secondary types depending on the cloak it is in. It evolves from a female Burmy starting at level 20. The specific form Wormadam takes after evolving is determined by the environment where Burmy last battled and changes according to the type of cloak it has.
+
+**Types:**
+- **Plant Cloak Wormadam:** Bug/Grass
+- **Sandy Cloak Wormadam:** Bug/Ground
+- **Trash Cloak Wormadam:** Bug/Steel
+
+**Abilities:**
+- **Anticipation:** This ability allows Wormadam to shiver upon sensing the opponent's dangerous moves, providing an early warning in battle.
+- **Hidden Ability (Overcoat):** This ability protects Wormadam from damage caused by weather effects and powder moves like Spore and Sleep Powder.
+
+**Interesting Facts:**
+- Wormadam's appearance and type are determined by its cloak, which is influenced by the last battle location of Burmy"
+"pokemon-species","mimikyu","**Mimikyu** is a unique and enigmatic Pokémon, introduced in Generation VII and known for its eerie appearance and mysterious nature. It is classified as a Ghost/Fairy-type Pokémon, making it one of the few Pokémon with this dual typing.
 
 **Type:** Ghost/Fairy
 
@@ -245,7 +1237,7 @@ pokemon-species,mimikyu,"**Mimikyu** is a unique and enigmatic Pokémon, introdu
 **Design and Backstory:**
 - Mimikyu's appearance is shrouded beneath a rag that it has fashioned to look like Pikachu, the beloved Pokémon mascot. The reason behind this disguise is tied to Mimikyu's desire for companionship and acceptance, as it believes that mimicking Pikachu's appearance will endear it to humans and other Pokémon.
 - The rag costume has a crude, hand-made"
-pokemon-species,toxtricity,"**Toxtricity** is a dual-type Electric/Poison Pokémon introduced in Generation VIII (Pokémon Sword and Shield). It has a distinctive punk rock-inspired appearance, embodying both the charming and rebellious spirit of its design ethos. Toxtricity has two forms, Amped Form and Low Key Form, which vary in coloration and posture. The form Toxel, its pre-evolution, evolves into depends on its nature.
+"pokemon-species","toxtricity","**Toxtricity** is a dual-type Electric/Poison Pokémon introduced in Generation VIII (Pokémon Sword and Shield). It has a distinctive punk rock-inspired appearance, embodying both the charming and rebellious spirit of its design ethos. Toxtricity has two forms, Amped Form and Low Key Form, which vary in coloration and posture. The form Toxel, its pre-evolution, evolves into depends on its nature.
 
 **Type:** Electric/Poison
 
@@ -255,7 +1247,7 @@ pokemon-species,toxtricity,"**Toxtricity** is a dual-type Electric/Poison Pokém
 - **Hidden Ability (Technician):** This ability increases the power of Toxtricity's moves with a base power of 60 or less by 50%.
 
 ### **"
-pokemon-species,eiscue,"**Eiscue** is a unique and intriguing Pokémon introduced in the eighth generation of Pokémon games. It is known for its distinctive appearance, largely characterized by its ice-covered head, which resembles a block of ice with a face drawn on it. This Pokémon hails from the Galar region and has become a favorite for many players due to its quirky design and interesting battle mechanics.
+"pokemon-species","eiscue","**Eiscue** is a unique and intriguing Pokémon introduced in the eighth generation of Pokémon games. It is known for its distinctive appearance, largely characterized by its ice-covered head, which resembles a block of ice with a face drawn on it. This Pokémon hails from the Galar region and has become a favorite for many players due to its quirky design and interesting battle mechanics.
 
 **Type:** Ice
 
@@ -266,7 +1258,7 @@ pokemon-species,eiscue,"**Eiscue** is a unique and intriguing Pokémon introduce
 
 **Interesting Facts:**
 - **"
-pokemon-species,indeedee,"**Indeedee** is a dual-type Psychic/Normal Pokémon introduced in Generation VIII. Indeedee has two forms based on its gender: Male Indeedee and Female Indeedee. While they share many characteristics, there are slight differences in their appearances, stats, and even their moveset tendencies.
+"pokemon-species","indeedee","**Indeedee** is a dual-type Psychic/Normal Pokémon introduced in Generation VIII. Indeedee has two forms based on its gender: Male Indeedee and Female Indeedee. While they share many characteristics, there are slight differences in their appearances, stats, and even their moveset tendencies.
 
 **Type:** Psychic/Normal
 
@@ -278,7 +1270,7 @@ pokemon-species,indeedee,"**Indeedee** is a dual-type Psychic/Normal Pokémon in
 ### Physical Appearance:
 - **Male Indeedee:** Has upturned horn-like features on its head and a dignified demeanor, often depicted with its hands positioned in a poised manner. Its colors are predominantly black with white.
 - **Female Indeedee:** Sports downturned"
-pokemon-species,morpeko,"**Morpeko** is a Dual-type Electric/Dark Pokémon, introduced in Generation VIII of the Pokémon series. Known for its unique and fluctuating form, Morpeko has gained popularity among players and fans alike due to its distinctive gimmick and charming design.
+"pokemon-species","morpeko","**Morpeko** is a Dual-type Electric/Dark Pokémon, introduced in Generation VIII of the Pokémon series. Known for its unique and fluctuating form, Morpeko has gained popularity among players and fans alike due to its distinctive gimmick and charming design.
 
 **Type:** Electric/Dark
 
@@ -293,7 +1285,7 @@ pokemon-species,morpeko,"**Morpeko** is a Dual-type Electric/Dark Pokémon, intr
 **Signature Move:**
 
 **Aura Wheel"
-pokemon-species,urshifu,"**Urshifu** is a Legendary Pokémon introduced in Generation VIII. It is known for its unique martial arts-inspired design and two distinct fighting styles that it can adopt: Single Strike Style and Rapid Strike Style. Depending on the style, Urshifu has different typings, moves, and abilities.
+"pokemon-species","urshifu","**Urshifu** is a Legendary Pokémon introduced in Generation VIII. It is known for its unique martial arts-inspired design and two distinct fighting styles that it can adopt: Single Strike Style and Rapid Strike Style. Depending on the style, Urshifu has different typings, moves, and abilities.
 
 **Type:**
 - **Single Strike Style:** Fighting/Dark
@@ -310,7 +1302,7 @@ pokemon-species,urshifu,"**Urshifu** is a Legendary Pokémon introduced in Gener
 
 ### Evolution:
 - Urshifu evolves from **Kubfu** after completing one of the two branching paths at the"
-pokemon-species,basculegion,"**Basculegion** is a Water/Ghost-type Pokémon introduced in Pokémon Legends: Arceus, marking its debut in the Hisui region (known as ancient Sinnoh). It evolves from Basculin, specifically the White-Striped form, when it takes recoil damage from moves such as Wave Crash or Double-Edge without fainting. Basculegion is traditionally associated with the spirits of Basculin that could not survive the perilous journey upstream.
+"pokemon-species","basculegion","**Basculegion** is a Water/Ghost-type Pokémon introduced in Pokémon Legends: Arceus, marking its debut in the Hisui region (known as ancient Sinnoh). It evolves from Basculin, specifically the White-Striped form, when it takes recoil damage from moves such as Wave Crash or Double-Edge without fainting. Basculegion is traditionally associated with the spirits of Basculin that could not survive the perilous journey upstream.
 
 **Type:** Water/Ghost
 
@@ -320,7 +1312,7 @@ pokemon-species,basculegion,"**Basculegion** is a Water/Ghost-type Pokémon intr
 
 **Interesting Facts:**
 - **Design and Inspiration:** Basculegion's design is inspired"
-pokemon-species,enamorus,"**Enamorus** is a unique Pokémon introduced in Pokémon Legends: Arceus. It belongs to the Legendary Forces of Nature quartet, which also includes Tornadus, Thundurus, and Landorus. Enamorus is known for its distinct fairy-like and serpentine appearance. Its design draws inspiration from various mythological and natural elements.
+"pokemon-species","enamorus","**Enamorus** is a unique Pokémon introduced in Pokémon Legends: Arceus. It belongs to the Legendary Forces of Nature quartet, which also includes Tornadus, Thundurus, and Landorus. Enamorus is known for its distinct fairy-like and serpentine appearance. Its design draws inspiration from various mythological and natural elements.
 
 **Type:** Fairy/Flying
 
@@ -330,1000 +1322,8 @@ pokemon-species,enamorus,"**Enamorus** is a unique Pokémon introduced in Pokém
 
 **Interesting Facts:**
 - **Design and Inspiration:** Enamorus's design is inspired by myths and natural elements"
-pokemon-species,bulbasaur,
-pokemon-species,ivysaur,
-pokemon-species,venusaur,
-pokemon-species,charmander,
-pokemon-species,charmeleon,
-pokemon-species,charizard,
-pokemon-species,squirtle,
-pokemon-species,wartortle,
-pokemon-species,blastoise,
-pokemon-species,caterpie,
-pokemon-species,metapod,
-pokemon-species,butterfree,
-pokemon-species,weedle,
-pokemon-species,kakuna,
-pokemon-species,beedrill,
-pokemon-species,pidgey,
-pokemon-species,pidgeotto,
-pokemon-species,pidgeot,
-pokemon-species,rattata,
-pokemon-species,raticate,
-pokemon-species,spearow,
-pokemon-species,fearow,
-pokemon-species,ekans,
-pokemon-species,arbok,
-pokemon-species,pikachu,
-pokemon-species,raichu,
-pokemon-species,sandshrew,
-pokemon-species,sandslash,
-pokemon-species,nidoran-f,
-pokemon-species,nidorina,
-pokemon-species,nidoqueen,
-pokemon-species,nidoran-m,
-pokemon-species,nidorino,
-pokemon-species,nidoking,
-pokemon-species,clefairy,
-pokemon-species,clefable,
-pokemon-species,vulpix,
-pokemon-species,ninetales,
-pokemon-species,jigglypuff,
-pokemon-species,wigglytuff,
-pokemon-species,zubat,
-pokemon-species,golbat,
-pokemon-species,oddish,
-pokemon-species,gloom,
-pokemon-species,vileplume,
-pokemon-species,paras,
-pokemon-species,parasect,
-pokemon-species,venonat,
-pokemon-species,venomoth,
-pokemon-species,diglett,
-pokemon-species,dugtrio,
-pokemon-species,meowth,
-pokemon-species,persian,
-pokemon-species,psyduck,
-pokemon-species,golduck,
-pokemon-species,mankey,
-pokemon-species,primeape,
-pokemon-species,growlithe,
-pokemon-species,arcanine,
-pokemon-species,poliwag,
-pokemon-species,poliwhirl,
-pokemon-species,poliwrath,
-pokemon-species,abra,
-pokemon-species,kadabra,
-pokemon-species,alakazam,
-pokemon-species,machop,
-pokemon-species,machoke,
-pokemon-species,machamp,
-pokemon-species,bellsprout,
-pokemon-species,weepinbell,
-pokemon-species,victreebel,
-pokemon-species,tentacool,
-pokemon-species,tentacruel,
-pokemon-species,geodude,
-pokemon-species,graveler,
-pokemon-species,golem,
-pokemon-species,ponyta,
-pokemon-species,rapidash,
-pokemon-species,slowpoke,
-pokemon-species,slowbro,
-pokemon-species,magnemite,
-pokemon-species,magneton,
-pokemon-species,farfetchd,
-pokemon-species,doduo,
-pokemon-species,dodrio,
-pokemon-species,seel,
-pokemon-species,dewgong,
-pokemon-species,grimer,
-pokemon-species,muk,
-pokemon-species,shellder,
-pokemon-species,cloyster,
-pokemon-species,gastly,
-pokemon-species,haunter,
-pokemon-species,gengar,
-pokemon-species,onix,
-pokemon-species,drowzee,
-pokemon-species,hypno,
-pokemon-species,krabby,
-pokemon-species,kingler,
-pokemon-species,voltorb,
-pokemon-species,electrode,
-pokemon-species,exeggcute,
-pokemon-species,exeggutor,
-pokemon-species,cubone,
-pokemon-species,marowak,
-pokemon-species,hitmonlee,
-pokemon-species,hitmonchan,
-pokemon-species,lickitung,
-pokemon-species,koffing,
-pokemon-species,weezing,
-pokemon-species,rhyhorn,
-pokemon-species,rhydon,
-pokemon-species,chansey,
-pokemon-species,tangela,
-pokemon-species,kangaskhan,
-pokemon-species,horsea,
-pokemon-species,seadra,
-pokemon-species,goldeen,
-pokemon-species,seaking,
-pokemon-species,staryu,
-pokemon-species,starmie,
-pokemon-species,mr-mime,
-pokemon-species,scyther,
-pokemon-species,jynx,
-pokemon-species,electabuzz,
-pokemon-species,magmar,
-pokemon-species,pinsir,
-pokemon-species,tauros,
-pokemon-species,magikarp,
-pokemon-species,gyarados,
-pokemon-species,lapras,
-pokemon-species,ditto,
-pokemon-species,eevee,
-pokemon-species,vaporeon,
-pokemon-species,jolteon,
-pokemon-species,flareon,
-pokemon-species,porygon,
-pokemon-species,omanyte,
-pokemon-species,omastar,
-pokemon-species,kabuto,
-pokemon-species,kabutops,
-pokemon-species,aerodactyl,
-pokemon-species,snorlax,
-pokemon-species,articuno,
-pokemon-species,zapdos,
-pokemon-species,moltres,
-pokemon-species,dratini,
-pokemon-species,dragonair,
-pokemon-species,dragonite,
-pokemon-species,mewtwo,
-pokemon-species,mew,
-pokemon-species,chikorita,
-pokemon-species,bayleef,
-pokemon-species,meganium,
-pokemon-species,cyndaquil,
-pokemon-species,quilava,
-pokemon-species,typhlosion,
-pokemon-species,totodile,
-pokemon-species,croconaw,
-pokemon-species,feraligatr,
-pokemon-species,sentret,
-pokemon-species,furret,
-pokemon-species,hoothoot,
-pokemon-species,noctowl,
-pokemon-species,ledyba,
-pokemon-species,ledian,
-pokemon-species,spinarak,
-pokemon-species,ariados,
-pokemon-species,crobat,
-pokemon-species,chinchou,
-pokemon-species,lanturn,
-pokemon-species,pichu,
-pokemon-species,cleffa,
-pokemon-species,igglybuff,
-pokemon-species,togepi,
-pokemon-species,togetic,
-pokemon-species,natu,
-pokemon-species,xatu,
-pokemon-species,mareep,
-pokemon-species,flaaffy,
-pokemon-species,ampharos,
-pokemon-species,bellossom,
-pokemon-species,marill,
-pokemon-species,azumarill,
-pokemon-species,sudowoodo,
-pokemon-species,politoed,
-pokemon-species,hoppip,
-pokemon-species,skiploom,
-pokemon-species,jumpluff,
-pokemon-species,aipom,
-pokemon-species,sunkern,
-pokemon-species,sunflora,
-pokemon-species,yanma,
-pokemon-species,wooper,
-pokemon-species,quagsire,
-pokemon-species,espeon,
-pokemon-species,umbreon,
-pokemon-species,murkrow,
-pokemon-species,slowking,
-pokemon-species,misdreavus,
-pokemon-species,unown,
-pokemon-species,wobbuffet,
-pokemon-species,girafarig,
-pokemon-species,pineco,
-pokemon-species,forretress,
-pokemon-species,dunsparce,
-pokemon-species,gligar,
-pokemon-species,steelix,
-pokemon-species,snubbull,
-pokemon-species,granbull,
-pokemon-species,qwilfish,
-pokemon-species,scizor,
-pokemon-species,shuckle,
-pokemon-species,heracross,
-pokemon-species,sneasel,
-pokemon-species,teddiursa,
-pokemon-species,ursaring,
-pokemon-species,slugma,
-pokemon-species,magcargo,
-pokemon-species,swinub,
-pokemon-species,piloswine,
-pokemon-species,corsola,
-pokemon-species,remoraid,
-pokemon-species,octillery,
-pokemon-species,delibird,
-pokemon-species,mantine,
-pokemon-species,skarmory,
-pokemon-species,houndour,
-pokemon-species,houndoom,
-pokemon-species,kingdra,
-pokemon-species,phanpy,
-pokemon-species,donphan,
-pokemon-species,porygon2,
-pokemon-species,stantler,
-pokemon-species,smeargle,
-pokemon-species,tyrogue,
-pokemon-species,hitmontop,
-pokemon-species,smoochum,
-pokemon-species,elekid,
-pokemon-species,magby,
-pokemon-species,miltank,
-pokemon-species,blissey,
-pokemon-species,raikou,
-pokemon-species,entei,
-pokemon-species,suicune,
-pokemon-species,larvitar,
-pokemon-species,pupitar,
-pokemon-species,tyranitar,
-pokemon-species,lugia,
-pokemon-species,ho-oh,
-pokemon-species,celebi,
-pokemon-species,treecko,
-pokemon-species,grovyle,
-pokemon-species,sceptile,
-pokemon-species,torchic,
-pokemon-species,combusken,
-pokemon-species,blaziken,
-pokemon-species,mudkip,
-pokemon-species,marshtomp,
-pokemon-species,swampert,
-pokemon-species,poochyena,
-pokemon-species,mightyena,
-pokemon-species,zigzagoon,
-pokemon-species,linoone,
-pokemon-species,wurmple,
-pokemon-species,silcoon,
-pokemon-species,beautifly,
-pokemon-species,cascoon,
-pokemon-species,dustox,
-pokemon-species,lotad,
-pokemon-species,lombre,
-pokemon-species,ludicolo,
-pokemon-species,seedot,
-pokemon-species,nuzleaf,
-pokemon-species,shiftry,
-pokemon-species,taillow,
-pokemon-species,swellow,
-pokemon-species,wingull,
-pokemon-species,pelipper,
-pokemon-species,ralts,
-pokemon-species,kirlia,
-pokemon-species,gardevoir,
-pokemon-species,surskit,
-pokemon-species,masquerain,
-pokemon-species,shroomish,
-pokemon-species,breloom,
-pokemon-species,slakoth,
-pokemon-species,vigoroth,
-pokemon-species,slaking,
-pokemon-species,nincada,
-pokemon-species,ninjask,
-pokemon-species,shedinja,
-pokemon-species,whismur,
-pokemon-species,loudred,
-pokemon-species,exploud,
-pokemon-species,makuhita,
-pokemon-species,hariyama,
-pokemon-species,azurill,
-pokemon-species,nosepass,
-pokemon-species,skitty,
-pokemon-species,delcatty,
-pokemon-species,sableye,
-pokemon-species,mawile,
-pokemon-species,aron,
-pokemon-species,lairon,
-pokemon-species,aggron,
-pokemon-species,meditite,
-pokemon-species,medicham,
-pokemon-species,electrike,
-pokemon-species,manectric,
-pokemon-species,plusle,
-pokemon-species,minun,
-pokemon-species,volbeat,
-pokemon-species,illumise,
-pokemon-species,roselia,
-pokemon-species,gulpin,
-pokemon-species,swalot,
-pokemon-species,carvanha,
-pokemon-species,sharpedo,
-pokemon-species,wailmer,
-pokemon-species,wailord,
-pokemon-species,numel,
-pokemon-species,camerupt,
-pokemon-species,torkoal,
-pokemon-species,spoink,
-pokemon-species,grumpig,
-pokemon-species,spinda,
-pokemon-species,trapinch,
-pokemon-species,vibrava,
-pokemon-species,flygon,
-pokemon-species,cacnea,
-pokemon-species,cacturne,
-pokemon-species,swablu,
-pokemon-species,altaria,
-pokemon-species,zangoose,
-pokemon-species,seviper,
-pokemon-species,lunatone,
-pokemon-species,solrock,
-pokemon-species,barboach,
-pokemon-species,whiscash,
-pokemon-species,corphish,
-pokemon-species,crawdaunt,
-pokemon-species,baltoy,
-pokemon-species,claydol,
-pokemon-species,lileep,
-pokemon-species,cradily,
-pokemon-species,anorith,
-pokemon-species,armaldo,
-pokemon-species,feebas,
-pokemon-species,milotic,
-pokemon-species,castform,
-pokemon-species,kecleon,
-pokemon-species,shuppet,
-pokemon-species,banette,
-pokemon-species,duskull,
-pokemon-species,dusclops,
-pokemon-species,tropius,
-pokemon-species,chimecho,
-pokemon-species,absol,
-pokemon-species,wynaut,
-pokemon-species,snorunt,
-pokemon-species,glalie,
-pokemon-species,spheal,
-pokemon-species,sealeo,
-pokemon-species,walrein,
-pokemon-species,clamperl,
-pokemon-species,huntail,
-pokemon-species,gorebyss,
-pokemon-species,relicanth,
-pokemon-species,luvdisc,
-pokemon-species,bagon,
-pokemon-species,shelgon,
-pokemon-species,salamence,
-pokemon-species,beldum,
-pokemon-species,metang,
-pokemon-species,metagross,
-pokemon-species,regirock,
-pokemon-species,regice,
-pokemon-species,registeel,
-pokemon-species,latias,
-pokemon-species,latios,
-pokemon-species,kyogre,
-pokemon-species,groudon,
-pokemon-species,rayquaza,
-pokemon-species,jirachi,
-pokemon-species,turtwig,
-pokemon-species,grotle,
-pokemon-species,torterra,
-pokemon-species,chimchar,
-pokemon-species,monferno,
-pokemon-species,infernape,
-pokemon-species,piplup,
-pokemon-species,prinplup,
-pokemon-species,empoleon,
-pokemon-species,starly,
-pokemon-species,staravia,
-pokemon-species,staraptor,
-pokemon-species,bidoof,
-pokemon-species,bibarel,
-pokemon-species,kricketot,
-pokemon-species,kricketune,
-pokemon-species,shinx,
-pokemon-species,luxio,
-pokemon-species,luxray,
-pokemon-species,budew,
-pokemon-species,roserade,
-pokemon-species,cranidos,
-pokemon-species,rampardos,
-pokemon-species,shieldon,
-pokemon-species,bastiodon,
-pokemon-species,burmy,
-pokemon-species,mothim,
-pokemon-species,combee,
-pokemon-species,vespiquen,
-pokemon-species,pachirisu,
-pokemon-species,buizel,
-pokemon-species,floatzel,
-pokemon-species,cherubi,
-pokemon-species,cherrim,
-pokemon-species,shellos,
-pokemon-species,gastrodon,
-pokemon-species,ambipom,
-pokemon-species,drifloon,
-pokemon-species,drifblim,
-pokemon-species,buneary,
-pokemon-species,lopunny,
-pokemon-species,mismagius,
-pokemon-species,honchkrow,
-pokemon-species,glameow,
-pokemon-species,purugly,
-pokemon-species,chingling,
-pokemon-species,stunky,
-pokemon-species,skuntank,
-pokemon-species,bronzor,
-pokemon-species,bronzong,
-pokemon-species,bonsly,
-pokemon-species,mime-jr,
-pokemon-species,happiny,
-pokemon-species,chatot,
-pokemon-species,spiritomb,
-pokemon-species,gible,
-pokemon-species,gabite,
-pokemon-species,garchomp,
-pokemon-species,munchlax,
-pokemon-species,riolu,
-pokemon-species,lucario,
-pokemon-species,hippopotas,
-pokemon-species,hippowdon,
-pokemon-species,skorupi,
-pokemon-species,drapion,
-pokemon-species,croagunk,
-pokemon-species,toxicroak,
-pokemon-species,carnivine,
-pokemon-species,finneon,
-pokemon-species,lumineon,
-pokemon-species,mantyke,
-pokemon-species,snover,
-pokemon-species,abomasnow,
-pokemon-species,weavile,
-pokemon-species,magnezone,
-pokemon-species,lickilicky,
-pokemon-species,rhyperior,
-pokemon-species,tangrowth,
-pokemon-species,electivire,
-pokemon-species,magmortar,
-pokemon-species,togekiss,
-pokemon-species,yanmega,
-pokemon-species,leafeon,
-pokemon-species,glaceon,
-pokemon-species,gliscor,
-pokemon-species,mamoswine,
-pokemon-species,porygon-z,
-pokemon-species,gallade,
-pokemon-species,probopass,
-pokemon-species,dusknoir,
-pokemon-species,froslass,
-pokemon-species,rotom,
-pokemon-species,uxie,
-pokemon-species,mesprit,
-pokemon-species,azelf,
-pokemon-species,dialga,
-pokemon-species,palkia,
-pokemon-species,heatran,
-pokemon-species,regigigas,
-pokemon-species,cresselia,
-pokemon-species,phione,
-pokemon-species,manaphy,
-pokemon-species,darkrai,
-pokemon-species,arceus,
-pokemon-species,victini,
-pokemon-species,snivy,
-pokemon-species,servine,
-pokemon-species,serperior,
-pokemon-species,tepig,
-pokemon-species,pignite,
-pokemon-species,emboar,
-pokemon-species,oshawott,
-pokemon-species,dewott,
-pokemon-species,samurott,
-pokemon-species,patrat,
-pokemon-species,watchog,
-pokemon-species,lillipup,
-pokemon-species,herdier,
-pokemon-species,stoutland,
-pokemon-species,purrloin,
-pokemon-species,liepard,
-pokemon-species,pansage,
-pokemon-species,simisage,
-pokemon-species,pansear,
-pokemon-species,simisear,
-pokemon-species,panpour,
-pokemon-species,simipour,
-pokemon-species,munna,
-pokemon-species,musharna,
-pokemon-species,pidove,
-pokemon-species,tranquill,
-pokemon-species,unfezant,
-pokemon-species,blitzle,
-pokemon-species,zebstrika,
-pokemon-species,roggenrola,
-pokemon-species,boldore,
-pokemon-species,gigalith,
-pokemon-species,woobat,
-pokemon-species,swoobat,
-pokemon-species,drilbur,
-pokemon-species,excadrill,
-pokemon-species,audino,
-pokemon-species,timburr,
-pokemon-species,gurdurr,
-pokemon-species,conkeldurr,
-pokemon-species,tympole,
-pokemon-species,palpitoad,
-pokemon-species,seismitoad,
-pokemon-species,throh,
-pokemon-species,sawk,
-pokemon-species,sewaddle,
-pokemon-species,swadloon,
-pokemon-species,leavanny,
-pokemon-species,venipede,
-pokemon-species,whirlipede,
-pokemon-species,scolipede,
-pokemon-species,cottonee,
-pokemon-species,whimsicott,
-pokemon-species,petilil,
-pokemon-species,lilligant,
-pokemon-species,sandile,
-pokemon-species,krokorok,
-pokemon-species,krookodile,
-pokemon-species,darumaka,
-pokemon-species,maractus,
-pokemon-species,dwebble,
-pokemon-species,crustle,
-pokemon-species,scraggy,
-pokemon-species,scrafty,
-pokemon-species,sigilyph,
-pokemon-species,yamask,
-pokemon-species,cofagrigus,
-pokemon-species,tirtouga,
-pokemon-species,carracosta,
-pokemon-species,archen,
-pokemon-species,archeops,
-pokemon-species,trubbish,
-pokemon-species,garbodor,
-pokemon-species,zorua,
-pokemon-species,zoroark,
-pokemon-species,minccino,
-pokemon-species,cinccino,
-pokemon-species,gothita,
-pokemon-species,gothorita,
-pokemon-species,gothitelle,
-pokemon-species,solosis,
-pokemon-species,duosion,
-pokemon-species,reuniclus,
-pokemon-species,ducklett,
-pokemon-species,swanna,
-pokemon-species,vanillite,
-pokemon-species,vanillish,
-pokemon-species,vanilluxe,
-pokemon-species,deerling,
-pokemon-species,sawsbuck,
-pokemon-species,emolga,
-pokemon-species,karrablast,
-pokemon-species,escavalier,
-pokemon-species,foongus,
-pokemon-species,amoonguss,
-pokemon-species,frillish,
-pokemon-species,jellicent,
-pokemon-species,alomomola,
-pokemon-species,joltik,
-pokemon-species,galvantula,
-pokemon-species,ferroseed,
-pokemon-species,ferrothorn,
-pokemon-species,klink,
-pokemon-species,klang,
-pokemon-species,klinklang,
-pokemon-species,tynamo,
-pokemon-species,eelektrik,
-pokemon-species,eelektross,
-pokemon-species,elgyem,
-pokemon-species,beheeyem,
-pokemon-species,litwick,
-pokemon-species,lampent,
-pokemon-species,chandelure,
-pokemon-species,axew,
-pokemon-species,fraxure,
-pokemon-species,haxorus,
-pokemon-species,cubchoo,
-pokemon-species,beartic,
-pokemon-species,cryogonal,
-pokemon-species,shelmet,
-pokemon-species,accelgor,
-pokemon-species,stunfisk,
-pokemon-species,mienfoo,
-pokemon-species,mienshao,
-pokemon-species,druddigon,
-pokemon-species,golett,
-pokemon-species,golurk,
-pokemon-species,pawniard,
-pokemon-species,bisharp,
-pokemon-species,bouffalant,
-pokemon-species,rufflet,
-pokemon-species,braviary,
-pokemon-species,vullaby,
-pokemon-species,mandibuzz,
-pokemon-species,heatmor,
-pokemon-species,durant,
-pokemon-species,deino,
-pokemon-species,zweilous,
-pokemon-species,hydreigon,
-pokemon-species,larvesta,
-pokemon-species,volcarona,
-pokemon-species,cobalion,
-pokemon-species,terrakion,
-pokemon-species,virizion,
-pokemon-species,reshiram,
-pokemon-species,zekrom,
-pokemon-species,kyurem,
-pokemon-species,genesect,
-pokemon-species,chespin,
-pokemon-species,quilladin,
-pokemon-species,chesnaught,
-pokemon-species,fennekin,
-pokemon-species,braixen,
-pokemon-species,delphox,
-pokemon-species,froakie,
-pokemon-species,frogadier,
-pokemon-species,greninja,
-pokemon-species,bunnelby,
-pokemon-species,diggersby,
-pokemon-species,fletchling,
-pokemon-species,fletchinder,
-pokemon-species,talonflame,
-pokemon-species,scatterbug,
-pokemon-species,spewpa,
-pokemon-species,vivillon,
-pokemon-species,litleo,
-pokemon-species,pyroar,
-pokemon-species,flabebe,
-pokemon-species,floette,
-pokemon-species,florges,
-pokemon-species,skiddo,
-pokemon-species,gogoat,
-pokemon-species,pancham,
-pokemon-species,pangoro,
-pokemon-species,furfrou,
-pokemon-species,espurr,
-pokemon-species,honedge,
-pokemon-species,doublade,
-pokemon-species,spritzee,
-pokemon-species,aromatisse,
-pokemon-species,swirlix,
-pokemon-species,slurpuff,
-pokemon-species,inkay,
-pokemon-species,malamar,
-pokemon-species,binacle,
-pokemon-species,barbaracle,
-pokemon-species,skrelp,
-pokemon-species,dragalge,
-pokemon-species,clauncher,
-pokemon-species,clawitzer,
-pokemon-species,helioptile,
-pokemon-species,heliolisk,
-pokemon-species,tyrunt,
-pokemon-species,tyrantrum,
-pokemon-species,amaura,
-pokemon-species,aurorus,
-pokemon-species,sylveon,
-pokemon-species,hawlucha,
-pokemon-species,dedenne,
-pokemon-species,carbink,
-pokemon-species,goomy,
-pokemon-species,sliggoo,
-pokemon-species,goodra,
-pokemon-species,klefki,
-pokemon-species,phantump,
-pokemon-species,trevenant,
-pokemon-species,bergmite,
-pokemon-species,avalugg,
-pokemon-species,noibat,
-pokemon-species,noivern,
-pokemon-species,xerneas,
-pokemon-species,yveltal,
-pokemon-species,diancie,
-pokemon-species,hoopa,
-pokemon-species,volcanion,
-pokemon-species,rowlet,
-pokemon-species,dartrix,
-pokemon-species,decidueye,
-pokemon-species,litten,
-pokemon-species,torracat,
-pokemon-species,incineroar,
-pokemon-species,popplio,
-pokemon-species,brionne,
-pokemon-species,primarina,
-pokemon-species,pikipek,
-pokemon-species,trumbeak,
-pokemon-species,toucannon,
-pokemon-species,yungoos,
-pokemon-species,gumshoos,
-pokemon-species,grubbin,
-pokemon-species,charjabug,
-pokemon-species,vikavolt,
-pokemon-species,crabrawler,
-pokemon-species,crabominable,
-pokemon-species,cutiefly,
-pokemon-species,ribombee,
-pokemon-species,rockruff,
-pokemon-species,mareanie,
-pokemon-species,toxapex,
-pokemon-species,mudbray,
-pokemon-species,mudsdale,
-pokemon-species,dewpider,
-pokemon-species,araquanid,
-pokemon-species,fomantis,
-pokemon-species,lurantis,
-pokemon-species,morelull,
-pokemon-species,shiinotic,
-pokemon-species,salandit,
-pokemon-species,salazzle,
-pokemon-species,stufful,
-pokemon-species,bewear,
-pokemon-species,bounsweet,
-pokemon-species,steenee,
-pokemon-species,tsareena,
-pokemon-species,comfey,
-pokemon-species,oranguru,
-pokemon-species,passimian,
-pokemon-species,wimpod,
-pokemon-species,golisopod,
-pokemon-species,sandygast,
-pokemon-species,palossand,
-pokemon-species,pyukumuku,
-pokemon-species,type-null,
-pokemon-species,silvally,
-pokemon-species,komala,
-pokemon-species,turtonator,
-pokemon-species,togedemaru,
-pokemon-species,bruxish,
-pokemon-species,drampa,
-pokemon-species,dhelmise,
-pokemon-species,jangmo-o,
-pokemon-species,hakamo-o,
-pokemon-species,kommo-o,
-pokemon-species,tapu-koko,
-pokemon-species,tapu-lele,
-pokemon-species,tapu-bulu,
-pokemon-species,tapu-fini,
-pokemon-species,cosmog,
-pokemon-species,cosmoem,
-pokemon-species,solgaleo,
-pokemon-species,lunala,
-pokemon-species,nihilego,
-pokemon-species,buzzwole,
-pokemon-species,pheromosa,
-pokemon-species,xurkitree,
-pokemon-species,celesteela,
-pokemon-species,kartana,
-pokemon-species,guzzlord,
-pokemon-species,necrozma,
-pokemon-species,magearna,
-pokemon-species,marshadow,
-pokemon-species,poipole,
-pokemon-species,naganadel,
-pokemon-species,stakataka,
-pokemon-species,blacephalon,
-pokemon-species,zeraora,
-pokemon-species,meltan,
-pokemon-species,melmetal,
-pokemon-species,grookey,
-pokemon-species,thwackey,
-pokemon-species,rillaboom,
-pokemon-species,scorbunny,
-pokemon-species,raboot,
-pokemon-species,cinderace,
-pokemon-species,sobble,
-pokemon-species,drizzile,
-pokemon-species,inteleon,
-pokemon-species,skwovet,
-pokemon-species,greedent,
-pokemon-species,rookidee,
-pokemon-species,corvisquire,
-pokemon-species,corviknight,
-pokemon-species,blipbug,
-pokemon-species,dottler,
-pokemon-species,orbeetle,
-pokemon-species,nickit,
-pokemon-species,thievul,
-pokemon-species,gossifleur,
-pokemon-species,eldegoss,
-pokemon-species,wooloo,
-pokemon-species,dubwool,
-pokemon-species,chewtle,
-pokemon-species,drednaw,
-pokemon-species,yamper,
-pokemon-species,boltund,
-pokemon-species,rolycoly,
-pokemon-species,carkol,
-pokemon-species,coalossal,
-pokemon-species,applin,
-pokemon-species,flapple,
-pokemon-species,appletun,
-pokemon-species,silicobra,
-pokemon-species,sandaconda,
-pokemon-species,cramorant,
-pokemon-species,arrokuda,
-pokemon-species,barraskewda,
-pokemon-species,toxel,
-pokemon-species,sizzlipede,
-pokemon-species,centiskorch,
-pokemon-species,clobbopus,
-pokemon-species,grapploct,
-pokemon-species,sinistea,
-pokemon-species,polteageist,
-pokemon-species,hatenna,
-pokemon-species,hattrem,
-pokemon-species,hatterene,
-pokemon-species,impidimp,
-pokemon-species,morgrem,
-pokemon-species,grimmsnarl,
-pokemon-species,obstagoon,
-pokemon-species,perrserker,
-pokemon-species,cursola,
-pokemon-species,sirfetchd,
-pokemon-species,mr-rime,
-pokemon-species,runerigus,
-pokemon-species,milcery,
-pokemon-species,alcremie,
-pokemon-species,falinks,
-pokemon-species,pincurchin,
-pokemon-species,snom,
-pokemon-species,frosmoth,
-pokemon-species,stonjourner,
-pokemon-species,cufant,
-pokemon-species,copperajah,
-pokemon-species,dracozolt,
-pokemon-species,arctozolt,
-pokemon-species,dracovish,
-pokemon-species,arctovish,
-pokemon-species,duraludon,
-pokemon-species,dreepy,
-pokemon-species,drakloak,
-pokemon-species,dragapult,
-pokemon-species,zacian,
-pokemon-species,zamazenta,
-pokemon-species,eternatus,
-pokemon-species,kubfu,
-pokemon-species,zarude,
-pokemon-species,regieleki,
-pokemon-species,regidrago,
-pokemon-species,glastrier,
-pokemon-species,spectrier,
-pokemon-species,calyrex,
-pokemon-species,wyrdeer,
-pokemon-species,kleavor,
-pokemon-species,ursaluna,
-pokemon-species,sneasler,
-pokemon-species,overqwil,
-pokemon-species,sprigatito,
-pokemon-species,floragato,
-pokemon-species,meowscarada,
-pokemon-species,fuecoco,
-pokemon-species,crocalor,
-pokemon-species,skeledirge,
-pokemon-species,quaxly,
-pokemon-species,quaxwell,
-pokemon-species,quaquaval,
-pokemon-species,lechonk,
-pokemon-species,oinkologne,
-pokemon-species,tarountula,
-pokemon-species,spidops,
-pokemon-species,nymble,
-pokemon-species,lokix,
-pokemon-species,pawmi,
-pokemon-species,pawmo,
-pokemon-species,pawmot,
-pokemon-species,tandemaus,
-pokemon-species,maushold,
-pokemon-species,fidough,
-pokemon-species,dachsbun,
-pokemon-species,smoliv,
-pokemon-species,dolliv,
-pokemon-species,arboliva,
-pokemon-species,squawkabilly,
-pokemon-species,nacli,
-pokemon-species,naclstack,
-pokemon-species,garganacl,
-pokemon-species,charcadet,
-pokemon-species,armarouge,
-pokemon-species,ceruledge,
-pokemon-species,tadbulb,
-pokemon-species,bellibolt,
-pokemon-species,wattrel,
-pokemon-species,kilowattrel,
-pokemon-species,maschiff,
-pokemon-species,mabosstiff,
-pokemon-species,shroodle,
-pokemon-species,grafaiai,
-pokemon-species,bramblin,
-pokemon-species,brambleghast,
-pokemon-species,toedscool,
-pokemon-species,toedscruel,
-pokemon-species,klawf,
-pokemon-species,capsakid,
-pokemon-species,scovillain,
-pokemon-species,rellor,
-pokemon-species,rabsca,
-pokemon-species,flittle,
-pokemon-species,espathra,
-pokemon-species,tinkatink,
-pokemon-species,tinkatuff,
-pokemon-species,tinkaton,
-pokemon-species,wiglett,
-pokemon-species,wugtrio,
-pokemon-species,bombirdier,
-pokemon-species,finizen,
-pokemon-species,palafin,
-pokemon-species,varoom,
-pokemon-species,revavroom,
-pokemon-species,cyclizar,
-pokemon-species,orthworm,
-pokemon-species,glimmet,
-pokemon-species,glimmora,
-pokemon-species,greavard,
-pokemon-species,houndstone,
-pokemon-species,flamigo,
-pokemon-species,cetoddle,
-pokemon-species,cetitan,
-pokemon-species,veluza,
-pokemon-species,dondozo,
-pokemon-species,tatsugiri,
-pokemon-species,annihilape,
-pokemon-species,clodsire,
-pokemon-species,farigiraf,
-pokemon-species,dudunsparce,
-pokemon-species,kingambit,
-pokemon-species,great-tusk,
-pokemon-species,scream-tail,
-pokemon-species,brute-bonnet,
-pokemon-species,flutter-mane,
-pokemon-species,slither-wing,
-pokemon-species,sandy-shocks,
-pokemon-species,iron-treads,
-pokemon-species,iron-bundle,
-pokemon-species,iron-hands,
-pokemon-species,iron-jugulis,
-pokemon-species,iron-moth,
-pokemon-species,iron-thorns,
-pokemon-species,frigibax,
-pokemon-species,arctibax,
-pokemon-species,baxcalibur,
-pokemon-species,gimmighoul,
-pokemon-species,gholdengo,
-pokemon-species,wo-chien,
-pokemon-species,chien-pao,
-pokemon-species,ting-lu,
-pokemon-species,chi-yu,
-pokemon-species,roaring-moon,
-pokemon-species,iron-valiant,
-pokemon-species,koraidon,
-pokemon-species,miraidon,
-pokemon-species,walking-wake,
-pokemon-species,iron-leaves,
-pokemon-species,dipplin,
-pokemon-species,poltchageist,
-pokemon-species,sinistcha,
-pokemon-species,okidogi,
-pokemon-species,munkidori,
-pokemon-species,fezandipiti,
-pokemon-species,ogerpon,
-pokemon-species,archaludon,
-pokemon-species,hydrapple,
-pokemon-species,gouging-fire,
-pokemon-species,raging-bolt,
-pokemon-species,iron-boulder,
-pokemon-species,iron-crown,
-pokemon-species,terapagos,
-pokemon-species,pecharunt,
+"pokemon-species","bulbasaur",""
+"pokemon-species","ivysaur",""
+"pokemon-species","venusaur",""
+"pokemon-species","charmander",""
+"pokemon-species","charmeleon",""

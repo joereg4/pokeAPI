@@ -175,5 +175,8 @@ data/summary_progress.json
 # Local deployment notes
 !.env.example
 
+# Agent / internal planning (not for the public repo)
+docs/superpowers/
+
 # Operator-only (real IPs, production paths)
 DEPLOYMENT.private.md

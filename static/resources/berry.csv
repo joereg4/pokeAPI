@@ -1,5 +1,5 @@
-resource,name,summary
-berry,cheri,"**Cheri Berry** is a type of Berry in the Pokémon series that primarily serves to heal the status condition of paralysis when consumed by a Pokémon. This makes it particularly useful in battles where paralysis is a frequent hazard, providing trainers with a strategic item to quickly remedy this debilitating status. 
+"resource","name","summary"
+"berry","cheri","**Cheri Berry** is a type of Berry in the Pokémon series that primarily serves to heal the status condition of paralysis when consumed by a Pokémon. This makes it particularly useful in battles where paralysis is a frequent hazard, providing trainers with a strategic item to quickly remedy this debilitating status. 
 
 ### Effects
 - **Primary Effect:** When held by a Pokémon, the Cheri Berry automatically activates to cure paralysis.
@@ -8,14 +8,14 @@ berry,cheri,"**Cheri Berry** is a type of Berry in the Pokémon series that prim
 ### Common Uses
 - **In Battles:** Given its ability to cure paralysis, the Cheri Berry is commonly equipped by Pokémon that are susceptible to Thunder Wave or other paralysis-inducing moves.
 - **Training and Bonding:** Trainers often use Cheri Berries to make Poffins or Pokéblocks, which can help improve"
-berry,chesto,"**Chesto Berry** is a type of Berry known for its ability to awaken a Pokémon from sleep status when consumed. This makes it an invaluable item in both casual and competitive battles, where sleep-inducing moves like Sleep Powder, Hypnosis, and Spore are commonly used to incapacitate opponents.
+"berry","chesto","**Chesto Berry** is a type of Berry known for its ability to awaken a Pokémon from sleep status when consumed. This makes it an invaluable item in both casual and competitive battles, where sleep-inducing moves like Sleep Powder, Hypnosis, and Spore are commonly used to incapacitate opponents.
 
 **Effects:** The primary effect of the Chesto Berry is to wake up a sleeping Pokémon instantly. When held by a Pokémon, it will automatically be consumed once the Pokémon falls asleep, allowing them to continue battling without losing turns.
 
 **Common Uses:** 
 1. **Battle Strategy:** Trainers frequently equip their Pokémon with a Chesto Berry to counteract the sleep-inducing strategies of opponents. This is particularly effective in competitive play, where sleep moves are often part of the meta.
 2. **Single-Use Moves:** Some Pokémon are trained to use the move Rest, which fully restores HP but puts the user to sleep for two turns. By holding a Chesto Berry, the Pokémon can immediately wake"
-berry,pecha,"**Pecha Berry** is a distinctive type of Berry known for its sweet taste and notable pink color. In the Pokémon universe, the primary effect of a Pecha Berry is its ability to cure a Pokémon of poisoning, making it a valuable item for trainers to have on hand during battles where poison-inducing moves or abilities are common.
+"berry","pecha","**Pecha Berry** is a distinctive type of Berry known for its sweet taste and notable pink color. In the Pokémon universe, the primary effect of a Pecha Berry is its ability to cure a Pokémon of poisoning, making it a valuable item for trainers to have on hand during battles where poison-inducing moves or abilities are common.
 
 **Effects:**
 - Pecha Berry cures the Pokémon holding it of poison status automatically when needed.
@@ -24,12 +24,12 @@ berry,pecha,"**Pecha Berry** is a distinctive type of Berry known for its sweet 
 **Common Uses:**
 - **Battle Strategy:** Trainers frequently use Pecha Berries as held items during battles to provide an immediate remedy against poison-inducing attacks. This can prevent further damage accumulation and preserve the Pokémon's fighting capability.
 - **Exploration:** Adventurers and trainers in regions where poisonous Pokémon or environments are prevalent often carry Pecha Berries for quick access to an anti-poison solution, ensuring their"
-berry,rawst,"**Rawst Berry** is a type of Berry primarily known for its ability to cure a Pokémon of a burn status condition when consumed. This makes it a valuable asset in battles where burn-inducing moves or abilities are common. The Rawst Berry is often carried by trainers as a precautionary measure to ensure that their Pokémon can continue fighting at full capacity without the debilitating effects of a burn, which not only causes damage over time but also reduces the damage output of physical moves.
+"berry","rawst","**Rawst Berry** is a type of Berry primarily known for its ability to cure a Pokémon of a burn status condition when consumed. This makes it a valuable asset in battles where burn-inducing moves or abilities are common. The Rawst Berry is often carried by trainers as a precautionary measure to ensure that their Pokémon can continue fighting at full capacity without the debilitating effects of a burn, which not only causes damage over time but also reduces the damage output of physical moves.
 
 **Effects and Common Uses:**
 1. **Healing Properties:** When a Pokémon consumes a Rawst Berry, either automatically during battle or through a trainer’s intervention, it immediately cures any burn inflicted on the Pokémon. This instant remedy can turn the tide in closely contested battles, especially against opponents who rely on burn-inducing tactics.
 2. **Held Item Strategy:** Many trainers equip their Pokémon with a Rawst Berry as a held item. This ensures that if the Pokémon gets burned during battle, the Berry will be used instantly"
-berry,aspear,"**Aspear Berry** is a type of Berry in the Pokémon series known primarily for its ability to heal the frozen status condition when consumed by a Pokémon. It is classified as a status-healing Berry.
+"berry","aspear","**Aspear Berry** is a type of Berry in the Pokémon series known primarily for its ability to heal the frozen status condition when consumed by a Pokémon. It is classified as a status-healing Berry.
 
 ### Effects:
 - **Primary Effect:** Heals the frozen status condition, allowing a Pokémon to thaw out immediately.
@@ -38,7 +38,7 @@ berry,aspear,"**Aspear Berry** is a type of Berry in the Pokémon series known p
 ### Common Uses:
 - **Status Healing:** The most common use of the Aspear Berry is to prevent or cure the frozen status condition during battles. This can be particularly useful in battles against Ice-type Pokémon or those known to use moves that can freeze opponents, such as Ice Beam or Blizzard.
 - **Berry Blending and Poffin Making:** In certain games like Pokémon Ruby, Sapphire, and Emerald, the Aspear Berry can be used in Berry Blending to create Pokéblocks, which enhance a Pokémon's contest"
-berry,leppa,"**Leppa Berry** is a type of Berry in the Pokémon series that restores 10 Power Points (PP) to a selected move when consumed by a Pokémon. This makes it particularly useful in long battles or during lengthy adventures where access to Pokémon Centers may be limited. Here are some key details about the Leppa Berry:
+"berry","leppa","**Leppa Berry** is a type of Berry in the Pokémon series that restores 10 Power Points (PP) to a selected move when consumed by a Pokémon. This makes it particularly useful in long battles or during lengthy adventures where access to Pokémon Centers may be limited. Here are some key details about the Leppa Berry:
 
 **Effects:**
 - Restores 10 PP to a specific move.
@@ -48,12 +48,12 @@ berry,leppa,"**Leppa Berry** is a type of Berry in the Pokémon series that rest
 - In battle: To restore the PP of critical moves, ensuring that Pokémon can continue to use their most powerful attacks or essential support moves.
 - During Elite Four or Champion battles: Trainers often equip their Pokémon with Leppa Berries to ensure they don’t run out of crucial moves during these long, multi-battle sequences.
 - In lengthy cave or wilderness exploration: Where access to Pokémon Centers is restricted, having Leppa Berries can be a lifesaver for"
-berry,oran,"**Oran Berry** is a versatile and widely recognized Berry in the Pokémon series, known for its healing properties and practical applications in various gameplay scenarios. This small blue Berry restores 10 HP to the Pokémon that consumes it, making it an essential item for trainers, especially in the early stages of their journey. 
+"berry","oran","**Oran Berry** is a versatile and widely recognized Berry in the Pokémon series, known for its healing properties and practical applications in various gameplay scenarios. This small blue Berry restores 10 HP to the Pokémon that consumes it, making it an essential item for trainers, especially in the early stages of their journey. 
 
 **Effects:** When a Pokémon holding an Oran Berry's HP drops below 50%, the Berry is automatically consumed to heal 10 HP. This automatic healing can provide a strategic advantage during battles, giving the Pokémon a chance to last longer against opponents. In certain games, such as Pokémon Mystery Dungeon, the Oran Berry's healing effect may vary; in these games, it often restores a more substantial portion of a Pokémon's health.
 
 **Common Uses:** Oran Berries are commonly used in both casual play and competitive battles. Trainers often equip their Pokémon with Oran Berries for early-game Gyms, rival battles, and other key encounters where every bit of HP can be"
-berry,persim,"**Persim Berry** is a fruit in the Pokémon universe known for its ability to cure confusion in Pokémon when consumed. Here are the primary details:
+"berry","persim","**Persim Berry** is a fruit in the Pokémon universe known for its ability to cure confusion in Pokémon when consumed. Here are the primary details:
 
 **Effects:**
 - When consumed, a Persim Berry immediately heals a Pokémon from the status condition of confusion.
@@ -63,7 +63,7 @@ berry,persim,"**Persim Berry** is a fruit in the Pokémon universe known for its
 - **Battle Strategy:** Trainers often use Persim Berries strategically in battles to ensure their Pokémon can recover from confusion induced by moves like Swagger or Thrash. This can be particularly crucial in tight battles where sustaining confusion could shift the momentum.
 - **Contest Performance:** Aside from battles, Persim Berries are useful in Pokémon Contests to create Pokéblocks or Poffins that help boost performance stats, making Pokémon more appealing in various contest categories.
 - **Held Item:** Pokémon can hold Persim Berries"
-berry,lum,"**Lum Berry** is a versatile and highly regarded Berry in the Pokémon world. Its primary effect is to cure any status condition afflicting the Pokémon that consumes it. This means it can heal ailments such as paralysis, poisoning, sleep, freezing, burn, and confusion, making it an invaluable item in both casual play and competitive battling.
+"berry","lum","**Lum Berry** is a versatile and highly regarded Berry in the Pokémon world. Its primary effect is to cure any status condition afflicting the Pokémon that consumes it. This means it can heal ailments such as paralysis, poisoning, sleep, freezing, burn, and confusion, making it an invaluable item in both casual play and competitive battling.
 
 **Effects:**
 - The Lum Berry automatically activates when the Pokémon holding it is affected by any status condition.
@@ -73,12 +73,12 @@ berry,lum,"**Lum Berry** is a versatile and highly regarded Berry in the Pokémo
 - **Competitive Battling:** Lum Berries are frequently equipped to Pokémon by trainers who participate in competitive battles. They provide a safety net against the widespread use of status-inflicting moves, ensuring that the Pokémon can maintain peak performance.
 - **In-Game Gyms and Elite Four Challenges:** Trainers often use Lum Berries during significant battles to counteract status moves used by Gym Leaders and Elite Four members.
 -"
-berry,sitrus,"**Sitrus Berry** is a type of Berry known for its restorative properties in the Pokémon world. When consumed by a Pokémon, it restores 25% of the Pokémon's maximum HP. This makes the Sitrus Berry significantly more effective than the Oran Berry, which only restores a flat 10 HP.
+"berry","sitrus","**Sitrus Berry** is a type of Berry known for its restorative properties in the Pokémon world. When consumed by a Pokémon, it restores 25% of the Pokémon's maximum HP. This makes the Sitrus Berry significantly more effective than the Oran Berry, which only restores a flat 10 HP.
 
 **Effects:** The primary effect of the Sitrus Berry is to heal a Pokémon by 25% of its maximum HP, which can be crucial in battle situations. In more recent games, such as Pokémon Sword and Shield, it is a commonly used item for its reliable healing properties. Additionally, if a Pokémon holds a Sitrus Berry and has the Gluttony ability, it will consume the berry earlier than usual, providing a strategic advantage in prolonged battles.
 
 **Common Uses:** The Sitrus Berry is widely used in both casual and competitive gameplay. In competitive battling, it is commonly given to bulky or defensive Pokémon to provide sustained survivability, allowing them to stay"
-berry,figy,"**Figy Berry** is a type of Berry in the Pokémon series known for its healing properties and unique effects. When consumed by a Pokémon, it typically restores 50% of the Pokémon's maximum HP, making it a valuable item for sustaining health during battles. However, there is a notable twist: if the Pokémon's Nature is one that dislikes the bitter flavor, consuming a Figy Berry will cause confusion instead of providing healing. This makes the Figy Berry a bit more strategic to use compared to other healing Berries, requiring trainers to be mindful of their Pokémon's Nature.
+"berry","figy","**Figy Berry** is a type of Berry in the Pokémon series known for its healing properties and unique effects. When consumed by a Pokémon, it typically restores 50% of the Pokémon's maximum HP, making it a valuable item for sustaining health during battles. However, there is a notable twist: if the Pokémon's Nature is one that dislikes the bitter flavor, consuming a Figy Berry will cause confusion instead of providing healing. This makes the Figy Berry a bit more strategic to use compared to other healing Berries, requiring trainers to be mindful of their Pokémon's Nature.
 
 **Effects:**
 - Restores 50% of the Pokémon's maximum HP when its HP drops to 25% or lower.
@@ -86,7 +86,7 @@ berry,figy,"**Figy Berry** is a type of Berry in the Pokémon series known for i
 
 **Common Uses:**
 - **In-battle Healing:** Figy Berries are often held by Pokémon to provide an emergency HP boost during battles, particularly in competitive play. Their ability to"
-berry,wiki,"**Wiki Berry** is a type of Berry in the Pokémon series known for its utility in battle and in Pokémon Contests. When a Pokémon consumes a Wiki Berry, it restores 50% of its maximum HP. However, this benefit comes with a potential drawback: if the Pokémon's nature dislikes the dry flavor (specifically, if it has the Modest, Mild, Rash, or Quiet natures), it will become confused.
+"berry","wiki","**Wiki Berry** is a type of Berry in the Pokémon series known for its utility in battle and in Pokémon Contests. When a Pokémon consumes a Wiki Berry, it restores 50% of its maximum HP. However, this benefit comes with a potential drawback: if the Pokémon's nature dislikes the dry flavor (specifically, if it has the Modest, Mild, Rash, or Quiet natures), it will become confused.
 
 ### Effects:
 1. **Healing**: When held by a Pokémon and its HP drops to 25% or lower in battle, a Wiki Berry will be automatically consumed to restore half of the Pokémon’s maximum HP.
@@ -94,7 +94,7 @@ berry,wiki,"**Wiki Berry** is a type of Berry in the Pokémon series known for i
 
 ### Common Uses:
 1. **Battle Strategy**: Trainers often use Wiki Berries in competitive battles to provide an immediate source of healing during critical moments. This berry can turn the tide of battle by significantly"
-berry,mago,"**Mago Berry** is a type of Berry that restores HP when consumed. Specifically, it restores 1/8 of a Pokémon's maximum HP. However, it comes with a unique twist: if the Pokémon consuming it has a Nature that dislikes the sweet flavor (Natures such as Adamant, Jolly, Careful, or Impish), it will become confused.
+"berry","mago","**Mago Berry** is a type of Berry that restores HP when consumed. Specifically, it restores 1/8 of a Pokémon's maximum HP. However, it comes with a unique twist: if the Pokémon consuming it has a Nature that dislikes the sweet flavor (Natures such as Adamant, Jolly, Careful, or Impish), it will become confused.
 
 ### Effects:
 - **HP Restoration**: The primary effect of the Mago Berry is that it restores HP equivalent to 1/8 of the Pokémon's maximum HP.
@@ -103,7 +103,7 @@ berry,mago,"**Mago Berry** is a type of Berry that restores HP when consumed. Sp
 ### Common Uses:
 - **Healing in Battles**: The Mago Berry is often used to restore a Pokémon's health during battles, especially in situations where quick healing is needed without the usage of potions.
 - **Strategic Elements**: Trainers might utilize the Mago Berry as part"
-berry,aguav,"**Aguav Berry** is a type of Berry known for its unique ability to restore health to a Pokémon under certain conditions. When a Pokémon consumes an Aguav Berry, it restores 1/8th of the Pokémon's maximum HP, which can be a significant boost during battles. However, there is a twist: if the Pokémon holding the Berry dislikes the bitter flavor, it will become confused after consumption.
+"berry","aguav","**Aguav Berry** is a type of Berry known for its unique ability to restore health to a Pokémon under certain conditions. When a Pokémon consumes an Aguav Berry, it restores 1/8th of the Pokémon's maximum HP, which can be a significant boost during battles. However, there is a twist: if the Pokémon holding the Berry dislikes the bitter flavor, it will become confused after consumption.
 
 ### Effects
 - **Restores HP**: The primary function of an Aguav Berry is to heal the Pokémon by restoring 1/8th of its max HP.
@@ -111,7 +111,7 @@ berry,aguav,"**Aguav Berry** is a type of Berry known for its unique ability to 
 
 ### Common Uses
 - **In"
-berry,iapapa,"**Iapapa Berry** is a consumable item in the Pokémon series that restores a significant portion of a Pokémon’s HP when it drops to a critically low point. Specifically, it restores 50% of the Pokémon's maximum HP. However, it has a potential drawback: if the Pokémon consuming the Iapapa Berry dislikes the sour flavor, it will become confused. This flavor preference is determined by the Pokémon's nature.
+"berry","iapapa","**Iapapa Berry** is a consumable item in the Pokémon series that restores a significant portion of a Pokémon’s HP when it drops to a critically low point. Specifically, it restores 50% of the Pokémon's maximum HP. However, it has a potential drawback: if the Pokémon consuming the Iapapa Berry dislikes the sour flavor, it will become confused. This flavor preference is determined by the Pokémon's nature.
 
 ### Effects
 - **Primary Effect**: Restores 50% of maximum HP when the Pokémon's HP falls below 25%.
@@ -120,7 +120,7 @@ berry,iapapa,"**Iapapa Berry** is a consumable item in the Pokémon series that 
 ### Common Uses
 - **In Battle**: The Iapapa Berry is strategically used in competitive battles and single-player campaigns to provide a substantial recovery mechanism. Trainers often give these berries to Pokémon who can benefit from the HP restoration without the risk of confusion.
 - **Berry Juice Production**: The Iapapa Berry can be used with other"
-berry,razz,"**Razz Berry** is an item featured prominently in the Pokémon series, known for its utility in various gameplay scenarios. In the core Pokémon games, its primary function differs slightly from its use in the mobile game, Pokémon GO.
+"berry","razz","**Razz Berry** is an item featured prominently in the Pokémon series, known for its utility in various gameplay scenarios. In the core Pokémon games, its primary function differs slightly from its use in the mobile game, Pokémon GO.
 
 ### Effects:
 - **Core Games**: In the main series, the Razz Berry is primarily used for making Pokéblocks or Poffins, which are treats used to enhance a Pokémon's attributes for contests, such as Coolness, Toughness, and Cuteness.
@@ -128,7 +128,7 @@ berry,razz,"**Razz Berry** is an item featured prominently in the Pokémon serie
 
 ### Common Uses:
 - **Contests and Competitions**: In games that feature Pokémon contests, Razz Berries are often collected and utilized to maximize a Pokémon's contest stats via Pokéblocks or Poffins. This makes"
-berry,bluk,"**Bluk Berry** is a type of Berry known primarily for its role in the Pokéblock and Poffin creation processes, rather than for direct consumption by Pokémon for battle-related effects. 
+"berry","bluk","**Bluk Berry** is a type of Berry known primarily for its role in the Pokéblock and Poffin creation processes, rather than for direct consumption by Pokémon for battle-related effects. 
 
 ### Effects:
 - Unlike other Berries such as Oran or Sitrus Berries, the Bluk Berry does not restore HP or cure status conditions when consumed in battle.
@@ -137,7 +137,7 @@ berry,bluk,"**Bluk Berry** is a type of Berry known primarily for its role in th
 ### Common Uses:
 - **Pokéblock Creation:** In the Hoenn region, Bluk Berries are commonly used to create Pokéblocks. These Pokéblocks are then fed to Pokémon to enhance various contest attributes such as Cool, Beauty, Cute, Smart, and Tough.
 - **Poffin Creation:** In the Sinnoh region, Bluk Berries are used to make Poffins. Poffins serve a similar purpose to"
-berry,nanab,"**Nanab Berry** is a type of Berry in the Pokémon series known for its unique effects, especially in Pokémon GO. Unlike other Berries that often provide healing or status benefits, the Nanab Berry primarily affects encounters with wild Pokémon.
+"berry","nanab","**Nanab Berry** is a type of Berry in the Pokémon series known for its unique effects, especially in Pokémon GO. Unlike other Berries that often provide healing or status benefits, the Nanab Berry primarily affects encounters with wild Pokémon.
 
 ### Effects
 
@@ -148,7 +148,7 @@ berry,nanab,"**Nanab Berry** is a type of Berry in the Pokémon series known for
 
 - **Catching Pokémon:** In Pokémon GO, trainers commonly use Nanab Berries when they encounter wild Pokémon that are particularly jumpy or difficult to catch using Poké Balls alone.
 - **"
-berry,wepear,"**Wepear Berry** is a type of Berry in the Pokémon universe known for its unique properties and applications. Below is a detailed summary of its characteristics, effects, common uses, and some interesting facts:
+"berry","wepear","**Wepear Berry** is a type of Berry in the Pokémon universe known for its unique properties and applications. Below is a detailed summary of its characteristics, effects, common uses, and some interesting facts:
 
 ### Effects
 - **Primary Effect**: The Wepear Berry, unlike some other Berries, does not have a direct healing effect in battles. Instead, its primary use is as an ingredient in various Pokémon-related products.
@@ -156,7 +156,7 @@ berry,wepear,"**Wepear Berry** is a type of Berry in the Pokémon universe known
 
 ### Common Uses
 - **Cultivation**: Wepear Berries can be planted and grown by trainers. The growth cycle involves specific stages including planting, sprouting, growing into a mature plant, and finally, producing more Berries. Proper care, including watering and attention to soil quality, is required to"
-berry,pinap,"**Pinap Berry** is a type of Berry known in the Pokémon series for its distinctive effects and uses, particularly in Pokémon GO. When consumed, a Pinap Berry can double the amount of Candy a trainer would receive from catching a Pokémon. This makes it an invaluable item for trainers aiming to evolve their Pokémon more quickly or power them up by gathering Candy more efficiently.
+"berry","pinap","**Pinap Berry** is a type of Berry known in the Pokémon series for its distinctive effects and uses, particularly in Pokémon GO. When consumed, a Pinap Berry can double the amount of Candy a trainer would receive from catching a Pokémon. This makes it an invaluable item for trainers aiming to evolve their Pokémon more quickly or power them up by gathering Candy more efficiently.
 
 **Effects:**
 - In Pokémon GO, the primary effect of the Pinap Berry is to double the Candy reward from a successful capture. For example, if a Pokémon normally provides 3 Candy when caught, using a Pinap Berry would increase the reward to 6 Candy.
@@ -164,7 +164,7 @@ berry,pinap,"**Pinap Berry** is a type of Berry known in the Pokémon series for
 
 **Common Uses:**
 - **Candy Farming**: In Pokémon GO,"
-berry,pomeg,"**Pomeg Berry** is a special type of Berry in the Pokémon series. It primarily affects a Pokémon's base stats by lowering the base HP (Hit Points) stat by 10 EVs (Effort Values), while simultaneously increasing the Pokémon's friendship. The Pomeg Berry is particularly notable for its unique application in training and breeding scenarios.
+"berry","pomeg","**Pomeg Berry** is a special type of Berry in the Pokémon series. It primarily affects a Pokémon's base stats by lowering the base HP (Hit Points) stat by 10 EVs (Effort Values), while simultaneously increasing the Pokémon's friendship. The Pomeg Berry is particularly notable for its unique application in training and breeding scenarios.
 
 ### Effects:
 - **Base HP Reduction:** Upon consumption, a Pomeg Berry reduces a Pokémon's base HP by 10 EVs. This effect is critical for trainers looking to reallocate Effort Values to different stats for optimized performance.
@@ -172,12 +172,12 @@ berry,pomeg,"**Pomeg Berry** is a special type of Berry in the Pokémon series. 
 
 ### Common Uses:
 - **EV Training Management:** Trainers often use the Pomeg Berry to redistribute EVs effectively, especially if a Pokémon has accumulated unwanted HP EVs that need to be reassigned to"
-berry,kelpsy,"**Kelpsy Berry** is a type of Berry in the Pokémon series primarily used for reducing a Pokémon's base stats and enhancing friendship. When a Kelpsy Berry is consumed, it reduces the base Attack stat of a Pokémon by 10 EVs (Effort Values) but increases its friendship level, which can be advantageous for certain evolutions and moves that depend on high friendship.
+"berry","kelpsy","**Kelpsy Berry** is a type of Berry in the Pokémon series primarily used for reducing a Pokémon's base stats and enhancing friendship. When a Kelpsy Berry is consumed, it reduces the base Attack stat of a Pokémon by 10 EVs (Effort Values) but increases its friendship level, which can be advantageous for certain evolutions and moves that depend on high friendship.
 
 **Effects and Uses:**
 1. **Stat Adjustment**: The primary use of the Kelpsy Berry is to lower the base Attack EVs of a Pokémon. This can be beneficial if a trainer wants to reallocate those EVs into other stats to better suit the Pokémon's role in competitive play or specific battle strategies.
 2. **Friendship Boost**: Consuming a Kelpsy Berry increases a Pokémon's friendship level. Many Pokémon evolve when they reach a certain level of friendship, such as Eevee evolving into Espeon or Umbreon, making the Kelpsy Berry a valuable tool for trainers focusing on these"
-berry,qualot,"**Qualot Berry** is a type of Berry in the Pokémon series known for its unique effects and strategic uses. 
+"berry","qualot","**Qualot Berry** is a type of Berry in the Pokémon series known for its unique effects and strategic uses. 
 
 ### Effects:
 - **EV Reduction**: When a Pokémon consumes a Qualot Berry, it reduces that Pokémon's base Defense stat Effort Values (EVs) by 10. This is particularly useful for trainers looking to reallocate EVs to optimize their Pokémon's stat distribution.
@@ -186,21 +186,21 @@ berry,qualot,"**Qualot Berry** is a type of Berry in the Pokémon series known f
 ### Common Uses:
 - **Stat Adjustment**: Competitive players and breeding enthusiasts often use Qualot Berries to fine-tune their Pokémon's stats by removing unwanted EVs in Defense. This allows them to better control their Pokémon's growth and performance in battles.
 - **Friendship Raising**: Qualot Berries are also used to quickly"
-berry,hondew,"**Hondew Berry** is a type of Berry in the Pokémon series known for its unique attributes and specific effects on a Pokémon's stats. 
+"berry","hondew","**Hondew Berry** is a type of Berry in the Pokémon series known for its unique attributes and specific effects on a Pokémon's stats. 
 
 ### Effects
 The primary effect of the Hondew Berry is to reduce a Pokémon's base Special Attack Effort Values (EVs) by 10 points when consumed. This makes it an essential item for trainers who wish to reallocate their Pokémon's EVs for a more optimized battle strategy. In the context of in-game mechanics, this Berry is particularly valuable for adjusting a Pokémon's stats to better suit specific roles or to correct previous training mistakes.
 
 ### Common Uses
 Hondew Berries are commonly used in competitive Pokémon training and breeding. Trainers often use them during the process of EV training to fine-tune their Pokémon's stats for maximum efficiency. Additionally, these Berries are useful for resetting EVs if a trainer decides to re-specialize a Pokémon for different battle roles. Beyond stat adjustment, Hondew Berries can also be"
-berry,grepa,"**Grepa Berry** is a type of Berry commonly found in the Pokémon series, known for its unique properties and versatile applications. 
+"berry","grepa","**Grepa Berry** is a type of Berry commonly found in the Pokémon series, known for its unique properties and versatile applications. 
 
 **Effects:** When consumed by a Pokémon, the Grepa Berry decreases the Pokémon's base Special Defense EV (Effort Value) by 10 points, while also making the Pokémon more friendly towards its Trainer. This dual effect makes it a valuable item for trainers who wish to reshape the EV distribution of their Pokémon, allowing for more precise stat customization. 
 
 **Common Uses:** The primary use of the Grepa Berry is in EV training, particularly for adjusting a Pokémon’s EVs to optimize their performance in battles. By lowering the base Special Defense EV, trainers can reallocate the removed points to other stats, thus fine-tuning their Pokémon's overall abilities. Aside from its technical application in EV management, the increase in friendliness makes Grepa Berries also useful for evolving certain Pokémon that require high friendship levels, such as Togepi into Togetic.
 
 **Interesting Facts"
-berry,tamato,"**Tamato Berry** is a unique type of Berry within the Pokémon series known for its dual effects. When a Pokémon consumes a Tamato Berry, it reduces the Pokémon's Speed EVs (Effort Values) by 10, while also increasing its friendship or happiness level. This makes the Tamato Berry particularly useful for trainers who want to quickly adjust their Pokémon's EV distribution for more strategic battles or when shifting training focuses.
+"berry","tamato","**Tamato Berry** is a unique type of Berry within the Pokémon series known for its dual effects. When a Pokémon consumes a Tamato Berry, it reduces the Pokémon's Speed EVs (Effort Values) by 10, while also increasing its friendship or happiness level. This makes the Tamato Berry particularly useful for trainers who want to quickly adjust their Pokémon's EV distribution for more strategic battles or when shifting training focuses.
 
 **Effects:**  
 - **Speed EV Reduction:** Lowers the consuming Pokémon's Speed EVs by 10 points.
@@ -209,7 +209,7 @@ berry,tamato,"**Tamato Berry** is a unique type of Berry within the Pokémon ser
 **Common Uses:**
 1. **EV Adjustment:** Trainers often use Tamato Berries to fine-tune their Pokémon's Speed EVs, making them more suitable for specific battle strategies.
 2. **Friendship Building:** The Berry is also a"
-berry,cornn,"**Cornn Berry** is a type of Berry in the Pokémon series known primarily for its role in Pokéblocks and Poffins, which are used to enhance a Pokémon's condition in contests. When held by a Pokémon, the Cornn Berry doesn't have an immediate in-battle effect like restoring HP or curing a status condition. Instead, it is generally utilized for its flavor and contribution to contest stats.
+"berry","cornn","**Cornn Berry** is a type of Berry in the Pokémon series known primarily for its role in Pokéblocks and Poffins, which are used to enhance a Pokémon's condition in contests. When held by a Pokémon, the Cornn Berry doesn't have an immediate in-battle effect like restoring HP or curing a status condition. Instead, it is generally utilized for its flavor and contribution to contest stats.
 
 ### Effects:
 - **Condition Enhancement**: The Cornn Berry is often used to create Pokéblocks or Poffins. These items, when fed to Pokémon, can improve stats such as Beauty, Coolness, and the like, which are essential in contest categories.
@@ -217,7 +217,7 @@ berry,cornn,"**Cornn Berry** is a type of Berry in the Pokémon series known pri
 
 ### Common Uses:
 - **Pokéblocks**: In"
-berry,magost,"**Magost Berry** is a type of Berry known in the Pokémon world for its sweet and invigorating qualities. 
+"berry","magost","**Magost Berry** is a type of Berry known in the Pokémon world for its sweet and invigorating qualities. 
 
 **Effects:**
 - The primary function of the Magost Berry is to increase a Pokémon's friendship level when fed to them in certain games. 
@@ -226,26 +226,26 @@ berry,magost,"**Magost Berry** is a type of Berry known in the Pokémon world fo
 **Common Uses:**
 - **Friendship Increase:** Trainers often use Magost Berries to raise the happiness of their Pokémon, which is especially useful for evolving certain species that require high friendship levels, such as Togepi, Pichu, and Eevee (into Espeon or Umbreon).
 - **Pokéblocks/Poffins:** The Magost Berry can be blended into Pokéblocks (in Generation III) or Poffins (in Generation IV). It produces primarily dry-flavored Pokéblocks or Poffins, which are used to improve a Pokémon's condition for contests, specifically enhancing their Beauty"
-berry,rabuta,"**Rabuta Berry** is a type of Berry prominently featured in various Pokémon games. Unlike some other berries which directly affect a Pokémon's health or stats in battle, the Rabuta Berry is primarily used for making Pokéblocks and Poffins, which are items that enhance a Pokémon's condition for Pokémon Contests.
+"berry","rabuta","**Rabuta Berry** is a type of Berry prominently featured in various Pokémon games. Unlike some other berries which directly affect a Pokémon's health or stats in battle, the Rabuta Berry is primarily used for making Pokéblocks and Poffins, which are items that enhance a Pokémon's condition for Pokémon Contests.
 
 **Effects and Common Uses:**
 - **Pokéblocks and Poffins:** The primary use of Rabuta Berries is in the creation of Pokéblocks in Pokémon Ruby, Sapphire, and Emerald, and Poffins in Pokémon Diamond, Pearl, and Platinum. These items enhance a Pokémon’s contest stats such as Coolness, Beauty, Cuteness, Cleverness, and Toughness, which are crucial for performing well in Pokémon Contests.
 - **Flavor:** Rabuta Berries have a distinct flavor which is primarily bitter with a hint of sweetness. This makes them useful ingredients in recipes that require balancing multiple flavors.
 - **Avoidance of Spoilage:** In"
-berry,nomel,"**Nomel Berry** is known for its distinctive taste and particular uses in the Pokémon series. Here are the detailed aspects of the Nomel Berry:
+"berry","nomel","**Nomel Berry** is known for its distinctive taste and particular uses in the Pokémon series. Here are the detailed aspects of the Nomel Berry:
 
 1. **Effects**: The Nomel Berry is often associated with notable effects on a Pokémon's condition or performance in battle. Although the exact effect may vary depending on the version of the game or specific context in which it is used, in some versions, it has been known to restore a Pokémon's health or affect its status condition when held and consumed during battles.
 
 2. **Common Uses**:
    - **Battle Item**: A Nomel Berry can be used during battles as a held item. When certain conditions are met, such as a Pokémon’s health dropping to a particular level, the berry is consumed, granting its beneficial effects automatically.
    - **Cooking and PokéBlocks**: In various versions of the games, particularly those featuring content around PokéBlocks or Poffins, the Nomel Berry can be an ingredient in"
-berry,spelon,"**Spelon Berry** is a rare and intriguing Berry known for its unique properties in the Pokémon world. This Berry is notable for its intensely spicy flavor, which is often sought after for culinary purposes despite its rarity.
+"berry","spelon","**Spelon Berry** is a rare and intriguing Berry known for its unique properties in the Pokémon world. This Berry is notable for its intensely spicy flavor, which is often sought after for culinary purposes despite its rarity.
 
 ### Effects:
 - **Pokéblock Creation**: In the Hoenn region's Pokémon Contests, Spelon Berries can be blended to create high-level Pokéblocks. Specifically, they produce Pokéblocks with a spicy flavor, which increases the Coolness condition of Pokémon.
 - **Poffin Production**: In the Sinnoh region, Spelon Berries can be used to make Poffins, particularly ones that enhance a Pokémon's Coolness, thus aiding them in Super Contests.
 - **Berry Blender & Poffin Cook-off**: The Berry can be used in Berry Blender in Hoenn or Poffin Cooking in Sinnoh to create high-quality Pokéblocks or Poffins, respectively, which are essential in raising a Pokémon's contest stats"
-berry,pamtre,"**Pamtre Berry** is a rare and fascinating type of Berry in the Pokémon world, known for both its practical and aesthetic attributes.
+"berry","pamtre","**Pamtre Berry** is a rare and fascinating type of Berry in the Pokémon world, known for both its practical and aesthetic attributes.
 
 ### Effects:
 Pamtre Berries serve mainly in the creation of high-quality Pokéblocks and Poffins, which are used to enhance a Pokémon's condition in specific categories such as Beauty, Coolness, Cuteness, etc. These enhancements are particularly valuable during Pokémon Contests, where a Pokémon's performance in these categories can determine its success. The Pamtre Berry’s most prominent effect is to significantly boost a Pokémon's Beauty condition. Unlike other Berries, Pamtre does not have a direct in-battle effect like restoring HP or curing status conditions.
@@ -253,7 +253,7 @@ Pamtre Berries serve mainly in the creation of high-quality Pokéblocks and Poff
 ### Common Uses:
 1. **Pokéblocks and Poffins:** Due to its outstanding ability to enhance a Pokémon's traits, trainers commonly use Pamtre Berries to create Blue Pokéblocks or Poffins aimed at increasing Beauty.
 2. **Pokémon Contests:** Trainers seeking to"
-berry,watmel,"**Watmel Berry** is a type of Berry in the Pokémon series, known for its vibrant appearance and large size. It is particularly notable for its sweet flavor. Below are the detailed aspects:
+"berry","watmel","**Watmel Berry** is a type of Berry in the Pokémon series, known for its vibrant appearance and large size. It is particularly notable for its sweet flavor. Below are the detailed aspects:
 
 **Effects:**
 - When held by a Pokémon, a Watmel Berry does not have any direct in-battle effect. However, it can be used to create a custom Pokéblock or Poffin that greatly enhances a Pokémon's condition, particularly in the Coolness category for Pokémon Contests.
@@ -261,7 +261,7 @@ berry,watmel,"**Watmel Berry** is a type of Berry in the Pokémon series, known 
 **Common Uses:**
 1. **Pokémon Contests**: The most prominent use of the Watmel Berry is in Pokémon Contests, where it can significantly boost a Pokémon's performance, especially in the Coolness category. Trainers often use it to make high-level Pokéblocks and Poffins to maximize the contest stats of their Pokémon.
 2. **Cooking Recipes**: In the context of making Pokéblocks in Generation III and Poffins in Generation IV, the Watmel Berry"
-berry,durin,"**Durin Berry** is a type of Berry in the Pokémon series that primarily serves a utility role rather than directly influencing battles. Here’s a detailed overview:
+"berry","durin","**Durin Berry** is a type of Berry in the Pokémon series that primarily serves a utility role rather than directly influencing battles. Here’s a detailed overview:
 
 ### Effects
 The Durin Berry does not have any direct combat-use effects in terms of restoring HP or curing status conditions. Instead, it is mainly used as an ingredient in creating different types of Pokéblocks or Poffins, which are items used to enhance a Pokémon's condition for contests.
@@ -269,13 +269,13 @@ The Durin Berry does not have any direct combat-use effects in terms of restorin
 ### Common Uses
 1. **Pokéblock and Poffin Making:** The primary use of the Durin Berry is in the preparation of Pokéblocks in Generation III and Poffins in Generation IV and beyond. These items are used to improve a Pokémon's condition, such as Coolness, Beauty, Cuteness, Cleverness, and Toughness, which are essential stats for Pokémon Contests and similar activities.
 2. **Flavor Profile:** The Durin Berry is known for its extremely bitter taste. This characteristic makes it"
-berry,belue,"**Belue Berry** is a type of Berry in the Pokémon series known for its vivid colors and various uses. When used in battle, the Belue Berry doesn't have a direct immediate effect like some other berries; instead, it is primarily used as an ingredient in various in-game cooking recipes, such as Pokéblocks and Poffins, which are used to enhance a Pokémon’s condition in contests.
+"berry","belue","**Belue Berry** is a type of Berry in the Pokémon series known for its vivid colors and various uses. When used in battle, the Belue Berry doesn't have a direct immediate effect like some other berries; instead, it is primarily used as an ingredient in various in-game cooking recipes, such as Pokéblocks and Poffins, which are used to enhance a Pokémon’s condition in contests.
 
 **Effects**: The primary effect of the Belue Berry is its use in the creation of Pokéblocks and Poffins. In Pokémon Contests, these items can enhance a Pokémon’s specific condition—Beauty, in particular. Feeding a Pokémon a Belue Berry-based Pokéblock or Poffin can increase their Beauty stat significantly, which is beneficial for Beauty Contests.
 
 **Common Uses**:
 1. **Cooking**: In the Hoenn region, you can blend Belue Berries with others to create Pokéblocks. In the Sinnoh region, they can be used"
-berry,occa,"**Occa Berry** is a type of Berry in the Pokémon series that provides a specific defensive benefit. When held by a Pokémon, an Occa Berry reduces the damage taken from a super-effective Fire-type move by 50%. This Berry is particularly useful in competitive battles where predicting and mitigating super-effective moves can play a crucial role in strategy.
+"berry","occa","**Occa Berry** is a type of Berry in the Pokémon series that provides a specific defensive benefit. When held by a Pokémon, an Occa Berry reduces the damage taken from a super-effective Fire-type move by 50%. This Berry is particularly useful in competitive battles where predicting and mitigating super-effective moves can play a crucial role in strategy.
 
 **Common Uses**:
 1. **Competitive Battles**: Trainers often equip Occa Berries to Pokémon that are weak to Fire-type moves, such as Steel, Grass, Ice, or Bug types. This can be especially important for Pokémon that need to survive a hit from a Fire-type move to retaliate or set up their own strategy.
@@ -283,7 +283,7 @@ berry,occa,"**Occa Berry** is a type of Berry in the Pokémon series that provid
 
 **Interesting Facts**:
 - **Natural Gift Move**: When used as an ingredient in the"
-berry,passho,"**Passho Berry** is a type of Berry in the Pokémon series that provides a specific defensive boost when held by a Pokémon. 
+"berry","passho","**Passho Berry** is a type of Berry in the Pokémon series that provides a specific defensive boost when held by a Pokémon. 
 
 **Effects**:
 When a Pokémon holding the Passho Berry is hit by a super-effective Water-type move, the power of that move is halved. This defensive mechanism can be crucial in competitive battles where type advantages are often exploited.
@@ -294,7 +294,7 @@ When a Pokémon holding the Passho Berry is hit by a super-effective Water-type 
 
 **Interesting Facts**:
 1. **Origin of the Name**: The name ""Passho"" is derived from ""passion fruit,"" aligning with the"
-berry,wacan,"**Wacan Berry** is a type of Berry in the Pokémon series known for its ability to reduce the damage taken from a foe's super-effective Electric-type attack by 50% when held by a Pokémon. This defensive property makes it particularly useful in competitive battles, allowing Pokémon with Electric-type weaknesses to endure potentially decisive hits and possibly turn the tide of the match.
+"berry","wacan","**Wacan Berry** is a type of Berry in the Pokémon series known for its ability to reduce the damage taken from a foe's super-effective Electric-type attack by 50% when held by a Pokémon. This defensive property makes it particularly useful in competitive battles, allowing Pokémon with Electric-type weaknesses to endure potentially decisive hits and possibly turn the tide of the match.
 
 ### Effects
 - **Damage Reduction**: The primary effect of the Wacan Berry is to cut the damage from a single super-effective Electric-type attack in half.
@@ -303,7 +303,7 @@ berry,wacan,"**Wacan Berry** is a type of Berry in the Pokémon series known for
 ### Common Uses
 - **Competitive Battling**: In competitive play, the Wacan Berry is often equipped by Pokémon that have significant weaknesses to Electric-type moves. This includes Water-, Flying-, and other types that may be vulnerable to Electric attacks.
 - **Strategic Planning**: Trainers use this Berry to catch opponents off guard, as it can significantly"
-berry,rindo,"**Rindo Berry** is a type of Berry in the Pokémon series known for its defensive properties rather than direct healing. When held by a Pokémon, a Rindo Berry weakens the power of a super effective Grass-type attack. This effect can be crucial in competitive battling, allowing a Pokémon to survive an otherwise devastating attack and possibly turn the tide of battle.
+"berry","rindo","**Rindo Berry** is a type of Berry in the Pokémon series known for its defensive properties rather than direct healing. When held by a Pokémon, a Rindo Berry weakens the power of a super effective Grass-type attack. This effect can be crucial in competitive battling, allowing a Pokémon to survive an otherwise devastating attack and possibly turn the tide of battle.
 
 **Effects:**
 1. **Defensive Use:** It specifically reduces the damage taken from one super effective Grass-type move by 50%.
@@ -315,7 +315,7 @@ berry,rindo,"**Rindo Berry** is a type of Berry in the Pokémon series known for
 
 **Interesting Facts:**
 1. **Introduction:** The Rindo"
-berry,yache,"**Yache Berry** is a type of Berry designed to reduce the effectiveness of super-effective Ice-type attacks on the Pokémon holding it. When a Pokémon bearing a Yache Berry is hit by an Ice-type move, the power of that move is halved, allowing the Pokémon to endure the attack better than it normally would.
+"berry","yache","**Yache Berry** is a type of Berry designed to reduce the effectiveness of super-effective Ice-type attacks on the Pokémon holding it. When a Pokémon bearing a Yache Berry is hit by an Ice-type move, the power of that move is halved, allowing the Pokémon to endure the attack better than it normally would.
 
 **Effects:**
 - When a Pokémon holding a Yache Berry is targeted by an Ice-type move, the Berry is consumed, and the damage taken from that move is halved.
@@ -323,7 +323,7 @@ berry,yache,"**Yache Berry** is a type of Berry designed to reduce the effective
 **Common Uses:**
 - **Competitive Battling:** Yache Berries are commonly utilized in competitive Pokémon battling, especially on Pokémon that have a significant weakness to Ice-type moves. This can include Dragon, Grass, Ground, and Flying-type Pokémon. By holding a Yache Berry, these Pokémon can potentially survive critical hits that would otherwise knock them out.
 - **Strategic Play:** Trainers may use Yache Berries to catch opponents off guard, allowing key Pokémon to stay in play longer"
-berry,chople,"**Chople Berry** is a type of Berry known for its damage-reducing properties in the Pokémon series. When held by a Pokémon, it weakens the power of a super-effective Fighting-type attack against the holder. This makes it a valuable item in competitive battling, particularly for Pokémon that have a weakness to Fighting-type moves.
+"berry","chople","**Chople Berry** is a type of Berry known for its damage-reducing properties in the Pokémon series. When held by a Pokémon, it weakens the power of a super-effective Fighting-type attack against the holder. This makes it a valuable item in competitive battling, particularly for Pokémon that have a weakness to Fighting-type moves.
 
 **Effects**:
 - When a Pokémon holding a Chople Berry is hit by a super-effective Fighting-type move, the damage is reduced by half.
@@ -333,7 +333,7 @@ berry,chople,"**Chople Berry** is a type of Berry known for its damage-reducing 
 - **Story Mode Battles**: In regular gameplay, Chople Berries can be used strategically when facing opponents known to favor Fighting-type moves, allowing players to mitigate damage and maintain their team's longevity.
 
 **Interesting Facts"
-berry,kebia,"**Kebia Berry** is a type of Berry in the Pokémon series known for its unique ability to reduce super effective damage from Poison-type attacks. Specifically, when a Pokémon holding this Berry is hit by a Poison-type move, the damage is halved, providing a strategic advantage in battles.
+"berry","kebia","**Kebia Berry** is a type of Berry in the Pokémon series known for its unique ability to reduce super effective damage from Poison-type attacks. Specifically, when a Pokémon holding this Berry is hit by a Poison-type move, the damage is halved, providing a strategic advantage in battles.
 
 **Effects**: 
 - Halves the damage taken from a super effective Poison-type attack. This can be crucial for Pokémon that are weak to Poison types, giving them a better chance to survive and counterattack.
@@ -341,20 +341,20 @@ berry,kebia,"**Kebia Berry** is a type of Berry in the Pokémon series known for
 **Common Uses**:
 1. **Competitive Battles**: Trainers often use Kebia Berries in competitive battling to mitigate the risk of Poison-type moves against key Pokémon in their team. This can create opportunities to turn the tide of battle or to execute specific strategies without being easily countered by Poison-type attacks.
 2. **Story Progression**: During the main storyline of Pokémon games, some trainers might use Kebia Berries on their Pokémon to handle Poison-type opponents encountered in gyms,"
-berry,shuca,"**Shuca Berry** is a special type of Berry in the Pokémon series known for its defensive utility. When a Pokémon holding a Shuca Berry is hit by a Ground-type move, the power of that move is halved, providing a significant tactical advantage in battle. This effect is particularly beneficial for Pokémon that have a Ground-type weakness, such as Electric, Fire, Poison, Rock, and Steel types.
+"berry","shuca","**Shuca Berry** is a special type of Berry in the Pokémon series known for its defensive utility. When a Pokémon holding a Shuca Berry is hit by a Ground-type move, the power of that move is halved, providing a significant tactical advantage in battle. This effect is particularly beneficial for Pokémon that have a Ground-type weakness, such as Electric, Fire, Poison, Rock, and Steel types.
 
 **Effects:** Upon activation, a Shuca Berry reduces the damage of a Ground-type move by 50%. This damage reduction can often be the difference between a Pokémon being knocked out or surviving to attack or set up a strategy.
 
 **Common Uses:** 
 - Competitive Battling: The Shuca Berry is frequently used in competitive play to counter powerful Ground-type moves such as Earthquake and Earth Power.
 - Story Mode Battles: Trainers might equip Pokémon with Shuca Berries during key battles against opponents known to use Ground-type moves, providing an edge in tougher battles, like those against Gym Leaders"
-berry,coba,"**Coba Berry** is an item in the Pokémon series known for its defensive capabilities in battle. When held by a Pokémon, a Coba Berry will weaken the power of a super-effective Flying-type move used against the holder, reducing the damage inflicted by 50%. This makes Coba Berry particularly useful in mitigating potential one-hit knockouts from powerful Flying-type attacks, thereby giving the holder an improved chance to survive and potentially counterattack.
+"berry","coba","**Coba Berry** is an item in the Pokémon series known for its defensive capabilities in battle. When held by a Pokémon, a Coba Berry will weaken the power of a super-effective Flying-type move used against the holder, reducing the damage inflicted by 50%. This makes Coba Berry particularly useful in mitigating potential one-hit knockouts from powerful Flying-type attacks, thereby giving the holder an improved chance to survive and potentially counterattack.
 
 **Effects**: Upon activation, the Coba Berry weakens the damage from a super-effective Flying-type move. This defensive mechanism activates only once per battle and does not require any action from the Pokémon or the trainer; the Berry works automatically when the condition of a super-effective Flying-type move is met.
 
 **Common Uses**: 
 - **Competitive Battles**: Coba Berry is frequently used in competitive play, especially for Pokémon that are notably weak to Flying-type moves. For example, Grass, Bug, Fighting, and other types that do not fare well"
-berry,payapa,"**Payapa Berry** is a type of Berry in the Pokémon series known for its ability to reduce super-effective damage from Psychic-type moves. When a Pokémon holding a Payapa Berry is hit by a Psychic-type attack, the damage is halved, providing strategic advantages in battles where Psychic-type moves are a threat.
+"berry","payapa","**Payapa Berry** is a type of Berry in the Pokémon series known for its ability to reduce super-effective damage from Psychic-type moves. When a Pokémon holding a Payapa Berry is hit by a Psychic-type attack, the damage is halved, providing strategic advantages in battles where Psychic-type moves are a threat.
 
 ### Effects:
 - **Damage Reduction**: When held by a Pokémon, the Payapa Berry lessens the damage taken from a Psychic-type move by 50%.
@@ -363,7 +363,7 @@ berry,payapa,"**Payapa Berry** is a type of Berry in the Pokémon series known f
 ### Common Uses:
 - **Competitive Battling**: Trainers often use Payapa Berries in competitive play to protect Pokémon that are weak to Psychic-type attacks, allowing them to survive hits they otherwise wouldn't.
 -"
-berry,tanga,"**Tanga Berry** is a type of Berry in the Pokémon series known for its unique defensive properties. It is designed to mitigate damage from specific types of attacks, making it a strategic item in both casual and competitive battles.
+"berry","tanga","**Tanga Berry** is a type of Berry in the Pokémon series known for its unique defensive properties. It is designed to mitigate damage from specific types of attacks, making it a strategic item in both casual and competitive battles.
 
 ### Effects
 - **Damage Reduction:** The primary effect of a Tanga Berry is to reduce the damage taken from a super-effective Bug-type move. When a Pokémon holding a Tanga Berry is hit by such a move, the Berry is consumed, and the damage is halved. This can provide a crucial advantage in battle, especially if the opposing Pokémon relies on Bug-type attacks.
@@ -371,7 +371,7 @@ berry,tanga,"**Tanga Berry** is a type of Berry in the Pokémon series known for
 ### Common Uses
 - **Competitive Battles:** In competitive Pokémon battling, Tanga Berry is often used to guard against powerful Bug-type moves. This can be particularly important for Pokémon that have weaknesses to Bug-type attacks, like Psychic or Grass types.
 - **Strategy and Surprise Factor:** Trainers might use Tanga Berries to surprise opponents by reducing expected damage from a Bug-type move and then retali"
-berry,charti,"**Charti Berry** is a type of Berry in the Pokémon universe known for its ability to weaken damage from Super Effective Rock-type moves when held by a Pokémon. This Berry is highly valued for strategic purposes, especially in competitive battles where type advantages can play a significant role.
+"berry","charti","**Charti Berry** is a type of Berry in the Pokémon universe known for its ability to weaken damage from Super Effective Rock-type moves when held by a Pokémon. This Berry is highly valued for strategic purposes, especially in competitive battles where type advantages can play a significant role.
 
 ### Effects:
 - **Damage Reduction**: When a Pokémon holding a Charti Berry is hit by a super effective Rock-type move, the damage is reduced by half. This effect can be crucial for Pokémon that are particularly vulnerable to Rock-type moves, providing them with an added layer of durability.
@@ -379,7 +379,7 @@ berry,charti,"**Charti Berry** is a type of Berry in the Pokémon universe known
 ### Common Uses:
 - **Competitive Battles**: The primary use of a Charti Berry is in competitive play. Trainers often equip Pokémon that have a weakness to Rock-type moves with a Charti Berry to mitigate the risk of being one-shot by powerful Rock-type attacks, such as Stone Edge or Rock Slide.
 - **Strategic Planning**: Charti Berries are also used in single-player modes, such as the Battle"
-berry,kasib,"**Kasib Berry** is a type of Berry in the Pokémon series that has a specific defensive function. When held by a Pokémon, the Kasib Berry reduces the damage taken from a super-effective Ghost-type move by 50%. This effect makes it highly valuable in strategic battling, particularly for Pokémon that are vulnerable to Ghost-type attacks.
+"berry","kasib","**Kasib Berry** is a type of Berry in the Pokémon series that has a specific defensive function. When held by a Pokémon, the Kasib Berry reduces the damage taken from a super-effective Ghost-type move by 50%. This effect makes it highly valuable in strategic battling, particularly for Pokémon that are vulnerable to Ghost-type attacks.
 
 **Effects:** 
 - The primary effect of the Kasib Berry is damage reduction. When a super-effective Ghost-type move targets the Pokémon holding the Berry, the damage inflicted by that move is halved.
@@ -389,7 +389,7 @@ berry,kasib,"**Kasib Berry** is a type of Berry in the Pokémon series that has 
 - The Kasib Berry is often used in competitive battling to provide an element of surprise and an additional layer of defense for Pokémon with Ghost-type weaknesses.
 - It can be strategically given to Pokémon during tournaments or important matches to mitigate a potential KO (knockout) from a powerful Ghost-type move like Shadow Ball.
 - In double battles, the Kasib Berry"
-berry,haban,"**Haban Berry** is a type of Berry in the Pokémon series known for its defensive properties. When a Pokémon holding a Haban Berry is hit by a Dragon-type move, the damage inflicted by the move is reduced by half for that specific attack. This defensive capability makes the Haban Berry a strategic choice in competitive play, particularly for Pokémon that are vulnerable to Dragon-type moves but are not inherently resistant to them.
+"berry","haban","**Haban Berry** is a type of Berry in the Pokémon series known for its defensive properties. When a Pokémon holding a Haban Berry is hit by a Dragon-type move, the damage inflicted by the move is reduced by half for that specific attack. This defensive capability makes the Haban Berry a strategic choice in competitive play, particularly for Pokémon that are vulnerable to Dragon-type moves but are not inherently resistant to them.
 
 **Common Uses**:
 1. **Competitive Battling**: Trainers often use the Haban Berry to safeguard their key Pokémon against powerful Dragon-type attacks, which are prevalent in higher tiers of competitive play.
@@ -397,7 +397,7 @@ berry,haban,"**Haban Berry** is a type of Berry in the Pokémon series known for
 
 **Interesting Facts**:
 1. **Versatility**: While its primary function is to reduce damage from Dragon-type attacks, it"
-berry,colbur,"**Colbur Berry** is a type of Berry commonly used in the Pokémon series, known for its efficacy in weakening Dark-type moves. When a Pokémon holding a Colbur Berry is hit by a damaging Dark-type attack, the damage received from that move is halved. This makes it a strategic item in competitive battles, especially for Pokémon that are weak to Dark-type moves.
+"berry","colbur","**Colbur Berry** is a type of Berry commonly used in the Pokémon series, known for its efficacy in weakening Dark-type moves. When a Pokémon holding a Colbur Berry is hit by a damaging Dark-type attack, the damage received from that move is halved. This makes it a strategic item in competitive battles, especially for Pokémon that are weak to Dark-type moves.
 
 ### Effects:
 - **Damage Reduction:** The primary effect of the Colbur Berry is to reduce the damage of a single Dark-type move by 50% when it is used against the holder.
@@ -406,7 +406,7 @@ berry,colbur,"**Colbur Berry** is a type of Berry commonly used in the Pokémon 
 ### Common Uses:
 - **Competitive Battling:** Players often equip their Pokémon with Colbur Berries to counteract potential threats from powerful Dark-type moves, especially if their Pokémon has a type disadvantage against Dark-types.
 - **Strategic Planning"
-berry,babiri,"**Babiri Berry** is a type of Berry in the Pokémon series primarily known for its defensive properties. When held by a Pokémon, the Babiri Berry weakens the damage taken from a supereffective Steel-type move. This effect can be crucial in competitive battles where type matchups play a significant role in determining the outcome.
+"berry","babiri","**Babiri Berry** is a type of Berry in the Pokémon series primarily known for its defensive properties. When held by a Pokémon, the Babiri Berry weakens the damage taken from a supereffective Steel-type move. This effect can be crucial in competitive battles where type matchups play a significant role in determining the outcome.
 
 **Effects:** 
 - Reduces the damage from a supereffective Steel-type attack by half when held by a Pokémon.
@@ -418,7 +418,7 @@ berry,babiri,"**Babiri Berry** is a type of Berry in the Pokémon series primari
 
 **Interesting Facts:**
 "
-berry,chilan,"**Chilan Berry** is a unique Berry in the Pokémon series known for its defensive properties rather than restorative effects. Here are the detailed aspects:
+"berry","chilan","**Chilan Berry** is a unique Berry in the Pokémon series known for its defensive properties rather than restorative effects. Here are the detailed aspects:
 
 **Effects:** The Chilan Berry is specifically designed to weaken the power of an incoming Normal-type move when held by a Pokémon. Upon activation, it reduces the damage from a single Normal-type attack by 50%, making it a strategic item in battles where Normal-type moves are expected.
 
@@ -428,7 +428,7 @@ berry,chilan,"**Chilan Berry** is a unique Berry in the Pokémon series known fo
 
 **Interesting Facts:**
 - **Introduction"
-berry,liechi,"**Liechi Berry** is a rare and highly valued type of Berry in the Pokémon series, primarily known for its ability to boost a Pokémon's Attack stat. When a Pokémon holding a Liechi Berry reaches a critical HP threshold (typically 25% of its maximum HP), the Berry activates and increases the Pokémon's Attack by one stage. 
+"berry","liechi","**Liechi Berry** is a rare and highly valued type of Berry in the Pokémon series, primarily known for its ability to boost a Pokémon's Attack stat. When a Pokémon holding a Liechi Berry reaches a critical HP threshold (typically 25% of its maximum HP), the Berry activates and increases the Pokémon's Attack by one stage. 
 
 **Effects:**
 - **Stat Boost:** Liechi Berry sharply raises the Attack stat of the Pokémon holding it when their HP drops to a quarter or less of their maximum health.
@@ -436,7 +436,7 @@ berry,liechi,"**Liechi Berry** is a rare and highly valued type of Berry in the 
 
 **Common Uses:** 
 - **Competitive Battles:** In competitive Pokémon battling, Liechi Berry is often used strategically on physical sweepers or Pokémon that operate on a low-health threshold for maximum damage output. It is particularly popular in strategies that involve Substitute, Endure, or Reversal where the"
-berry,ganlon,"**Ganlon Berry** is a type of Berry in the Pokémon series known for its strategic defensive benefits in battles. Here is a detailed summary:
+"berry","ganlon","**Ganlon Berry** is a type of Berry in the Pokémon series known for its strategic defensive benefits in battles. Here is a detailed summary:
 
 **Effects:**
 - The primary effect of the Ganlon Berry is to increase a Pokémon's Defense stat by one stage when the Pokémon's HP falls below 25% of its maximum.
@@ -449,7 +449,7 @@ berry,ganlon,"**Ganlon Berry** is a type of Berry in the Pokémon series known f
 
 **Interesting Facts:**
 - Gan"
-berry,salac,"**Salac Berry** is a type of Berry in the Pokémon series known for its unique effect of boosting a Pokémon's Speed stat in battle. When a Pokémon holding a Salac Berry drops to 25% or less of its maximum HP, the Berry activates and increases the holder's Speed by one stage.
+"berry","salac","**Salac Berry** is a type of Berry in the Pokémon series known for its unique effect of boosting a Pokémon's Speed stat in battle. When a Pokémon holding a Salac Berry drops to 25% or less of its maximum HP, the Berry activates and increases the holder's Speed by one stage.
 
 ### Effects
 - **Activation Threshold**: The Salac Berry activates when the holder's HP falls to 25% or less.
@@ -458,7 +458,7 @@ berry,salac,"**Salac Berry** is a type of Berry in the Pokémon series known for
 ### Common Uses
 - **Competitive Battling**: The Salac Berry is often used in competitive battling strategies to give slower Pokémon a much-needed Speed boost at critical moments, allowing them to take advantage of their other strengths.
 - **Endurance Strategies**: It is particularly useful for Pokémon with high attack stats but lower Speed, or for those utilizing ""Endeavor"""
-berry,petaya,"**Petaya Berry** is a type of Berry known for its unique effect of raising the Special Attack stat of the Pokémon holding it when its HP drops below 25% of its maximum. This makes it a strategic item in battles, particularly for special attackers aiming to turn the tide in critical moments.
+"berry","petaya","**Petaya Berry** is a type of Berry known for its unique effect of raising the Special Attack stat of the Pokémon holding it when its HP drops below 25% of its maximum. This makes it a strategic item in battles, particularly for special attackers aiming to turn the tide in critical moments.
 
 **Effects:**
 - When a Pokémon's HP falls below 25%, the Petaya Berry activates and increases the Special Attack stat by one stage.
@@ -468,7 +468,7 @@ berry,petaya,"**Petaya Berry** is a type of Berry known for its unique effect of
 - **In Battles:** Typically used on Pokémon with high Special Attack stats to boost their offensive capabilities when their HP is low, making them more formidable in a comeback scenario.
 - **In Competitive Play:** Especially valuable in strategic sets, often combined with moves or abilities that intentionally lower a Pokémon's HP (like Substitute or Endure) to trigger the Berry's effect at the optimal time.
 - **In Contests:** Used to boost Clever"
-berry,apicot,"**Apicot Berry** is a special type of Berry known for its unique ability to enhance a Pokémon's special defense under certain conditions. When a Pokémon holding an Apicot Berry reaches 25% or less of its maximum HP, the Berry activates and increases the Pokémon's Special Defense stat, which can be critical in turning the tide of a battle.
+"berry","apicot","**Apicot Berry** is a special type of Berry known for its unique ability to enhance a Pokémon's special defense under certain conditions. When a Pokémon holding an Apicot Berry reaches 25% or less of its maximum HP, the Berry activates and increases the Pokémon's Special Defense stat, which can be critical in turning the tide of a battle.
 
 **Effects:**
 - **Activation Trigger:** It activates when the holder's HP falls to 25% or less.
@@ -478,7 +478,7 @@ berry,apicot,"**Apicot Berry** is a special type of Berry known for its unique a
 - **Battle Strategies:** The Apicot Berry is often used in competitive battling where Pokémon with high longevity and defensive roles might benefit from the additional Special Defense boost.
 - **In-Game Battles:** Trainers might equip their Pokémon with an Apicot Berry during difficult in-game battles, such as Gym Leader confrontations or Elite Four challenges, to provide an edge when HP is critically low.
 "
-berry,lansat,"**Lansat Berry** is a rare and valuable Berry in the Pokémon series, notable for its unique effects and specialized uses. When a Pokémon holds a Lansat Berry and its HP falls below 25%, the Lansat Berry activates, significantly increasing the holder’s critical hit ratio. This boost can turn the tide of battles by making subsequent attacks more likely to land as critical hits, thereby dealing extra damage.
+"berry","lansat","**Lansat Berry** is a rare and valuable Berry in the Pokémon series, notable for its unique effects and specialized uses. When a Pokémon holds a Lansat Berry and its HP falls below 25%, the Lansat Berry activates, significantly increasing the holder’s critical hit ratio. This boost can turn the tide of battles by making subsequent attacks more likely to land as critical hits, thereby dealing extra damage.
 
 **Effects:**
 - Boosts the holder's critical hit ratio when HP drops below 25%.
@@ -489,12 +489,12 @@ berry,lansat,"**Lansat Berry** is a rare and valuable Berry in the Pokémon seri
 
 **Interesting Facts:**
 - Due to its powerful effect, the Lansat Berry is not as easily obtainable as other Berries. Typically, players can acquire it after achieving significant milestones, such as successfully completing the Pokémon League or other endgame"
-berry,starf,"**Starf Berry** is a rare and unique type of Berry in the Pokémon series, often sought after for its powerful effects in battles. When a Pokémon holding a Starf Berry's HP falls below 25% of its maximum, the Berry is consumed to sharply boost one of its stats by two stages. This stat increase effect is random and can target any one of the Pokémon's stats, including Attack, Defense, Special Attack, Special Defense, or Speed.
+"berry","starf","**Starf Berry** is a rare and unique type of Berry in the Pokémon series, often sought after for its powerful effects in battles. When a Pokémon holding a Starf Berry's HP falls below 25% of its maximum, the Berry is consumed to sharply boost one of its stats by two stages. This stat increase effect is random and can target any one of the Pokémon's stats, including Attack, Defense, Special Attack, Special Defense, or Speed.
 
 **Common Uses:**
 - **Competitive Battles:** The Starf Berry is particularly useful in competitive battling scenarios where the sudden boost in a stat can turn the tide of the battle. It is often used in conjunction with strategies that deliberately lower a Pokémon’s HP to trigger the Berry's effect at a critical moment.
 - **Endurance Battles:** Due to its potent stat-boosting ability, the Starf Berry is also advantageous in lengthy, endurance-based battles such as the Battle Tower or similar facilities, where the unpredictability of the boost"
-berry,enigma,"**Enigma Berry** is a special type of Berry in the Pokémon series known for its unique and situational restorative properties. Unlike other Berries that provide a straightforward effect, the Enigma Berry activates only under specific conditions.
+"berry","enigma","**Enigma Berry** is a special type of Berry in the Pokémon series known for its unique and situational restorative properties. Unlike other Berries that provide a straightforward effect, the Enigma Berry activates only under specific conditions.
 
 **Effect:** When a Pokémon holding an Enigma Berry is hit by a move that is super effective against it, the Berry will activate and restore 1/4 of the Pokémon's maximum HP. This can provide a crucial health boost in battles, potentially allowing the Pokémon to withstand subsequent attacks that could otherwise knock it out.
 
@@ -502,7 +502,7 @@ berry,enigma,"**Enigma Berry** is a special type of Berry in the Pokémon series
 
 **Interesting Facts:**
 - **Rarity:** The Enigma Berry is rare and often"
-berry,micle,"**Micle Berry** is a beneficial item in the Pokémon universe known for its unique effects and situational uses in battles. When a Pokémon holds a Micle Berry and its HP falls below 25%, the berry activates and increases the accuracy of the Pokémon's next move, ensuring it hits the target. This makes it particularly useful for moves with lower accuracy or during critical moments in battles where a missed attack could be detrimental.
+"berry","micle","**Micle Berry** is a beneficial item in the Pokémon universe known for its unique effects and situational uses in battles. When a Pokémon holds a Micle Berry and its HP falls below 25%, the berry activates and increases the accuracy of the Pokémon's next move, ensuring it hits the target. This makes it particularly useful for moves with lower accuracy or during critical moments in battles where a missed attack could be detrimental.
 
 **Effects:**
 - **Increased Accuracy:** When HP drops below 25%, the next move of the holder will have its accuracy boosted, helping ensure critical hits land.
@@ -513,7 +513,7 @@ berry,micle,"**Micle Berry** is a beneficial item in the Pokémon universe known
 
 **Interesting Facts:**
 "
-berry,custap,"**Custap Berry** is a unique and strategic item in the Pokémon series known for its ability to grant a priority boost under specific conditions. 
+"berry","custap","**Custap Berry** is a unique and strategic item in the Pokémon series known for its ability to grant a priority boost under specific conditions. 
 
 **Effects**: When a Pokémon holding a Custap Berry has its HP reduced to 25% or less, the Berry activates. On the next turn, the Pokémon's move is given the highest priority, allowing it to act before other moves regardless of its Speed stat. This effect only applies once per Berry.
 
@@ -522,7 +522,7 @@ berry,custap,"**Custap Berry** is a unique and strategic item in the Pokémon se
 **Interesting Facts**:
 - The Custap Berry first appeared in Generation IV (Diamond, Pearl, and Platinum versions).
 - It is one"
-berry,jaboca,"**Jaboca Berry** is an item in the Pokémon series known for its unique utility in battle situations. When a Pokémon holding a Jaboca Berry is hit by a physical move, it activates and the attacker receives damage equal to 1/8 of its maximum HP. This makes the Jaboca Berry particularly strategic in battles, especially for Pokémon with lower Speed stats that are likely to receive physical hits.
+"berry","jaboca","**Jaboca Berry** is an item in the Pokémon series known for its unique utility in battle situations. When a Pokémon holding a Jaboca Berry is hit by a physical move, it activates and the attacker receives damage equal to 1/8 of its maximum HP. This makes the Jaboca Berry particularly strategic in battles, especially for Pokémon with lower Speed stats that are likely to receive physical hits.
 
 **Effects:**
 - When the holder of a Jaboca Berry is hit by a physical move, the attacking Pokémon takes damage equal to 1/8 of its maximum HP.
@@ -532,7 +532,7 @@ berry,jaboca,"**Jaboca Berry** is an item in the Pokémon series known for its u
 - In competitive battling, trainers often equip Jaboca Berries to bulky Pokémon that can withstand multiple hits, inflicting chip damage to physical attackers.
 - It can serve as a surprise element in battles, catching the opponent off guard and potentially turning the tide of the match.
 - The Berry is less commonly used in casual gameplay but can be effective in specific"
-berry,rowap,"**Rowap Berry** is a type of Berry in the Pokémon series known for its unique ability to counterattack when a Pokémon holding it is hit by a special attack. Below is a detailed summary of its properties, uses, and some interesting facts:
+"berry","rowap","**Rowap Berry** is a type of Berry in the Pokémon series known for its unique ability to counterattack when a Pokémon holding it is hit by a special attack. Below is a detailed summary of its properties, uses, and some interesting facts:
 
 1. **Effects**: 
    - When a Pokémon holding a Rowap Berry is hit by a special attack, the attacker loses 1/8 of its maximum HP, but only if the attacker used a move that makes direct contact. This effect makes the Rowap Berry particularly useful in battling strategies where retaliation against specific kinds of moves can be crucial.

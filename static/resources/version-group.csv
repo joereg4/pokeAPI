@@ -1,11 +1,11 @@
-resource,name,summary
-version-group,red-blue,"**Red-Blue version group**: The Pokémon Red and Blue versions are part of the first generation of Pokémon games, released for the Game Boy in 1996 in Japan (with Red paired with Green instead of Blue) and later in 1998 in North America and other regions. Developed by Game Freak and published by Nintendo, these games are the pioneers of the Pokémon series, setting the stage for a worldwide phenomenon.
+"resource","name","summary"
+"version-group","red-blue","**Red-Blue version group**: The Pokémon Red and Blue versions are part of the first generation of Pokémon games, released for the Game Boy in 1996 in Japan (with Red paired with Green instead of Blue) and later in 1998 in North America and other regions. Developed by Game Freak and published by Nintendo, these games are the pioneers of the Pokémon series, setting the stage for a worldwide phenomenon.
 
 **Key Features**:
 1. **Region**: The games are set in the Kanto region, a diverse area with towns, cities, routes, caves, and seas that players explore. Kanto features various landscapes, from forests and mountains to urban centers and coastal areas.
 2. **Pokédex**: Red and Blue introduced the original 151 Pokémon. Players assume the role of a young trainer on a quest to capture and train Pokémon, ultimately aiming to become the Pokémon Champion.
 3. **Gameplay Mechanics**: Core mechanics established by these games include capturing Pokémon"
-version-group,yellow,"**Pokémon Yellow Version** is part of the first generation of Pokémon games and was released as a special edition following the Pokémon Red and Blue versions. Officially titled **""Pokémon Yellow: Special Pikachu Edition,""** it was released for the Game Boy in 1998 in Japan and 1999 in North America and other regions.
+"version-group","yellow","**Pokémon Yellow Version** is part of the first generation of Pokémon games and was released as a special edition following the Pokémon Red and Blue versions. Officially titled **""Pokémon Yellow: Special Pikachu Edition,""** it was released for the Game Boy in 1998 in Japan and 1999 in North America and other regions.
 
 ### Key Features:
 1. **Pikachu as the Starter Pokémon**: Unlike Red and Blue where players choose between Bulbasaur, Charmander, and Squirtle, in Yellow, players start with a Pikachu that follows them around outside its Poké Ball, emulating Ash's Pikachu from the Pokémon anime series.
@@ -13,7 +13,7 @@ version-group,yellow,"**Pokémon Yellow Version** is part of the first generatio
 2. **Pokémon Sprites and Colors**: The game's graphics were enhanced to better utilize the Game Boy Color's capabilities, providing more vibrant and detailed sprites.
 
 3. **Anime Influence**: Pokémon Yellow closely follows elements of the Pokémon anime, incorporating characters like Jessie and James from Team Rocket, who weren’t"
-version-group,gold-silver,"**Generation II** consists of the Pokémon Gold and Silver versions, which were released for the Game Boy Color. This generation was later complemented by Pokémon Crystal, an enhanced version introducing several new features and improvements. 
+"version-group","gold-silver","**Generation II** consists of the Pokémon Gold and Silver versions, which were released for the Game Boy Color. This generation was later complemented by Pokémon Crystal, an enhanced version introducing several new features and improvements. 
 
 **Key Features:**
 
@@ -28,7 +28,7 @@ version-group,gold-silver,"**Generation II** consists of the Pokémon Gold and S
 
 3. **Breeding and Gender:**
    - Introduced Pokémon breeding"
-version-group,crystal,"**Pokémon Crystal** is a part of the Generation II main series Pokémon games, alongside Pokémon Gold and Silver, for the Game Boy Color. Released in Japan on December 14, 2000, and in North America on July 29, 2001, it serves as an enhanced version of Pokémon Gold and Silver with several notable improvements and unique features.
+"version-group","crystal","**Pokémon Crystal** is a part of the Generation II main series Pokémon games, alongside Pokémon Gold and Silver, for the Game Boy Color. Released in Japan on December 14, 2000, and in North America on July 29, 2001, it serves as an enhanced version of Pokémon Gold and Silver with several notable improvements and unique features.
 
 **Key Features:**
 
@@ -38,7 +38,7 @@ version-group,crystal,"**Pokémon Crystal** is a part of the Generation II main 
 2. **Storyline and Suicune Focus:**
    - The game's storyline places a greater emphasis on the Legendary Pokémon Suicune, adding new plot elements, characters, and events centered around this Pokémon. Players encounter Suicune multiple times throughout their journey, culminating in a special battle at the Tin Tower.
    - It"
-version-group,ruby-sapphire,"**Ruby-Sapphire** is a version group from **Generation III** of the Pokémon series, comprising the games Pokémon Ruby and Pokémon Sapphire. Released for the Game Boy Advance in 2002 in Japan and 2003 in North America and Europe, these entries marked a significant evolution in the series both graphically and mechanically.
+"version-group","ruby-sapphire","**Ruby-Sapphire** is a version group from **Generation III** of the Pokémon series, comprising the games Pokémon Ruby and Pokémon Sapphire. Released for the Game Boy Advance in 2002 in Japan and 2003 in North America and Europe, these entries marked a significant evolution in the series both graphically and mechanically.
 
 Key Features:
 1. **The Hoenn Region**: Ruby and Sapphire introduced the expansive and richly diverse Hoenn region, known for its extensive water routes and diverse climates ranging from arid deserts to lush forests. The region introduced unique environment-based gameplay elements, such as diving underwater.
@@ -46,7 +46,7 @@ Key Features:
 2. **Pokémon Contests**: A major new feature was Pokémon Contests, where players could enter their Pokémon into various contest categories like Beauty, Coolness, and Cuteness. This side activity provided an alternative to traditional battling.
 
 3. **Double Battles**: Ruby and Sapphire introduced Double Battles, where two Pokémon from each side battle simultaneously. This added a layer of"
-version-group,emerald,"**Pokémon Emerald Version** is part of the Generation III series of Pokémon games and is a companion to Pokémon Ruby and Sapphire. Released in 2004 in Japan and 2005 worldwide, Pokémon Emerald is notable for being an enhanced version of the Ruby and Sapphire games, featuring several updated gameplay mechanics, additional content, and new story elements.
+"version-group","emerald","**Pokémon Emerald Version** is part of the Generation III series of Pokémon games and is a companion to Pokémon Ruby and Sapphire. Released in 2004 in Japan and 2005 worldwide, Pokémon Emerald is notable for being an enhanced version of the Ruby and Sapphire games, featuring several updated gameplay mechanics, additional content, and new story elements.
 
 **Key Features:**
 
@@ -55,16 +55,7 @@ version-group,emerald,"**Pokémon Emerald Version** is part of the Generation II
 2. **Gym Leader Rematches:** Unlike Ruby and Sapphire, Emerald allows players to rematch Gym Leaders, making it possible to earn experience and enjoy more battles after beating the main storyline.
 
 3. **Double Battles & Multi Battles:** Double battles were introduced in Ruby and Sapphire, but"
-version-group,firered-leafgreen,"**FireRed-LeafGreen** refers to the Generation III games Pokémon FireRed and Pokémon LeafGreen, which are enhanced remakes of the original Pokémon Red and Blue games. These titles were developed by Game Freak and published by Nintendo and The Pokémon Company for the Game Boy Advance. The games were first released in Japan in January 2004, followed by releases in North America, Australia, and Europe later that year.
-
-**Key Features:**
-
-1. **Updated Graphics and Sound:** FireRed and LeafGreen boast significantly improved graphics and sound compared to their original counterparts. The visual and auditory enhancements take advantage of the Game Boy Advance's increased processing power.
-
-2. **Wireless Adapter:** Both games were packaged with a Game Boy Advance Wireless Adapter, which allowed players to trade and battle Pokémon wirelessly. This innovation marked one of the first instances of wireless connectivity in Pokémon games.
-
-3. **Sevii Islands:** A new addition to the storyline, the Sevii Islands are a group of seven islands"
-version-group,diamond-pearl,"**Diamond-Pearl Version Group**
+"version-group","diamond-pearl","**Diamond-Pearl Version Group**
 
 **Games in this Group:**
 1. **Pokémon Diamond**
@@ -76,7 +67,7 @@ version-group,diamond-pearl,"**Diamond-Pearl Version Group**
 - **Pokémon Introduced:** A total of 107 new Pokémon, bringing the total number of Pokémon to 493. Notable new Pokémon include the starters Turtwig, Chimchar, and Piplup, as well as the legendary mascots Dialga (Diamond) and Palkia (Pearl).
 - **Legendary Pokémon:** In addition to Dialga and Palkia, other significant legendaries introduced are Giratina (featured in Pokémon Platinum), Uxie, Mesprit, Azelf, and Arceus, the latter often referred to as the ""God of Pokémon.""
 - **"
-version-group,platinum,"**Pokémon Platinum**
+"version-group","platinum","**Pokémon Platinum**
 
 **Games in the Group**: 
 Pokémon Platinum version is a single game in the Pokémon main series and serves as the enhanced version of the Pokémon Diamond and Pearl games. Released originally in Japan in September 2008, it later rolled out internationally between March and May 2009.
@@ -88,7 +79,7 @@ Pokémon Platinum version is a single game in the Pokémon main series and serve
 2. **Pokémon Forms**: Giratina’s Origin Forme was introduced in Platinum, accessible through the Griseous Orb in the Distortion World. Shaymin also received a new Sky Forme, which changes its type and stats.
 
 3. **Enhanced Storyline**: Compared to Diamond and Pearl, the storyline in Platinum includes more involvement with the villainous team, Team Galactic"
-version-group,heartgold-soulsilver,"**HeartGold and SoulSilver** are part of the fourth generation of Pokémon games, released for the Nintendo DS. They are enhanced remakes of the original Pokémon Gold and Silver, released for the Game Boy Color. 
+"version-group","heartgold-soulsilver","**HeartGold and SoulSilver** are part of the fourth generation of Pokémon games, released for the Nintendo DS. They are enhanced remakes of the original Pokémon Gold and Silver, released for the Game Boy Color. 
 
 ### Games in This Group:
 - **Pokémon HeartGold**: Released in Japan on September 12, 2009, and internationally in March 2010.
@@ -98,7 +89,7 @@ version-group,heartgold-soulsilver,"**HeartGold and SoulSilver** are part of the
 1. **Graphics and Presentation**: These versions feature updated graphics that take full advantage of the Nintendo DS's capabilities, presenting a more vibrant and detailed world compared to the originals.
 2. **Two Regions**: Players can explore both the Johto and Kanto regions, providing a broad and diverse adventure that includes up to 16 badges to collect after defeating the Elite Four.
 3. **Pokéwalker**: Each game was bundled with a Poké"
-version-group,black-white,"**Pokémon Black and White** comprise the fifth generation of the Pokémon video game series, developed by Game Freak and published by Nintendo and The Pokémon Company for the Nintendo DS. These games were first released in Japan in September 2010, with subsequent releases in North America, Europe, and other regions in 2011.
+"version-group","black-white","**Pokémon Black and White** comprise the fifth generation of the Pokémon video game series, developed by Game Freak and published by Nintendo and The Pokémon Company for the Nintendo DS. These games were first released in Japan in September 2010, with subsequent releases in North America, Europe, and other regions in 2011.
 
 **Key Features:**
 1. **New Region:**
@@ -109,14 +100,14 @@ version-group,black-white,"**Pokémon Black and White** comprise the fifth gener
 
 3. **Story and Characters:**
    - The storyline focuses on the player’s journey to become the Pokémon Champion while also tackling"
-version-group,colosseum,"**Pokémon Colosseum Version Group** consists of ""Pokémon Colosseum"" and its follow-up, ""Pokémon XD: Gale of Darkness,"" both released for the Nintendo GameCube. These games are distinct in the Pokémon franchise as they focus more on a narrative-driven journey rather than the traditional capturing and battling mechanics seen in the main series games.
+"version-group","colosseum","**Pokémon Colosseum Version Group** consists of ""Pokémon Colosseum"" and its follow-up, ""Pokémon XD: Gale of Darkness,"" both released for the Nintendo GameCube. These games are distinct in the Pokémon franchise as they focus more on a narrative-driven journey rather than the traditional capturing and battling mechanics seen in the main series games.
 
 **Pokémon Colosseum**:
 - Released: November 21, 2003, in Japan, and in 2004 in other regions.
 - Setting: The game takes place in the Orre region, a desert-like area with a darker tone compared to the colorful and verdant regions of the main series.
 - Protagonist: Players control Wes, a former member of Team Snagem, who defected after witnessing the organization’s malicious practices.
 - Core Gameplay: The unique aspect of Pokémon Colosseum is its Shadow Pokémon mechanic. Players must capture these corrupted Pokémon, which have had their hearts closed off by the evil"
-version-group,xd,"**Pokémon XD: Gale of Darkness** is a role-playing video game for the Nintendo GameCube developed by Genius Sonority and published by The Pokémon Company and Nintendo. Released in 2005, it serves as a sequel to Pokémon Colosseum and is part of a subseries distinct from the mainline Pokémon games that appear on handheld consoles.
+"version-group","xd","**Pokémon XD: Gale of Darkness** is a role-playing video game for the Nintendo GameCube developed by Genius Sonority and published by The Pokémon Company and Nintendo. Released in 2005, it serves as a sequel to Pokémon Colosseum and is part of a subseries distinct from the mainline Pokémon games that appear on handheld consoles.
 
 ### Key Features:
 1. **Storyline and Setting**: The game is set in the Orre region, a desert-like area, and revolves around the protagonist, Michael, who aims to thwart Cipher, an evil organization that captures and corrupts Pokémon into Shadow Pokémon.
@@ -124,7 +115,7 @@ version-group,xd,"**Pokémon XD: Gale of Darkness** is a role-playing video game
 2. **Shadow Pokémon**: One of the game’s central mechanics is the purification of Shadow Pokémon—Pokémon whose hearts have been closed off, resulting in them being more aggressive and unable to grow. Purification involves battling with them and reaching various in-game milestones to reopen their hearts.
 
 3. **Battle System**: Unlike traditional mainline Pokémon games that often focus"
-version-group,black-2-white-2,"**Generation V** includes the Pokémon Black 2 and White 2 versions. These games are direct sequels to Pokémon Black and White, making them unique in the main series for continuing the storyline established in their predecessors.
+"version-group","black-2-white-2","**Generation V** includes the Pokémon Black 2 and White 2 versions. These games are direct sequels to Pokémon Black and White, making them unique in the main series for continuing the storyline established in their predecessors.
 
 **Games in This Group**:
 - **Pokémon Black 2**
@@ -136,7 +127,7 @@ version-group,black-2-white-2,"**Generation V** includes the Pokémon Black 2 an
 2. **New Storyline**: The storyline revolves around the new antagonistic team, Neo Team Plasma, who have evolved from the original Team Plasma's ideals. The game delves deeper into the lore of the Unova region and features various new characters and returning ones with new roles and developments.
 
 3."
-version-group,x-y,"**Pokémon X and Pokémon Y** are part of the main series' sixth generation of Pokémon games, released worldwide on October 12, 2013, for the Nintendo 3DS. These games introduced several groundbreaking features and significant advancements in the series.
+"version-group","x-y","**Pokémon X and Pokémon Y** are part of the main series' sixth generation of Pokémon games, released worldwide on October 12, 2013, for the Nintendo 3DS. These games introduced several groundbreaking features and significant advancements in the series.
 
 **Games in this Group:**
 1. **Pokémon X**
@@ -149,7 +140,7 @@ version-group,x-y,"**Pokémon X and Pokémon Y** are part of the main series' si
 2. **Kalos Region:** The setting for these games is the Kalos region, inspired by France. Kalos is known for its urban and lush environments, elegant architecture, and diverse array of locations, which include cities, forests, and beaches.
 
 3. **Mega Evolution:** A groundbreaking mechanic introduced in X and Y"
-version-group,omega-ruby-alpha-sapphire,"**Omega Ruby and Alpha Sapphire**
+"version-group","omega-ruby-alpha-sapphire","**Omega Ruby and Alpha Sapphire**
 
 The Pokémon version group named **Omega Ruby and Alpha Sapphire** includes the titular games, which are remakes of the original Pokémon Ruby and Sapphire versions from Generation III. These games were released for the Nintendo 3DS in November 2014. Set in the Hoenn region, Omega Ruby and Alpha Sapphire bring back the beloved Generation III experience with numerous enhancements and new features.
 
@@ -160,7 +151,7 @@ The Pokémon version group named **Omega Ruby and Alpha Sapphire** includes the 
 2. **Mega Evolution**: Introduced in Pokémon X and Y, Mega Evolution allows certain Pokémon to undergo a temporary transformation, increasing their power and, at times, altering their abilities and types. Omega Ruby and Alpha Sapphire expanded the roster of Pokémon capable of Mega Evolution.
 
 3. **Pr"
-version-group,sun-moon,"**Sun-Moon**
+"version-group","sun-moon","**Sun-Moon**
 
 The Pokémon Sun and Moon games are part of the seventh generation of the Pokémon series, released by Nintendo and Game Freak for the Nintendo 3DS. This generation includes Pokémon Sun, Pokémon Moon, Pokémon Ultra Sun, and Pokémon Ultra Moon. The games were released initially in late 2016 for Sun and Moon, and the enhanced versions, Ultra Sun and Ultra Moon, were released in late 2017.
 
@@ -168,7 +159,7 @@ The Pokémon Sun and Moon games are part of the seventh generation of the Pokém
 1. **Alola Region:** The setting for the games is the Alola region, a tropical archipelago inspired by the Hawaiian Islands. Alola is divided into four main islands: Melemele Island, Akala Island, Ula'ula Island, and Poni Island, along with an artificial island, Aether Paradise.
    
 2. **Alolan Forms:** Introduced new regional variants of existing Pokémon known as Alolan forms. These forms have distinct appearances and typings from their counterparts in other regions, such as Alolan V"
-version-group,ultra-sun-ultra-moon,"**Ultra Sun and Ultra Moon**
+"version-group","ultra-sun-ultra-moon","**Ultra Sun and Ultra Moon**
 
 The Pokémon Ultra Sun and Ultra Moon games are part of the seventh generation of the Pokémon series and are enhanced versions of Pokémon Sun and Moon. Released for the Nintendo 3DS in late 2017, these games present an expanded narrative set within the Alola region, a tropical archipelago inspired by Hawaii.
 
@@ -182,16 +173,7 @@ The Pokémon Ultra Sun and Ultra Moon games are part of the seventh generation o
 2. **Ultra Wormholes and Ultra Beasts**: One of the standout features is the ability to travel through Ultra Wormholes, leading to different dimensions where players can encounter and capture Ultra Beasts and other legendary Pokémon.
    
 3. **Rotom Dex Enhancements**: The Rotom Pokédex"
-version-group,lets-go-pikachu-lets-go-eevee,"**Pokémon: Let's Go, Pikachu! and Let's Go, Eevee!** are a pair of main series role-playing video games in the Pokémon franchise developed by Game Freak and published by The Pokémon Company and Nintendo for the Nintendo Switch. Released on November 16, 2018, these games are part of Generation VII and serve as enhanced remakes of the 1998 Game Boy games Pokémon Yellow. They primarily cater to newer fans brought in by the success of Pokémon GO.
-
-### Key Features:
-
-1. **Partner Pokémon**: 
-   - In Let's Go, Pikachu!, players start with Pikachu, while in Let's Go, Eevee!, Eevee is the starter. These partner Pokémon ride on the player's shoulder or head and cannot evolve. They also learn exclusive moves and can interact with players through play, which enhances their bond.
-
-2. **Pokémon GO Integration**: 
-   - These games integrate with the mobile game Pokémon GO, allowing players to transfer Pokémon from GO"
-version-group,sword-shield,"**Sword-Shield**
+"version-group","sword-shield","**Sword-Shield**
 
 The Pokémon Sword and Pokémon Shield games are part of the eighth generation of the Pokémon series and were released on the Nintendo Switch on November 15, 2019. These games introduced players to the Galar region, which is inspired by the United Kingdom. The region is characterized by its diverse environments and landmarks resembling those of Great Britain, including rolling countrysides, contemporary cities, thick forests, and snowy mountains.
 
@@ -204,7 +186,7 @@ The Pokémon Sword and Pokémon Shield games are part of the eighth generation o
    - A central new mechanic in these games is Dynamaxing, which allows Pokémon to grow to gigantic sizes during battles. Some Pokémon can also Gigantamax, a special form of Dynamax that changes their appearance and gives them a unique, powerful move.
 
 3. **"
-version-group,the-isle-of-armor,"**The Isle of Armor** is an expansion for the Pokémon Sword and Shield games, which are part of **Generation VIII** of the Pokémon series. This expansion was released as part of the Pokémon Sword and Shield Expansion Pass on June 17, 2020. The Isle of Armor adds a new area to explore, located off the coast of the Galar region, and introduces new gameplay mechanics, additional Pokémon, and a variety of new features.
+"version-group","the-isle-of-armor","**The Isle of Armor** is an expansion for the Pokémon Sword and Shield games, which are part of **Generation VIII** of the Pokémon series. This expansion was released as part of the Pokémon Sword and Shield Expansion Pass on June 17, 2020. The Isle of Armor adds a new area to explore, located off the coast of the Galar region, and introduces new gameplay mechanics, additional Pokémon, and a variety of new features.
 
 ### Key Features:
 
@@ -214,7 +196,7 @@ version-group,the-isle-of-armor,"**The Isle of Armor** is an expansion for the P
 
 2. **Kubfu and Urshifu:**
    - A major addition to the expansion is the Legendary Pokémon"
-version-group,the-crown-tundra,"**The Crown Tundra** is an expansion for the Pokémon Sword and Shield games, which are part of the eighth generation of the Pokémon series. Released on October 22, 2020, as part of the Pokémon Sword and Shield Expansion Pass, The Crown Tundra adds a new area to the Galar region known for its snowy landscapes and exploration-heavy gameplay.
+"version-group","the-crown-tundra","**The Crown Tundra** is an expansion for the Pokémon Sword and Shield games, which are part of the eighth generation of the Pokémon series. Released on October 22, 2020, as part of the Pokémon Sword and Shield Expansion Pass, The Crown Tundra adds a new area to the Galar region known for its snowy landscapes and exploration-heavy gameplay.
 
 **Key Features:**
 
@@ -226,7 +208,7 @@ version-group,the-crown-tundra,"**The Crown Tundra** is an expansion for the Pok
 
 3. **Dynamax Adventures:**
    - A new cooperative gameplay mode"
-version-group,brilliant-diamond-and-shining-pearl,"**Brilliant Diamond and Shining Pearl**
+"version-group","brilliant-diamond-and-shining-pearl","**Brilliant Diamond and Shining Pearl**
 
 **Games in this Group**:
 - Pokémon Brilliant Diamond
@@ -238,7 +220,7 @@ version-group,brilliant-diamond-and-shining-pearl,"**Brilliant Diamond and Shini
 - **Graphics and Gameplay**: The games feature updated graphics, adopting a chibi-style character design for the overworld and more detailed models during battles. The visuals have been modernized to appeal to contemporary audiences while preserving the charm of the originals.
   
 - **Pokémon Roster**: Players can catch the original 493 Pokémon from Generations I through IV, and the National Pokédex is accessible after certain conditions are met, allowing players to capture and use Pokémon from later generations via"
-version-group,legends-arceus,"**Legends-Arceus**
+"version-group","legends-arceus","**Legends-Arceus**
 
 **Games in this Group**:
 - Pokémon Legends: Arceus
@@ -254,7 +236,7 @@ Pokémon Legends: Arceus represents a landmark shift in the Pokémon franchise, 
 2. **Gameplay Mechanics**:
    - Pokémon Legends: Arceus departs from the standard linear storyline and turn-based battles, incorporating real-time elements and a semi-open world for players to explore.
    -"
-version-group,scarlet-violet,"**Pokémon Scarlet and Pokémon Violet** are the main entries of the ninth generation of Pokémon games. Developed by Game Freak and published by Nintendo and The Pokémon Company for the Nintendo Switch, these games represent a significant evolution in the series both in terms of gameplay mechanics and narrative depth.
+"version-group","scarlet-violet","**Pokémon Scarlet and Pokémon Violet** are the main entries of the ninth generation of Pokémon games. Developed by Game Freak and published by Nintendo and The Pokémon Company for the Nintendo Switch, these games represent a significant evolution in the series both in terms of gameplay mechanics and narrative depth.
 
 ### Games in This Group
 - **Pokémon Scarlet**
@@ -268,7 +250,7 @@ version-group,scarlet-violet,"**Pokémon Scarlet and Pokémon Violet** are the m
 3. **Starter Pokémon**: Players begin their journey by choosing one of three new starter Pokémon:
    - **Sprigatito**: A Grass-type Pokémon.
    - **"
-version-group,the-teal-mask,"**The Teal Mask** is an installment within the Pokémon series, specifically as the first part of the Pokémon Scarlet and Violet expansion pass known as ""The Hidden Treasure of Area Zero."" Released in September 2023, The Teal Mask introduces players to a fresh narrative and new areas to explore, heightening the experience of the Paldea region introduced in Pokémon Scarlet and Violet.
+"version-group","the-teal-mask","**The Teal Mask** is an installment within the Pokémon series, specifically as the first part of the Pokémon Scarlet and Violet expansion pass known as ""The Hidden Treasure of Area Zero."" Released in September 2023, The Teal Mask introduces players to a fresh narrative and new areas to explore, heightening the experience of the Paldea region introduced in Pokémon Scarlet and Violet.
 
 **Key Features:**
 
@@ -277,4 +259,19 @@ version-group,the-teal-mask,"**The Teal Mask** is an installment within the Pok�
 2. **New Characters and Pokémon:** This expansion brings a variety of new Pokémon, as well as regional forms that are unique to Kitakami. Players can capture and add these never-before-seen creatures to their Pokédexes, expanding their collection even further.
 
 3. **Cultural and Mythological Elements:** The Teal Mask deeply"
-version-group,the-indigo-disk,**No Summary Available**
+"version-group","the-indigo-disk","**No Summary Available**"
+"version-group","lets-go-pikachu-lets-go-eevee","**Pokémon: Let's Go, Pikachu! and Let's Go, Eevee!** are main series role-playing video games in the Pokémon franchise. Developed by Game Freak and published by The Pokémon Company and Nintendo, they are designed for the Nintendo Switch and were released on November 16, 2018. As part of Generation VII, these games serve as enhanced remakes of the 1998 Game Boy games, Pokémon Yellow. They are primarily designed to draw in newer fans, thanks to the success of Pokémon GO.\r
+\r
+### Key Features:\r
+\r
+1. **Partner Pokémon**: Players in Let's Go, Pikachu! begin with Pikachu, while in Let's Go, Eevee! Eevee is the starting Pokémon. These partner Pokémon, who ride on the player's shoulder or head, are unique in that they cannot evolve. They also learn exclusive moves and interact with players through play, which strengthens their bond.\r
+2. **Pokémon GO Integration**: Let's Go, Pikachu! and Let's Go, Eevee! seamlessly integrate with the mobile game, Pokémon GO. This feature enables players to transfer their caught Pokémon from Pokémon GO directly into these games."
+"version-group","firered-leafgreen","**FireRed-LeafGreen** denotes the Generation III games Pokémon FireRed and Pokémon LeafGreen. They are enhanced remakes of the original Pokémon Red and Blue games, developed by Game Freak and published by Nintendo as well as The Pokémon Company for the Game Boy Advance. The launch of these games started in Japan in January 2004 and was followed by releases in North America, Australia, and Europe in the subsequent months of the same year.\r
+\r
+**Key Features:**\r
+\r
+- **Updated Graphics and Sound:** Compared to their original versions, FireRed and LeafGreen display significant improvements in graphics and sound, benefiting from the higher processing power of the Game Boy Advance.\r
+\r
+- **Wireless Adapter:** Every purchase of either game included a Game Boy Advance Wireless Adapter, enabling players to trade and battle Pokémon wirelessly. This was a pioneering move towards wireless connectivity in Pokémon games.\r
+\r
+- **Sevii Islands:** An exciting new feature is the addition of the Sevii Islands to the game's narrative. The Sevii Islands are a chain of seven islands that offer new adventures and challenges."

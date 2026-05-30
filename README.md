@@ -2,6 +2,16 @@
 
 A Flask-based Pokédex that surfaces Pokémon, moves, items, locations, and more from [PokéAPI](https://pokeapi.co/), with Redis and shelve caching and optional AI-generated summaries.
 
+## Screenshots
+
+<p align="center">
+  <img src="./screenshots/home.png" alt="Pokédex home page" width="800" />
+</p>
+
+<p align="center">
+  <img src="./screenshots/pokemon-detail.png" alt="Pikachu detail page" width="800" />
+</p>
+
 ## Quick Start (Docker)
 
 ```bash
@@ -14,7 +24,7 @@ docker compose up --build
 
 Open **http://localhost:8080**. See [DEPLOYMENT.md](DEPLOYMENT.md) and [docker/README.md](docker/README.md).
 
-Create an admin user after first start:
+On first start, the app entrypoint runs migrations and **imports AI summaries from `static/resources/*.csv`** when the `resources` table is empty (includes Pikachu and the rest). Create an admin user for the dashboard:
 
 ```bash
 docker compose run --rm app python manage.py create_user
@@ -28,6 +38,7 @@ python3 -m venv .venv
 cp .env.example .env
 # Start Postgres + Redis; set DATABASE_URL and REDIS_URL in .env
 .venv/bin/flask db upgrade
+.venv/bin/python scripts/seed_resources_if_empty.py
 .venv/bin/python manage.py create_user
 .venv/bin/python app.py
 ```

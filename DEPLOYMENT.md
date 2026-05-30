@@ -11,18 +11,24 @@ This document covers **self-hosted** deployment patterns. For a quick local site
 ## Docker Compose (production-like local)
 
 - Services: app, nginx, postgres, redis
-- DB seed: `docker/db/seed.sql` (committed, sanitized)
+- DB seed: migrations + CSV import on empty `resources` table (see [docker/README.md](docker/README.md))
 - Env: `.env` (not committed)
 - See [docker/README.md](docker/README.md) for ports and troubleshooting
 
 First-time setup after `docker compose up`:
 
 ```bash
-docker compose run --rm app flask db upgrade
 docker compose run --rm app python manage.py create_user
 ```
 
-(Migrations also run automatically via the app entrypoint on start.)
+The entrypoint runs `flask db upgrade` and seeds summaries from `static/resources/*.csv` when the `resources` table is empty. Users are never seeded automatically — use `create_user` above.
+
+For a non-Docker install, after `flask db upgrade` run:
+
+```bash
+python scripts/seed_resources_if_empty.py
+python manage.py create_user
+```
 
 ## Bare-metal outline (bring your own server)
 
@@ -30,8 +36,9 @@ docker compose run --rm app python manage.py create_user
 2. Clone repo; create venv; `pip install -r requirements.txt`
 3. Set all variables from `.env.example`
 4. `flask db upgrade`
-5. Run gunicorn behind nginx (example unit files not included — adapt to your OS)
-6. Optional: GitHub deploy webhook — set `WEBHOOK_SECRET` and `DEPLOY_APP_DIR`
+5. `python scripts/seed_resources_if_empty.py` (summaries from `static/resources/*.csv`)
+6. Run gunicorn behind nginx (example unit files not included — adapt to your OS)
+7. Optional: GitHub deploy webhook — set `WEBHOOK_SECRET` and `DEPLOY_APP_DIR`
 
 ## What not to commit
 

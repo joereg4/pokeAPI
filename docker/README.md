@@ -15,14 +15,22 @@ docker compose up --build
 
 Open **http://localhost:8080** (or the port from `NGINX_PORT` in `.env`).
 
-On first run, apply migrations and create an admin user:
+On first run (empty database), the app entrypoint automatically:
+
+1. Runs `flask db upgrade`
+2. Imports summaries from `static/resources/*.csv` via `scripts/seed_resources_if_empty.py`
+
+Create an admin user for login and summary editing:
 
 ```bash
-docker compose run --rm app flask db upgrade
 docker compose run --rm app python manage.py create_user
 ```
 
-The entrypoint runs `flask db upgrade` automatically on container start; you still need `create_user` for admin access.
+To re-import CSVs manually (skips rows that already exist):
+
+```bash
+docker compose run --rm app python scripts/migrate_pokemon_data.py
+```
 
 ## Services
 
@@ -42,9 +50,11 @@ If port 80 is already in use on your machine, keep `NGINX_PORT=8080` (default).
 
 ## Database
 
-- Committed seed: `docker/db/seed.sql` (empty bootstrap only)
-- **No** production `backup.sql` in the repo — operator dumps stay local and gitignored
-- Reset database: `docker compose down -v`
+- **Summaries:** `static/resources/*.csv` (committed) → imported on first app start when `resources` is empty
+- **Users:** created manually with `python manage.py create_user` (not in CSV)
+- **Optional TCG cards:** `python manage.py import_tcg_data`
+- Committed SQL seed: `docker/db/seed.sql` (schema bootstrap only; no production data)
+- Reset database: `docker compose down -v` (next start re-imports CSVs)
 
 ## Operator backup restore (local only)
 

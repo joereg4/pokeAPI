@@ -1,5 +1,5 @@
-resource,name,summary
-region,kanto,"**Kanto** is a seminal region in the Pokémon series, first introduced in the original Pokémon Red and Blue games. Known for housing the initial 151 Pokémon, it is the starting point for many Pokémon trainers and is deeply ingrained in the nostalgic memories of the series' fans. 
+"resource","name","summary"
+"region","kanto","**Kanto** is a seminal region in the Pokémon series, first introduced in the original Pokémon Red and Blue games. Known for housing the initial 151 Pokémon, it is the starting point for many Pokémon trainers and is deeply ingrained in the nostalgic memories of the series' fans. 
 
 ### Key Locations:
 
@@ -8,14 +8,14 @@ region,kanto,"**Kanto** is a seminal region in the Pokémon series, first introd
 3. **Pewter City** - Home to the Pewter Gym, which specializes in Rock-type Pokémon and is led by Brock.
 4. **Cerulean City** - Famous for Misty’s Water-type Gym and the Cerulean Cape, a popular tourist destination.
 5. **Vermilion City** -"
-region,johto,"**Johto** is the second region introduced in the Pokémon series, featured in the Pokémon Gold, Silver, and Crystal versions, as well as their remakes, HeartGold and SoulSilver. Johto is known for its rich cultural heritage and traditional, historical aspects, setting it apart from the more modernized Kanto region.
+"region","johto","**Johto** is the second region introduced in the Pokémon series, featured in the Pokémon Gold, Silver, and Crystal versions, as well as their remakes, HeartGold and SoulSilver. Johto is known for its rich cultural heritage and traditional, historical aspects, setting it apart from the more modernized Kanto region.
 
 **Key Locations:**
 - **New Bark Town:** The starting point for trainers in Johto. It's a quaint, small town surrounded by nature.
 - **Cherrygrove City:** The first city trainers encounter, offering basic amenities and a tutorial for new players.
 - **Violet City:** Home to the first Gym, led by Falkner, who specializes in Flying-type Pokémon. It also houses the Sprout Tower, an ancient multi-story tower occupied by Sages who train with Bellsprout.
 - **Azalea Town:** Known for its Slowpoke Well, where Slowpoke are revered. It is the site of the second Gym, led by Bugsy"
-region,hoenn,"**Hoenn** is the third region introduced in the Pokémon series, featured primarily in Pokémon Ruby, Sapphire, and Emerald. It is geographically diverse, boasting a range of environments including vast oceans, lush forests, towering mountains, and extensive cave systems. This region is known for its emphasis on nature and balance, with a significant influence of ancient Pokémon lore.
+"region","hoenn","**Hoenn** is the third region introduced in the Pokémon series, featured primarily in Pokémon Ruby, Sapphire, and Emerald. It is geographically diverse, boasting a range of environments including vast oceans, lush forests, towering mountains, and extensive cave systems. This region is known for its emphasis on nature and balance, with a significant influence of ancient Pokémon lore.
 
 ### Key Locations:
 1. **Littleroot Town**: The starting point for trainers in Hoenn, home to the protagonist and Professor Birch's laboratory.
@@ -23,7 +23,7 @@ region,hoenn,"**Hoenn** is the third region introduced in the Pokémon series, f
 3. **Dewford Town**: A small island town known for its trendy phrases and the Dewford Gym, led by Brawly.
 4. **Slateport City**: A bustling port city with a shipyard, market, and the Oceanic Museum.
 5. **Mauville City"
-region,sinnoh,"**Sinnoh** is a region in the Pokémon series introduced in Generation IV, primarily in the games Pokémon Diamond, Pearl, and Platinum. It is known for its diverse geography, rich mythology, and historical significance.
+"region","sinnoh","**Sinnoh** is a region in the Pokémon series introduced in Generation IV, primarily in the games Pokémon Diamond, Pearl, and Platinum. It is known for its diverse geography, rich mythology, and historical significance.
 
 ### Key Locations:
 1. **Twinleaf Town**: The player's hometown where the journey begins.
@@ -32,7 +32,7 @@ region,sinnoh,"**Sinnoh** is a region in the Pokémon series introduced in Gener
 4. **Oreburgh City**: Known for its coal mine and the first Gym led by Roark, specializing in Rock-type Pokémon.
 5. **Eterna City**: Home to the second Gym led by Gardenia, a Grass-type specialist. It also houses the ancient Eterna City statue and the Galactic Eterna Building.
 6. **Hearthome City**: A cultural hub with attractions like Amity"
-region,unova,"**Unova** is one of the major regions in the Pokémon world, first introduced in the Pokémon Black and White games. Unlike previous regions based on locations in Japan, Unova is inspired by the New York metropolitan area, bringing a distinctly urban and cosmopolitan feel.
+"region","unova","**Unova** is one of the major regions in the Pokémon world, first introduced in the Pokémon Black and White games. Unlike previous regions based on locations in Japan, Unova is inspired by the New York metropolitan area, bringing a distinctly urban and cosmopolitan feel.
 
 ### Key Locations
 
@@ -43,13 +43,13 @@ region,unova,"**Unova** is one of the major regions in the Pokémon world, first
 - **Castelia City**: A sprawling metropolis akin to New York City, Castelia City is one of the largest cities in the Pokémon world. It has numerous skyscrapers, a bustling harbor, and several key facilities like the Castelia Gym and Game Freak Headquarters.
 
 - **Nimbasa City**: Known for its lively entertainment"
-region,kalos,"**Kalos** is a region introduced in the Pokémon series, specifically in Pokémon X and Y. It is inspired by the real-world location of France, which is evident in its architecture, landmarks, and overall aesthetic. Kalos is renowned for its beauty, featuring diverse landscapes such as lush forests, grand cities, and serene waterways.
+"region","kalos","**Kalos** is a region introduced in the Pokémon series, specifically in Pokémon X and Y. It is inspired by the real-world location of France, which is evident in its architecture, landmarks, and overall aesthetic. Kalos is renowned for its beauty, featuring diverse landscapes such as lush forests, grand cities, and serene waterways.
 
 **Key Locations:**
 - **Lumiose City:** The largest city in the Kalos region, Lumiose City acts as a central hub for trainers. It features the iconic Prism Tower, reminiscent of the Eiffel Tower, and a vast array of shops, cafes, and facilities. Lumiose City is vibrant and bustling, offering various services for Pokémon trainers.
 - **Santalune City:** Known for its beautiful garden layout and the Santalune Gym, where trainers face off against Viola, the Bug-type Gym Leader. The city is also famous for Santalune Forest, which serves as an early challenge for new trainers.
 - **Shalour City:** Home"
-region,alola,"**Alola** is a unique region in the Pokémon series, introduced in Pokémon Sun and Moon and expanded in Pokémon Ultra Sun and Ultra Moon. It is inspired by the Hawaiian Islands, which is evident in its tropical landscapes, diverse ecosystems, and rich cultural setting. Alola stands out due to its distinct regional forms of existing Pokémon, known as Alolan forms, which have adapted to the islands' unique environments.
+"region","alola","**Alola** is a unique region in the Pokémon series, introduced in Pokémon Sun and Moon and expanded in Pokémon Ultra Sun and Ultra Moon. It is inspired by the Hawaiian Islands, which is evident in its tropical landscapes, diverse ecosystems, and rich cultural setting. Alola stands out due to its distinct regional forms of existing Pokémon, known as Alolan forms, which have adapted to the islands' unique environments.
 
 Key Locations:
 
@@ -60,7 +60,7 @@ Key Locations:
 
 2. **Akala Island**: Known for its tourist attractions and beautiful scenery:
    - **Heahea City**:"
-region,galar,"**Galar** is a region in the Pokémon universe introduced in ""Pokémon Sword and Shield"" for the Nintendo Switch. It is inspired by the United Kingdom and reflects this through its architecture, culture, and varied landscapes.
+"region","galar","**Galar** is a region in the Pokémon universe introduced in ""Pokémon Sword and Shield"" for the Nintendo Switch. It is inspired by the United Kingdom and reflects this through its architecture, culture, and varied landscapes.
 
 **Key Locations:**
 
@@ -71,7 +71,7 @@ region,galar,"**Galar** is a region in the Pokémon universe introduced in ""Pok
 3. **Hammerlocke**: A historical city with a castle-like aesthetic. It houses the Dragon-type gym led by Raihan and serves as a connection point between different parts of Galar.
 
 4. **Spikemuth**: A gritty, urban"
-region,hisui,"**Hisui** is an ancient region in the Pokémon world, introduced in the game ""Pokémon Legends: Arceus."" It is known to be an earlier version of the Sinnoh region, set in a time long before modern Pokémon traditions and technologies were established. Here is a detailed summary of Hisui:
+"region","hisui","**Hisui** is an ancient region in the Pokémon world, introduced in the game ""Pokémon Legends: Arceus."" It is known to be an earlier version of the Sinnoh region, set in a time long before modern Pokémon traditions and technologies were established. Here is a detailed summary of Hisui:
 
 ### Key Locations
 1. **Jubilife Village**: The central hub of the region, Jubilife Village acts as the main settlement where players can return to prepare for their next expedition. It is the early precursor to Jubilife City in modern Sinnoh.
@@ -81,7 +81,7 @@ region,hisui,"**Hisui** is an ancient region in the Pokémon world, introduced i
 3. **Crimson Mirelands**: A marshy area characterized by its wetland terrain and fog-covered swamps. Pokémon that thrive in damp environments are plentiful here.
 
 4."
-region,paldea,"**Paldea** is a region introduced in the ninth generation of the Pokémon series, specifically in the games Pokémon Scarlet and Pokémon Violet. Inspired by the Iberian Peninsula, Paldea is characterized by its diverse geography, encompassing a wide array of terrains such as sprawling plains, lush forests, arid deserts, and towering mountains. 
+"region","paldea","**Paldea** is a region introduced in the ninth generation of the Pokémon series, specifically in the games Pokémon Scarlet and Pokémon Violet. Inspired by the Iberian Peninsula, Paldea is characterized by its diverse geography, encompassing a wide array of terrains such as sprawling plains, lush forests, arid deserts, and towering mountains. 
 
 **Key Locations:**
 1. **Mesagoza**: The largest city and central hub of Paldea, home to the prestigious Naranja/Uva Academy, where aspiring trainers and researchers flock to study and advance their skills.

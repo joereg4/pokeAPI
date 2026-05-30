@@ -1,234 +1,611 @@
-resource,name,summary
-type,normal,"**Normal-type** Pokémon are a diverse group known for their straightforward and balanced characteristics. Unlike other Pokémon types that are typically specialized, Normal-types lack specific elemental attributes, which contributes to their broad versatility. However, this versatility also means they don't have a type advantage over others, making strategy and skill crucial for trainers using Normal-types.
+"resource","name","summary"
+"type","shadow","**Shadow** is a Pokémon type.
 
-### Strengths:
-- **Offensive Neutrality:** Normal-type moves are neutral against all types except Rock, Steel, and Ghost. This neutrality allows Normal-type Pokémon to perform reliably in various scenarios without worrying about many resistances or immunities.
-- **Stability and Versatility:** Many Normal-type Pokémon can learn a wide array of moves from different types, enhancing their adaptability in battles.
+**Type Effectiveness:**
 
-### Weaknesses:
-- **No Super-Effective Damage:** Normal-type moves aren’t super-effective against any other type, which can limit their offensive contributions.
-- **Weak to Fighting:** Normal-type Pokémon take double damage from Fighting-type moves, making them vulnerable in matchups against"
-type,fighting,"**Fighting-type** Pokémon are known for their physical prowess and hand-to-hand combat skills, making them formidable opponents in battles emphasizing brute strength and bodily techniques.
 
-**Strengths**: Fighting-type moves are particularly effective against Normal, Ice, Rock, Dark, and Steel types. This gives Fighting-type Pokémon an advantageous edge in taking down these specific types, as their powerful punches, kicks, and other martial arts moves hit hard against such opponents.
+**Historical Changes:**
 
-**Weaknesses**: On the flip side, Fighting-type Pokémon have several vulnerabilities. They are weak to Flying, Psychic, and Fairy-type moves. This weakness can be attributed to their reliance on physical combat, which can be easily disrupted by the agility of Flying types, the mental prowess of Psychic types, and the mystical nature of Fairy types.
-
-**Notable Fighting-type Pokémon**:
-1. **Machamp** - Known for its four arms, Machamp delivers a barrage of powerful punches and is a staple in many competitive Fighting-type teams. Its"
-type,flying,"**Flying-type** Pokémon are distinguished by their ability to soar above the ground, often possessing features like wings, feathers, or other flight adaptations. These Pokémon are typically affiliated with aerial or elevated habitats and are known for their agility and speed in battles.
-
-**Strengths:** Flying-type Pokémon have significant advantages over Fighting, Bug, and Grass types. Their ability to stay airborne makes them resistant to attacks that are based on close-range physical strength (Fighting) or strategies involving plant and insect attributes (Grass and Bug). This can be particularly advantageous in battles where mobility and evasion play critical roles.
-
-**Weaknesses:** Despite their aerial abilities, Flying-type Pokémon have notable vulnerabilities. They are weak to Electric, Ice, and Rock-type attacks. Electric-type moves are effective due to the conductivity of air, Ice-type moves can slow down or disrupt their flight, and Rock-type moves pose a danger due to their mass and stability, which can effectively counter the airborne advantage.
+- Introduced in Generation III
 
 **Notable Pokémon:**
-1."
-type,poison,"**Poison-type** Pokémon are a fascinating and versatile category within the Pokémon universe. They are characterized by their ability to produce and manipulate toxic substances to afflict their opponents. Here are the key aspects of Poison-type Pokémon:
 
-### Strengths and Weaknesses:
+- Various pure and dual-type Pokémon feature this type
 
-**Strengths:**
-- **Effective Against:** Poison-type moves are super effective against Grass and Fairy-type Pokémon. This makes them valuable in battles where these types are prevalent.
-- **Resistance:** Poison-type Pokémon have resistance to Fighting, Poison, Bug, Grass, and Fairy-type moves. This resistance allows them to take less damage from these attack types, giving them an advantage in many match-ups.
+**Move Pool:**
 
-**Weaknesses:**
-- **Weak Against:** Poison-type moves are not very effective against Ground, Rock, Ghost, and other Poison-type Pokémon. This requires strategic play to avoid unfavorable engagements.
-- **Damage Taken:** Poison-type Pokémon are particularly vulnerable to Ground and Psychic-type moves, which can deal double damage. This type disadvantage"
-type,ground,"**Ground-type Pokémon** are recognized for their strong connection to the earth and are often associated with powerful physical attacks and high defense stats. These Pokémon excel in environments such as deserts, caves, and rocky terrains.
+- Multiple moves are available for this type
 
-**Strengths:**
-Ground-type moves are super effective against Electric, Fire, Poison, Rock, and Steel types. This makes them especially valuable for taking down opponents that rely on these elemental strengths. Ground Pokémon are often equipped with moves like Earthquake, which can cause massive damage across the board.
+**Competitive Analysis:**
 
-**Weaknesses:**
-Ground-type Pokémon are particularly vulnerable to Water, Ice, and Grass types. These elemental weaknesses can pose a significant threat, especially considering many Ground types also possess Rock subtypes, exacerbating their vulnerabilities. Additionally, Ground-type moves have no effect on Flying-type Pokémon due to their airborne nature.
+- Has specific strengths and weaknesses in competitive play
 
-**Notable Ground-type Pokémon:**
-1. **Garchomp** – A Dragon/Ground type that is immensely popular for its speed and offensive capabilities. Garch"
-type,rock,"**Rock-type** Pokémon are characterized by their solid, sturdy appearance and their connection to the Earth's geology. They often resemble stones, boulders, and other geological formations. Rock-type Pokémon are known for their defense and offensive power, making them formidable opponents in battles.
+**Interesting Facts:**
 
-**Strengths:**
-- Rock-type moves are super effective against Fire, Ice, Flying, and Bug-type Pokémon. This makes Rock-types particularly useful against Pokémon that are fragile or that rely on their speed and special attacks.
+- This type has unique characteristics in the Pokémon world
+"
+"type","flying","**Flying** is a Pokémon type.
 
-**Weaknesses:**
-- Rock-type Pokémon have several weaknesses, which must be considered in battles. They are weak to Water, Grass, Fighting, Ground, and Steel-type moves. These vulnerabilities can make Rock-types challenging to use against certain opponents, particularly Water and Grass types, which often exploit their lower speed.
+**Type Effectiveness:**
 
-**Notable Pokémon of Rock-type:**
-1. **Geodude, Graveler, and Golem** - This evolutionary line is iconic within the Rock-type category. Geodude starts"
-type,bug,"**Bug-type** Pokémon are one of the various elemental types featured in the Pokémon series. They are often associated with insects and other arthropods, and can possess moves that reflect their cunning and agile nature.
+- **Weak To:** Rock, Electric, Ice
+- **Super Effective Against:** Fighting, Bug, Grass
+- **Resistant To:** Fighting, Bug, Grass
+- **Not Very Effective Against:** Rock, Steel, Electric
+- **Immune To:** Ground
 
-**Strengths:**
-Bug-type moves are super effective against Grass, Psychic, and Dark types. This gives Bug-type Pokémon a strategic edge, especially against powerful Psychic types that can be difficult to counter otherwise.
+**Historical Changes:**
 
-**Weaknesses:**
-However, Bug-type Pokémon have several weaknesses. They are vulnerable to Fire, Flying, and Rock-type moves. This can make battling with Bug-types challenging, as these weaknesses are quite common and can be exploited by adversaries.
+- Introduced in Generation I
 
-**Notable Bug-type Pokémon:**
-1. **Scizor**: Known for its unique Bug/Steel typing, Scizor is a popular choice due to its powerful physical attacks and impressive defense. Its ability, Technician, boosts the power of its weaker moves, making them more formidable in battle.
-   
-2. **Butter"
-type,ghost,"**Ghost-type** Pokémon are a unique and enigmatic category within the Pokémon universe, known for their spectral abilities and ghostly nature. These Pokémon are often characterized by their eerie designs and supernatural powers, making them fascinating and formidable in battles.
+**Notable Pokémon:**
 
-### Strengths:
-Ghost-type moves are particularly effective against Psychic and Ghost-type Pokémon. This effectiveness makes Ghost types a strategic choice for countering opponents that rely heavily on psychic abilities. Additionally, Ghost-type Pokémon are completely immune to Normal and Fighting-type moves, providing them with a significant defensive advantage in battles that feature these common types.
+- Various pure and dual-type Pokémon feature this type
 
-### Weaknesses:
-Despite their strengths, Ghost-type Pokémon do have vulnerabilities. They are weak against Ghost and Dark-type moves, meaning that they can be at a disadvantage when facing these types in combat. Trainers must be cautious and strategic when using Ghost-type Pokémon against these adversaries to minimize potential risks.
+**Move Pool:**
 
-### Notable Ghost-type Pokémon:
-1. **Gengar** - As one of the most iconic Ghost-type Pokémon, Gengar is known"
-type,steel,"**Steel-type** Pokémon are renowned for their impressive defensive capabilities and durability in battles. Known for their outstanding resistance to many types of attacks, Steel Pokémon often serve as stalwart protectors and formidable opponents.
+- Multiple moves are available for this type
 
-### Strengths and Resistance
-Steel-type Pokémon are strong against Fairy, Ice, and Rock types. This means that their attacks are particularly effective against these types, often dealing double damage. Additionally, Steel-types boast a remarkable resistance to a total of 10 different types: Normal, Grass, Ice, Flying, Psychic, Bug, Rock, Dragon, Steel, and Fairy. This extensive range of resistances makes them difficult to bring down in many situations.
+**Competitive Analysis:**
 
-### Weaknesses
-Despite their robust defenses, Steel-type Pokémon do have some vulnerabilities. They are weak to Fire, Fighting, and Ground-type attacks. These weaknesses can be exploited by opponents to deal substantial damage to Steel-type Pokémon.
+- Has specific strengths and weaknesses in competitive play
 
-### Notable Steel-type Pokémon
-Several Steel-type Pokémon stand out due to their unique abilities and pivotal roles in battles"
-type,fire,"**Fire-type** Pokémon are one of the eighteen elemental types in the Pokémon universe, distinguished by their association with heat and flame. They are famous for their powerful fire-based attacks which often inflict damage over time and can burn opponents, reducing their attack power.
+**Interesting Facts:**
 
-### Strengths:
-Fire-type Pokémon have a natural advantage over certain other types, making them particularly potent in battles against:
-- **Grass-type**: Their intense heat easily scorches plants.
-- **Bug-type**: Many bug Pokémon are sensitive to flames.
-- **Ice-type**: Fire melts ice quickly, giving Fire-types the upper hand.
-- **Steel-type**: The extreme heat can make steel malleable and ineffective.
+- This type has unique characteristics in the Pokémon world
+"
+"type","fighting","**Fighting** is a Pokémon type.
 
-Due to these strengths, Fire-type moves are super effective and deal double damage to these types of Pokémon.
+**Type Effectiveness:**
 
-### Weaknesses:
-However, Fire-type Pokémon also have vulnerabilities that trainers must be mindful of:
-- **Water-type**: Water can extinguish flames, making Fire-types particularly susceptible.
-- **Rock"
-type,water,"**Water-type** Pokémon are one of the 18 elemental types in the Pokémon series, and they are characterized by their association with water and aquatic themes. Here is a detailed summary of their attributes, strengths, weaknesses, and some notable Pokémon within this type.
+- **Weak To:** Flying, Psychic, Fairy
+- **Super Effective Against:** Normal, Rock, Steel, Ice, Dark
+- **Resistant To:** Rock, Bug, Dark
+- **Not Very Effective Against:** Flying, Poison, Bug, Psychic, Fairy
+- **No Effect Against:** Ghost
 
-### Strengths
-Water-type Pokémon have several combat advantages:
-1. **Effective Against**: Water-type moves are particularly strong against Fire, Ground, and Rock types. Due to this, Water-type Pokémon are often utilized to counteract these types in battles.
+**Historical Changes:**
 
-### Weaknesses
-However, Water-type Pokémon also have their vulnerabilities:
-1. **Weak Against**: Water-type Pokémon are weak to Electric and Grass-type moves. They receive double damage from attacks of these types, making Electric and Grass Pokémon effective countermeasures.
-2. **Resisted By**: Water-type moves are less effective against Dragon and Water-type Pokémon themselves, meaning these types take reduced damage from Water attacks.
+- Introduced in Generation I
 
-### Notable Water-type Pokémon
-Water-type Pokémon"
-type,grass,"**Grass-type** Pokémon are known for their connection to nature and their diverse array of plant-based moves. These Pokémon often embody various plant species, from flowers and trees to vines and fungi. Their abilities make them versatile in battles, especially when exploiting their strengths against specific opponents.
+**Notable Pokémon:**
 
-**Strengths**
-Grass-type moves are particularly effective against Water, Ground, and Rock-type Pokémon. This makes Grass types especially useful when facing teams that rely heavily on those types. Grass-type moves can drain HP, inflict status conditions like paralysis and poison, and control the battlefield with moves that affect the terrain.
+- Various pure and dual-type Pokémon feature this type
 
-**Weaknesses**
-Grass-type Pokémon have several vulnerabilities. They are weak to Fire, Ice, Poison, Flying, and Bug-type moves, making strategic planning crucial when building a team. These numerous weaknesses often require Grass-type trainers to be very cautious and to consider support strategies to mitigate these vulnerabilities.
+**Move Pool:**
 
-**Notable Grass-type Pokémon:**
-1. **Bulbasaur/Ivysaur/Venusaur**"
-type,electric,"**Electric-type** Pokémon are a prominent class within the Pokémon universe, characterized by their affinity for electricity-based attacks. They are known for their incredible speed and high Special Attack stats, making them formidable opponents in battle.
+- Multiple moves are available for this type
 
-### Strengths:
-Electric-type moves are especially effective against Water and Flying-type Pokémon. This means that Electric-types can easily dispatch Pokémon that rely on aquatic or aerial mobility.
+**Competitive Analysis:**
 
-### Weaknesses:
-Electric-types have a significant disadvantage against Ground-type Pokémon, as Ground-type moves can inflict considerable damage on them. Moreover, Electric-type moves are completely ineffective against Ground-type Pokémon, adding an extra layer of strategic challenge when facing Ground types.
+- Has specific strengths and weaknesses in competitive play
 
-### Resistances and Vulnerabilities:
-Electric-type Pokémon also have a resistance to Electric, Flying, and Steel-type moves, which means they only take half the normal damage from these types of attacks. They have no innate vulnerabilities apart from their singular weakness to Ground-type moves.
+**Interesting Facts:**
 
-### Notable Electric-type Pokémon:
-- **Pikachu and Raichu"
-type,psychic,"**Psychic-type** Pokémon are known for their strong mental powers and are often depicted with abilities related to telekinesis, telepathy, and other supernatural phenomena. They are characterized by high Special Attack and Special Defense stats, making them powerful attackers and resilient defenders in battles that rely on special moves.
+- This type has unique characteristics in the Pokémon world
+"
+"type","poison","**Poison** is a Pokémon type.
 
-**Strengths:**
-Psychic-type Pokémon have a type advantage over Fighting and Poison types. This means that their Psychic-type moves are super effective against Pokémon of these types, dealing increased damage in battles. The reason behind this could be attributed to the concept of mind over matter, where mental prowess can outmatch sheer physical strength (Fighting) and toxins (Poison).
+**Type Effectiveness:**
 
-**Weaknesses:**
-Psychic-types are weak against Bug, Ghost, and Dark-type moves. Dark-type moves are particularly significant as they deal double damage and Psychic-type moves cannot affect Dark-type Pokémon at all. This weakness is often explained thematically through the concept of fear and the unknown; Psychic-types might be susceptible"
-type,ice,"**Ice-type** Pokémon are a unique and strategically significant category within the Pokémon universe. They are known for their formidable abilities to withstand and unleash frigid attacks, often characterized by moves that can freeze opponents or drastically lower their speed.
+- **Weak To:** Ground, Psychic
+- **Super Effective Against:** Grass, Fairy
+- **Resistant To:** Fighting, Poison, Bug, Grass, Fairy
+- **Not Very Effective Against:** Poison, Ground, Rock, Ghost
+- **No Effect Against:** Steel
 
-### Strengths
-Ice-type moves are particularly effective against Flying, Ground, Grass, and Dragon-type Pokémon. This makes Ice-type Pokémon invaluable in battles where they face adversaries from these types, as their attacks can deal significant damage. For instance, attacks like ""Ice Beam,"" ""Blizzard,"" and ""Icicle Crash"" are known for their high power and secondary effects, such as potentially causing the opposing Pokémon to become frozen.
+**Historical Changes:**
 
-### Weaknesses
-However, Ice-type Pokémon are not without their vulnerabilities. They are weak to Fire, Fighting, Rock, and Steel-type attacks. This significant array of weaknesses can sometimes make it challenging to keep Ice-type Pokémon in extended battles, as they often have to be switched out to avoid fatal damage from these types of moves.
+- Introduced in Generation I
 
-###"
-type,dragon,"**Dragon-type** Pokémon are one of the most revered and powerful types in the Pokémon universe. Known for their majestic and often ferocious traits, these Pokémon generally boast high stats and a versatile move set, making them a formidable presence in battles.
+**Notable Pokémon:**
 
-### Strengths
-- **Effective Against:** Dragon-type moves are super effective against other Dragon-type Pokémon. This innate rivalry leads to some intense and strategic battles.
-- **Resistant To:** Dragon-type Pokémon show resistance to Electric, Fire, Grass, and Water-type moves, granting them a significant defensive edge against some of the most commonly encountered types in the game.
+- Various pure and dual-type Pokémon feature this type
 
-### Weaknesses
-- **Weak To:** Dragon-type Pokémon have a few critical weaknesses. They take double damage from Ice, Dragon, and Fairy-type moves. The introduction of the Fairy type in later generations has added a significant counterbalance to their power.
-- **Not Effective Against:** Their moves are not particularly effective against Steel types, which can withstand their attacks better than most.
+**Move Pool:**
 
-###"
-type,dark,"**Dark-type** Pokémon are a fascinating and strategic type within the Pokémon universe, known for their cunning tactics and often malevolent designs. Introduced in Generation II, Dark-type Pokémon were introduced to balance out the Psychic-type, which dominated the meta-game in Generation I, and to add more diversity to the gameplay.
+- Multiple moves are available for this type
 
-### Strengths:
-- **Against Other Types:**
-  - Dark-type moves are super effective against Psychic and Ghost-type Pokémon. This makes Dark-types particularly valuable when facing opponents that rely on psychic abilities or ghostly attacks.
-  
-- **Immunities and Resistances:**
-  - Dark-type Pokémon are completely immune to Psychic-type attacks due to their inherent nature of dispelling psychic energies.
-  - They also have resistances to Ghost and Dark-type moves, making them resilient against these kinds of attacks.
+**Competitive Analysis:**
 
-### Weaknesses:
-- **Vulnerabilities:**
-  - Dark-type Pokémon are weak against Fighting, Bug, and Fairy-type moves. This vulnerability requires careful strategy when battling opponents"
-type,fairy,"**The Fairy-type** Pokémon, introduced in Generation VI with the release of Pokémon X and Y, represents a versatile and powerful addition to the Pokémon type roster. Fairy-types are known for their enchanting appearances and often whimsical or mystical attributes.
+- Has specific strengths and weaknesses in competitive play
 
-**Strengths:**
-Fairy-type Pokémon possess several strategic advantages in battles. They are particularly strong against Dragon, Dark, and Fighting types, making them excellent counters to some of the most formidable opponents. Fairy-type moves deal double damage to these types, giving players a tactical edge.
+**Interesting Facts:**
 
-**Weaknesses:**
-Despite their strengths, Fairy-type Pokémon also exhibit vulnerabilities. They are weak to Poison and Steel-type moves, meaning these types can deal double damage to Fairy-types. This requires trainers to be cautious when facing opponents known for using Poisonous or metallic attacks.
+- This type has unique characteristics in the Pokémon world
+"
+"type","bug","**Bug** is a Pokémon type.
 
-**Notable Fairy-type Pokémon:**
-Several Fairy-type Pokémon have garnered particular attention and acclaim within the Pokémon community:
+**Type Effectiveness:**
 
-1. **Gardevoir**: Initially a pure Psychic-type, Gardevoir gained a"
-type,stellar,"**Stellar-type Pokémon** are a unique and powerful classification, often characterized by their celestial aesthetics and cosmic abilities. These Pokémon draw their power from the stars and the cosmos, making them a force to be reckoned with in battles.
+- **Weak To:** Flying, Rock, Fire
+- **Super Effective Against:** Grass, Psychic, Dark
+- **Resistant To:** Fighting, Ground, Grass
+- **Not Very Effective Against:** Fighting, Flying, Poison, Ghost, Steel, Fire, Fairy
 
-### Strengths
+**Historical Changes:**
 
-- **Psychic:** Stellar-type Pokémon can easily overpower Psychic types due to their cosmic energies disrupting mental powers.
-- **Dark:** Their celestial light dissipates darkness, giving them an advantage over Dark types.
-- **Dragon:** Stellar types can harness cosmic energies that pierce even the toughest dragon scales.
+- Introduced in Generation I
 
-### Weaknesses
+**Notable Pokémon:**
 
-- **Electric:** The conductive nature of stellar energy makes these Pokémon particularly vulnerable to Electric-type attacks, which can easily disrupt their cosmic fields.
-- **Steel:** The resilience of Steel-type Pokémon can withstand and reflect the cosmic attacks from Stellar-types.
-- **Rock:** Rock types are grounded and can absorb or deflect some of the cosmic energy aimed"
-type,unknown,"**Unknown-type** is a unique Pokémon species that has the appearance of various alphabetical letters and punctuation marks. Unown is a Psychic-type Pokémon, featuring 28 different forms based on the English alphabet and the exclamation and question marks.
+- Various pure and dual-type Pokémon feature this type
 
-### Strengths and Weaknesses
+**Move Pool:**
 
-As a Psychic-type Pokémon, Unown has the following type matchups:
+- Multiple moves are available for this type
 
-#### Strengths:
-- **Strong Against**: Fighting, Poison
-- **Weak Against**: Bug, Ghost, Dark
-- **Resistant To**: Fighting, Psychic
+**Competitive Analysis:**
 
-#### Weaknesses:
-- **Vulnerable To**: Bug, Ghost, Dark
-- **Not Very Effective Against**: Steel, Dark
+- Has specific strengths and weaknesses in competitive play
 
-### Abilities and Usage
+**Interesting Facts:**
 
-Unown is distinct in that it typically only learns one move: Hidden Power, which varies in type based on the Pokémon's individual"
-type,shadow,"**Shadow-type** Pokémon are primarily linked to certain games and special events rather than a standalone type in the mainline series. Shadow Pokémon were first introduced in the GameCube titles ""Pokémon Colosseum"" and ""Pokémon XD: Gale of Darkness."" They aren't considered an official type like Fire or Water but instead are regular Pokémon corrupted into Shadow form using dark powers by an antagonistic organization.
+- This type has unique characteristics in the Pokémon world
+"
+"type","fire","**Fire** is a Pokémon type.
 
-### Characteristics of Shadow Pokémon:
+**Type Effectiveness:**
 
-- **Shadow Moves:** These Pokémon can utilize unique Shadow moves that are super effective against all non-Shadow Pokémon. However, they typically cannot use their standard moves until they are purified.
-- **Shadow Aura:** They possess a Shadow Aura which causes them to be aggressive and sometimes disobedient.
+- **Weak To:** Ground, Rock, Water
+- **Super Effective Against:** Bug, Steel, Grass, Ice
+- **Resistant To:** Bug, Steel, Fire, Grass, Ice, Fairy
+- **Not Very Effective Against:** Rock, Fire, Water, Dragon
 
-### Strengths:
+**Historical Changes:**
 
-1. **Super Effective Against All Types:** Shadow moves are generally designed to be super-effective against all regular Pokémon types. This gives them a significant edge in battles against non-Shadow Pokémon.
-2. **Unique Combat Ab"
+- Introduced in Generation I
+
+**Notable Pokémon:**
+
+- Various pure and dual-type Pokémon feature this type
+
+**Move Pool:**
+
+- Multiple moves are available for this type
+
+**Competitive Analysis:**
+
+- Has specific strengths and weaknesses in competitive play
+
+**Interesting Facts:**
+
+- This type has unique characteristics in the Pokémon world
+"
+"type","ghost","**Ghost** is a Pokémon type.
+
+**Type Effectiveness:**
+
+- **Weak To:** Ghost, Dark
+- **Super Effective Against:** Ghost, Psychic
+- **Resistant To:** Poison, Bug
+- **Not Very Effective Against:** Dark
+- **Immune To:** Normal, Fighting
+- **No Effect Against:** Normal
+
+**Historical Changes:**
+
+- Introduced in Generation I
+
+**Notable Pokémon:**
+
+- Various pure and dual-type Pokémon feature this type
+
+**Move Pool:**
+
+- Multiple moves are available for this type
+
+**Competitive Analysis:**
+
+- Has specific strengths and weaknesses in competitive play
+
+**Interesting Facts:**
+
+- This type has unique characteristics in the Pokémon world
+"
+"type","rock","**Rock** is a Pokémon type.
+
+**Type Effectiveness:**
+
+- **Weak To:** Fighting, Ground, Steel, Water, Grass
+- **Super Effective Against:** Flying, Bug, Fire, Ice
+- **Resistant To:** Normal, Flying, Poison, Fire
+- **Not Very Effective Against:** Fighting, Ground, Steel
+
+**Historical Changes:**
+
+- Introduced in Generation I
+
+**Notable Pokémon:**
+
+- Various pure and dual-type Pokémon feature this type
+
+**Move Pool:**
+
+- Multiple moves are available for this type
+
+**Competitive Analysis:**
+
+- Has specific strengths and weaknesses in competitive play
+
+**Interesting Facts:**
+
+- This type has unique characteristics in the Pokémon world
+"
+"type","steel","**Steel** is a Pokémon type.
+
+**Type Effectiveness:**
+
+- **Weak To:** Fighting, Ground, Fire
+- **Super Effective Against:** Rock, Ice, Fairy
+- **Resistant To:** Normal, Flying, Rock, Bug, Steel, Grass, Psychic, Ice, Dragon, Fairy
+- **Not Very Effective Against:** Steel, Fire, Water, Electric
+- **Immune To:** Poison
+
+**Historical Changes:**
+
+- Introduced in Generation II
+
+**Notable Pokémon:**
+
+- Various pure and dual-type Pokémon feature this type
+
+**Move Pool:**
+
+- Multiple moves are available for this type
+
+**Competitive Analysis:**
+
+- Has specific strengths and weaknesses in competitive play
+
+**Interesting Facts:**
+
+- This type has unique characteristics in the Pokémon world
+"
+"type","water","**Water** is a Pokémon type.
+
+**Type Effectiveness:**
+
+- **Weak To:** Grass, Electric
+- **Super Effective Against:** Ground, Rock, Fire
+- **Resistant To:** Steel, Fire, Water, Ice
+- **Not Very Effective Against:** Water, Grass, Dragon
+
+**Historical Changes:**
+
+- Introduced in Generation I
+
+**Notable Pokémon:**
+
+- Various pure and dual-type Pokémon feature this type
+
+**Move Pool:**
+
+- Multiple moves are available for this type
+
+**Competitive Analysis:**
+
+- Has specific strengths and weaknesses in competitive play
+
+**Interesting Facts:**
+
+- This type has unique characteristics in the Pokémon world
+"
+"type","dragon","**Dragon** is a Pokémon type.
+
+**Type Effectiveness:**
+
+- **Weak To:** Ice, Dragon, Fairy
+- **Super Effective Against:** Dragon
+- **Resistant To:** Fire, Water, Grass, Electric
+- **Not Very Effective Against:** Steel
+- **No Effect Against:** Fairy
+
+**Historical Changes:**
+
+- Introduced in Generation I
+
+**Notable Pokémon:**
+
+- Various pure and dual-type Pokémon feature this type
+
+**Move Pool:**
+
+- Multiple moves are available for this type
+
+**Competitive Analysis:**
+
+- Has specific strengths and weaknesses in competitive play
+
+**Interesting Facts:**
+
+- This type has unique characteristics in the Pokémon world
+"
+"type","electric","**Electric** is a Pokémon type.
+
+**Type Effectiveness:**
+
+- **Weak To:** Ground
+- **Super Effective Against:** Flying, Water
+- **Resistant To:** Flying, Steel, Electric
+- **Not Very Effective Against:** Grass, Electric, Dragon
+- **No Effect Against:** Ground
+
+**Historical Changes:**
+
+- Introduced in Generation I
+
+**Notable Pokémon:**
+
+- Various pure and dual-type Pokémon feature this type
+
+**Move Pool:**
+
+- Multiple moves are available for this type
+
+**Competitive Analysis:**
+
+- Has specific strengths and weaknesses in competitive play
+
+**Interesting Facts:**
+
+- This type has unique characteristics in the Pokémon world
+"
+"type","fairy","**Fairy** is a Pokémon type.
+
+**Type Effectiveness:**
+
+- **Weak To:** Poison, Steel
+- **Super Effective Against:** Fighting, Dragon, Dark
+- **Resistant To:** Fighting, Bug, Dark
+- **Not Very Effective Against:** Poison, Steel, Fire
+- **Immune To:** Dragon
+
+**Historical Changes:**
+
+- Introduced in Generation VI
+
+**Notable Pokémon:**
+
+- Various pure and dual-type Pokémon feature this type
+
+**Move Pool:**
+
+- Multiple moves are available for this type
+
+**Competitive Analysis:**
+
+- Has specific strengths and weaknesses in competitive play
+
+**Interesting Facts:**
+
+- This type has unique characteristics in the Pokémon world
+"
+"type","grass","**Grass** is a Pokémon type.
+
+**Type Effectiveness:**
+
+- **Weak To:** Flying, Poison, Bug, Fire, Ice
+- **Super Effective Against:** Ground, Rock, Water
+- **Resistant To:** Ground, Water, Grass, Electric
+- **Not Very Effective Against:** Flying, Poison, Bug, Steel, Fire, Grass, Dragon
+
+**Historical Changes:**
+
+- Introduced in Generation I
+
+**Notable Pokémon:**
+
+- Various pure and dual-type Pokémon feature this type
+
+**Move Pool:**
+
+- Multiple moves are available for this type
+
+**Competitive Analysis:**
+
+- Has specific strengths and weaknesses in competitive play
+
+**Interesting Facts:**
+
+- This type has unique characteristics in the Pokémon world
+"
+"type","ice","**Ice** is a Pokémon type.
+
+**Type Effectiveness:**
+
+- **Weak To:** Fighting, Rock, Steel, Fire
+- **Super Effective Against:** Flying, Ground, Grass, Dragon
+- **Resistant To:** Ice
+- **Not Very Effective Against:** Steel, Fire, Water, Ice
+
+**Historical Changes:**
+
+- Introduced in Generation I
+
+**Notable Pokémon:**
+
+- Various pure and dual-type Pokémon feature this type
+
+**Move Pool:**
+
+- Multiple moves are available for this type
+
+**Competitive Analysis:**
+
+- Has specific strengths and weaknesses in competitive play
+
+**Interesting Facts:**
+
+- This type has unique characteristics in the Pokémon world
+"
+"type","psychic","**Psychic** is a Pokémon type.
+
+**Type Effectiveness:**
+
+- **Weak To:** Bug, Ghost, Dark
+- **Super Effective Against:** Fighting, Poison
+- **Resistant To:** Fighting, Psychic
+- **Not Very Effective Against:** Steel, Psychic
+- **No Effect Against:** Dark
+
+**Historical Changes:**
+
+- Introduced in Generation I
+
+**Notable Pokémon:**
+
+- Various pure and dual-type Pokémon feature this type
+
+**Move Pool:**
+
+- Multiple moves are available for this type
+
+**Competitive Analysis:**
+
+- Has specific strengths and weaknesses in competitive play
+
+**Interesting Facts:**
+
+- This type has unique characteristics in the Pokémon world
+"
+"type","stellar","**Stellar** is a Pokémon type.
+
+**Type Effectiveness:**
+
+
+**Historical Changes:**
+
+- Introduced in Generation IX
+
+**Notable Pokémon:**
+
+- Various pure and dual-type Pokémon feature this type
+
+**Move Pool:**
+
+- Multiple moves are available for this type
+
+**Competitive Analysis:**
+
+- Has specific strengths and weaknesses in competitive play
+
+**Interesting Facts:**
+
+- This type has unique characteristics in the Pokémon world
+"
+"type","unknown","**Unknown** is a Pokémon type.
+
+**Type Effectiveness:**
+
+
+**Historical Changes:**
+
+- Introduced in Generation II
+
+**Notable Pokémon:**
+
+- Various pure and dual-type Pokémon feature this type
+
+**Move Pool:**
+
+- Multiple moves are available for this type
+
+**Competitive Analysis:**
+
+- Has specific strengths and weaknesses in competitive play
+
+**Interesting Facts:**
+
+- This type has unique characteristics in the Pokémon world
+"
+"type","ground","**Ground** is a Pokémon type.
+
+**Type Effectiveness:**
+
+- **Weak To:** Water, Grass, Ice
+- **Super Effective Against:** Poison, Rock, Steel, Fire, Electric
+- **Resistant To:** Poison, Rock
+- **Not Very Effective Against:** Bug, Grass
+- **Immune To:** Electric
+- **No Effect Against:** Flying
+
+**Historical Changes:**
+
+- Introduced in Generation I
+
+**Notable Pokémon:**
+
+- Various pure and dual-type Pokémon feature this type
+
+**Move Pool:**
+
+- Multiple moves are available for this type
+
+**Competitive Analysis:**
+
+- Has specific strengths and weaknesses in competitive play
+
+**Interesting Facts:**
+
+- This type has unique characteristics in the Pokémon world
+"
+"type","dark","**Dark** is a Pokémon type.
+
+**Type Effectiveness:**
+
+- **Weak To:** Fighting, Bug, Fairy
+- **Super Effective Against:** Ghost, Psychic
+- **Resistant To:** Ghost, Dark
+- **Not Very Effective Against:** Fighting, Dark, Fairy
+- **Immune To:** Psychic
+
+**Historical Changes:**
+
+- Introduced in Generation II
+
+**Notable Pokémon:**
+
+- Various pure and dual-type Pokémon feature this type
+
+**Move Pool:**
+
+- Multiple moves are available for this type
+
+**Competitive Analysis:**
+
+- Has specific strengths and weaknesses in competitive play
+
+**Interesting Facts:**
+
+- This type has unique characteristics in the Pokémon world
+"
+"type","normal","**Normal** is a Pokémon type.
+
+**Type Effectiveness:**
+
+- **Weak To:** Fighting
+- **Not Very Effective Against:** Rock, Steel
+- **Immune To:** Ghost
+- **No Effect Against:** Ghost
+
+**Historical Changes:**
+
+- Introduced in Generation I
+
+**Notable Pokémon:**
+
+- Various pure and dual-type Pokémon feature this type
+
+**Move Pool:**
+
+- Multiple moves are available for this type
+
+**Competitive Analysis:**
+
+- Has specific strengths and weaknesses in competitive play
+
+**Interesting Facts:**
+
+- This type has unique characteristics in the Pokémon world
+"
