@@ -128,6 +128,6 @@ Get the new run ID with `gh run list --branch main --limit 3`. CI must pass on `
 
 ### 6. Deploy (operator — private notes)
 
-Production deploy commands live in gitignored `DEPLOYMENT.md` or `DEPLOYMENT.private.md` (your private runbook). Never commit server IPs or secrets.
+See [DEPLOYMENT.md](DEPLOYMENT.md) for self-hosted deployment. Never commit server IPs, SSH keys, or secrets.
 
 The CI webhook step on `main` triggers production deploy when configured; see `CONTRIBUTING.md` for required GitHub secrets.

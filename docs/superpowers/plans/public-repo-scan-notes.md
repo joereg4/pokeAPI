@@ -2,8 +2,34 @@
 
 ## gitleaks
 
-- **Status:** Not installed on this machine (`gitleaks` not found in PATH).
-- **Action before going public:** Install gitleaks and run `gitleaks detect --source . --verbose`. If secrets appear in git history, rotate keys and consider `git filter-repo` / BFG (requires user approval).
+Install (macOS):
+
+```bash
+brew install gitleaks
+```
+
+Run against this repo (full history):
+
+```bash
+cd /path/to/pokeAPI
+gitleaks detect --source . --verbose
+```
+
+Optional: save a report:
+
+```bash
+gitleaks detect --source . --report-path /tmp/gitleaks-pokeapi.json --report-format json
+```
+
+Without installing locally (Docker):
+
+```bash
+docker run --rm -v "$(pwd):/repo" zricethezav/gitleaks:latest detect --source /repo --verbose
+```
+
+If secrets appear in **git history**, rotate those keys and consider `git filter-repo` or BFG before making the repo public.
+
+- **Status:** Clean as of history purge (2026-05-30). `newrelic.ini` removed from all commits via `git filter-repo`.
 
 ## Current tree grep (high-risk patterns)
 
@@ -19,7 +45,7 @@ No live API keys, PEM private keys, or committed `.env` values found in the curr
 
 ## Gitignored assets (expected, not scanned in tree)
 
-- `.env`, `DEPLOYMENT.md`, `*.sql`, `config/ga4-service-account.json`
+- `.env`, `*.sql`, `config/ga4-service-account.json`
 
 ## History
 

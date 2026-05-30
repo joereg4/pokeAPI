@@ -36,7 +36,7 @@ docker compose run --rm app python manage.py create_user
 ## What not to commit
 
 - `.env`, `*.sql` dumps, `config/ga4-service-account.json`
-- Production hostnames or SSH details — use `DEPLOYMENT.private.md` locally
+- Production hostnames, SSH keys, API keys, or other secrets
 
 ## Database migrations
 
@@ -44,7 +44,3 @@ docker compose run --rm app python manage.py create_user
 source .venv/bin/activate
 flask db upgrade
 ```
-
-## Operator notes
-
-Real server IPs, SSH commands, and production cron live in **gitignored** `DEPLOYMENT.private.md` (copy from your local private runbook). Never commit those values.

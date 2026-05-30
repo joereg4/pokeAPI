@@ -8,6 +8,8 @@
 
 **Tech Stack:** Flask 3, PostgreSQL, Redis, Docker Compose, pytest, GitHub Actions
 
+> **Superseded:** `DEPLOYMENT.private.md` was removed (no production server). Use public `DEPLOYMENT.md` only.
+
 ---
 
 ## Current state (audit summary)
