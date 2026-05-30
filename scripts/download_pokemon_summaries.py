@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Script to import Pokemon summaries from production database to local database.
-Usage: python3 import_pokemon_summaries.py --host 149.28.243.132 --database pokeapi --user pokeapi --password "your_password"
+Usage: python3 download_pokemon_summaries.py --host your-server.example --database pokeapi --user pokeapi --password "your_password"
 """
 
 import argparse
@@ -164,11 +164,11 @@ def main():
         epilog="""
 Examples:
   # Direct connection to production
-  python3 import_pokemon_summaries.py --host 149.28.243.132 --database pokeapi --user pokeapi --password "your_password"
+  python3 download_pokemon_summaries.py --host your-server.example --database pokeapi --user pokeapi --password "your_password"
   
   # Using SSH tunnel (tunnel must be established first)
-  ssh -L 63333:localhost:5432 pokeapi@149.28.243.132
-  python3 import_pokemon_summaries.py --host localhost --port 63333 --database pokeapi --user pokeapi --password "your_password"
+  ssh -L 63333:localhost:5432 ${PROD_SSH_USER:-root}@${PROD_SSH_HOST:?set PROD_SSH_HOST in .env}
+  python3 download_pokemon_summaries.py --host localhost --port 63333 --database pokeapi --user pokeapi --password "your_password"
         """
     )
     

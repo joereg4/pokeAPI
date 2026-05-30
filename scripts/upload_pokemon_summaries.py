@@ -24,6 +24,22 @@ def load_environment():
     load_dotenv(".flaskenv", override=True)
 
 
+def connect_prod_ssh():
+    """Connect to the production server via SSH (operator use only)."""
+    import paramiko
+
+    host = os.environ.get("PROD_SSH_HOST")
+    user = os.environ.get("PROD_SSH_USER", "root")
+    if not host:
+        raise SystemExit(
+            "PROD_SSH_HOST is not set. Add it to .env (operator use only)."
+        )
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(host, username=user)
+    return ssh
+
+
 def ensure_backup_directory(ssh_connection, backup_dir):
     """Ensure backup directory exists on production server"""
     # Create directory via SSH if it doesn't exist
@@ -339,11 +355,7 @@ Examples:
     # Handle special commands
     if args.list_backups:
         try:
-            import paramiko
-
-            ssh = paramiko.SSHClient()
-            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            ssh.connect("149.28.243.132", username="root")
+            ssh = connect_prod_ssh()
 
             list_available_backups(ssh, args.backup_dir)
             ssh.close()
@@ -365,11 +377,7 @@ Examples:
             sys.exit(1)
 
         try:
-            import paramiko
-
-            ssh = paramiko.SSHClient()
-            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            ssh.connect("149.28.243.132", username="root")
+            ssh = connect_prod_ssh()
 
             rollback_from_backup(
                 ssh,
@@ -431,9 +439,7 @@ Examples:
         print("✓ Connected to production database")
 
         # Set up SSH connection for backup operations
-        ssh = paramiko.SSHClient()
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect("149.28.243.132", username="root")
+        ssh = connect_prod_ssh()
         print("✓ Connected to production server via SSH")
 
         # Ensure backup directory exists
