@@ -1,0 +1,13 @@
+.venv
+.git
+.env
+__pycache__
+*.pyc
+docker/db/
+docker/nginx/
+logs/
+backups/
+tests/
+mock_data/
+.pytest_cache
+*.egg-info

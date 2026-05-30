@@ -1,0 +1,2 @@
+# Rotate logs weekly on Sunday at midnight
+0 0 * * 0 /app/docker/cron/rotate_logs.sh >> /app/logs/cron.log 2>&1
