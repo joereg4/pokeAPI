@@ -155,7 +155,7 @@ python3 scripts/upload_pokemon_summaries.py \
 | `--database` | Yes* | Database name |
 | `--user` | Yes* | Database username |
 | `--password` | Yes* | Database password |
-| `--backup-dir` | No | Backup directory on production server (default: /var/www/pokeAPI/backups) |
+| `--backup-dir` | No | Backup directory on remote server (default: `./backups` or `PROD_BACKUP_DIR`) |
 | `--keep-backups` | No | Number of recent backups to keep (default: 7) |
 | `--dry-run` | No | Preview changes without applying them |
 | `--list-backups` | No | List available backups |
@@ -173,7 +173,7 @@ Resource type: pokemon
 Target: localhost:5433
 Database: pokeapi
 User: pokeapi
-Backup directory: /var/www/pokeAPI/backups
+Backup directory: ./backups
 Keep backups: 7
 ============================================================
 ✓ Connected to production database
@@ -289,7 +289,7 @@ python3 scripts/backup_db.py \
 | `--database` | Yes* | Database name |
 | `--user` | Yes* | Database username |
 | `--password` | Yes* | Database password |
-| `--backup-dir` | No | Backup directory on production server (default: /var/www/pokeAPI/backups) |
+| `--backup-dir` | No | Backup directory on remote server (default: `./backups` or `PROD_BACKUP_DIR`) |
 | `--keep-backups` | No | Number of recent full backups to keep (default: 5) |
 | `--list-backups` | No | List available full backups |
 | `--restore` | No | Restore from backup |
@@ -305,7 +305,7 @@ PostgreSQL Full Database Backup Tool
 Target: localhost:5433
 Database: pokeapi
 User: pokeapi
-Backup directory: /var/www/pokeAPI/backups
+Backup directory: ./backups
 Keep backups: 5
 ============================================================
 ✓ Connected to production server via SSH
@@ -315,7 +315,7 @@ This may take several minutes for large databases...
 ✓ Kept 5 most recent full backups, removed 0 old ones
 
 ✓ Full backup completed successfully!
-Backup stored in: /var/www/pokeAPI/backups
+Backup stored in: ./backups
 Keeping 5 most recent full backups
 ```
 
@@ -324,7 +324,7 @@ Keeping 5 most recent full backups
 ### Backup Directory Structure
 
 ```
-/var/www/pokeAPI/backups/
+./backups/
 ├── production_backup_20241220_143022.sql    # Upload script backups
 ├── production_backup_20241220_150145.sql
 ├── full_backup_20241220_143022.sql          # Full database backups
@@ -403,7 +403,7 @@ ssh -L 5433:localhost:5432 ${PROD_SSH_USER:-root}@${PROD_SSH_HOST:?set PROD_SSH_
 ```bash
 # Error: Backup failed
 # Solution: Check disk space and permissions on the production server (via SSH using PROD_SSH_HOST)
-ssh ${PROD_SSH_USER:-root}@${PROD_SSH_HOST:?set PROD_SSH_HOST in .env} "df -h \$DEPLOY_APP_DIR/backups"
+ssh ${PROD_SSH_USER:-root}@${PROD_SSH_HOST:?set PROD_SSH_HOST in .env} "df -h \$PROD_BACKUP_DIR"
 ```
 
 #### Permission Issues
@@ -411,7 +411,7 @@ ssh ${PROD_SSH_USER:-root}@${PROD_SSH_HOST:?set PROD_SSH_HOST in .env} "df -h \$
 ```bash
 # Error: Permission denied
 # Solution: Check backup directory permissions on the production server
-ssh ${PROD_SSH_USER:-root}@${PROD_SSH_HOST:?set PROD_SSH_HOST in .env} "ls -la \$DEPLOY_APP_DIR/backups"
+ssh ${PROD_SSH_USER:-root}@${PROD_SSH_HOST:?set PROD_SSH_HOST in .env} "ls -la \$PROD_BACKUP_DIR"
 ```
 
 ### Log Files
@@ -423,7 +423,7 @@ Monitor script execution:
 # All operations provide detailed status messages
 
 # Future: Backup history log
-# /var/www/pokeAPI/backups/backup_log.txt
+# ./backups/backup_log.txt
 ```
 
 ## Best Practices

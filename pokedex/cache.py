@@ -118,12 +118,8 @@ def safe_make_dirs(path: str, mode: int = 0o777) -> str:
 
 
 def get_default_cache() -> str:
-    """Get the default cache location, adapting to dev or prod environments."""
-    if os.path.exists("/var/www/pokeAPI"):
-        project_root = "/var/www/pokeAPI"
-    else:
-        project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+    """Get the default cache location from the project root."""
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     cache_dir = os.path.join(project_root, ".cache", "Pokedex")
     return cache_dir
 

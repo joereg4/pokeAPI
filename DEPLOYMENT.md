@@ -38,7 +38,6 @@ python manage.py create_user
 4. `flask db upgrade`
 5. `python scripts/seed_resources_if_empty.py` (summaries from `static/resources/*.csv`)
 6. Run gunicorn behind nginx (example unit files not included — adapt to your OS)
-7. Optional: GitHub deploy webhook — set `WEBHOOK_SECRET` and `DEPLOY_APP_DIR`
 
 ## What not to commit
 

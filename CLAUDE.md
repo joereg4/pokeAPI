@@ -126,8 +126,6 @@ gh run watch <run-id> --exit-status
 ```
 Get the new run ID with `gh run list --branch main --limit 3`. CI must pass on `main` before deploying.
 
-### 6. Deploy (operator — private notes)
+### 6. Deploy
 
-See [DEPLOYMENT.md](DEPLOYMENT.md) for self-hosted deployment. Never commit server IPs, SSH keys, or secrets.
-
-The CI webhook step on `main` triggers production deploy when configured; see `CONTRIBUTING.md` for required GitHub secrets.
+See [DEPLOYMENT.md](DEPLOYMENT.md). For Docker: `docker compose up --build`. For local venv: reinstall from `requirements.txt` when dependencies change.

@@ -25,15 +25,11 @@ Run the full suite before opening a PR. CI uses the same marker on Ubuntu with R
 
 ## CI secrets (maintainers only)
 
-These GitHub Actions secrets are required for the main-branch deploy webhook step:
-
 | Secret | Purpose |
 |--------|---------|
-| `WEBHOOK_SECRET` | HMAC signature for deploy webhook |
-| `DEPLOY_WEBHOOK_URL` | Full URL of the production webhook endpoint |
 | `OPENAI_API_KEY` | Optional; used by tests that touch summary generation |
 
-Forks and contributors do not need these secrets; the deploy step only runs on pushes to `main`.
+Forks and contributors do not need repository secrets for CI.
 
 ## Code of conduct
 

@@ -188,6 +188,8 @@ def restore_from_backup(
 
 def main():
     """Main function."""
+    load_environment()
+
     parser = argparse.ArgumentParser(
         description="Backup the entire PostgreSQL database",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -221,8 +223,8 @@ Examples:
     parser.add_argument("--password", help="Database password")
     parser.add_argument(
         "--backup-dir",
-        default="/var/www/pokeAPI/backups",
-        help="Backup directory on production server",
+        default=os.environ.get("PROD_BACKUP_DIR", "./backups"),
+        help="Backup directory on remote server",
     )
     parser.add_argument(
         "--keep-backups",
@@ -237,9 +239,6 @@ Examples:
     parser.add_argument("--backup-file", help="Specific backup file for restore")
 
     args = parser.parse_args()
-
-    # Load environment
-    load_environment()
 
     # Handle list backups command
     if args.list_backups:

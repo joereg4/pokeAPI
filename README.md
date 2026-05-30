@@ -135,15 +135,15 @@ See repository layout: `routes/` (blueprints), `pokedex/` (API client and cache)
 
 ## Database Management
 
-> **Operator tools** — require `PROD_SSH_HOST` and production DB access. Not needed to run a local Pokédex.
+> **Optional operator tools** — for syncing summaries with a remote Postgres over SSH. Not needed for Docker or local dev.
 
-The application includes scripts for syncing data between local development and production:
+Scripts (require `PROD_SSH_HOST` in `.env` if you use a remote server):
 
-- **`scripts/upload_pokemon_summaries.py`** — Upload resource summaries to production
-- **`scripts/backup_db.py`** — Full database backup and restore
+- **`scripts/upload_pokemon_summaries.py`** — Upload resource summaries to a remote database
+- **`scripts/backup_db.py`** — Remote database backup and restore
 - **`scripts/interactive_summary_updater.py`** — Review and update summaries
 
-### Quick Start (operators)
+### Quick Start (remote server)
 
 1. **Install dependencies**
    ```bash

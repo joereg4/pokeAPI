@@ -12,7 +12,6 @@ class Config:
     SPRITE_URL = get_env_variable('SPRITE_URL', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites')
     POKEMON_PER_PAGE = int(get_env_variable('POKEMON_PER_PAGE', 60))
     ITEMS_PER_PAGE = int(get_env_variable('ITEMS_PER_PAGE', 50))
-    WEBHOOK_SECRET = get_env_variable('WEBHOOK_SECRET')
     CACHE_TIMEOUT = int(get_env_variable('CACHE_TIMEOUT', 300))
 ```
 

@@ -15,7 +15,6 @@ class Config:
     )
     POKEMON_PER_PAGE = int(get_env_variable("POKEMON_PER_PAGE", 60))
     ITEMS_PER_PAGE = int(get_env_variable("ITEMS_PER_PAGE", 50))
-    WEBHOOK_SECRET = get_env_variable("WEBHOOK_SECRET")
     CACHE_TIMEOUT = int(get_env_variable("CACHE_TIMEOUT", 3600))  # Default 1 hour cache
     REDIS_URL = get_env_variable("REDIS_URL", "redis://localhost:6379/0")
     SPRITE_EXT = "png"

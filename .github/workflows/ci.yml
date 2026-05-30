@@ -47,20 +47,3 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           pytest tests/ -n 12 -m "not integration" --tb=short
-
-      - name: Send webhook payload
-        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        env:
-          DEPLOY_WEBHOOK_URL: ${{ secrets.DEPLOY_WEBHOOK_URL }}
-          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
-        run: |
-          if [ -z "$DEPLOY_WEBHOOK_URL" ]; then
-            echo "Skipping deploy webhook (DEPLOY_WEBHOOK_URL not set)"
-            exit 0
-          fi
-          payload='{}'
-          signature=$(echo -n "$payload" | openssl dgst -sha256 -hmac "$WEBHOOK_SECRET" | sed 's/^.* //')
-          curl -X POST -H "Content-Type: application/json" \
-            -H "X-Hub-Signature-256: sha256=$signature" \
-            -d "$payload" \
-            "$DEPLOY_WEBHOOK_URL"

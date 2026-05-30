@@ -102,7 +102,7 @@ def create_app(test_config=None):
         app.config["SECRET_KEY"] = secret or "dev"
 
     # Google Analytics: expose to templates and resolve credentials path.
-    # Relative GOOGLE_APPLICATION_CREDENTIALS is resolved from app root (works for prod at e.g. /var/www/pokeAPI).
+    # Relative GOOGLE_APPLICATION_CREDENTIALS is resolved from app root.
     app.config["GOOGLE_ANALYTICS_MEASUREMENT_ID"] = os.environ.get(
         "GOOGLE_ANALYTICS_MEASUREMENT_ID"
     )

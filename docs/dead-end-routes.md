@@ -61,7 +61,6 @@ or are reached by hardcoded hrefs:
 | `pokemon.index` | `/` | Linked via hardcoded `href="/"` in nav |
 | `search.search_resources` | `/api/search` | Called by JavaScript search |
 | `sprite.get_specific_sprite` | `/<pokemon_id>/<sprite_type>` | Called programmatically |
-| `webhook.webhook` | `/webhook/` | Called by external services |
 
 ### Reachable via search only
 

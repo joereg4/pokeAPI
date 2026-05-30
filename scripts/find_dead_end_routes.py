@@ -18,7 +18,7 @@ How it works
 4. Classifies candidates into categories:
    - **True dead ends** – list/index pages with no link from the UI
    - **Search-only** – detail pages reachable only via the search bar
-   - **Intentional / API-only** – health checks, webhooks, search API, etc.
+   - **Intentional / API-only** – health checks, search API, etc.
 
 Usage
 -----
@@ -65,8 +65,6 @@ INTENTIONAL_ENDPOINTS = {
     "pokemon.index",
     # Search API – consumed by JavaScript, not via url_for in templates
     "search.search_resources",
-    # Webhook – called by external services
-    "webhook.webhook",
     # Sprite helpers – called programmatically in Python
     "sprite.get_artwork",
     "sprite.get_default_sprite",

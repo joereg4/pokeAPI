@@ -295,6 +295,8 @@ def upload_resource_type(resource_type, prod_conn, local_app, dry_run=False):
 
 def main():
     """Main function."""
+    load_environment()
+
     parser = argparse.ArgumentParser(
         description="Upload Pokemon summaries from local database to production database",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -330,8 +332,8 @@ Examples:
     parser.add_argument("--password", help="Database password")
     parser.add_argument(
         "--backup-dir",
-        default="/var/www/pokeAPI/backups",
-        help="Backup directory on production server",
+        default=os.environ.get("PROD_BACKUP_DIR", "./backups"),
+        help="Backup directory on remote server",
     )
     parser.add_argument(
         "--keep-backups", type=int, default=7, help="Number of recent backups to keep"
@@ -348,9 +350,6 @@ Examples:
     parser.add_argument("--backup-file", help="Specific backup file for rollback")
 
     args = parser.parse_args()
-
-    # Load environment
-    load_environment()
 
     # Handle special commands
     if args.list_backups:
