@@ -9,6 +9,10 @@ from flask import Blueprint, request, abort
 webhook_bp = Blueprint("webhook", __name__)
 
 
+def _deploy_app_dir() -> str:
+    return os.getenv("DEPLOY_APP_DIR", "/var/www/pokeAPI")
+
+
 @webhook_bp.route("/webhook/", methods=["POST", "GET"])
 def webhook():
     secret = os.getenv("WEBHOOK_SECRET")
@@ -46,7 +50,7 @@ def webhook():
             # First stash any local changes - use 'git stash -u' to include untracked files
             # and redirect stderr to stdout to capture all output
             stash_result = subprocess.run(
-                ["git", "-C", "/var/www/pokeAPI", "stash", "-u", "--include-untracked"],
+                ["git", "-C", _deploy_app_dir(), "stash", "-u", "--include-untracked"],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True,
@@ -58,7 +62,7 @@ def webhook():
 
             # Then pull the new changes
             result = subprocess.run(
-                ["git", "-C", "/var/www/pokeAPI", "pull"],
+                ["git", "-C", _deploy_app_dir(), "pull"],
                 check=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
@@ -69,7 +73,7 @@ def webhook():
             # Only drop the stash if something was actually stashed
             if was_stashed:
                 drop_result = subprocess.run(
-                    ["git", "-C", "/var/www/pokeAPI", "stash", "drop"],
+                    ["git", "-C", _deploy_app_dir(), "stash", "drop"],
                     check=True,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
@@ -88,7 +92,9 @@ def webhook():
             activate_and_install = [
                 "/bin/bash",
                 "-c",
-                ". /var/www/pokeAPI/venv/bin/activate && cd /var/www/pokeAPI && pip install -r requirements.txt",
+                ". {}/venv/bin/activate && cd {} && pip install -r requirements.txt".format(
+                    _deploy_app_dir(), _deploy_app_dir()
+                ),
             ]
 
             result = subprocess.run(
