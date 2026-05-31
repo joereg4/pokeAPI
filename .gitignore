@@ -169,8 +169,12 @@ backups/
 *.backup
 !docker/db/seed.sql
 
-# Summary updater progress
-data/summary_progress.json
+# Local runtime data (keep directory via .gitkeep)
+data/*
+!data/.gitkeep
+
+# Cursor IDE (local workspace metadata)
+.cursor/
 
 # Local deployment notes
 !.env.example

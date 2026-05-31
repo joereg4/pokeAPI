@@ -18,9 +18,13 @@ A Flask-based Pokédex that surfaces Pokémon, moves, items, locations, and more
 git clone https://github.com/joereg4/pokeAPI.git
 cd pokeAPI
 cp .env.example .env
-# Edit .env: set SECRET_KEY
+# Edit .env before any non-throwaway use:
+#   FLASK_ENV=production
+#   SECRET_KEY=<long random string>
 docker compose up --build
 ```
+
+> **Security:** Docker Compose defaults to `FLASK_ENV=production`, which requires a real `SECRET_KEY` in `.env`. The example value is only for local experimentation — generate a strong secret for anything beyond a quick trial.
 
 Open **http://localhost:8080**. See [DEPLOYMENT.md](DEPLOYMENT.md) and [docker/README.md](docker/README.md).
 

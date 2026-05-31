@@ -8,6 +8,7 @@ import argparse
 import sys
 import os
 import subprocess
+import getpass
 from datetime import datetime
 from dotenv import load_dotenv
 
@@ -29,7 +30,7 @@ def connect_prod_ssh():
             "PROD_SSH_HOST is not set. Add it to .env (operator use only)."
         )
     ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.set_missing_host_key_policy(paramiko.WarningPolicy())
     ssh.connect(host, username=user)
     return ssh
 
@@ -186,6 +187,13 @@ def restore_from_backup(
     print(f"✓ Database restored successfully from {os.path.basename(full_backup_path)}")
 
 
+def resolve_password(password):
+    """Return password from args or prompt securely if omitted."""
+    if password:
+        return password
+    return getpass.getpass("Database password: ")
+
+
 def main():
     """Main function."""
     load_environment()
@@ -259,11 +267,13 @@ Examples:
 
     # Handle restore command
     if args.restore:
-        if not all([args.host, args.port, args.database, args.user, args.password]):
+        if not all([args.host, args.port, args.database, args.user]):
             print(
-                "Error: --host, --port, --database, --user, and --password are required for restore"
+                "Error: --host, --port, --database, and --user are required for restore"
             )
             sys.exit(1)
+
+        args.password = resolve_password(args.password)
 
         try:
             ssh = connect_prod_ssh()
@@ -288,11 +298,13 @@ Examples:
             sys.exit(1)
 
     # Validate required arguments for backup
-    if not all([args.host, args.port, args.database, args.user, args.password]):
+    if not all([args.host, args.port, args.database, args.user]):
         print(
-            "Error: --host, --port, --database, --user, and --password are required for backup operations"
+            "Error: --host, --port, --database, and --user are required for backup operations"
         )
         sys.exit(1)
+
+    args.password = resolve_password(args.password)
 
     print("PostgreSQL Full Database Backup Tool")
     print("=" * 60)
