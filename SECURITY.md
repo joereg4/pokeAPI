@@ -18,3 +18,5 @@ We will acknowledge reports within a reasonable timeframe and coordinate disclos
 
 - Never commit `.env`, database dumps, or service account JSON files.
 - Use `.env.example` as a template; bring your own keys and production values locally.
+- Test-only credentials live under `tests/` (see `tests/fake_credentials.py`). `.gitguardian.yml` ignores `tests/` for secret scanning.
+- If GitGuardian reports a **historical** incident (e.g. removed `newrelic.ini`), resolve it in the dashboard after rotating the key — the file is no longer in the repository.

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Script to upload Pokemon summaries from local database to production database.
-Usage: python3 scripts/upload_pokemon_summaries.py --resource pokemon --host localhost --port 5433 --database pokeapi --user pokeapi --password "password"
+Usage: python3 scripts/upload_pokemon_summaries.py --resource pokemon --host localhost --port 5433 --database pokeapi --user pokeapi
 """
 
 import argparse
@@ -311,7 +311,7 @@ def main():
         epilog="""
 Examples:
   # Upload Pokemon summaries with automatic backup
-  python3 scripts/upload_pokemon_summaries.py --resource pokemon --host localhost --port 5433 --database pokeapi --user pokeapi --password "password"
+  python3 scripts/upload_pokemon_summaries.py --resource pokemon --host localhost --port 5433 --database pokeapi --user pokeapi
   
   # Dry run to see what would change
   python3 scripts/upload_pokemon_summaries.py --resource pokemon --dry-run

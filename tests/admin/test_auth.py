@@ -1,6 +1,14 @@
 import pytest
 from limiter import limiter
 
+from tests.fake_credentials import (
+    TEST_ADMIN_PASSWORD,
+    TEST_ADMIN_USERNAME,
+    TEST_USER_PASSWORD,
+    TEST_USER_USERNAME,
+    TEST_WRONG_PASSWORD,
+)
+
 
 def test_login_page(client):
     """Test that login page loads correctly."""
@@ -13,7 +21,7 @@ def test_successful_login(client, regular_user):
     """Test successful login with correct credentials."""
     response = client.post(
         "/auth/login",
-        data={"username": "user", "password": "user123"},
+        data={"username": TEST_USER_USERNAME, "password": TEST_USER_PASSWORD},
         follow_redirects=True,
     )
     assert response.status_code == 200
@@ -24,7 +32,7 @@ def test_login_invalid_username(client):
     """Test login with non-existent username."""
     response = client.post(
         "/auth/login",
-        data={"username": "nonexistent", "password": "password"},
+        data={"username": "nonexistent", "password": TEST_WRONG_PASSWORD},
         follow_redirects=True,
     )
     assert response.status_code == 200
@@ -35,7 +43,7 @@ def test_login_wrong_password(client, regular_user):
     """Test login with wrong password."""
     response = client.post(
         "/auth/login",
-        data={"username": "user", "password": "wrongpassword"},
+        data={"username": TEST_USER_USERNAME, "password": TEST_WRONG_PASSWORD},
         follow_redirects=True,
     )
     assert response.status_code == 200
@@ -77,7 +85,7 @@ def test_remember_me_functionality(client, admin_user):
     """Test that login works without remember me functionality."""
     response = client.post(
         "/auth/login",
-        data={"username": "admin", "password": "admin123"},
+        data={"username": TEST_ADMIN_USERNAME, "password": TEST_ADMIN_PASSWORD},
         follow_redirects=True,
     )
     assert response.status_code == 200

@@ -1,0 +1,7 @@
+# GitGuardian — reduce false positives for local/dev and test-only values.
+# See https://docs.gitguardian.com/guardian/configure-gitguardian-yaml
+
+paths-ignore:
+  - "tests/**"
+  - "mock_data/**"
+  - "static/vendor/**"

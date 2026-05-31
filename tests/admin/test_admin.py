@@ -2,6 +2,8 @@ import pytest
 from flask import url_for
 from models.model import User, db
 
+from tests.fake_credentials import TEST_NEW_USER_PASSWORD
+
 
 def test_admin_dashboard_access(auth_client):
     """Test that admin can access dashboard."""
@@ -25,7 +27,7 @@ def test_add_user(auth_client):
         data={
             "username": "newuser",
             "email": "newuser@test.com",
-            "password": "password123",
+            "password": TEST_NEW_USER_PASSWORD,
             "is_admin": "on",
         },
         follow_redirects=True,
@@ -42,7 +44,7 @@ def test_add_duplicate_username(auth_client, regular_user):
         data={
             "username": "user",  # This username already exists
             "email": "another@test.com",
-            "password": "password123",
+            "password": TEST_NEW_USER_PASSWORD,
         },
         follow_redirects=True,
     )
@@ -57,7 +59,7 @@ def test_add_duplicate_email(auth_client, regular_user):
         data={
             "username": "another",
             "email": "user@test.com",  # This email already exists
-            "password": "password123",
+            "password": TEST_NEW_USER_PASSWORD,
         },
         follow_redirects=True,
     )

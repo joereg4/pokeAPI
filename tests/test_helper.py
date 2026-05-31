@@ -5,6 +5,8 @@ from unittest.mock import patch
 from app import create_app
 from cache import cache
 
+from tests.fake_credentials import TEST_SECRET_KEY
+
 
 def load_mock_data(file_name):
     """Load mock data from a JSON file located in the mock_data directory."""
@@ -19,7 +21,7 @@ def get_test_client():
         "TESTING": True,
         "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
         "SQLALCHEMY_TRACK_MODIFICATIONS": False,
-        "SECRET_KEY": "test-secret-key",
+        "SECRET_KEY": TEST_SECRET_KEY,
         "WTF_CSRF_ENABLED": False,
         "LOGIN_DISABLED": False,
         "SQLALCHEMY_BINDS": {},

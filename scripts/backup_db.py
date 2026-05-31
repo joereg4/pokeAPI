@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Standalone script to backup the entire PostgreSQL database.
-Usage: python3 scripts/backup_db.py --host localhost --port 5433 --database pokeapi --user pokeapi --password "password"
+Usage: python3 scripts/backup_db.py --host localhost --port 5433 --database pokeapi --user pokeapi
 """
 
 import argparse
@@ -204,19 +204,19 @@ def main():
         epilog="""
 Examples:
   # Create full backup with automatic cleanup
-  python3 scripts/backup_db.py --host localhost --port 5433 --database pokeapi --user pokeapi --password "password"
+  python3 scripts/backup_db.py --host localhost --port 5433 --database pokeapi --user pokeapi
   
-  # Create backup keeping 10 most recent
-  python3 scripts/backup_db.py --host localhost --port 5433 --database pokeapi --user pokeapi --password "password" --keep-backups 10
+  # Create backup keeping 10 most recent (omit --password to be prompted)
+  python3 scripts/backup_db.py --host localhost --port 5433 --database pokeapi --user pokeapi --keep-backups 10
   
   # List available backups
   python3 scripts/backup_db.py --list-backups
   
   # Restore from latest backup
-  python3 scripts/backup_db.py --restore --host localhost --port 5433 --database pokeapi --user pokeapi --password "password"
+  python3 scripts/backup_db.py --restore --host localhost --port 5433 --database pokeapi --user pokeapi
   
   # Restore from specific backup
-  python3 scripts/backup_db.py --restore --backup-file full_backup_20241220_143022.sql --host localhost --port 5433 --database pokeapi --user pokeapi --password "password"
+  python3 scripts/backup_db.py --restore --backup-file full_backup_20241220_143022.sql --host localhost --port 5433 --database pokeapi --user pokeapi
         """,
     )
 

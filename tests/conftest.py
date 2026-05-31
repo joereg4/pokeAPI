@@ -14,6 +14,12 @@ from app import create_app
 from models.model import db, User
 from flask_login import login_user
 
+from tests.fake_credentials import (
+    TEST_ADMIN_PASSWORD,
+    TEST_SECRET_KEY,
+    TEST_USER_PASSWORD,
+)
+
 # Add the tests directory to the Python path so test helpers can be imported
 test_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, test_dir)
@@ -69,7 +75,7 @@ def app():
         "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
         "SQLALCHEMY_TRACK_MODIFICATIONS": False,
         "SQLALCHEMY_BINDS": {},
-        "SECRET_KEY": "test-secret-key",
+        "SECRET_KEY": TEST_SECRET_KEY,
         "WTF_CSRF_ENABLED": False,
         "LOGIN_DISABLED": False,
         "CACHE_TYPE": "SimpleCache",
@@ -132,7 +138,7 @@ def admin_user(app):
             )
 
         user = User(username="admin", email="admin@test.com", is_admin=True)
-        user.set_password("admin123")
+        user.set_password(TEST_ADMIN_PASSWORD)
         db.session.add(user)
         db.session.commit()
         yield user
@@ -152,7 +158,7 @@ def regular_user(app):
             )
 
         user = User(username="user", email="user@test.com", is_admin=False)
-        user.set_password("user123")
+        user.set_password(TEST_USER_PASSWORD)
         db.session.add(user)
         db.session.commit()
         yield user

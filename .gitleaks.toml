@@ -1,0 +1,11 @@
+# Gitleaks allowlist for known false positives (run: gitleaks detect --source .)
+
+title = "pokeAPI gitleaks config"
+
+[allowlist]
+description = "Test fixtures and vendored assets"
+paths = [
+  '''tests/''',
+  '''mock_data/''',
+  '''static/vendor/''',
+]

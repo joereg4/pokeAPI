@@ -3,7 +3,7 @@ services:
     build: .
     env_file: .env
     environment:
-      - DATABASE_URL=postgresql://pokeapi:pokeapi@db:5432/pokeapi
+      - DATABASE_URL=postgresql://pokeapi:pokeapi_local_docker_dev_only@db:5432/pokeapi
       - REDIS_URL=redis://redis:6379/0
       - FLASK_ENV=${FLASK_ENV:-production}
     ports:
@@ -31,7 +31,8 @@ services:
     image: postgres:16-alpine
     environment:
       - POSTGRES_USER=pokeapi
-      - POSTGRES_PASSWORD=pokeapi
+      # Local Docker only — not a production secret (see .gitguardian.yml)
+      - POSTGRES_PASSWORD=pokeapi_local_docker_dev_only
       - POSTGRES_DB=pokeapi
     volumes:
       - pgdata:/var/lib/postgresql/data
