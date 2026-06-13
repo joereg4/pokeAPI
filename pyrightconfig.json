@@ -1,0 +1,24 @@
+{
+  "venvPath": ".",
+  "venv": ".venv",
+  "pythonVersion": "3.9",
+  "typeCheckingMode": "basic",
+  "include": [
+    "app.py",
+    "ga_analytics.py",
+    "routes",
+    "models",
+    "pokedex",
+    "cache",
+    "utils.py",
+    "manage.py",
+    "tests"
+  ],
+  "exclude": [
+    "**/__pycache__",
+    ".venv",
+    "static",
+    "mock_data",
+    "migrations"
+  ]
+}
