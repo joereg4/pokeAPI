@@ -3,7 +3,7 @@ cachelib==0.14.0
 certifi==2024.7.4
 charset-normalizer==3.3.2
 cryptography==48.0.1
-click==8.1.7
+click==8.4.2
 dacite==1.8.1
 dnspython==2.7.0
 exceptiongroup==1.1.2
