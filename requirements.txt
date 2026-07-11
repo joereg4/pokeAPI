@@ -50,6 +50,6 @@ zipp==3.20.0
 beautifulsoup4==4.12.3
 openai==2.11.0
 paramiko==5.0.0
-rich==13.9.4
+rich==15.0.0
 brotli==1.2.0
 google-analytics-data==0.20.0
