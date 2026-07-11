@@ -2,8 +2,8 @@ import pytest
 from flask import url_for
 from bs4 import BeautifulSoup
 from datetime import datetime
+from flask_limiter import Limit
 from flask_limiter.errors import RateLimitExceeded
-from flask_limiter.wrappers import Limit
 from unittest.mock import MagicMock
 import time
 from unittest.mock import patch
