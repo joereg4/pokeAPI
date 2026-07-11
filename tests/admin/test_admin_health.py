@@ -4,10 +4,13 @@ import json
 from flask import url_for
 
 
+@patch("routes.health.scan_keys")
 @patch("routes.health.redis_client")
 @patch("utils.get_cache_stats")
 @patch("routes.health.cache")
-def test_health_check_success(mock_routes_cache, mock_stats, mock_redis, auth_client):
+def test_health_check_success(
+    mock_routes_cache, mock_stats, mock_redis, mock_scan_keys, auth_client
+):
     """Test successful health check."""
     # Mock cache behavior
     mock_routes_cache.set.return_value = True
@@ -23,26 +26,16 @@ def test_health_check_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
         "uptime_in_seconds": 3600,
     }
 
-    # Mock Redis pipeline
+    # Mock Redis pipeline (hourly/daily counters)
     mock_pipeline = MagicMock()
     mock_pipeline.execute.return_value = [
-        [
-            b"api_calls:endpoint:pokemon:hour:12345",
-            b"api_calls:endpoint:move:hour:12345",
-        ],  # keys
-        [
-            b"api_calls:resource:pokemon:1:hour:12345",
-            b"api_calls:resource:pokemon:2:hour:12345",
-            b"api_calls:resource:move:tackle:hour:12345",
-        ],  # resource_keys
-        [],  # method_keys
         b"10",  # hourly
         b"100",  # daily
     ]
     mock_redis.pipeline.return_value = mock_pipeline
 
-    # Mock Redis keys for traffic stats
-    mock_redis.keys.side_effect = lambda pattern: (
+    # Mock key scanning for API/traffic stats
+    mock_scan_keys.side_effect = lambda client, pattern, count=100: (
         [
             b"api_calls:endpoint:pokemon:hour:12345",
             b"api_calls:endpoint:move:hour:12345",
@@ -137,10 +130,13 @@ def test_health_check_unauthorized(client):
     assert response.json["error"] == "Unauthorized"
 
 
+@patch("routes.health.scan_keys")
 @patch("routes.health.redis_client")
 @patch("utils.get_cache_stats")
 @patch("routes.health.cache")
-def test_cache_health_success(mock_routes_cache, mock_stats, mock_redis, auth_client):
+def test_cache_health_success(
+    mock_routes_cache, mock_stats, mock_redis, mock_scan_keys, auth_client
+):
     """Test successful health check with HTML response."""
     # Mock cache behavior
     mock_routes_cache.set.return_value = True
@@ -156,19 +152,16 @@ def test_cache_health_success(mock_routes_cache, mock_stats, mock_redis, auth_cl
         "uptime_in_seconds": 3600,
     }
 
-    # Mock Redis pipeline
+    # Mock Redis pipeline (hourly/daily counters)
     mock_pipeline = MagicMock()
     mock_pipeline.execute.return_value = [
-        [b"api_calls:endpoint:pokemon:hour:12345"],  # keys
-        [b"api_calls:resource:pokemon:1:hour:12345"],  # resource_keys
-        [],  # method_keys
         b"10",  # hourly
         b"100",  # daily
     ]
     mock_redis.pipeline.return_value = mock_pipeline
 
-    # Mock Redis keys and get for traffic stats
-    mock_redis.keys.side_effect = lambda pattern: (
+    # Mock key scanning for API/traffic stats
+    mock_scan_keys.side_effect = lambda client, pattern, count=100: (
         [b"api_calls:endpoint:pokemon:hour:12345"]
         if "endpoint" in pattern
         else (

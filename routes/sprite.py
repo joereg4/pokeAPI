@@ -16,7 +16,7 @@ from pokedex.utils import Config
 from limiter import limiter
 import logging
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 sprite_bp = Blueprint("sprite", __name__, url_prefix="/sprite")
 
@@ -38,7 +38,7 @@ def _add_cache_headers(response, max_age=31536000):
     """
     response.headers["Cache-Control"] = f"public, max-age={max_age}"
     response.headers["Expires"] = (
-        datetime.utcnow() + timedelta(seconds=max_age)
+        datetime.now(timezone.utc) + timedelta(seconds=max_age)
     ).strftime("%a, %d %b %Y %H:%M:%S GMT")
     return response
 

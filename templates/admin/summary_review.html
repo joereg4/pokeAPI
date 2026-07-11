@@ -27,6 +27,7 @@
                                                   resource=resource.resource, 
                                                   name=resource.name,
                                                   return_to=request.args.get('return_to')) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="search_term" value="{{ search_term }}">
                 <button type="submit" class="btn btn-primary mt-2">Generate New Summary</button>
             </form>

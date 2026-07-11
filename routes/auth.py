@@ -6,8 +6,7 @@ from flask_login import (
     login_required,
     current_user,
 )
-from datetime import datetime
-from models.model import User, db
+from models.model import User, db, utcnow
 from limiter import limiter
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
@@ -25,7 +24,7 @@ def login():
         user = User.query.filter_by(username=username).first()
         if user and user.check_password(password):
             login_user(user)
-            user.last_login = datetime.utcnow()
+            user.last_login = utcnow()
             db.session.commit()
             session["ga_fire_login_event"] = True
             flash("Logged in successfully!", "success")

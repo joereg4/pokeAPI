@@ -17,6 +17,18 @@ Thanks for your interest in contributing to pokeAPI.
 
 Run the full suite before opening a PR. CI uses the same marker on Ubuntu with Redis.
 
+## Rebuilding CSS
+
+Stylesheets are compiled from SCSS — do not edit files in `static/css` directly.
+After changing anything in `scss/`:
+
+```bash
+npm install        # first time only
+npm run sass:build
+```
+
+This compiles `scss/` to `static/css` via [Dart Sass](https://sass-lang.com/dart-sass/).
+
 ## Pull requests
 
 - Branch from an up-to-date `main`

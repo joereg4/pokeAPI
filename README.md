@@ -77,7 +77,7 @@ Open **http://127.0.0.1:5000**.
 ## Technology Stack
 
 - Flask: Web framework
-- Python 3.9+: Programming language
+- Python 3.11+: Programming language
 - PokéAPI: Primary data source
 - Flask-Caching: High-level caching for route responses
 - Shelve: Low-level caching for Pokédex-specific data
@@ -89,7 +89,7 @@ Open **http://127.0.0.1:5000**.
 ### Prerequisites
 
 - **Docker path:** Docker and Docker Compose
-- **Local path:** Python 3.9+, PostgreSQL, Redis
+- **Local path:** Python 3.11+, PostgreSQL, Redis
 
 ### Installation
 

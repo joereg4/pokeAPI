@@ -44,6 +44,7 @@
                                                            resource=resource.resource, 
                                                            name=resource.name,
                                                            return_to=return_to) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="row g-3">
                 <div class="col-md-4">
                     <div class="input-group">
@@ -68,6 +69,7 @@
                                               resource=resource.resource, 
                                               name=resource.name,
                                               return_to=return_to) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <input type="hidden" name="action" value="accept">
             <button type="submit" class="btn btn-success">Accept Summary</button>
             <a href="{{ return_to }}" class="btn btn-secondary">Cancel</a>
@@ -85,6 +87,7 @@
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content,
             },
             body: JSON.stringify({text: editor.value})
         })

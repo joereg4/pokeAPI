@@ -23,6 +23,7 @@
             
             {% if resources_list|length > 0 %}
                 <form method="POST" action="{{ url_for('admin.batch_refresh_summaries', resource_type=resource_type) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="mb-3">
                         <div class="btn-group mb-3">
                             <button type="button" class="btn btn-outline-primary" id="selectAll">Select All</button>

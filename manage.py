@@ -4,6 +4,8 @@ import click
 from flask.cli import FlaskGroup
 from app import create_app
 from models.model import db, User
+from pokedex.redis_client import redis_client, scan_keys
+from utils import invalidate_related_caches
 
 
 def create_cli_app():
@@ -110,17 +112,13 @@ def clear_cache(resource_type, resource_name=None):
     Usage: python manage.py clear-cache [resource_type] [resource_name]
     Example: python manage.py clear-cache ability sand-veil
     """
-    from utils import invalidate_related_caches
-
     if resource_name:
         # Clear cache for specific resource
         count = invalidate_related_caches(resource_type, resource_name)
         print(f"Cleared {count} cache keys for {resource_type}/{resource_name}")
     else:
         # Clear all caches for this resource type
-        from cache import cache
-
-        keys = cache.cache._write_client.keys(f"pokedex:*{resource_type}*")
+        keys = scan_keys(redis_client, f"pokedex:*{resource_type}*")
         deleted_count = 0
 
         # Handle bytes/string conversion and delete each key individually
@@ -131,7 +129,7 @@ def clear_cache(resource_type, resource_name=None):
                     key = key.decode("utf-8")
 
                 # Delete the key
-                if cache.cache._write_client.delete(key):
+                if redis_client.delete(key):
                     deleted_count += 1
             except Exception as e:
                 print(f"Error deleting key {key}: {e}")

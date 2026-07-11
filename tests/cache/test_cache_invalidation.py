@@ -2,7 +2,6 @@
 
 import pytest
 from unittest.mock import patch, MagicMock
-from cache import cache
 from utils import invalidate_related_caches
 from models.model import Resource, db
 from routes.summary_generators.generators import generate_summary
@@ -22,8 +21,14 @@ def mock_redis_client(mocker):
     # Make delete() return 1 (success)
     mock_client.delete.return_value = 1
 
-    # Patch the cache._write_client to use our mock
-    mocker.patch.object(cache.cache, "_write_client", mock_client)
+    # utils accesses Redis through pokedex.redis_client, so patch that.
+    mocker.patch("pokedex.redis_client.redis_client", mock_client)
+    # scan_keys wraps SCAN; route it to the mock's keys() so tests can keep
+    # configuring pattern -> keys mappings via keys.side_effect.
+    mocker.patch(
+        "utils.scan_keys",
+        side_effect=lambda client, pattern, count=100: mock_client.keys(pattern),
+    )
 
     return mock_client
 
@@ -46,12 +51,10 @@ def test_invalidate_ability_cache(app, mock_redis_client):
         # and track all the calls to delete
         mock_deleted_keys = []
 
-        # Override the delete method to track keys
-        original_delete = mock_redis_client.delete
-
-        def mock_delete(key):
-            mock_deleted_keys.append(key)
-            return 1
+        # Override the delete method to track keys (DEL accepts multiple keys)
+        def mock_delete(*keys):
+            mock_deleted_keys.extend(keys)
+            return len(keys)
 
         mock_redis_client.delete = mock_delete
 

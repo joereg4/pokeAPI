@@ -17,9 +17,9 @@ Privacy Design Principles:
 import hashlib
 import re
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, List, Optional, Tuple
-from pokedex.redis_client import redis_client
+from pokedex.redis_client import redis_client, scan_keys
 
 
 # ============================================================================
@@ -127,7 +127,7 @@ def anonymize_ip(ip_address: str) -> str:
     
     # Add a daily salt to prevent rainbow table attacks
     # This rotates daily, providing additional privacy
-    daily_salt = datetime.utcnow().strftime("%Y-%m-%d")
+    daily_salt = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     
     # Combine IP with salt and hash
     data_to_hash = f"{ip_address}:{daily_salt}:pokeapi_bot_detection"
@@ -403,7 +403,7 @@ def get_bot_detection_stats() -> Dict:
         stats["daily_by_category"][category] = daily_count
     
     # Get type breakdown (specific bots and browsers)
-    type_keys = redis_client.keys(f"{REDIS_PREFIX}type:*:day:{day}")
+    type_keys = scan_keys(redis_client, f"{REDIS_PREFIX}type:*:day:{day}")
     for key in type_keys:
         # Handle both string and bytes keys
         key_str = key if isinstance(key, str) else key.decode("utf-8")
@@ -418,7 +418,7 @@ def get_bot_detection_stats() -> Dict:
     stats["types"] = dict(sorted(stats["types"].items(), key=lambda x: x[1], reverse=True))
     
     # Get OS breakdown
-    os_keys = redis_client.keys(f"{REDIS_PREFIX}os:*:day:{day}")
+    os_keys = scan_keys(redis_client, f"{REDIS_PREFIX}os:*:day:{day}")
     for key in os_keys:
         key_str = key if isinstance(key, str) else key.decode("utf-8")
         parts = key_str.split(":")
@@ -429,7 +429,7 @@ def get_bot_detection_stats() -> Dict:
                 stats["os_breakdown"][os_name] = count
     
     # Get device breakdown
-    device_keys = redis_client.keys(f"{REDIS_PREFIX}device:*:day:{day}")
+    device_keys = scan_keys(redis_client, f"{REDIS_PREFIX}device:*:day:{day}")
     for key in device_keys:
         key_str = key if isinstance(key, str) else key.decode("utf-8")
         parts = key_str.split(":")
@@ -440,7 +440,7 @@ def get_bot_detection_stats() -> Dict:
                 stats["device_breakdown"][device_type] = count
     
     # Find high-volume sources (anonymized IPs with many requests)
-    ip_keys = redis_client.keys(f"{REDIS_PREFIX}ip:*:day:{day}")
+    ip_keys = scan_keys(redis_client, f"{REDIS_PREFIX}ip:*:day:{day}")
     ip_counts = []
     for key in ip_keys:
         key_str = key if isinstance(key, str) else key.decode("utf-8")
@@ -488,7 +488,7 @@ def get_bot_detection_report() -> Dict:
     
     # Add additional analysis
     report = {
-        "generated_at": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
+        "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
         "summary": {
             "total_requests_today": stats["totals"]["daily"],
             "total_requests_this_hour": stats["totals"]["hourly"],

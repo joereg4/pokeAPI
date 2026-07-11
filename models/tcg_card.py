@@ -5,8 +5,7 @@ Uses data from the pokemon-tcg-data GitHub repository.
 """
 from sqlalchemy import Column, String, Text, Integer, JSON, DateTime, Index
 from sqlalchemy.ext.declarative import declarative_base
-from datetime import datetime
-from models.model import db
+from models.model import db, utcnow
 
 
 class TcgCard(db.Model):
@@ -57,8 +56,8 @@ class TcgCard(db.Model):
     legalities = Column(JSON)  # {"unlimited": "Legal", "expanded": "Legal"}
 
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=utcnow)
+    updated_at = Column(DateTime, default=utcnow, onupdate=utcnow)
 
     # Indexes for common queries (avoid JSON column indexes in PostgreSQL)
     __table_args__ = (
