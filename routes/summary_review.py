@@ -3,6 +3,8 @@ import csv
 import json
 import sys
 import re
+from typing import Optional
+from urllib.parse import urlparse
 from flask import (
     Blueprint,
     render_template,
@@ -22,6 +24,21 @@ from routes.summary_generators.generators import generate_summary
 
 
 summary_review_bp = Blueprint("summary_review", __name__)
+
+
+def safe_return_to(url: Optional[str], fallback: str) -> str:
+    """Return ``url`` only if it is an internal relative path, else ``fallback``.
+
+    The ``return_to`` query parameter is attacker-controllable, so following it
+    blindly would allow open redirects (e.g. luring an admin to a phishing
+    site after a legitimate-looking action). A URL with no scheme and no
+    netloc can only point within this application.
+    """
+    if url:
+        parsed = urlparse(url)
+        if not parsed.scheme and not parsed.netloc:
+            return url
+    return fallback
 
 
 # Add markdown filter to blueprint
@@ -86,7 +103,9 @@ def update_summary(resource, name):
             flash("Summary updated successfully", "success")
             return_to = request.args.get("return_to")
             if return_to:
-                return redirect(return_to)
+                return redirect(
+                    safe_return_to(return_to, url_for("summary_review.summary_review"))
+                )
             # If no return_to, redirect to search results if we have a search term
             search_term = request.form.get("search_term")
             if search_term:
@@ -256,7 +275,9 @@ def edit_summary(resource, name):
 def new_pokemon_summary(pokemon_name):
     """Generate a new Pokemon summary with OpenAI using the templated format."""
     # Check if we're returning from a filtered list
-    return_to = request.args.get("return_to", url_for("admin.list_pokemon_summaries"))
+    return_to = safe_return_to(
+        request.args.get("return_to"), url_for("admin.list_pokemon_summaries")
+    )
 
     # Get the Pokemon resource or create it if it doesn't exist
     resource_obj = Resource.query.filter_by(

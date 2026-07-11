@@ -31,6 +31,7 @@
                 </div>
                 <div class="card-body">
                     <form id="summaryForm" method="POST" action="{{ url_for('summary_review.new_pokemon_summary', pokemon_name=pokemon_name, return_to=return_to) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="current_summary" value="{{ summary }}">
                         
                         <div class="form-group mb-3">
@@ -101,6 +102,7 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content,
                 },
                 body: JSON.stringify({text: summaryEditor.value})
             })

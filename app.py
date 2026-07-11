@@ -2,6 +2,8 @@ import logging
 import os
 from flask import Flask, render_template, request, abort
 from flask_compress import Compress
+from werkzeug.middleware.proxy_fix import ProxyFix
+from flask_wtf.csrf import CSRFProtect
 from flask_migrate import Migrate
 import pokedex
 from cache import cache, get_cache_config
@@ -19,6 +21,18 @@ pokedex.env.load_environment()
 
 def create_app(test_config=None):
     app = Flask(__name__)
+
+    # Trust X-Forwarded-* headers from the single nginx proxy in front of the
+    # app (see docker/nginx/pokedexapi.conf). Without this, Flask sees every
+    # request as coming from the proxy's IP, so per-IP rate limiting keys on
+    # the nginx container instead of the real client.
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
+
+    # Enable CSRF protection globally. Every POST form must include
+    # {{ csrf_token() }} and JS POSTs must send the X-CSRFToken header
+    # (available via the csrf-token meta tag in base.html). Tests disable
+    # this via WTF_CSRF_ENABLED=False in their config.
+    CSRFProtect(app)
 
     # Initialize rate limiter
     limiter.init_app(app)

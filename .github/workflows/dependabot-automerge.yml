@@ -17,7 +17,14 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Enable auto-merge for Dependabot PRs
+      # Only auto-merge patch and minor bumps. Major version bumps can break
+      # the app and should be reviewed by a human. Note: --auto waits for
+      # required status checks, which only exist if branch protection on main
+      # requires CI -- keep that configured in repo Settings -> Branches.
+      - name: Enable auto-merge for Dependabot PRs (patch/minor only)
+        if: >-
+          steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
+          steps.metadata.outputs.update-type == 'version-update:semver-minor'
         run: gh pr merge --auto --merge "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}

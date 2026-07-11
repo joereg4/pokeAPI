@@ -1,8 +1,11 @@
-from flask import current_app
-import redis
-from cache import cache
-from functools import wraps
 import logging
+
+from cache import cache
+from pokedex.api import get_data
+# Access the client through the module (rather than a from-import) so that
+# test fixtures which patch pokedex.redis_client.redis_client take effect here.
+import pokedex.redis_client as redis_module
+from pokedex.redis_client import scan_keys
 
 logger = logging.getLogger(__name__)
 
@@ -10,8 +13,7 @@ logger = logging.getLogger(__name__)
 def get_cache_stats():
     """Monitor Redis cache usage"""
     try:
-        redis_client = cache.cache._write_client
-        info = redis_client.info()
+        info = redis_module.redis_client.info()
 
         stats = {
             "status": "connected",
@@ -39,18 +41,11 @@ def get_cache_stats():
 def clear_expired_keys():
     """Clean up expired keys periodically"""
     try:
-        redis_client = cache.cache._write_client
-        cursor = 0
         deleted_count = 0
-
-        while True:
-            cursor, keys = redis_client.scan(cursor, match="pokedex:*")
-            for key in keys:
-                if redis_client.ttl(key) <= 0:
-                    redis_client.delete(key)
-                    deleted_count += 1
-            if cursor == 0:
-                break
+        for key in scan_keys(redis_module.redis_client, "pokedex:*"):
+            if redis_module.redis_client.ttl(key) <= 0:
+                redis_module.redis_client.delete(key)
+                deleted_count += 1
 
         logger.info(f"Cleared {deleted_count} expired keys")
         return deleted_count
@@ -84,15 +79,11 @@ def invalidate_related_caches(resource_type, resource_id):
         specific_keys.append(f"pokedex:type_{resource_id}")
 
     # Delete specific keys that we know the exact patterns for
-    deleted_count = 0
-    redis_client = cache.cache._write_client
-
     for key in specific_keys:
         try:
-            if redis_client.exists(key):
-                redis_client.delete(key)
+            if redis_module.redis_client.exists(key):
+                redis_module.redis_client.delete(key)
                 deleted_keys.append(key)
-                deleted_count += 1
                 logger.info(f"Deleted specific cache key: {key}")
         except Exception as e:
             logger.error(f"Error deleting specific key {key}: {e}")
@@ -111,9 +102,12 @@ def invalidate_related_caches(resource_type, resource_id):
     if resource_type in additional_patterns:
         for pattern in additional_patterns[resource_type]:
             try:
-                keys = redis_client.keys(f"pokedex:{pattern}")
+                keys = scan_keys(redis_module.redis_client, f"pokedex:{pattern}")
                 if keys:
-                    cache.delete_many(*keys)
+                    # These are raw Redis keys (already prefixed), so delete
+                    # them directly instead of via the Flask-Caching wrapper,
+                    # which would prepend its own key prefix again.
+                    redis_module.redis_client.delete(*keys)
                     deleted_keys.extend(keys)
             except Exception as e:
                 logger.error(f"Error invalidating cache pattern {pattern}: {e}")
@@ -122,9 +116,6 @@ def invalidate_related_caches(resource_type, resource_id):
     logger.info(f"Cleared {total_cleared} cache keys for {resource_type}/{resource_id}")
 
     return total_cleared
-
-
-from pokedex.api import get_data
 
 
 def warm_common_endpoints():
@@ -168,18 +159,10 @@ def inspect_cache_keys(resource_type=None, resource_name=None):
         A list of matching cache keys
     """
     try:
-        redis_client = cache.cache._write_client
-        cursor = 0
-        all_keys = []
-
-        # Collect all keys
-        while True:
-            cursor, keys = redis_client.scan(cursor, match="pokedex:*")
-            all_keys.extend(
-                [k.decode("utf-8") if isinstance(k, bytes) else k for k in keys]
-            )
-            if cursor == 0:
-                break
+        all_keys = [
+            k.decode("utf-8") if isinstance(k, bytes) else k
+            for k in scan_keys(redis_module.redis_client, "pokedex:*")
+        ]
 
         # Filter keys if resource_type or resource_name is provided
         filtered_keys = all_keys
@@ -217,12 +200,9 @@ def clear_cache_for_resource(resource_type, resource_name):
         keys = inspect_cache_keys(resource_type, resource_name)
 
         if keys:
-            # Delete all matching keys
-            redis_client = cache.cache._write_client
             deleted_count = 0
-
             for key in keys:
-                redis_client.delete(key)
+                redis_module.redis_client.delete(key)
                 deleted_count += 1
 
             logger.info(

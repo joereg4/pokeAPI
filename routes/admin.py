@@ -1,15 +1,29 @@
+import gc
+import logging
+import os
+import time
+from datetime import datetime
+from functools import wraps
+
+import psutil
 from flask import Blueprint, current_app, render_template, redirect, url_for, request, flash, jsonify, session
 from flask_login import login_required, current_user
 from models.model import User, db, Resource
-from functools import wraps
 from limiter import limiter
 from cache import cache
 from pokedex.utils import Config
 from pokedex.client import client as pokeapi
-import logging
 from utils import invalidate_related_caches
 from bot_detection import get_bot_detection_report, get_bot_detection_stats
 from ga_analytics import get_ga_dashboard_data
+from routes.summary_generators.generators import generate_summary
+
+# Server-side caps for batch summary refresh. This handler runs synchronously
+# inside a gunicorn worker, so unbounded batch sizes or delays would tie up a
+# worker for many minutes and can stall the whole app.
+MAX_BATCH_SIZE = 50
+MAX_DELAY_BETWEEN_ITEMS = 5
+MAX_DELAY_BETWEEN_BATCHES = 30
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
 
@@ -295,19 +309,22 @@ def batch_refresh_summaries(resource_type):
     # Handle form submission for batch refresh
     if request.method == "POST":
         try:
-            import gc
-            import time
-            import psutil
-            import os
-            from datetime import datetime
-
             # Get the process to monitor memory usage
             process = psutil.Process(os.getpid())
 
-            # Get batch processing parameters
-            batch_size = int(request.form.get("batch_size", 10))
-            delay_between_items = int(request.form.get("delay_between_items", 1))
-            delay_between_batches = int(request.form.get("delay_between_batches", 5))
+            # Get batch processing parameters (clamped to sane server-side
+            # bounds -- see MAX_* constants at the top of this module).
+            batch_size = min(
+                max(1, int(request.form.get("batch_size", 10))), MAX_BATCH_SIZE
+            )
+            delay_between_items = min(
+                max(0, int(request.form.get("delay_between_items", 1))),
+                MAX_DELAY_BETWEEN_ITEMS,
+            )
+            delay_between_batches = min(
+                max(0, int(request.form.get("delay_between_batches", 5))),
+                MAX_DELAY_BETWEEN_BATCHES,
+            )
             log_memory_usage = request.form.get("log_memory_usage", "off") == "on"
 
             # Get the list of resource IDs to refresh
@@ -339,9 +356,6 @@ def batch_refresh_summaries(resource_type):
             if log_memory_usage:
                 initial_memory = process.memory_info().rss / 1024 / 1024  # MB
                 logging.info(f"Initial memory usage: {initial_memory:.2f} MB")
-
-            # Import the generate_summary function
-            from routes.summary_generators.generators import generate_summary
 
             # Process each batch
             for batch_num, batch in enumerate(batches, 1):

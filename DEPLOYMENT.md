@@ -32,7 +32,7 @@ python manage.py create_user
 
 ## Bare-metal outline (bring your own server)
 
-1. Provision: Python 3.9+, PostgreSQL, Redis, nginx
+1. Provision: Python 3.11+, PostgreSQL, Redis, nginx
 2. Clone repo; create venv; `pip install -r requirements.txt`
 3. Set all variables from `.env.example`
 4. `flask db upgrade`

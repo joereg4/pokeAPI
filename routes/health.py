@@ -13,7 +13,7 @@ from limiter import limiter
 from flask_limiter.util import get_remote_address
 from flask_login import login_required
 import time
-from pokedex.redis_client import redis_client
+from pokedex.redis_client import redis_client, scan_keys
 from bot_detection import track_request, get_bot_detection_stats, get_bot_detection_report
 
 health_bp = Blueprint("health", __name__)
@@ -143,31 +143,34 @@ def get_api_stats():
     weekly_calls = sum(int(x) if x else 0 for x in last_7_counts)
     monthly_calls = sum(int(x) if x else 0 for x in last_30_counts)
 
-    # Get endpoint stats
-    endpoint_keys = redis_client.keys(f"api_calls:endpoint:*:hour:{hour}")
+    def _key_str(key):
+        return key.decode("utf-8") if isinstance(key, bytes) else key
+
+    # Get endpoint stats (SCAN instead of KEYS to avoid blocking Redis)
+    endpoint_keys = scan_keys(redis_client, f"api_calls:endpoint:*:hour:{hour}")
     endpoint_stats = {}
     if endpoint_keys:
         endpoint_values = redis_client.mget(endpoint_keys)
         for key, value in zip(endpoint_keys, endpoint_values):
-            endpoint = key.decode("utf-8").split(":")[2]
+            endpoint = _key_str(key).split(":")[2]
             endpoint_stats[endpoint] = int(value) if value else 0
 
     # Get resource stats
-    resource_keys = redis_client.keys(f"api_calls:resource:*:hour:{hour}")
+    resource_keys = scan_keys(redis_client, f"api_calls:resource:*:hour:{hour}")
     resource_stats = {}
     if resource_keys:
         resource_values = redis_client.mget(resource_keys)
         for key, value in zip(resource_keys, resource_values):
-            resource = key.decode("utf-8").split(":")[2]
+            resource = _key_str(key).split(":")[2]
             resource_stats[resource] = int(value) if value else 0
 
     # Get method stats
-    method_keys = redis_client.keys(f"api_calls:method:*:hour:{hour}")
+    method_keys = scan_keys(redis_client, f"api_calls:method:*:hour:{hour}")
     method_stats = {}
     if method_keys:
         method_values = redis_client.mget(method_keys)
         for key, value in zip(method_keys, method_values):
-            method = key.decode("utf-8").split(":")[2]
+            method = _key_str(key).split(":")[2]
             method_stats[method] = int(value) if value else 0
 
     return {
@@ -249,26 +252,16 @@ def get_traffic_stats():
         hour = now // 3600
         day = now // 86400
 
-        pipe = redis_client.pipeline()
-
-        # Get all keys for different metrics
-        pipe.keys("api_calls:endpoint:*")
-        pipe.keys("api_calls:resource:*")
-        pipe.keys("api_calls:method:*")
+        # Collect metric keys with SCAN (KEYS would block Redis and is not
+        # actually pipelineable anyway -- it returns synchronously).
+        keys = scan_keys(redis_client, "api_calls:endpoint:*")
+        resource_keys = scan_keys(redis_client, "api_calls:resource:*")
 
         # Get current time period counts
+        pipe = redis_client.pipeline()
         pipe.get(f"api_calls:hour:{hour}")
         pipe.get(f"api_calls:day:{day}")
-        # Remove week/month from pipeline, will use rolling logic below
-
-        # Execute pipeline
-        (
-            keys,
-            resource_keys,
-            method_keys,
-            hourly,
-            daily,
-        ) = pipe.execute()
+        hourly, daily = pipe.execute()
 
         # Rolling 7-day and 30-day totals
         last_7_days = [f"api_calls:day:{day - i}" for i in range(7)]
@@ -281,7 +274,7 @@ def get_traffic_stats():
         # Process endpoint stats and organize resources by endpoint
         endpoint_stats = {}
         for key in keys:
-            key_str = key.decode()
+            key_str = key.decode() if isinstance(key, bytes) else key
             parts = key_str.split(":")
             endpoint = parts[2]  # Get endpoint name from key structure
 
@@ -294,7 +287,7 @@ def get_traffic_stats():
 
         # Process resource stats and associate them with endpoints
         for key in resource_keys:
-            key_str = key.decode()
+            key_str = key.decode() if isinstance(key, bytes) else key
             parts = key_str.split(":")
             endpoint = parts[2]  # Get endpoint from key structure
 
@@ -324,7 +317,8 @@ def get_traffic_stats():
                     f"pokedex:{endpoint}:{resource_id}:name"
                 )
                 if resource_name:
-                    resource_name = resource_name.decode()
+                    if isinstance(resource_name, bytes):
+                        resource_name = resource_name.decode()
                 else:
                     resource_name = f"{endpoint.title()} #{resource_id}"
             else:
