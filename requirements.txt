@@ -24,7 +24,7 @@ Jinja2==3.1.6
 Markdown==3.10.2
 MarkupSafe==3.0.3
 numpy==2.4.6
-packaging==24.1
+packaging==26.3
 pandas==3.0.3
 pluggy==1.6.0
 pokebase==1.4.1
