@@ -25,7 +25,7 @@ Markdown==3.10.2
 MarkupSafe==3.0.3
 numpy==2.4.6
 packaging==26.3
-pandas==3.0.3
+pandas==3.0.5
 pluggy==1.6.0
 pokebase==1.4.1
 pokemontcgsdk==3.4.0
