@@ -41,7 +41,7 @@ pytz==2026.2
 redis==8.1.0
 requests==2.34.2
 six==1.17.0
-SQLAlchemy==2.0.51
+SQLAlchemy==2.0.52
 tomli==2.4.1
 tzdata==2026.3
 urllib3==2.7.0
