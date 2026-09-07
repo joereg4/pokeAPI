@@ -9,7 +9,7 @@
     "routes",
     "models",
     "pokedex",
-    "cache",
+    "cache.py",
     "utils.py",
     "manage.py",
     "tests"
